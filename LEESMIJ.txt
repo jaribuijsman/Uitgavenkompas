@@ -1,0 +1,11 @@
+Uitgavenkompas — PWA pakket
+
+Bestanden:
+- index.html: dashboardversie
+- manifest.json: installatiegegevens
+- sw.js: offline cache
+- icons/: app-iconen
+
+Publiceer de inhoud van deze map als website op HTTPS (bijvoorbeeld GitHub Pages). Open daarna de website in Chrome op Android en kies in het menu voor Installeren of Toevoegen aan startscherm.
+
+Let op: maak eerst een export/back-up vanuit Uitgavenkompas voordat je overstapt. Browseropslag van een lokaal HTML-bestand wordt niet automatisch overgezet naar de geïnstalleerde website; importeer je JSON-back-up daarna in de online app. Test de import en export voordat je de oude versie verwijdert.
