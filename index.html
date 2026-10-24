@@ -241,7 +241,75 @@ table th{color:#aebbe6}table td{border-color:#26365f}
 .pin-keypad [data-delete]{font-size:25px;color:#b8c5ff}
 .pin-submit{margin-top:0!important;padding:15px!important;border-radius:15px!important;font-size:15px;min-height:52px}
 .pin-foot{margin-top:16px!important;color:#9aa9d7!important;font-size:10px!important;line-height:1.55}
-@media(max-height:760px){.pin-panel{padding:20px 22px}.pin-mark{width:76px;height:76px;margin-bottom:10px}.pin-dots{margin:12px 0 14px}.pin-keypad{gap:6px 12px}.pin-keypad button{width:48px;height:48px;font-size:21px}.pin-foot{margin-top:10px!important}}</style>
+@media(max-height:760px){.pin-panel{padding:20px 22px}.pin-mark{width:76px;height:76px;margin-bottom:10px}.pin-dots{margin:12px 0 14px}.pin-keypad{gap:6px 12px}.pin-keypad button{width:48px;height:48px;font-size:21px}.pin-foot{margin-top:10px!important}}
+/* PIN FULLSCREEN ANDROID — gebaseerd op het gekozen exacte voorbeeld */
+#pinLock{
+  padding:0;
+  align-items:stretch;
+  justify-content:stretch;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 8%,rgba(77,24,205,.46),transparent 42%),
+    radial-gradient(ellipse at 0% 100%,rgba(33,42,255,.24),transparent 42%),
+    linear-gradient(160deg,#080b25 0%,#0b1030 52%,#050817 100%);
+}
+#pinLock::before{
+  content:"";
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 100% 80%,rgba(58,39,255,.18),transparent 34%),
+    linear-gradient(140deg,transparent 0 68%,rgba(52,31,187,.12) 68% 73%,transparent 73%);
+}
+.pin-panel{
+  position:relative;z-index:1;
+  width:100%;max-width:none;
+  height:100vh;height:100dvh;min-height:100svh;
+  border:0;border-radius:0;box-shadow:none;
+  backdrop-filter:none;
+  background:transparent;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 24px calc(env(safe-area-inset-bottom,0px) + 14px);
+  display:flex;flex-direction:column;align-items:stretch;justify-content:center;
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.pin-mark{
+  flex:0 0 auto;
+  width:clamp(84px,13.5vh,112px);height:clamp(84px,13.5vh,112px);
+  border-radius:50%;
+  margin:0 auto clamp(12px,2vh,18px);
+  background:#21117b url('pin-portrait.webp') center/cover no-repeat;
+  border:2px solid rgba(162,100,255,.8);
+  box-shadow:0 0 0 6px rgba(255,255,255,.035),0 0 36px rgba(105,54,255,.45);
+}
+#pinTitle{text-align:center;font-size:clamp(27px,6.6vw,34px);line-height:1.13;margin:0 0 8px;color:#fff}
+#pinDescription{text-align:center;font-size:clamp(14px,3.8vw,17px);line-height:1.35;margin:0 0 clamp(12px,2.2vh,20px);color:#b9c7f5}
+.pin-dots{flex:0 0 auto;display:flex;justify-content:center;gap:clamp(10px,3.8vw,17px);margin:clamp(7px,1.5vh,13px) 0 clamp(16px,2.5vh,22px)}
+.pin-dots span{width:clamp(11px,3vw,14px);height:clamp(11px,3vw,14px);border:1.5px solid #8554ff;border-radius:50%;background:transparent}
+.pin-dots span.filled{background:#b43dff;border-color:#d07cff;box-shadow:0 0 15px #9a3dff9c}
+.pin-keypad{flex:0 0 auto;width:min(100%,350px);max-width:350px;gap:clamp(7px,1.5vh,13px) clamp(12px,4vw,24px);margin:0 auto clamp(16px,2.6vh,22px)}
+.pin-keypad button{width:clamp(54px,15vw,70px);height:clamp(54px,15vw,70px);border-radius:50%;border:1.5px solid #7652ed;background:linear-gradient(145deg,rgba(29,35,92,.8),rgba(9,15,43,.96));color:#f8f7ff;font-size:clamp(23px,6vw,29px);font-weight:500;box-shadow:inset 0 1px rgba(255,255,255,.08),0 4px 14px rgba(0,0,0,.1);touch-action:manipulation}
+.pin-keypad button:active{background:linear-gradient(145deg,#9c2cff,#345fff);transform:scale(.96)}
+.pin-keypad [data-delete]{font-size:clamp(26px,6vw,31px);color:#b8c6ff}
+.pin-submit{flex:0 0 auto;width:100%;margin:0!important;min-height:56px;padding:15px!important;border-radius:16px!important;font-size:16px;touch-action:manipulation}
+.pin-error{flex:0 0 auto;min-height:18px;margin:8px 0 0!important;font-size:12px!important}
+.pin-foot{flex:0 0 auto;margin:clamp(8px,1.6vh,14px) 0 0!important;text-align:center;color:#9aa9d7!important;font-size:11px!important;line-height:1.5}
+@media(max-height:720px){
+ .pin-panel{padding:calc(env(safe-area-inset-top,0px) + 8px) 20px calc(env(safe-area-inset-bottom,0px) + 8px)}
+ .pin-mark{width:clamp(68px,10vh,82px);height:clamp(68px,10vh,82px);margin-bottom:8px}
+ #pinTitle{font-size:27px}
+ #pinDescription{font-size:14px;margin-bottom:10px}
+ .pin-dots{margin:7px 0 12px}
+ .pin-keypad{gap:7px 14px;margin-bottom:12px}
+ .pin-keypad button{width:clamp(47px,12vw,56px);height:clamp(47px,12vw,56px);font-size:22px}
+ .pin-submit{min-height:49px}
+ .pin-foot{font-size:10px!important;margin-top:8px!important}
+}
+@media(max-width:360px){
+ .pin-panel{padding-left:16px;padding-right:16px}
+ .pin-keypad{gap:7px 10px}
+ .pin-keypad button{width:50px;height:50px}
+}
+
+</style>
 
 </head>
 <body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle">Uitgavenkompas</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••"><div class="pin-dots" id="pinDots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pin-keypad" id="pinKeypad" aria-label="Pincode toetsenbord"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><button type="button" data-delete="1" aria-label="Laatste cijfer verwijderen">⌫</button></div><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
