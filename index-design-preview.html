@@ -454,6 +454,21 @@ table th{color:#aebbe6}table td{border-color:#26365f}
  .app .dashboard-redesign .salary-period-modern-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
  .app .dashboard-redesign .salary-period-modern-metrics .account-period-card:last-child{grid-column:1/-1}
 }
+
+/* Higher-specificity overrides for the compact transaction workspace. */
+.app #view-transactions .field-search.tx-search{background:#0b1328;border:1px solid #2c3a5b}
+.app #view-transactions .field-search.tx-search input{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+.app #view-transactions .tx-filter-select,.app #view-transactions .tx-more-toggle{background:#141e39!important;color:#e6eaff!important;border-color:#2c3959!important}
+.app #view-transactions .tx-more-toggle{background:#26214a!important;color:#d7ceff!important;border-color:#494078!important}
+.app #view-transactions .tx-more-filters{background:#101a33!important;border-color:#2c3959!important;color:#edf1ff}
+.app #view-transactions .tx-list-heading span:last-child{background:#272249!important;color:#d8ceff!important;border-color:#474070!important}
+.app #view-transactions .tx-card-date{background:#272349!important;color:#d7ccff!important}
+.app #view-transactions .tx-card-left-tags .pill{background:#1d2642!important;color:#c4cde2!important;border-color:#303e5e!important}
+.app #view-transactions .tx-card-note{background:#141f38!important;color:#aebbd5!important;border-color:#2a3857!important}
+.app #view-transactions .tx-list-empty{background:#101a33!important;color:#a7b4cf!important;border-color:#2b3959!important}
+.app .split-row button{background:#352034;border:1px solid #63364d;color:#ffb2bd}
+.app .analysis-tab.active{color:#f1eaff}
+.app .data-table th{color:#9ba9c7}
 </style>
 </head>
 <body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle">Compass</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••"><div class="pin-dots" id="pinDots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pin-keypad" id="pinKeypad" aria-label="Pincode toetsenbord"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><button type="button" data-delete="1" aria-label="Laatste cijfer verwijderen">⌫</button></div><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
