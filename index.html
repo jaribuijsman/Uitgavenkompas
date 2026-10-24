@@ -226,10 +226,25 @@ table th{color:#aebbe6}table td{border-color:#26365f}
 .pin-foot{color:#8897c5;font-size:11px;line-height:1.55}
 .pin-error{color:#ff6b9c}
 @media(max-width:700px){.sidebar{background:linear-gradient(180deg,#100c38,#080d22)}.topbar{background:#080d22}.pin-panel{margin:18px;padding:28px 22px}}
-</style>
+/* PIN v2 — persoonlijk portret en numeriek toetsenbord */
+.pin-panel{width:min(100%,390px);padding:30px 26px 24px;background:linear-gradient(160deg,rgba(20,24,73,.98),rgba(6,12,32,.99));border-color:rgba(155,115,255,.6);box-shadow:0 25px 90px #0008,0 0 55px #673cff20;border-radius:30px}
+.pin-mark{width:112px;height:112px;border-radius:50%;background:#21117b url('icon.svg') center/cover no-repeat;box-shadow:0 0 0 7px #ffffff08,0 0 34px #653aff66;margin-bottom:18px}
+#pinTitle{font-size:clamp(25px,6vw,31px);font-weight:800;letter-spacing:-.9px;margin:0 0 8px;color:#fff}
+#pinDescription{font-size:15px;color:#b9c7f5;margin-bottom:19px}
+.pin-digits{position:absolute!important;width:1px!important;height:1px!important;opacity:.01!important;left:-10000px!important;pointer-events:none!important}
+.pin-dots{display:flex;justify-content:center;gap:14px;margin:20px 0 22px}
+.pin-dots span{width:13px;height:13px;border:1.5px solid #704cff;border-radius:50%;background:transparent}
+.pin-dots span.filled{background:#a83dff;border-color:#a83dff;box-shadow:0 0 14px #8c3dff80}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px;max-width:270px;margin:0 auto 18px}
+.pin-keypad button{width:58px;height:58px;justify-self:center;border-radius:50%;border:1px solid #5945d9;background:linear-gradient(145deg,#121b48,#0b1230);color:#f7f6ff;font-size:24px;font-weight:500;display:grid;place-items:center}
+.pin-keypad button:active{background:linear-gradient(145deg,#8d31ff,#3559ff);transform:scale(.96)}
+.pin-keypad [data-delete]{font-size:25px;color:#b8c5ff}
+.pin-submit{margin-top:0!important;padding:15px!important;border-radius:15px!important;font-size:15px;min-height:52px}
+.pin-foot{margin-top:16px!important;color:#9aa9d7!important;font-size:10px!important;line-height:1.55}
+@media(max-height:760px){.pin-panel{padding:20px 22px}.pin-mark{width:76px;height:76px;margin-bottom:10px}.pin-dots{margin:12px 0 14px}.pin-keypad{gap:6px 12px}.pin-keypad button{width:48px;height:48px;font-size:21px}.pin-foot{margin-top:10px!important}}</style>
 
 </head>
-<body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle">Uitgavenkompas</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••" required><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
+<body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle">Uitgavenkompas</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••" required><div class="pin-dots" id="pinDots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pin-keypad" id="pinKeypad" aria-label="Pincode toetsenbord"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><button type="button" data-delete="1" aria-label="Laatste cijfer verwijderen">⌫</button></div><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brand-mark">↗</div><div><div class="brand-name">Uitgavenkompas</div><div class="brand-sub">Grip op je geld</div></div></div><div class="nav-label">Overzicht</div><nav class="nav" id="sideNav"><button class="active" data-view="dashboard"><span class="ico">◫</span>Dashboard</button><button data-view="transactions"><span class="ico">⇄</span>Transacties</button><button data-view="analysis"><span class="ico">◔</span>Analyse & rapporten</button><button data-view="accounts"><span class="ico">▤</span>Rekeningen</button><button data-view="budgets"><span class="ico">◎</span>Budgetten</button><button data-view="planning"><span class="ico">▦</span>Planning & doelen</button><button data-view="smartbuy"><span class="ico">✦</span>Slim Kopen</button><button data-view="moneycoach"><span class="ico">◈</span>Geldcoach</button><button data-view="receipts"><span class="ico">▧</span>Bonnetjesscanner</button><button data-view="settings"><span class="ico">⚙</span>Instellingen & data</button></nav><div class="side-bottom"><div class="help-card"><b>Jouw geld, jouw overzicht.</b><p>Je financiële gegevens blijven op dit apparaat.</p><button data-view="settings">Back-up beheren →</button></div><div class="local-badge"><span class="dot"></span> Lokale opslag actief</div></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Instellingen">⚙</button><div class="crumb">Uitgavenkompas <span style="color:#aab4ad"> / </span> <strong id="crumbTitle">Dashboard</strong></div></div><div class="top-actions"><select id="globalMonth" class="month-select" aria-label="Maand"></select><span id="saveStatus" class="pill green save-status" aria-live="polite">Opgeslagen</span><button class="icon-btn" id="quickSearch" aria-label="Zoeken">⌕</button><div class="avatar">UK</div></div></header>
 <div class="content">
@@ -578,6 +593,12 @@ form.addEventListener('submit',async e=>{
  }catch(err){error.textContent='Beveiligde pincode-opslag is niet beschikbaar in deze browser.'}
 });
 input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,6)});
+const dots=document.getElementById('pinDots');
+const keypad=document.getElementById('pinKeypad');
+function syncPinDots(){const value=input.value;[...dots.children].forEach((dot,i)=>dot.classList.toggle('filled',i<value.length))}
+keypad.addEventListener('click',event=>{const key=event.target.closest('button');if(!key)return;if(key.hasAttribute('data-digit')){if(input.value.length<6)input.value+=key.dataset.digit}else if(key.hasAttribute('data-delete')){input.value=input.value.slice(0,-1)}syncPinDots();error.textContent='';});
+input.addEventListener('input',syncPinDots);
+syncPinDots();
 if(!config){description.textContent='Stel een persoonlijke pincode van 6 cijfers in.';submit.textContent='Pincode instellen'}else{description.textContent='Voer je pincode in om verder te gaan.';submit.textContent='Ontgrendelen'}
 pinLockVisible();
 ['pointerdown','keydown','touchstart','scroll'].forEach(evt=>document.addEventListener(evt,()=>{if(pinUnlocked)resetPinIdleTimer()},{passive:true}));
