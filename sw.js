@@ -1,4 +1,4 @@
-const CACHE = "uitgavenkompas-pwa-v8";
+const CACHE = "uitgavenkompas-pwa-v9";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon.svg", "./pin-portrait.webp", "./compass-icon.jpg"];
 self.addEventListener("install", event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
