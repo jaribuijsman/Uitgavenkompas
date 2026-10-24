@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Uitgavenkompas",
-  "short_name": "Uitgaven",
+  "name": "Compass",
+  "short_name": "Compass",
   "description": "Persoonlijk inzicht in geld, uitgaven en spaardoelen.",
   "lang": "nl-NL",
   "start_url": "./",
