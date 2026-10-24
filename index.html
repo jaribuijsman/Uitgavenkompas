@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="nl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#173b34"><meta name="application-name" content="Uitgavenkompas">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#080d22"><meta name="application-name" content="Uitgavenkompas">
 <meta name="uk-slimbuy-version" content="definitief-v1"><meta name="description" content="Uitgavenkompas — persoonlijk inzicht in je geld, uitgaven en spaardoelen.">
 <title>Uitgavenkompas</title><link rel="manifest" href="manifest.json">
 <style>
@@ -193,10 +193,43 @@ body.pin-locked{overflow:hidden}
 #view-transactions .tx-card-emoji{background:transparent}
 #view-transactions .tx-card-content{min-width:0}
 .transaction-row .tx-icon,.category-list .category-icon,.bar-item .bar-label{font-variant-emoji:emoji}
+
+/* Uitgaven v20 persoonlijke neonstijl */
+:root{--bg:#070b1c;--surface:#0d1530;--surface2:#111d3b;--ink:#f3f5ff;--muted:#a9b5dc;--line:#24345e;--green:#7b36ff;--green2:#24154d;--lime:#35c7ff;--orange:#ffb84e;--red:#ff4f88;--blue:#398cff;--shadow:0 12px 32px rgba(0,0,0,.25);--radius:18px}
+html,body{background:#070b1c;color:var(--ink)}
+body{background:radial-gradient(ellipse at 18% 0%,rgba(79,37,214,.18),transparent 38%),var(--bg)}
+.sidebar{background:linear-gradient(180deg,#100c38,#080d22);border-right:1px solid #26366b}
+.brand-mark{background:linear-gradient(135deg,#d05cff,#354eff);color:#fff;border-radius:14px;box-shadow:0 0 24px #633cff55}
+.brand-sub,.nav-label,.local-badge{color:#9eabe0}
+.nav button{color:#c9d2f7}
+.nav button:hover{background:#1a2250;color:#fff}
+.nav button.active{background:linear-gradient(100deg,#8b35ff,#315dff);color:#fff;box-shadow:0 5px 22px #632cff44}
+.help-card{background:#111d3d;border:1px solid #2d3f75;color:#f3f5ff}
+.help-card p{color:#b7c3e8}.help-card button{color:#c89cff}
+.topbar{background:rgba(8,13,34,.92);border-color:#25345f;color:#f3f5ff}
+.card,.stat-card,.modal,.dropdown-menu,.filter-panel,.settings-card,.goal-card,.budget-card,.account-card,.receipt-card,.coach-card,.smartbuy-card{background:linear-gradient(145deg,#111c3a,#0b1229);border-color:#273966;color:#f3f5ff;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.card-title,.page-head h1,.page-head h2,.page-head h3,.brand-name{color:#f7f8ff}
+.card-subtitle,.muted,.page-head p{color:#aab7df}
+button,.btn,.icon-btn{transition:background .18s,border-color .18s,transform .18s}
+.btn.primary,.btn-primary,.pin-submit{background:linear-gradient(110deg,#9c35ff,#385bff)!important;color:#fff!important;border:1px solid #9c69ff!important;box-shadow:0 7px 22px #7135ff33}
+.btn:not(.primary),.icon-btn{background:#121d3d;color:#e6eaff;border-color:#304274}
+input,select,textarea{background:#0b1430!important;color:#f2f4ff!important;border-color:#2b3e70!important}
+input::placeholder,textarea::placeholder{color:#8795c3}
+table th{color:#aebbe6}table td{border-color:#26365f}
+.tx-card,.transaction-row,.category-row,.list-row{border-color:#26365f}
+#pinLock{background:radial-gradient(ellipse at 50% 10%,#25106e 0%,#0a0d2c 48%,#050816 100%);backdrop-filter:blur(18px)}
+.pin-panel{background:linear-gradient(155deg,rgba(20,24,70,.96),rgba(7,13,34,.98));border:1px solid #5b49c8;border-radius:28px;box-shadow:0 24px 90px #0008,0 0 50px #713bff22;padding:30px 26px;max-width:390px}
+.pin-mark{width:104px;height:104px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:#2919a0 url('icon.svg') center/cover no-repeat;color:transparent;font-size:0;box-shadow:0 0 0 7px #ffffff08,0 0 35px #633dff55}
+#pinTitle{font-size:30px;letter-spacing:-.8px;color:#fff;margin:8px 0}
+#pinDescription{color:#b7c4f3}
+.pin-digits{height:56px;text-align:center;letter-spacing:10px;font-size:22px;border-radius:15px!important;background:#080f2a!important}
+.pin-foot{color:#8897c5;font-size:11px;line-height:1.55}
+.pin-error{color:#ff6b9c}
+@media(max-width:700px){.sidebar{background:linear-gradient(180deg,#100c38,#080d22)}.topbar{background:#080d22}.pin-panel{margin:18px;padding:28px 22px}}
 </style>
 
 </head>
-<body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true">🔒</div><h1 id="pinTitle">Uitgavenkompas</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••" required><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
+<body><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><form class="pin-panel" id="pinForm"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle">Uitgavenkompas</h1><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••" required><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p></form></div><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brand-mark">↗</div><div><div class="brand-name">Uitgavenkompas</div><div class="brand-sub">Grip op je geld</div></div></div><div class="nav-label">Overzicht</div><nav class="nav" id="sideNav"><button class="active" data-view="dashboard"><span class="ico">◫</span>Dashboard</button><button data-view="transactions"><span class="ico">⇄</span>Transacties</button><button data-view="analysis"><span class="ico">◔</span>Analyse & rapporten</button><button data-view="accounts"><span class="ico">▤</span>Rekeningen</button><button data-view="budgets"><span class="ico">◎</span>Budgetten</button><button data-view="planning"><span class="ico">▦</span>Planning & doelen</button><button data-view="smartbuy"><span class="ico">✦</span>Slim Kopen</button><button data-view="moneycoach"><span class="ico">◈</span>Geldcoach</button><button data-view="receipts"><span class="ico">▧</span>Bonnetjesscanner</button><button data-view="settings"><span class="ico">⚙</span>Instellingen & data</button></nav><div class="side-bottom"><div class="help-card"><b>Jouw geld, jouw overzicht.</b><p>Je financiële gegevens blijven op dit apparaat.</p><button data-view="settings">Back-up beheren →</button></div><div class="local-badge"><span class="dot"></span> Lokale opslag actief</div></div></aside>
 <main class="main"><header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Instellingen">⚙</button><div class="crumb">Uitgavenkompas <span style="color:#aab4ad"> / </span> <strong id="crumbTitle">Dashboard</strong></div></div><div class="top-actions"><select id="globalMonth" class="month-select" aria-label="Maand"></select><span id="saveStatus" class="pill green save-status" aria-live="polite">Opgeslagen</span><button class="icon-btn" id="quickSearch" aria-label="Zoeken">⌕</button><div class="avatar">UK</div></div></header>
 <div class="content">
