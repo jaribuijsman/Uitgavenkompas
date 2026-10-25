@@ -3891,5 +3891,34 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 @media(max-width:360px){#lifeApp .shopping-row{padding:6px 3px;gap:2px}#lifeApp .shopping-row:has(.shopping-ai){grid-template-columns:40px minmax(0,1fr) 36px 36px}#lifeApp .shopping-row:has(.shopping-ai) .shopping-icon-button{width:36px;min-width:36px}#lifeApp .shopping-row:has(.shopping-ai) .life-task-menu>summary{width:36px;min-width:36px}#lifeApp .shopping-row-title{font-size:15px}}
 </style>
 
+<style id="memento-menu-viewport-style">#lifeApp .life-task-menu[open]>.life-task-actions{position:fixed;right:auto;bottom:auto;z-index:250;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}</style>
+<script id="memento-menu-viewport">
+(()=>{'use strict';
+ const root=document.getElementById('lifeApp');if(!root)return;
+ function place(anchor,width,height,bounds){
+  const gap=6,below=Math.max(0,bounds.bottom-anchor.bottom-gap),above=Math.max(0,anchor.top-bounds.top-gap);
+  const down=height<=below||(height>above&&below>=above),available=down?below:above;
+  const w=Math.min(width,Math.max(0,bounds.right-bounds.left)),h=Math.min(height,available);
+  return {left:Math.max(bounds.left,Math.min(anchor.right-w,bounds.right-w)),top:down?anchor.bottom+gap:anchor.top-gap-h,width:w,maxHeight:available};
+ }
+ function layout(){
+  const vp=window.visualViewport,top=vp?.offsetTop||0,left=vp?.offsetLeft||0,w=vp?.width||window.innerWidth,h=vp?.height||window.innerHeight;
+  const nav=document.getElementById('mementoQuickNav')?.getBoundingClientRect(),header=document.getElementById('compassAreaBar')?.getBoundingClientRect();
+  const bounds={left:left+10,right:left+w-10,top:Math.max(top+10,header&&header.bottom>top?header.bottom+8:top+10),bottom:Math.min(top+h-10,nav&&nav.height>0?nav.top-10:top+h-10)};
+  root.querySelectorAll('.life-task-menu[open]').forEach(menu=>{
+   const anchor=menu.querySelector('summary')?.getBoundingClientRect(),panel=menu.querySelector('.life-task-actions');if(!anchor||!panel)return;
+   if(anchor.bottom<bounds.top||anchor.top>bounds.bottom||bounds.bottom<=bounds.top){menu.open=false;return}
+   panel.style.maxHeight='none';panel.style.width='';
+   const size=panel.getBoundingClientRect(),p=place(anchor,size.width,panel.scrollHeight,bounds);
+   Object.assign(panel.style,{left:p.left+'px',top:p.top+'px',width:p.width+'px',maxHeight:p.maxHeight+'px'});
+  });
+ }
+ let frame;function schedule(e){if(e?.target?.closest?.('.life-task-actions'))return;cancelAnimationFrame(frame);frame=requestAnimationFrame(layout)}
+ root.addEventListener('toggle',e=>{if(e.target.matches('.life-task-menu[open]'))layout()},true);
+ window.addEventListener('resize',schedule);window.addEventListener('scroll',schedule,true);window.visualViewport?.addEventListener('resize',schedule);window.visualViewport?.addEventListener('scroll',schedule);
+ window.MementoMenuLayout={place,layout};
+})();
+</script>
+
 </body></html>
 
