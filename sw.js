@@ -1,5 +1,5 @@
-const CACHE = "uitgavenkompas-pwa-v10";
-const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon.svg", "./pin-portrait.webp", "./compass-icon-v2.webp", "./compass-icon.jpg"];
+const CACHE = "memento-pwa-v1-20261025";
+const CORE = ["./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png"];
 self.addEventListener("install", event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", event => {

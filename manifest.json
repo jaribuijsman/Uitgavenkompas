@@ -1,20 +1,20 @@
 {
   "id": "./",
-  "name": "Compass",
-  "short_name": "Compass",
-  "description": "Persoonlijk inzicht in geld, uitgaven en spaardoelen.",
+  "name": "Memento",
+  "short_name": "Memento",
+  "description": "Reflect · Refine · Conquer — overzicht van Leven en Financiën.",
   "lang": "nl-NL",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#080d22",
-  "theme_color": "#080d22",
+  "background_color": "#101412",
+  "theme_color": "#101412",
   "icons": [
     {
-      "src": "compass-icon-v2.webp",
-      "sizes": "192x192",
-      "type": "image/webp",
+      "src": "./assets/memento-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
