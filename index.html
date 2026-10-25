@@ -2594,6 +2594,13 @@ function validate(s){
  for(const key of ['tasks','groceries','wishes','notes','templates']){
   const ids=new Set();for(const x of s[key]){if(!x||typeof x.id!=='string'||ids.has(x.id)||typeof x.title!=='string'||!x.title.trim())throw Error('De back-up bevat een ongeldig of dubbel item.');ids.add(x.id)}
  }
+ if(s.appointments===undefined)s.appointments=[];
+ if(!Array.isArray(s.appointments))throw Error('Ongeldige afsprakenlijst.');
+ const appointmentIds=new Set();
+ for(const a of s.appointments){
+  if(!a||typeof a.id!=='string'||appointmentIds.has(a.id)||typeof a.title!=='string'||!a.title.trim()||!validDate(a.date||'')||!/^\d{2}:\d{2}$/.test(a.time||'00:00'))throw Error('De opgeslagen afspraken zijn ongeldig.');
+  appointmentIds.add(a.id);
+ }
  for(const t of [...s.tasks,...s.templates]){if(t.repeatDays===undefined)t.repeatDays=4;if(!Number.isInteger(t.repeatDays)||t.repeatDays<1||t.repeatDays>3650)throw Error('Het herhaalinterval moet een heel getal van 1 tot en met 3650 dagen zijn.');}
  for(const t of s.templates){if(!['task','routine'].includes(t.kind)||!Object.hasOwn(repeats,t.repeat)||!Array.isArray(t.steps)||t.steps.some(x=>!x||typeof x.text!=='string'))throw Error('Ongeldig taaksjabloon.');if(t.deletedAt===undefined)t.deletedAt='';if(typeof t.deletedAt!=='string')throw Error('Ongeldige prullenbakstatus.');}
  for(const n of s.notes){if(n.deletedAt===undefined)n.deletedAt='';if(typeof n.deletedAt!=='string')throw Error('Ongeldige notitiestatus.');}
@@ -2601,6 +2608,7 @@ function validate(s){
  return s;
 }
 try{const raw=localStorage.getItem(KEY);state=raw?validate(JSON.parse(raw)):clone(seed)}catch(e){state=clone(seed);blocked=true}
+if(!Array.isArray(state.appointments))state.appointments=[];
 function status(text,canUndo=false,error=false){clearTimeout(messageTimer);$('lifeMessage').innerHTML='<span>'+esc(text)+'</span>'+(canUndo?'<button type="button" data-life-action="undo">Ongedaan maken</button>':'');$('lifeMessage').setAttribute('role',error?'alert':'status');messageTimer=setTimeout(()=>{$('lifeMessage').textContent=''},canUndo?18000:7000)}
 function savedStatus(){$('lifeSaveStatus').textContent='Lokaal opgeslagen';$('lifeSaveStatus').dataset.error='false'}
 function save(){
@@ -2621,7 +2629,86 @@ function renderNav(){
 function option(values,current){return values.map(([v,l])=>'<option value="'+esc(v)+'"'+(v===current?' selected':'')+'>'+esc(l)+'</option>').join('')}
 function toolbar(house=false){return '<div class="life-toolbar memento-task-toolbar"><label>Zoeken<input id="lifeSearch" type="search" placeholder="Zoek in je taken…" value="'+esc(search)+'"></label><details class="memento-filter-drawer"><summary>Filters</summary><div class="memento-filter-fields">'+(house?'<label>Ruimte<select id="lifeRoomFilter">'+option([['all','Alle ruimtes'],...rooms.map(x=>[x,x])],roomFilter)+'</select></label><label>Herhaling<select id="lifeRepeatFilter">'+option([['all','Alle herhalingen'],...Object.entries(repeats)],repeatFilter)+'</select></label>':'<label>Categorie<select id="lifeCategoryFilter">'+option([['all','Alle categorieën'],...categories.map(x=>[x,x])],categoryFilter)+'</select></label>')+'</div></details></div>'}
 function segments(entries,current,attr){return '<div class="life-segments" role="group" aria-label="Weergave">'+entries.map(([id,title])=>'<button type="button" '+attr+'="'+id+'" aria-pressed="'+(current===id)+'">'+title+'</button>').join('')+'</div>'}
-function quickForm(){return '<form class="life-quick-add" id="lifeQuickForm"><input id="lifeQuickTitle" aria-label="Snel een taak toevoegen" placeholder="Snel iets vastleggen…" required maxlength="180" autocomplete="off"><button class="life-btn life-btn-primary" type="submit">＋ Toevoegen</button></form>'}
+/* Memento unified appointments: local Life storage, never modify Google calendars. */
+const localAppointments=()=>Array.isArray(state.appointments)?state.appointments:[];
+const eventTime=e=>e.time||'09:00';
+const isTime=v=>/^([01]\d|2[0-3]):[0-5]\d$/.test(v);
+function editAppointment(id=null,date=today(),prefillTitle='',prefillNotes=''){
+ const event=localAppointments().find(x=>x.id===id)||{title:prefillTitle,date,allDay:false,time:'09:00',endTime:'',location:'',notes:prefillNotes};
+ modal={mode:'memento-appointment',id};
+ showDialog(id?'Afspraak bewerken':'Afspraak toevoegen','Wordt lokaal in Memento opgeslagen; niet automatisch in Google Calendar.',
+ '<form id="mementoAppointmentForm"><div class="life-form-grid">'+
+ '<div class="life-form-field wide"><label for="mementoEventTitle">Afspraak *</label><input id="mementoEventTitle" required maxlength="180" value="'+esc(event.title||'')+'"></div>'+
+ '<div class="life-form-field"><label for="mementoEventDate">Datum *</label><input id="mementoEventDate" type="date" required value="'+esc(event.date||today())+'"></div>'+
+ '<div class="life-form-field"><label for="mementoEventTime">Begintijd</label><input id="mementoEventTime" type="time" value="'+esc(event.time||'09:00')+'"></div>'+
+ '<div class="life-form-field"><label for="mementoEventEnd">Eindtijd (optioneel)</label><input id="mementoEventEnd" type="time" value="'+esc(event.endTime||'')+'"></div>'+
+ '<div class="life-form-field"><label class="memento-event-check"><input id="mementoEventAllDay" type="checkbox" '+(event.allDay?'checked':'')+'> Hele dag</label></div>'+
+ '<div class="life-form-field wide"><label for="mementoEventLocation">Locatie (optioneel)</label><input id="mementoEventLocation" maxlength="250" value="'+esc(event.location||'')+'"></div>'+
+ '<div class="life-form-field wide"><label for="mementoEventNotes">Notitie (optioneel)</label><textarea id="mementoEventNotes" rows="4" maxlength="8000">'+esc(event.notes||'')+'</textarea></div></div></form>',
+ (id?'<button type="button" class="life-btn life-btn-danger" data-memento-delete-event="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+
+ '<button type="submit" class="life-btn life-btn-primary" form="mementoAppointmentForm">Afspraak opslaan</button>');
+}
+function saveAppointment(id){
+ const title=$('mementoEventTitle').value.trim(),date=$('mementoEventDate').value,
+ allDay=$('mementoEventAllDay').checked,time=allDay?'':$('mementoEventTime').value,
+ endTime=allDay?'':$('mementoEventEnd').value;
+ if(!title||!date||!validDate(date)||(!allDay&&!isTime(time))||(endTime&&!isTime(endTime))||(endTime&&endTime<=time)){
+  status('Controleer de titel, datum en begintijd. Eindtijd moet na begintijd liggen.',false,true);return;
+ }
+ const old=localAppointments().find(x=>x.id===id);
+ const item={...(old||{id:uid(),createdAt:new Date().toISOString()}),title,date,allDay,time,endTime,
+ location:$('mementoEventLocation').value.trim(),notes:$('mementoEventNotes').value.trim()};
+ if(mutate(()=>{if(old)state.appointments[state.appointments.findIndex(x=>x.id===id)]=item;else state.appointments.push(item)},'Afspraak lokaal opgeslagen.')){
+  closeDialog();window.MementoGoogleCalendar?.refreshAgenda?.();
+ }
+}
+function convertNote(id,kind){
+ const n=state.notes.find(x=>x.id===id&&!x.deletedAt);if(!n)return;
+ if(kind==='appointment'){editAppointment(null,today(),n.title,n.body);return}
+ if(kind==='task'){
+  editTask();$('lifeTaskTitle').value=n.title;$('lifeTaskNotes').value=n.body||'';
+  return;
+ }
+ if(kind==='wish'){
+  editWish();$('lifeWishTitle').value=n.title;$('lifeWishNotes').value=n.body||'';
+ }
+}
+function noteFromQuick(raw){
+ const body=String(raw||'').trim();if(!body)return false;
+ const title=(body.split(/[\r\n]/)[0]||body).trim().slice(0,84)+(body.split(/[\r\n]/)[0].trim().length>84?'…':'');
+ noteTab='active';
+ return mutate(()=>state.notes.unshift({id:uid(),title,body,category:'Inbox',createdAt:new Date().toISOString(),deletedAt:'',sourceUrl:''}),
+  'Opgeslagen bij Notities · Inbox. Je kunt deze later verwerken als taak, afspraak of wens.');
+}
+function googleEventDay(e,iso){
+ const start=e.start?.date||e.start?.dateTime;if(!start)return false;
+ const toDay=t=>{if(!t)return '';if(/^\d{4}-\d{2}-\d{2}$/.test(t))return t;const d=new Date(t);return Number.isNaN(d.valueOf())?'':formatISO(d)};
+ const sd=toDay(start);const end=e.end?.date||e.end?.dateTime;
+ if(!end)return sd===iso;
+ const until=e.end?.date?toDay(end):toDay(new Date(new Date(end).getTime()-1).toISOString());
+ return iso>=sd&&iso<=(e.end?.date?formatISO(new Date(parseDate(until).getTime()-86400000)):until);
+}
+function renderUnifiedAppointmentItem(e,source){
+ const local=source==='local',time=local?(e.allDay?'Hele dag':e.time||''):e.start?.date?'Hele dag':new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit'}).format(new Date(e.start?.dateTime||''));
+ return '<div class="memento-unified-event"><span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info"><strong>'+esc(e.title||e.summary||'Afspraak')+'</strong>'+(e.location?'<small>'+esc(e.location)+'</small>':'')+(local?'<small>Lokaal in Memento</small>':'')+'</div>'+(local?'<button class="memento-edit-event" type="button" data-memento-edit-event="'+esc(e.id)+'" aria-label="Afspraak bewerken">Bewerk</button>':'')+'</div>';
+}
+function paintTodayAppointments(){
+ for(const el of root.querySelectorAll('[data-memento-date]')){
+  const iso=el.dataset.mementoDate,locals=localAppointments().filter(x=>x.date===iso),
+  remote=window.MementoGoogleCalendar?.getUpcomingForDay?.(iso)||[],
+  all=[...locals.map(x=>({x,source:'local',key:x.allDay?'00:00':x.time||'00:00'})),
+    ...remote.map(x=>({x,source:'google',key:x.start?.date?'00:00':new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(x.start?.dateTime))}))].sort((a,b)=>a.key.localeCompare(b.key));
+  const status=window.MementoGoogleCalendar?.todayState?.()||{connected:false,previous:false,loading:false};
+  const cards=all.map(e=>renderUnifiedAppointmentItem(e.x,e.source)).join('');
+  const hint=!status.connected?(status.previous?'<button class="memento-inline-link" data-memento-gcal-connect="true" type="button">Google-agenda opnieuw verbinden</button>':'<button class="memento-inline-link" data-life-view="agenda" type="button">Google-agenda verbinden bij Agenda</button>'):
+   (status.loading?'Google-afspraken laden…':(!all.length?'Geen afspraken gepland':' '));
+  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+all.length+'</span><button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(cards?'<div class="memento-unified-list">'+cards+'</div>':'')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
+  const count=root.querySelector('[data-memento-total="'+iso+'"]');if(count){const n=Number(count.dataset.tasks)||0;count.textContent=n+' '+(n===1?'taak':'taken')+' · '+all.length+' '+(all.length===1?'afspraak':'afspraken')}
+ }
+}
+window.MementoLife={getLocalAppointments:()=>localAppointments(),paintTodayAppointments};
+
+function quickForm(){return '<form class="life-quick-add memento-quick-note" id="lifeQuickForm"><input id="lifeQuickTitle" aria-label="Snel een notitie vastleggen" placeholder="Wat wil je onthouden?" required maxlength="2500" autocomplete="off"><button class="memento-voice-btn" type="button" id="mementoVoiceButton" aria-label="Spreek een notitie in" aria-pressed="false" title="Inspreken"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="13" rx="4"></rect><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"></path></svg></button><button class="life-btn life-btn-primary" type="submit">Opslaan</button><div class="memento-voice-message" id="mementoVoiceMessage" aria-live="polite">Snel vastleggen gaat naar Notities · Inbox. Later zelf indelen.</div></form>'}
 function taskRow(t){const late=lateLabel(t),finished=t.done,focus=t.focusDate===today(),inDay=view==='today';
  const meta=[esc(t.kind==='routine'?t.room||'Hele huis':t.category)];if(t.kind==='routine')meta.push('↻ '+esc(repeatLabel(t)));if(late)meta.push('<span class="life-late-text">'+esc(late)+'</span>');else if(t.date&&!inDay)meta.push(fmt(t.date));if(t.priority)meta.push('<span class="life-priority-label">★ Belangrijk</span>');
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
@@ -2638,9 +2725,9 @@ function renderTasks(house=false){
 function renderToday(){
  const now=today(),open=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done),overdue=open.filter(t=>t.date&&t.date<now&&t.focusDate!==now);
  const dayKeys=[0,1,2].map(n=>{const d=parseDate(now);d.setDate(d.getDate()+n);return formatISO(d)}),labels=['Vandaag','Morgen','Overmorgen'];
- const days=dayKeys.map((key,i)=>{const list=open.filter(t=>(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));return '<section class="life-day-column" data-life-day="'+key+'"><div class="life-day-heading"><h2>'+labels[i]+'</h2><span>'+fmt(key)+' · '+list.length+' '+(list.length===1?'taak':'taken')+'</span></div>'+(list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">'+(i===0?'Nog niets gekozen. Plan een taak via het menu ⋮.':'Niets gepland')+'</p>')+'</section>'}).join('');
+ const days=dayKeys.map((key,i)=>{const list=open.filter(t=>(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));return '<section class="life-day-column" data-life-day="'+key+'"><div class="life-day-heading"><h2>'+labels[i]+'</h2><span>'+fmt(key)+' · <span data-memento-total="'+key+'" data-tasks="'+list.length+'">'+list.length+' '+(list.length===1?'taak':'taken')+'</span></span></div><div class="memento-day-appointments" data-memento-date="'+key+'"></div><div class="memento-day-caption memento-day-task-label">Taken</div>'+(list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">'+(i===0?'Nog niets gekozen. Plan een taak via het menu ⋮.':'Niets gepland')+'</p>')+'</section>'}).join('');
  const unplanned=open.filter(t=>!t.date&&t.focusDate!==now),completed=state.tasks.reduce((n,t)=>n+(t.deletedAt?0:t.history.filter(h=>h.date===now).length),0);
- content.innerHTML=window.CompassFlow.home()+quickForm()+(overdue.length?'<div class="life-list-head life-late-text"><span>Te laat</span><small>'+overdue.length+' taken</small></div><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div>':'')+'<div class="life-horizon">'+days+'</div><div class="life-day-foot">Vandaag '+completed+' '+(completed===1?'taak':'taken')+' afgerond.</div><details class="life-unplanned"><summary>Nog zonder planning ('+unplanned.length+')</summary><div class="life-list">'+(unplanned.length?unplanned.slice(0,5).map(taskRow).join(''):empty('Alles heeft een plek',''))+'</div><button type="button" class="life-btn life-btn-small" data-life-view="tasks">Alle taken bekijken →</button></details>';window.CompassFlow.mount();
+ content.innerHTML=window.CompassFlow.home()+quickForm()+(overdue.length?'<div class="life-list-head life-late-text"><span>Te laat</span><small>'+overdue.length+' taken</small></div><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div>':'')+'<div class="life-horizon">'+days+'</div><div class="life-day-foot">Vandaag '+completed+' '+(completed===1?'taak':'taken')+' afgerond.</div><details class="life-unplanned"><summary>Nog zonder planning ('+unplanned.length+')</summary><div class="life-list">'+(unplanned.length?unplanned.slice(0,5).map(taskRow).join(''):empty('Alles heeft een plek',''))+'</div><button type="button" class="life-btn life-btn-small" data-life-view="tasks">Alle taken bekijken →</button></details>';window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();
 }
 
 function renderGroceries(){
@@ -2649,7 +2736,7 @@ function renderGroceries(){
  $('lifeGroceryResults').innerHTML=list.length?groups.map(group=>'<div class="life-list-head"><span>'+esc(group)+'</span><small>'+list.filter(g=>(g.category||'Overig')===group).length+' producten</small></div><div class="life-list">'+list.filter(g=>(g.category||'Overig')===group).map(g=>'<div class="life-product'+(g.bought&&g.needed?' bought':'')+'">'+(groceryTab==='list'?'<input type="checkbox" data-life-bought="'+esc(g.id)+'" id="lifeBought-'+esc(g.id)+'"'+(g.bought?' checked':'')+'>':'')+'<label'+(groceryTab==='list'?' for="lifeBought-'+esc(g.id)+'"':'')+'>'+esc(g.title)+'<small>'+esc(g.quantity||'Hoeveelheid nog invullen')+'</small></label><button type="button" class="life-btn life-btn-small" data-life-grocery-edit="'+esc(g.id)+'">Bewerk</button>'+(groceryTab==='saved'?'<button type="button" class="life-btn life-btn-small" data-life-needed="'+esc(g.id)+'">'+(g.needed?'Van lijst halen':'＋ Op mijn lijst')+'</button>':'<button type="button" class="life-btn life-btn-small" data-life-needed="'+esc(g.id)+'">Van lijst</button>')+'</div>').join('')+'</div>').join(''):'<div class="life-list">'+empty('Nog niets op je boodschappenlijst','Kies producten bij ‘Bewaarde producten’ of voeg zelf iets toe. Oude Notion-vinkjes zijn niet als huidige boodschappen overgenomen.')+'</div>';
 }
 function wishCards(){const arr=state.wishes.filter(w=>!search||[w.title,w.notes].join(' ').toLowerCase().includes(search.toLowerCase()));$('lifeWishResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(w=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(w.title)+'</h2><span class="life-pill">'+esc({idea:'Idee',research:'Uitzoeken',bought:'Gekocht'}[w.status]||'Idee')+'</span></div><p>'+esc(w.notes||'Nog geen notitie.')+'</p>'+(safeLink(w.url)?'<a class="life-source" href="'+esc(safeLink(w.url))+'" target="_blank" rel="noopener noreferrer">Productlink ↗</a>':'')+'<div class="life-card-actions"><button type="button" class="life-btn life-btn-small" data-life-wish-edit="'+esc(w.id)+'">Bewerken</button><button type="button" class="life-btn life-btn-small" data-life-research="'+esc(w.id)+'">Naar Slim Kopen →</button></div></article>').join('')+'</div>':'<div class="life-list">'+empty('Geen aankoopwensen gevonden','Voeg een idee toe om het later rustig te bekijken.')+'</div>'}
-function noteCards(){const arr=state.notes.filter(n=>noteTab==='trash'?n.deletedAt:!n.deletedAt).filter(n=>!search||[n.title,n.body].join(' ').toLowerCase().includes(search.toLowerCase()));$('lifeNoteResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(n=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(n.title)+'</h2><span class="life-pill">'+esc(n.category||'Notitie')+'</span></div><div class="life-note-text">'+esc(n.body||'')+'</div><div class="life-card-actions">'+(noteTab==='trash'?'<button type="button" class="life-btn life-btn-small" data-life-note-restore="'+esc(n.id)+'">Terugzetten</button>':'<button type="button" class="life-btn life-btn-small" data-life-note-edit="'+esc(n.id)+'">Bewerken</button><button type="button" class="life-btn life-btn-small life-btn-danger" data-life-note-delete="'+esc(n.id)+'">Verwijderen</button>')+'</div></article>').join('')+'</div>':'<div class="life-list">'+empty(noteTab==='trash'?'De prullenbak is leeg':'Geen notities gevonden',noteTab==='trash'?'Verwijderde notities blijven hier herstelbaar.':'Bewaar een idee, inpaklijst of andere informatie.')+'</div>'}
+function noteCards(){const arr=state.notes.filter(n=>noteTab==='trash'?n.deletedAt:!n.deletedAt).filter(n=>!search||[n.title,n.body].join(' ').toLowerCase().includes(search.toLowerCase()));$('lifeNoteResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(n=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(n.title)+'</h2><span class="life-pill">'+esc(n.category||'Notitie')+'</span></div><div class="life-note-text">'+esc(n.body||'')+'</div><div class="life-card-actions">'+(noteTab==='trash'?'<button type="button" class="life-btn life-btn-small" data-life-note-restore="'+esc(n.id)+'">Terugzetten</button>':'<button type="button" class="life-btn life-btn-small" data-life-note-edit="'+esc(n.id)+'">Bewerken</button><details class="memento-convert-note"><summary>Verwerken als…</summary><div><button type="button" data-memento-convert="task" data-memento-note-id="'+esc(n.id)+'">Taak</button><button type="button" data-memento-convert="appointment" data-memento-note-id="'+esc(n.id)+'">Afspraak</button><button type="button" data-memento-convert="wish" data-memento-note-id="'+esc(n.id)+'">Wens</button></div></details><button type="button" class="life-btn life-btn-small life-btn-danger" data-life-note-delete="'+esc(n.id)+'">Verwijderen</button>')+'</div></article>').join('')+'</div>':'<div class="life-list">'+empty(noteTab==='trash'?'De prullenbak is leeg':'Geen notities gevonden',noteTab==='trash'?'Verwijderde notities blijven hier herstelbaar.':'Bewaar een idee, inpaklijst of andere informatie.')+'</div>'}
 function renderLibrary(){
  const arr=state.templates.filter(t=>templateTab==='trash'?t.deletedAt:!t.deletedAt).filter(t=>!search||[t.title,t.notes,t.category].join(' ').toLowerCase().includes(search.toLowerCase()));
  $('lifeTemplateResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(t=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(t.title)+'</h2><span class="life-pill later">'+esc(repeatLabel(t))+'</span></div><p>'+esc(t.notes||'Klaar om opnieuw te gebruiken.')+'</p>'+(t.steps.length?'<div class="life-footnote">'+t.steps.length+' bewaarde stappen</div>':'')+'<div class="life-card-actions">'+(templateTab==='trash'?'<button type="button" class="life-btn life-btn-small" data-life-template-restore="'+esc(t.id)+'">Terugzetten</button>':'<button type="button" class="life-btn life-btn-primary" data-life-template-use="'+esc(t.id)+'">＋ Taak inplannen</button><button type="button" class="life-btn life-btn-small" data-life-template-edit="'+esc(t.id)+'">Bewerken</button><button type="button" class="life-btn life-btn-small life-btn-danger" data-life-template-delete="'+esc(t.id)+'">Verwijderen</button>')+'</div></article>').join('')+'</div>':'<div class="life-list">'+empty(templateTab==='trash'?'De prullenbak is leeg':'Nog geen bewaarde taken',templateTab==='trash'?'Verwijderde sjablonen kun je hier terugzetten.':'Open een taak en kies ‘Bewaar in takenbibliotheek’, of maak zelf een sjabloon.')+'</div>';
@@ -2671,7 +2758,7 @@ function renderAgenda(){
   const iso=year+'-'+String(month+1).padStart(2,'0')+'-'+String(dayNo).padStart(2,'0');
   cells.push('<button type="button" data-gcal-day="'+iso+'" class="memento-cal-day'+(iso===now?' is-today':'')+'" aria-label="'+dayNo+' '+esc(label)+'" aria-pressed="false"><span>'+dayNo+'</span><span class="memento-cal-dots" aria-hidden="true"></span></button>')
  }
- content.innerHTML='<section class="life-panel memento-calendar-panel" data-gcal-year="'+year+'" data-gcal-month="'+month+'"><div class="memento-cal-intro"><div><div class="memento-cal-eyebrow">JOUW PLANNING</div><h2>Agenda</h2><p>Je afspraken op één plek. Huishoudelijke taken blijven onder Taken en Huishouden.</p></div><span class="memento-cal-status" id="memento-gcal-status">Niet verbonden</span></div><div class="memento-cal-toolbar"><h3>'+esc(label)+'</h3><div class="memento-cal-actions"><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><button type="button" data-memento-agenda-shift="0" aria-label="Huidige maand">Vandaag</button><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button></div></div><div class="memento-cal-grid">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div><div class="memento-gcal-tools" id="memento-gcal-tools"></div><section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
+ content.innerHTML='<section class="life-panel memento-calendar-panel" data-gcal-year="'+year+'" data-gcal-month="'+month+'"><div class="memento-cal-intro"><div><div class="memento-cal-eyebrow">JOUW PLANNING</div><h2>Agenda</h2><p>Je afspraken op één plek. Huishoudelijke taken blijven onder Taken en Huishouden.</p></div><span class="memento-cal-status" id="memento-gcal-status">Niet verbonden</span></div><div class="memento-cal-toolbar"><h3>'+esc(label)+'</h3><div class="memento-cal-actions"><button type="button" class="memento-agenda-add" data-memento-new-event="" title="Nieuwe afspraak">＋ Afspraak</button><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><button type="button" data-memento-agenda-shift="0" aria-label="Huidige maand">Vandaag</button><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button></div></div><div class="memento-cal-grid">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div><div class="memento-gcal-tools" id="memento-gcal-tools"></div><section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
  if(window.MementoGoogleCalendar)window.MementoGoogleCalendar.render(year,month);
 }
 function renderBackup(){content.innerHTML='<div class="life-grid"><section class="life-panel"><h2>Een volledige back-up</h2><p>Bewaar je taken, routines, takenbibliotheek, boodschappen, wensen en notities samen met de financiële gegevens van deze versie. De pincode wordt niet meegestuurd.</p><button type="button" class="life-btn life-btn-primary" id="lifeExportBackup">↓ Back-up Leven & Financiën</button><p class="life-footnote">De bestaande back-upknop binnen Financiën blijft alleen de financiële gegevens exporteren.</p></section><section class="life-panel"><h2>Herstellen</h2><p>Je kunt hier ook je volledige back-up uit v9, v10 of v11 importeren om je eigen taken en notities mee te nemen. Je kiest zelf of je ook de financiële gegevens wilt terugzetten.</p><label class="life-checkbox-label"><input type="checkbox" id="lifeRestoreFinance">Ook de financiële gegevens uit de back-up herstellen</label><input type="file" id="lifeImportFile" accept=".json,application/json" aria-label="Back-up van Leven kiezen"><p class="life-footnote">Een oudere financiële back-up importeer je via Instellingen & data binnen Financiën.</p></section></div><section class="life-panel"><h2>Herkomst en opslag</h2><p>Je pincode beschermt de toegang op je scherm. Deze vergrendeling vervangt geen volledige versleuteling van de appgegevens.</p><p>Het weer voor Beverwijk wordt via Open-Meteo opgehaald. Zonder internet blijven de laatst opgehaalde gegevens zichtbaar met datum en status.</p><p>De startinhoud is een eenmalige overname uit jouw Notion-verzameling: schoonmaaktaken, losse taken, bewaarde boodschappen, aankoopideeën en enkele notities. Er wordt geen verbinding met Notion onderhouden. Oude vinkjes zijn niet als huidige uitvoering overgenomen.</p><p>Gegevens staan in deze browser. Een los geopend HTML-bestand en de online app kunnen afzonderlijke opslag gebruiken. Download daarom een back-up wanneer je naar een andere versie of browser overstapt.</p><div class="life-card-actions"><button type="button" class="life-btn" id="lifeRestorePrevious">Vorige opgeslagen Leven-versie terugzetten</button></div></section>'}
@@ -2711,6 +2798,10 @@ function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
 root.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.mementoNewEvent!==undefined){editAppointment(null,d.mementoNewEvent||today());return}
+ if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
+ if(d.mementoConvert&&d.mementoNoteId){convertNote(d.mementoNoteId,d.mementoConvert);return}
+ if(d.mementoGcalConnect){window.MementoGoogleCalendar?.connect?.();return}
  if(d.mementoAgendaShift!==undefined){mementoAgendaOffset=d.mementoAgendaShift==='0'?0:mementoAgendaOffset+Number(d.mementoAgendaShift);renderAgenda();return}
  if(d.lifeEditTask){editTask(d.lifeEditTask);return}if(d.lifeSaveTask){const t=state.tasks.find(x=>x.id===d.lifeSaveTask);mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.',true);return}if(d.lifeTaskDelete){removeTask(d.lifeTaskDelete);return}if(d.lifeTaskRestore){restoreTask(d.lifeTaskRestore);return}
  if(d.lifeNoteTab){noteTab=d.lifeNoteTab;render();return}if(d.lifeTemplateTab){templateTab=d.lifeTemplateTab;render();return}
@@ -2738,11 +2829,17 @@ root.addEventListener('change',e=>{
  if(el.dataset.lifeBought){const g=state.groceries.find(x=>x.id===el.dataset.lifeBought);mutate(()=>{g.bought=el.checked},'Boodschappen bijgewerkt.',true);return}
  if(el.id==='lifeImportFile'&&el.files[0]){const file=el.files[0],include=$('lifeRestoreFinance').checked;el.value='';importBackup(file,include)}
 });
-root.addEventListener('submit',e=>{if(e.target.id!=='lifeQuickForm')return;e.preventDefault();const title=$('lifeQuickTitle').value.trim();if(!title)return;if(['tasks','household'].includes(view))taskTab='open';mutate(()=>state.tasks.push({id:uid(),title,kind:view==='household'?'routine':'task',category:view==='household'?'Huishouden':'Persoonlijk',room:view==='household'?'Hele huis':'',repeat:'none',date:'',focusDate:view==='today'?today():'',priority:false,notes:'',steps:[],repeatDays:4,done:false,archived:false,lastDone:'',history:[],sourceUrl:'',sourceLabel:'Zelf toegevoegd'}),'Taak toegevoegd.');$('lifeQuickTitle')?.focus()});
-dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
+root.addEventListener('submit',e=>{if(e.target.id!=='lifeQuickForm')return;e.preventDefault();const body=$('lifeQuickTitle').value.trim();if(!body)return;window.MementoVoice?.stop?.();noteFromQuick(body);$('lifeQuickTitle')?.focus()});
+dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;if(b.dataset.mementoDeleteEvent){
+ const id=b.dataset.mementoDeleteEvent,entry=localAppointments().find(x=>x.id===id);
+ if(entry&&confirm('Afspraak ‘'+entry.title+'’ verwijderen uit Memento?')){
+  if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==id)},'Lokale afspraak verwijderd.',true)){closeDialog();window.MementoGoogleCalendar?.refreshAgenda?.()}
+ }return;
+ }if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
 dialog.addEventListener('change',e=>{if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
+ if(mode==='memento-appointment'){saveAppointment(id);return}
  if(mode==='task'||mode==='template'){
   const title=$('lifeTaskTitle').value.trim(),date=mode==='template'?'':$('lifeTaskDate').value,repeat=$('lifeTaskRepeat').value,repeatDays=Number($('lifeTaskRepeatDays').value);if(repeat==='custom'&&(!Number.isInteger(repeatDays)||repeatDays<1||repeatDays>3650)){status('Kies een heel aantal dagen tussen 1 en 3650.',false,true);return}if(!title||!validDate(date)){status('Controleer de omschrijving en datum.',false,true);return}
   const old=(mode==='template'?state.templates:state.tasks).find(x=>x.id===id),template=state.templates.find(x=>x.id===fromTemplate),oldSteps=old?.steps||[],steps=$('lifeTaskSteps').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(text=>({text,done:oldSteps.find(x=>x.text===text)?.done||false}));
@@ -2912,8 +3009,9 @@ render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').textContent='
 (()=>{'use strict';
  const CLIENT_ID='563005309741-imckfchgrkksdnp6r39r30ggp5671rme.apps.googleusercontent.com';
  const SCOPE='https://www.googleapis.com/auth/calendar.events.readonly';
- const PREFERENCE_KEY='memento_gcal_connected_preference_v1'; // only a boolean; never store OAuth tokens
- let token=null,expires=0,events=[],loadedMonth='',message='',busy=false,requestSeq=0,selectedDay='';
+ const PREFERENCE_KEY='memento_gcal_connected_preference_v1';
+ let token='',expires=0,events=[],loadedMonth='',message='',busy=false,requestSeq=0,selectedDay='';
+ let upcoming=[],upcomingStart='',upcomingEnd='',upcomingLoading=false,upcomingLoaded=false,upcomingError='',upcomingSeq=0;
  const $=id=>document.getElementById(id);
  const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  const active=()=>document.querySelector('#lifeApp[data-life-view="agenda"] .memento-calendar-panel');
@@ -2925,95 +3023,171 @@ render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').textContent='
  const eventDate=e=>{if(e.start?.date)return e.start.date;const d=new Date(e.start?.dateTime||'');return isNaN(d)?'':localIso(d)};
  const dateLabel=iso=>{const d=new Date(iso+'T12:00:00');return new Intl.DateTimeFormat('nl-NL',{weekday:'long',day:'numeric',month:'long'}).format(d)};
  const sameMonth=(iso,y,m)=>iso.startsWith(y+'-'+String(m+1).padStart(2,'0')+'-');
- function setDefaultDay(y,m){
-  if(selectedDay&&sameMonth(selectedDay,y,m))return;
-  const today=localIso(new Date());selectedDay=sameMonth(today,y,m)?today:y+'-'+String(m+1).padStart(2,'0')+'-01';
+ const local=()=>window.MementoLife?.getLocalAppointments?.()||[];
+ const syncToday=()=>window.MementoLife?.paintTodayAppointments?.();
+ function spans(e,iso){
+  const start=eventDate(e);if(!start)return false;
+  let end=start;
+  if(e.end?.date){const d=new Date(e.end.date+'T12:00:00');d.setDate(d.getDate()-1);end=localIso(d)}
+  else if(e.end?.dateTime){const d=new Date(new Date(e.end.dateTime).getTime()-1);if(Number.isFinite(d.getTime()))end=localIso(d)}
+  return iso>=start&&iso<=end;
  }
+ const sameDay=(e,iso)=>spans(e,iso);
+ const myDay=(iso)=>local().filter(e=>e.date===iso);
+ function setDefaultDay(y,m){if(selectedDay&&sameMonth(selectedDay,y,m))return;const d=localIso(new Date());selectedDay=sameMonth(d,y,m)?d:y+'-'+String(m+1).padStart(2,'0')+'-01'}
  function paintControls(){
   const el=$('memento-gcal-tools');if(!el||!active())return;
   const known=previouslyConnected();
-  el.innerHTML=(valid()
-    ?'<button type="button" class="gcal-btn" title="Afspraken bijwerken" data-gcal-action="refresh">↻ Vernieuwen</button><details class="gcal-settings"><summary aria-label="Google Calendar-instellingen">⋯</summary><div class="gcal-settings-menu"><button type="button" class="gcal-btn" data-gcal-action="connect">Opnieuw aanmelden</button><button type="button" class="gcal-btn" data-gcal-action="disconnect">Ontkoppelen</button></div></details>'
-    :'<button type="button" class="gcal-btn primary" data-gcal-action="connect">'+(known?'↻ Verbinding herstellen':'Google Calendar verbinden')+'</button>'
-   )+'<p class="gcal-note">'+(valid()?'Google verbonden · alleen lezen.':'Google bewaart je toestemming. Memento bewaart geen toegangstokens.')+'</p>';
+  el.innerHTML=(valid()?'<button type="button" class="gcal-btn" data-gcal-action="refresh">↻ Vernieuwen</button><details class="gcal-settings"><summary aria-label="Google Calendar-instellingen">⋯</summary><div class="gcal-settings-menu"><button type="button" class="gcal-btn" data-gcal-action="connect">Opnieuw aanmelden</button><button type="button" class="gcal-btn" data-gcal-action="disconnect">Ontkoppelen</button></div></details>':'<button type="button" class="gcal-btn primary" data-gcal-action="connect">'+(known?'↻ Verbinding herstellen':'Google Calendar verbinden')+'</button>')+'<p class="gcal-note">'+(valid()?'Google verbonden · alleen lezen.':'Memento bewaart geen Google-toegangstokens.')+'</p>';
   const status=$('memento-gcal-status');if(status)status.textContent=busy?'Synchroniseren…':valid()?'✓ Google verbonden':known?'Eerder gekoppeld':'Niet verbonden';
  }
  function paintEvents(y,m){
   const el=$('memento-gcal-events');if(!el||!active())return;
   setDefaultDay(y,m);
-  let own=events.filter(e=>eventDate(e)===selectedDay);
-  if(valid()&&loadedMonth===y+'-'+m&&!events.some(e=>eventDate(e)===selectedDay)){
-   const today=localIso(new Date());
-   if(selectedDay===today&&events.length){const next=events.map(e=>eventDate(e)).filter(d=>d>=today&&sameMonth(d,y,m)).sort()[0];if(next)selectedDay=next}
-   own=events.filter(e=>eventDate(e)===selectedDay);
+  const available=valid()&&loadedMonth===y+'-'+m;
+  const here=available?events.filter(e=>sameDay(e,selectedDay)):[];
+  const own=myDay(selectedDay);
+  if(available&&!here.length&&!own.length){
+   const current=localIso(new Date());
+   if(selectedDay===current){const allDates=[...events.map(eventDate),...local().map(e=>e.date)].filter(x=>x>=current&&sameMonth(x,y,m)).sort();if(allDates.length)selectedDay=allDates[0]}
   }
+  const googleOnDay=available?events.filter(e=>sameDay(e,selectedDay)):[],localOnDay=myDay(selectedDay);
   document.querySelectorAll('[data-gcal-day]').forEach(d=>{
-   const count=(valid()&&loadedMonth===y+'-'+m)?events.filter(e=>eventDate(e)===d.dataset.gcalDay).length:0;
+   const count=local().filter(e=>e.date===d.dataset.gcalDay).length+(available?events.filter(e=>sameDay(e,d.dataset.gcalDay)).length:0);
    d.classList.toggle('has-gcal-event',count>0);d.classList.toggle('selected',selectedDay===d.dataset.gcalDay);
    d.setAttribute('aria-pressed',String(selectedDay===d.dataset.gcalDay));d.title=count?count+' afspraak'+(count===1?'':'en'):'';
   });
   if($('memento-gcal-selected-label'))$('memento-gcal-selected-label').textContent=dateLabel(selectedDay);
-  if($('memento-gcal-count'))$('memento-gcal-count').textContent=valid()&&loadedMonth===y+'-'+m?own.length+' afspraak'+(own.length===1?'':'en'):'';
-  if(message){el.innerHTML='<p class="gcal-message" role="status">'+esc(message)+'</p>';return}
-  if(!valid()){
-   el.innerHTML='<p class="gcal-message">'+(previouslyConnected()?'Je hebt Google Calendar eerder gekoppeld. Tik op <strong>Verbinding herstellen</strong> om afspraken weer te laden.':'Verbind je Google-account om je afspraken te bekijken.')+'</p>';return;
-  }
-  if(loadedMonth!==y+'-'+m){el.innerHTML='<p class="gcal-message">Afspraken ophalen…</p>';return}
-  if(!own.length){el.innerHTML='<p class="gcal-message">Geen afspraken op deze dag. Tik op een dag met een groen stipje.</p>';return}
-  el.innerHTML=own.map(e=>{
-   const allDay=!!e.start?.date;
-   const start=allDay?new Date(e.start.date+'T12:00:00'):new Date(e.start?.dateTime||'');
-   if(isNaN(start))return '';
-   const at=allDay?'Hele dag':new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit'}).format(start);
-   return '<div class="gcal-event"><span class="gcal-event-date">'+esc(at)+'</span><div><div class="gcal-event-title">'+esc(e.summary||'Afspraak')+'</div>'+(e.location?'<div class="gcal-event-meta">'+esc(e.location)+'</div>':'')+'</div></div>';
+  if($('memento-gcal-count'))$('memento-gcal-count').textContent=(localOnDay.length+googleOnDay.length)+' afspraak'+(localOnDay.length+googleOnDay.length===1?'':'en');
+  const rows=[...localOnDay.map(e=>({kind:'local',time:e.allDay?'':e.time||'',e})),...googleOnDay.map(e=>({kind:'google',time:e.start?.date?'':new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(e.start?.dateTime)),e}))].sort((a,b)=>a.time.localeCompare(b.time));
+  let result=rows.map(item=>{
+   const e=item.e,isLocal=item.kind==='local';const date=isLocal?(e.allDay?'Hele dag':e.time):(e.start?.date?'Hele dag':new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit'}).format(new Date(e.start?.dateTime)));
+   return '<div class="gcal-event"><span class="gcal-event-date">'+esc(date||'—')+'</span><div class="gcal-event-main"><div class="gcal-event-title">'+esc(e.title||e.summary||'Afspraak')+'</div>'+(e.location?'<div class="gcal-event-meta">'+esc(e.location)+'</div>':'')+(isLocal?'<div class="gcal-event-meta">Lokaal in Memento</div>':'')+'</div>'+(isLocal?'<button class="gcal-btn" type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerk</button>':'')+'</div>';
   }).join('');
+  if(message)result+='<p class="gcal-message" role="status">'+esc(message)+'</p>';
+  if(!valid())result+='<p class="gcal-message">'+(previouslyConnected()?'Google-afspraken tijdelijk verborgen. Herstel de verbinding om ze weer te tonen.':'Verbind Google Calendar om ook je Google-afspraken te zien.')+'</p>';
+  else if(!available)result+='<p class="gcal-message">Google-afspraken ophalen…</p>';
+  else if(!rows.length&&!message)result='<p class="gcal-message">Geen afspraken op deze dag. Je kunt hier zelf een afspraak toevoegen.</p>';
+  el.innerHTML=result;
+ }
+ async function listGoogleEvents(start,end){
+  const q=new URLSearchParams({timeMin:start.toISOString(),timeMax:end.toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250'});
+  const all=[];let page='';
+  for(let i=0;i<8;i++){
+   if(page)q.set('pageToken',page);else q.delete('pageToken');
+   const response=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+q,{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+   if(!response.ok){if(response.status===401){token='';throw Error('Google-sessie verlopen. Herstel je verbinding.')}if(response.status===403)throw Error('Google weigert toegang. Controleer de Calendar API en testgebruikers.');throw Error('Google Calendar HTTP '+response.status)}
+   const data=await response.json();all.push(...(data.items||[]));page=data.nextPageToken||'';if(!page)break;
+  }
+  return all.filter(e=>e.status!=='cancelled');
  }
  async function load(y,m){
-  if(!valid()){token=null;paintControls();paintEvents(y,m);return}
+  if(!valid()){token='';paintControls();paintEvents(y,m);syncToday();return}
   const seq=++requestSeq;busy=true;message='';paintControls();
-  try{
-   const begin=new Date(y,m,1),end=new Date(y,m+1,1);
-   const q=new URLSearchParams({timeMin:begin.toISOString(),timeMax:end.toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250'});
-   const all=[];let page='';
-   for(let i=0;i<8;i++){
-    if(page)q.set('pageToken',page);else q.delete('pageToken');
-    const response=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+q,{headers:{Authorization:'Bearer '+token},cache:'no-store'});
-    if(!response.ok){if(response.status===401){token=null;throw Error('Je Google-sessie is verlopen. Gebruik Verbinding herstellen.')}if(response.status===403)throw Error('Google weigert de toegang. Controleer de Calendar API en testgebruikers.');throw Error('Google Calendar gaf fout '+response.status)}
-    const data=await response.json();all.push(...(data.items||[]));page=data.nextPageToken||'';if(!page)break;
-   }
-   if(seq!==requestSeq)return;
-   events=all.filter(e=>e.status!=='cancelled');loadedMonth=y+'-'+m;
-  }catch(error){if(seq!==requestSeq)return;message=error?.message||'Kon afspraken niet ophalen.';events=[];loadedMonth=''}
-  busy=false;paintControls();const current=monthShown();if(current)paintEvents(...current);
+  try{const fresh=await listGoogleEvents(new Date(y,m,1),new Date(y,m+1,1));if(seq!==requestSeq)return;events=fresh;loadedMonth=y+'-'+m}
+  catch(error){if(seq!==requestSeq)return;message=error?.message||'Afspraken konden niet worden opgehaald.';events=[];loadedMonth=''}
+  busy=false;paintControls();const current=monthShown();if(current)paintEvents(...current);syncToday();
+ }
+ function next3Range(){const start=new Date();start.setHours(0,0,0,0);const end=new Date(start);end.setDate(end.getDate()+3);return [start,end]}
+ async function ensureUpcoming(force=false){
+  if(!valid()){syncToday();return}
+  const [start,end]=next3Range(),startDay=localIso(start),endDay=localIso(end);
+  if(!force&&upcomingLoaded&&upcomingStart===startDay&&upcomingEnd===endDay){syncToday();return}
+  if(upcomingLoading)return;
+  upcomingLoading=true;upcomingError='';syncToday();const id=++upcomingSeq;
+  try{const fresh=await listGoogleEvents(start,end);if(id!==upcomingSeq)return;upcoming=fresh;upcomingStart=startDay;upcomingEnd=endDay;upcomingLoaded=true}
+  catch(err){if(id!==upcomingSeq)return;upcomingError=err?.message||'Google-afspraken zijn tijdelijk niet beschikbaar.';upcoming=[];upcomingLoaded=false}
+  finally{if(id===upcomingSeq){upcomingLoading=false;syncToday()}}
  }
  function render(y,m){if(!active())return;setDefaultDay(y,m);paintControls();paintEvents(y,m);if(valid()&&loadedMonth!==y+'-'+m&&!busy)load(y,m)}
  function connect(){
-  const ym=monthShown();
-  if(location.protocol!=='https:'){message='Open Memento via GitHub Pages in Chrome, niet als gedownload HTML-bestand.';if(ym)render(...ym);return}
-  if(!window.google?.accounts?.oauth2){message='Google Inloggen kon niet laden. Controleer je internetverbinding.';if(ym)render(...ym);return}
+  if(location.protocol!=='https:'){message='Open de Memento-app via de online GitHub Pages-website.';const ym=monthShown();if(ym)paintEvents(...ym);return}
+  if(!window.google?.accounts?.oauth2){message='Google-aanmelding is nog niet geladen. Controleer internet.';const ym=monthShown();if(ym)paintEvents(...ym);return}
   const client=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:r=>{
-   const current=monthShown();
-   if(r.error||!r.access_token){message='Google-aanmelding niet voltooid: '+(r.error||'Geen toestemming');if(current)render(...current);return}
-   token=r.access_token;expires=Date.now()+Number(r.expires_in||3500)*1000-30000;
-   setPreference(true);message='';loadedMonth='';if(current)load(...current);
+   if(r.error||!r.access_token){message='Google-aanmelding niet voltooid: '+(r.error||'Geen toestemming');const current=monthShown();if(current)paintEvents(...current);syncToday();return}
+   token=r.access_token;expires=Date.now()+Number(r.expires_in||3500)*1000-30000;setPreference(true);message='';loadedMonth='';upcomingLoaded=false;
+   const current=monthShown();if(current)load(...current);else syncToday();ensureUpcoming(true);
   }});
-  // Unlike prompt:'consent', this reuses an already granted Google permission when available.
+
   client.requestAccessToken({prompt:''});
+ }
+ function disconnect(){
+  const old=token;token='';expires=0;events=[];loadedMonth='';message='Google Calendar ontkoppeld.';setPreference(false);++requestSeq;++upcomingSeq;upcoming=[];upcomingLoaded=false;upcomingLoading=false;busy=false;
+  try{if(old&&window.google?.accounts?.oauth2)google.accounts.oauth2.revoke(old,()=>{})}catch(e){}
+  const ym=monthShown();if(ym)render(...ym);syncToday();
  }
  document.addEventListener('click',e=>{
   const day=e.target.closest('[data-gcal-day]');if(day){selectedDay=day.dataset.gcalDay;const ym=monthShown();if(ym)paintEvents(...ym);return}
   const button=e.target.closest('[data-gcal-action]');if(!button)return;
-  const action=button.dataset.gcalAction,ym=monthShown();
-  if(action==='connect')connect();
-  if(action==='refresh'&&ym)load(...ym);
-  if(action==='disconnect'){
-   const old=token;token=null;expires=0;events=[];loadedMonth='';message='Google Calendar ontkoppeld.';
-   setPreference(false);++requestSeq;busy=false;
-   try{if(old&&window.google?.accounts?.oauth2)google.accounts.oauth2.revoke(old,()=>{})}catch(e){}
-   if(ym)render(...ym);
-  }
+  const ym=monthShown();switch(button.dataset.gcalAction){case 'connect':connect();break;case 'refresh':if(ym)load(...ym);ensureUpcoming(true);break;case 'disconnect':disconnect();break}
  });
- window.MementoGoogleCalendar={render};
+ window.MementoGoogleCalendar={render,connect,ensureUpcoming,refreshAgenda:()=>{const ym=monthShown();if(ym)paintEvents(...ym);syncToday()},getUpcomingForDay:iso=>valid()&&upcomingLoaded?upcoming.filter(e=>spans(e,iso)):[],todayState:()=>({connected:valid(),previous:previouslyConnected(),loading:upcomingLoading,loaded:upcomingLoaded,error:upcomingError})};
 })();
 </script>
+
+<style id="memento-unified-today-style">
+/* Feature patch only: Life day events, quick notes, appointments, note conversion. */
+#lifeApp .memento-day-appointments{margin:9px 0 14px}
+#lifeApp .memento-day-caption{display:flex;align-items:center;gap:8px;margin-bottom:10px;color:#b2d4b9;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+#lifeApp .memento-day-caption span{color:#e6f4e9;border:1px solid #49634e;padding:1px 7px;border-radius:12px}
+#lifeApp .memento-inline-add{margin-left:auto;background:#294a33;color:#dbf5e2;border:1px solid #4a6a54;border-radius:10px;padding:7px 11px;font-size:11px;font-weight:800;cursor:pointer}
+#lifeApp .memento-day-task-label{margin-top:12px;color:#b6c9bd}
+#lifeApp .memento-unified-list{display:grid;gap:7px}
+#lifeApp .memento-unified-event{display:flex;align-items:center;gap:10px;padding:12px;background:#21392a;border:1px solid #3b5943;border-radius:13px;min-width:0}
+#lifeApp .memento-unified-event:before{content:'';flex:none;width:3px;align-self:stretch;min-height:30px;border-radius:3px;background:#abe8bf}
+#lifeApp .memento-unified-time{font-size:12px;color:#b7efc8;font-weight:800;min-width:53px}
+#lifeApp .memento-unified-info{min-width:0;flex:1;display:grid;gap:3px}
+#lifeApp .memento-unified-info strong{font-size:12px;line-height:1.35;color:#f0f8f1;overflow-wrap:anywhere}
+#lifeApp .memento-unified-info small{font-size:10px;color:#a8c7b2;overflow-wrap:anywhere}
+#lifeApp .memento-edit-event{background:transparent;color:#c3e6cd;border:1px solid #446a50;border-radius:8px;padding:6px 8px;font-size:10px}
+#lifeApp .memento-day-hint{font-size:11px;color:#a7c3ae;margin:4px 0 0;line-height:1.5}
+#lifeApp .memento-inline-link{background:transparent;border:0;color:#b6ecc4;text-decoration:underline;padding:2px 0;font-size:11px;font-weight:700}
+#lifeApp .memento-quick-note{display:grid;grid-template-columns:minmax(0,1fr) 46px auto;gap:8px;align-items:center}
+#lifeApp .memento-quick-note input{min-width:0}
+#lifeApp .memento-quick-note .memento-voice-btn{width:46px;height:46px;border-radius:13px;background:#234732;color:#eaf8ed;border:1px solid #557b5f;cursor:pointer;display:grid;place-items:center}#lifeApp .memento-quick-note .memento-voice-btn svg{display:block;width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+#lifeApp .memento-quick-note .memento-voice-btn.recording{background:#c46b5a;color:#fff;animation:memento-voice-pulse 1.1s ease-in-out infinite}
+#lifeApp .memento-voice-message{grid-column:1/-1;font-size:10px;color:#a8c7b1;margin:0 3px}
+@keyframes memento-voice-pulse{50%{box-shadow:0 0 0 6px rgba(196,107,90,.13)}}
+#lifeApp .memento-convert-note{position:relative;display:inline-block;border:1px solid #486b52;background:#234330;border-radius:9px;font-size:11px;color:#dceee0}
+#lifeApp .memento-convert-note summary{padding:8px 10px;cursor:pointer;list-style:none;font-weight:700}
+#lifeApp .memento-convert-note summary::-webkit-details-marker{display:none}
+#lifeApp .memento-convert-note[open]{width:100%}
+#lifeApp .memento-convert-note>div{display:flex;gap:7px;flex-wrap:wrap;padding:2px 8px 8px}
+#lifeApp .memento-convert-note button{background:#d4f0db;color:#193b25;border:none;padding:8px 10px;border-radius:8px;font-weight:750;font-size:11px;cursor:pointer}
+#lifeApp .memento-cal-actions .memento-agenda-add{min-width:84px;white-space:nowrap;background:#b3ebc3!important;color:#173e25!important;border-color:#b3ebc3!important;font-size:11px!important;font-weight:800}
+#lifeApp .memento-event-check{display:flex;align-items:center;gap:9px;padding-top:18px;color:#ecf8ee}
+#lifeApp .memento-event-check input{width:17px;height:17px}
+@media(max-width:400px){#lifeApp .memento-quick-note{grid-template-columns:minmax(0,1fr) 42px auto;gap:6px}#lifeApp .memento-quick-note .memento-voice-btn{width:42px;height:42px}}
+</style>
+
+
+<script id="memento-voice-capture">
+(()=>{'use strict';
+ let recognizer=null,isActive=false;
+ const $=id=>document.getElementById(id);
+ function show(t){const e=$('mementoVoiceMessage');if(e)e.textContent=t}
+ function paint(){const b=$('mementoVoiceButton');if(!b)return;b.classList.toggle('recording',isActive);b.setAttribute('aria-pressed',String(isActive));b.setAttribute('aria-label',isActive?'Stop inspreken':'Spreek een notitie in');b.title=isActive?'Stop opname':'Inspreken'}
+ function stop(){if(recognizer&&isActive)try{recognizer.stop()}catch(e){}isActive=false;paint()}
+ document.addEventListener('click',e=>{
+  if(!e.target.closest('#mementoVoiceButton'))return;
+  if(isActive){stop();show('Opname gestopt. Controleer de tekst en druk op Opslaan.');return}
+  const input=$('lifeQuickTitle');if(!input)return;
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!Speech){show('Deze browser ondersteunt spraakherkenning niet. Gebruik eventueel de microfoon van je Android-toetsenbord.');input.focus();return}
+  if(location.protocol!=='https:'){show('Gebruik Memento via HTTPS in Chrome om in te spreken.');return}
+  const initial=input.value.trim();let committed='';
+  recognizer=new Speech();recognizer.lang='nl-NL';recognizer.continuous=false;recognizer.interimResults=true;recognizer.maxAlternatives=1;
+  recognizer.onstart=()=>{isActive=true;paint();show('Luisteren… Spreek rustig. De tekst kun je straks nakijken.')};
+  recognizer.onresult=event=>{
+   let interim='';for(let i=event.resultIndex;i<event.results.length;i++){const t=event.results[i][0]?.transcript||'';if(event.results[i].isFinal)committed+=' '+t.trim();else interim+=' '+t.trim()}
+   input.value=[initial,committed.trim(),interim.trim()].filter(Boolean).join(' ').slice(0,input.maxLength);
+  };
+  recognizer.onerror=event=>{isActive=false;paint();const names={'not-allowed':'Microfoontoegang geweigerd. Geef Chrome microfoontoegang.','no-speech':'Geen spraak gehoord. Probeer opnieuw.','network':'Spraakherkenning is tijdelijk niet bereikbaar.','audio-capture':'Microfoon niet beschikbaar.'};show(names[event.error]||'Spraakherkenning mislukt. Probeer opnieuw.')};
+  recognizer.onend=()=>{isActive=false;paint();if(input.isConnected&&input.value.trim())show('Tekst klaar. Lees na en druk op Opslaan om de notitie te bewaren.');else show('Geen spraak herkend. Probeer het opnieuw.');recognizer=null};
+  try{recognizer.start()}catch(err){isActive=false;paint();show('Microfoon kon niet starten. Probeer opnieuw.')}
+ });
+ window.MementoVoice={stop};
+})();
+</script>
+
 </body></html>
