@@ -1884,7 +1884,7 @@ let financeStorageBlocked=false,demoStateBackup=null;let state=loadState();let l
 function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return emptyState();const s=JSON.parse(raw);const d=emptyState();const loaded={...d,...s,receipts:Array.isArray(s.receipts)?s.receipts:[],settings:{...d.settings,...(s.settings||{})},categories:(Array.isArray(s.categories)&&s.categories.length?s.categories:d.categories).map(c=>({...c,subcategories:Array.isArray(c.subcategories)?c.subcategories:[]})),transactions:Array.isArray(s.transactions)?s.transactions:[],budgets:s.budgets||{},bills:Array.isArray(s.bills)?s.bills:[],goals:Array.isArray(s.goals)?s.goals:[],monthClosures:s.monthClosures||{}};loaded.settings.accountOpening={...d.settings.accountOpening,...(s.settings?.accountOpening||{})};if(!s.settings?.accountOpening&&Number(s.settings?.startBalance)){loaded.settings.accountOpening.personal=Number(s.settings.startBalance)}loaded.settings.actualBalances={...d.settings.actualBalances,...(s.settings?.actualBalances||{})};/* Migration: a previously entered overdraft opening balance is a starting financial position, not a monthly expense. Move it to the personal account's opening balance and remove the false transaction. */const openingTx=loaded.transactions.filter(t=>/^(begin)?saldo\s+roodstand$|^beginsaldo\s+roodstand$/i.test(String(t.description||'').trim()) && (t.account||'personal')==='personal');if(openingTx.length){if(!Number(loaded.settings.accountOpening.personal)){const tx=openingTx[0];loaded.settings.accountOpening.personal=-(Math.abs(Number(tx.amount)||0));}const ids=new Set(openingTx.map(t=>t.id));loaded.transactions=loaded.transactions.filter(t=>!ids.has(t.id));try{localStorage.setItem(STORAGE_KEY,JSON.stringify(loaded));}catch(migrationError){/* State remains corrected in memory; normal save can persist it later. */}}return loaded}catch(e){financeStorageBlocked=true;return emptyState()}}
 function setSaveStatus(text,error=false){const el=document.getElementById('saveStatus');if(el){el.textContent=text;el.classList.toggle('red',error);el.classList.toggle('green',!error)}}
 function save(){if(demoStateBackup!==null){setSaveStatus('Demomodus · eigen gegevens ongewijzigd');return true}if(financeStorageBlocked){setSaveStatus('Herstel eerst een back-up',true);toast('De financiële opslag is niet leesbaar en blijft behouden. Herstel een back-up via Instellingen & data.','error');return false}try{const raw=JSON.stringify(state);const previous=localStorage.getItem(STORAGE_KEY);localStorage.setItem(STORAGE_KEY,raw);if(previous&&previous!==raw){try{localStorage.setItem(AUTO_BACKUP_KEY,previous)}catch(backupError){/* Current data is saved; recovery snapshot could not be refreshed. */}}lastSavedFinance=raw;setSaveStatus('Alle wijzigingen opgeslagen');return true}catch(e){try{state=JSON.parse(lastSavedFinance)}catch{}setSaveStatus('Opslaan mislukt',true);toast('Opslaan mislukt. Maak direct een back-up.','error');return false}}
-function toast(message,type='ok'){const el=document.createElement('div');el.className='toast'+(type==='error'?' error':'');el.textContent=message;document.getElementById('toastWrap').append(el);setTimeout(()=>el.remove(),3400)}
+function toast(message,type='ok'){window.MementoNoticeLayout?.();const el=document.createElement('div');el.className='toast'+(type==='error'?' error':'');el.textContent=message;document.getElementById('toastWrap').append(el);setTimeout(()=>el.remove(),3000)}
 function sum(arr,fn=x=>x){return arr.reduce((a,x)=>a+(Number(fn(x))||0),0)}
 function txParts(t){if(Array.isArray(t.splits)&&t.splits.length)return t.splits;return [{category:t.category||'Overig',amount:t.amount,note:t.note||''}]}
 function txExpenseAmount(t){if(t.type==='income'||t.type==='transfer')return 0;if(t.type==='refund')return -Math.abs(Number(t.amount)||0);return Math.abs(Number(t.amount)||0)}
@@ -2799,7 +2799,7 @@ function validate(s){
 }
 try{const raw=localStorage.getItem(KEY);state=raw?validate(JSON.parse(raw)):clone(seed)}catch(e){state=clone(seed);blocked=true}
 if(!Array.isArray(state.appointments))state.appointments=[];
-function status(text,canUndo=false,error=false){clearTimeout(messageTimer);$('lifeMessage').innerHTML='<span>'+esc(text)+'</span>'+(canUndo?'<button type="button" data-life-action="undo">Ongedaan maken</button>':'');$('lifeMessage').setAttribute('role',error?'alert':'status');messageTimer=setTimeout(()=>{$('lifeMessage').textContent=''},canUndo?18000:7000)}
+function status(text,canUndo=false,error=false){clearTimeout(messageTimer);window.MementoNoticeLayout?.();$('lifeMessage').innerHTML='<span>'+esc(text)+'</span>'+(canUndo?'<button type="button" data-life-action="undo">Ongedaan maken</button>':'');$('lifeMessage').setAttribute('role',error?'alert':'status');messageTimer=setTimeout(()=>{$('lifeMessage').textContent=''},3000)}
 function savedStatus(){$('lifeSaveStatus').textContent='Lokaal opgeslagen';$('lifeSaveStatus').dataset.error='false'}
 function save(){
  if(blocked){status('De opgeslagen gegevens konden niet worden gelezen. Herstel eerst een back-up; de bestaande opslag is behouden.',false,true);return false}
@@ -3429,5 +3429,116 @@ body .sidebar .brand{display:none}body .sidebar .nav-label{padding-top:18px}
 <style>.memento-tx-filter-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0;font-size:12px;color:#bfd0c3}.goal-contribution-history{margin-top:12px;font-size:12px}#salaryPeriodCard .salary-period-modern-metrics{display:none}
 </style>
 <style>.nav .ico svg,.life-nav-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.memento-demo-banner{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;border-color:#b5c99d}.memento-demo-banner p{margin:4px 0;font-size:12px;color:#c3d3c6}@media(max-width:700px){.memento-demo-banner{flex-direction:column;align-items:start}}</style>
+<style id="memento-transactions-readability-20261025">
+/* Notifications reserve the actual bottom-navigation height, including safe areas. */
+:root{--memento-notice-bottom:16px}
+@media(max-width:800px){:root{--memento-notice-bottom:calc(86px + env(safe-area-inset-bottom))}}
+body #lifeMessage,body .toast-wrap{bottom:var(--memento-notice-bottom)!important;z-index:90!important}
+body #lifeMessage{background:#21402e!important;color:#f1f7f3!important;border-color:#729881!important;font-size:14px;line-height:1.5;box-shadow:0 8px 24px #0005}
+body #lifeMessage button{color:#dcf8e6!important;min-height:44px;font-size:14px}
+body .toast-wrap{pointer-events:none;max-width:calc(100vw - 32px)}
+body .toast{background:#21402e;color:#f1f7f3;border:1px solid #729881;font-size:14px}
+body .toast.error{background:#45292d;color:#ffe0db;border-color:#c9948c}
+/* Explicit component colours replace inherited light-theme surfaces and low-contrast text. */
+body[data-compass-area="finance"] .app #view-transactions{
+ --tx-panel:#1c3329;--tx-field:#10251d;--tx-ink:#f1f7f3;--tx-muted:#c3d7ca;--tx-line:#729881;
+ color:var(--tx-ink);color-scheme:dark;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-more-filters{
+ background:var(--tx-panel)!important;border:1px solid var(--tx-line)!important;color:var(--tx-ink)!important;
+ box-shadow:none!important;gap:14px;padding:16px;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-advanced-field label{
+ color:var(--tx-ink)!important;font-size:13px!important;font-weight:700;line-height:1.5;letter-spacing:0;text-transform:none;
+}
+body[data-compass-area="finance"] .app #view-transactions :is(.tx-filter-select,.tx-advanced-field select,.tx-advanced-field input){
+ background:var(--tx-field)!important;color:var(--tx-ink)!important;border:1px solid var(--tx-line)!important;
+ min-height:48px;font-size:16px!important;line-height:1.5;padding:10px 12px;border-radius:12px;color-scheme:dark;
+}
+body[data-compass-area="finance"] .app #view-transactions :is(select option,select optgroup){background:#10251d;color:#f1f7f3}
+body[data-compass-area="finance"] .app #view-transactions input::-webkit-calendar-picker-indicator{opacity:1;filter:none}
+body[data-compass-area="finance"] .app #view-transactions :is(input,select,button):focus-visible{
+ outline:3px solid #d4efdd!important;outline-offset:3px!important;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-more-toggle{
+ background:#294b38!important;color:var(--tx-ink)!important;border-color:var(--tx-line)!important;min-height:48px;font-size:15px!important;
+}
+body[data-compass-area="finance"] .app #view-transactions :is(.tx-more-toggle[aria-expanded="true"],#clearTxFilters){
+ background:#c5dbca!important;color:#12281b!important;border:1px solid #c5dbca!important;min-height:48px;font-size:15px!important;font-weight:750;
+}
+body[data-compass-area="finance"] .app #view-transactions .field-search.tx-search{
+ background:var(--tx-field)!important;border:1px solid var(--tx-line)!important;min-height:52px;
+}
+body[data-compass-area="finance"] .app #view-transactions .field-search.tx-search::before{display:none;content:none}
+body[data-compass-area="finance"] .app #view-transactions .field-search.tx-search:focus-within{outline:3px solid #d4efdd;outline-offset:2px}
+body[data-compass-area="finance"] .app #view-transactions #txSearch{
+ color:var(--tx-ink)!important;background:transparent!important;border:0!important;box-shadow:none!important;font-size:16px!important;padding:12px 0;
+}
+body[data-compass-area="finance"] .app #view-transactions #txSearch::placeholder{color:var(--tx-muted)!important;opacity:1}
+body[data-compass-area="finance"] .app #view-transactions .tx-search>span{color:var(--tx-muted)!important}
+body[data-compass-area="finance"] .app #view-transactions :is(.tx-list-heading,.tx-date-group,.tx-pager-label,.memento-tx-filter-summary){
+ color:var(--tx-muted)!important;font-size:14px!important;line-height:1.5;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-date-group{color:var(--tx-ink)!important;border-color:#4b6c57!important;margin-top:16px}
+body[data-compass-area="finance"] .app #view-transactions :is(.tx-list-heading span:first-child,#txClearQuick){color:var(--tx-ink)!important}
+body[data-compass-area="finance"] .app #view-transactions .tx-list{gap:12px;background:transparent}
+body[data-compass-area="finance"] .app #view-transactions .tx-card{
+ background:var(--tx-panel)!important;color:var(--tx-ink)!important;border:1px solid #607d6a!important;
+ border-radius:14px!important;padding:16px!important;gap:12px!important;grid-template-columns:32px minmax(0,1fr)!important;
+ box-shadow:none!important;transform:none!important;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-card:hover{background:#223d2e!important;border-color:var(--tx-line)!important}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-head{align-items:flex-start;gap:12px}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-title{
+ color:var(--tx-ink)!important;font-size:16px!important;font-weight:750;line-height:1.5!important;overflow-wrap:anywhere;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-amount{
+ color:var(--tx-ink)!important;font-size:18px!important;font-weight:800;line-height:1.4!important;font-variant-numeric:tabular-nums;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-amount.negative{color:#ffb6aa!important}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-amount.positive{color:#a9eac4!important}
+body[data-compass-area="finance"] .app #view-transactions :is(.tx-card-meta,.tx-card-person){color:var(--tx-muted)!important;font-size:14px!important;line-height:1.6!important}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-meta .tx-meta-sep{color:#93b49f!important}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-note{
+ background:var(--tx-field)!important;color:#dcebe0!important;font-size:14px!important;line-height:1.6;padding:10px 12px;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-left-tags .pill{background:#284735!important;color:#e5f6eb!important;font-size:12px!important;border:1px solid #607d6a!important;padding:5px 9px}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-detail{margin-top:12px;gap:12px;align-items:center}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-actions{gap:8px;flex-wrap:wrap}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-actions .btn{
+ background:#294b38!important;color:#f1f7f3!important;border:1px solid #729881!important;min-height:44px!important;font-size:14px!important;padding:9px 12px!important;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-card-actions .btn.danger{
+ background:#45292d!important;color:#ffd3cc!important;border-color:#c9948c!important;
+}
+body[data-compass-area="finance"] .app #view-transactions .tx-list-empty{background:var(--tx-panel)!important;color:var(--tx-muted)!important;border-color:var(--tx-line)!important;font-size:15px}
+body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color:var(--tx-ink)!important;font-size:16px}
+@media(max-width:480px){
+ body[data-compass-area="finance"] .app #view-transactions .tx-more-filters{grid-template-columns:minmax(0,1fr)}
+ body[data-compass-area="finance"] .app #view-transactions .tx-filter-toolbar{grid-template-columns:minmax(0,1fr)}
+ body[data-compass-area="finance"] .app #view-transactions .tx-card{padding:14px!important}
+ body[data-compass-area="finance"] .app #view-transactions .tx-card-head{flex-direction:column;align-items:stretch;gap:5px}
+ body[data-compass-area="finance"] .app #view-transactions .tx-card-amount{text-align:left}
+ body[data-compass-area="finance"] .app #view-transactions .tx-card-actions{width:100%;justify-content:flex-start}
+}
+
+</style>
+<script id="memento-notice-layout">
+/* Keep notifications above the visible navigation without covering its controls. */
+(()=>{
+ const nav=document.getElementById('mementoQuickNav');
+ function sync(){
+  const rect=nav?.getBoundingClientRect();
+  const clearance=rect&&rect.height>0?Math.max(0,window.innerHeight-rect.top)+12:16;
+  document.documentElement.style.setProperty('--memento-notice-bottom',Math.ceil(clearance)+'px');
+ }
+ window.MementoNoticeLayout=sync;
+ if(nav&&typeof ResizeObserver==='function')new ResizeObserver(sync).observe(nav);
+ window.addEventListener('resize',sync,{passive:true});
+ window.visualViewport?.addEventListener('resize',sync,{passive:true});
+ sync();
+})();
+
+</script>
 </body></html>
 
