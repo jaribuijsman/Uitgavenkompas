@@ -2668,11 +2668,11 @@ function renderAgenda(){
  for(let i=0;i<Math.ceil((first+total)/7)*7;i++){
   const dayNo=i-first+1;
   if(dayNo<1||dayNo>total){cells.push('<span class="memento-cal-day muted" aria-hidden="true"></span>');continue}
-  const iso=`${year}-${String(month+1).padStart(2,'0')}-${String(dayNo).padStart(2,'0')}`;
-  cells.push('<span data-gcal-day="'+iso+'" class="memento-cal-day'+(iso===now?' is-today':'')+'"'+(iso===now?' aria-label="Vandaag"':'')+'>'+dayNo+'</span>')
+  const iso=year+'-'+String(month+1).padStart(2,'0')+'-'+String(dayNo).padStart(2,'0');
+  cells.push('<button type="button" data-gcal-day="'+iso+'" class="memento-cal-day'+(iso===now?' is-today':'')+'" aria-label="'+dayNo+' '+esc(label)+'" aria-pressed="false"><span>'+dayNo+'</span><span class="memento-cal-dots" aria-hidden="true"></span></button>')
  }
- content.innerHTML='<section class="life-panel memento-calendar-panel" data-gcal-year="'+year+'" data-gcal-month="'+month+'"><div class="memento-cal-intro"><div><div class="memento-cal-eyebrow">AGENDA & ROOSTER</div><h2>Ruimte voor afspraken</h2><p>Dit onderdeel wordt gereserveerd voor afspraken en je ploegendienstrooster. Je huishoudelijke taken blijven bij <strong>Taken</strong> en <strong>Huishouden</strong>.</p></div><span class="memento-cal-status" id="memento-gcal-status">Niet gekoppeld</span></div><div class="memento-cal-toolbar"><h3>'+esc(label)+'</h3><div class="memento-cal-actions"><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><button type="button" data-memento-agenda-shift="0" aria-label="Terug naar huidige maand">Vandaag</button><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button></div></div><div class="memento-cal-grid">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div><div class="memento-cal-empty"><span aria-hidden="true">◷</span><div><strong>Nog geen agenda-afspraken</strong><p>Verbind Google Calendar om je afspraken te bekijken. Je rooster en bewerken volgen later.</p></div></div><div id="memento-gcal-tools"></div><div id="memento-gcal-events" aria-live="polite"></div></section>'
- window.MementoGoogleCalendar?.render(year,month);
+ content.innerHTML='<section class="life-panel memento-calendar-panel" data-gcal-year="'+year+'" data-gcal-month="'+month+'"><div class="memento-cal-intro"><div><div class="memento-cal-eyebrow">JOUW PLANNING</div><h2>Agenda</h2><p>Je afspraken op één plek. Huishoudelijke taken blijven onder Taken en Huishouden.</p></div><span class="memento-cal-status" id="memento-gcal-status">Niet verbonden</span></div><div class="memento-cal-toolbar"><h3>'+esc(label)+'</h3><div class="memento-cal-actions"><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><button type="button" data-memento-agenda-shift="0" aria-label="Huidige maand">Vandaag</button><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button></div></div><div class="memento-cal-grid">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div><div class="memento-gcal-tools" id="memento-gcal-tools"></div><section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
+ if(window.MementoGoogleCalendar)window.MementoGoogleCalendar.render(year,month);
 }
 function renderBackup(){content.innerHTML='<div class="life-grid"><section class="life-panel"><h2>Een volledige back-up</h2><p>Bewaar je taken, routines, takenbibliotheek, boodschappen, wensen en notities samen met de financiële gegevens van deze versie. De pincode wordt niet meegestuurd.</p><button type="button" class="life-btn life-btn-primary" id="lifeExportBackup">↓ Back-up Leven & Financiën</button><p class="life-footnote">De bestaande back-upknop binnen Financiën blijft alleen de financiële gegevens exporteren.</p></section><section class="life-panel"><h2>Herstellen</h2><p>Je kunt hier ook je volledige back-up uit v9, v10 of v11 importeren om je eigen taken en notities mee te nemen. Je kiest zelf of je ook de financiële gegevens wilt terugzetten.</p><label class="life-checkbox-label"><input type="checkbox" id="lifeRestoreFinance">Ook de financiële gegevens uit de back-up herstellen</label><input type="file" id="lifeImportFile" accept=".json,application/json" aria-label="Back-up van Leven kiezen"><p class="life-footnote">Een oudere financiële back-up importeer je via Instellingen & data binnen Financiën.</p></section></div><section class="life-panel"><h2>Herkomst en opslag</h2><p>Je pincode beschermt de toegang op je scherm. Deze vergrendeling vervangt geen volledige versleuteling van de appgegevens.</p><p>Het weer voor Beverwijk wordt via Open-Meteo opgehaald. Zonder internet blijven de laatst opgehaalde gegevens zichtbaar met datum en status.</p><p>De startinhoud is een eenmalige overname uit jouw Notion-verzameling: schoonmaaktaken, losse taken, bewaarde boodschappen, aankoopideeën en enkele notities. Er wordt geen verbinding met Notion onderhouden. Oude vinkjes zijn niet als huidige uitvoering overgenomen.</p><p>Gegevens staan in deze browser. Een los geopend HTML-bestand en de online app kunnen afzonderlijke opslag gebruiken. Download daarom een back-up wanneer je naar een andere versie of browser overstapt.</p><div class="life-card-actions"><button type="button" class="life-btn" id="lifeRestorePrevious">Vorige opgeslagen Leven-versie terugzetten</button></div></section>'}
 function render(){
@@ -2862,83 +2862,158 @@ render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').textContent='
  document.addEventListener('change',e=>{if(!e.target.matches('#lifeRoomFilter,#lifeRepeatFilter,#lifeCategoryFilter'))return;const d=e.target.closest('.memento-filter-drawer');if(d){const n=[...d.querySelectorAll('select')].filter(s=>s.value!=='all').length;d.querySelector('summary').textContent=n?'Filters · '+n+' actief':'Filters';}});
 })();
 </script>
-<style id="memento-gcal-style">
-#memento-gcal-tools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-#memento-gcal-tools button{border:1px solid #64866b;background:#254830;color:#f2fbf2;border-radius:11px;padding:10px 13px;font-weight:700}
-#memento-gcal-tools button.primary{background:#b2edc5;border-color:#b2edc5;color:#193e27}
-#memento-gcal-tools button:disabled{opacity:.55}
-#memento-gcal-tools p{width:100%;font-size:11px;color:#b9d4c0;margin:0}
-#memento-gcal-events .gcal-event{display:flex;gap:12px;padding:12px 2px;border-bottom:1px solid #3a5942}
-#memento-gcal-events .gcal-date{min-width:65px;color:#b2edc5;font-size:12px;font-weight:700}
-#memento-gcal-events .gcal-title{font-size:13px;font-weight:750;color:#f2fbf2;overflow-wrap:anywhere}
-#memento-gcal-events .gcal-meta{font-size:11px;color:#b7d2c0}
-#memento-gcal-events .gcal-message{font-size:12px;color:#d6ecda}
-#lifeApp .memento-cal-day.has-gcal-event{box-shadow:inset 0 -4px #b2edc5}
+<style id="memento-google-calendar-style">
+/* Agenda V2: uitsluitend de agendaweergave, geen globale financiële wijzigingen. */
+#lifeApp[data-life-view="agenda"] .life-page-head{margin-bottom:15px}
+#lifeApp[data-life-view="agenda"] .life-page-head h1{font-size:0;line-height:0;margin:0}
+#lifeApp[data-life-view="agenda"] .life-page-head .life-eyebrow{display:none}
+#lifeApp[data-life-view="agenda"] .life-page-head .life-subtitle{display:none}
+#lifeApp[data-life-view="agenda"] .memento-calendar-panel{max-width:920px;padding:clamp(16px,4vw,24px)!important}
+#lifeApp[data-life-view="agenda"] .memento-cal-intro{margin-bottom:20px}
+#lifeApp[data-life-view="agenda"] .memento-cal-intro h2{font-family:inherit;font-size:27px;font-weight:800;margin:3px 0 5px}
+#lifeApp[data-life-view="agenda"] .memento-cal-intro p{font-size:12px;max-width:480px}
+#lifeApp[data-life-view="agenda"] .memento-cal-status{white-space:normal;text-align:center;max-width:120px;font-size:10px;line-height:1.3}
+#lifeApp[data-life-view="agenda"] .memento-cal-toolbar{margin-bottom:14px}
+#lifeApp[data-life-view="agenda"] .memento-cal-grid{gap:4px}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day{font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:clamp(37px,9vw,62px);padding:6px 2px;cursor:pointer;transition:none}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day.is-today:not(.selected){border-color:#91cea5}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day.selected{background:#b5ebc6;color:#193d28;border:1px solid #b5ebc6;font-weight:800;box-shadow:0 0 0 1px #b5ebc6}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day:focus-visible{outline:2px solid #b5ebc6;outline-offset:2px}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day .memento-cal-dots{width:4px;height:4px;border-radius:50%;background:transparent}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day.has-gcal-event .memento-cal-dots{background:#b5ebc6}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day.selected.has-gcal-event .memento-cal-dots{background:#244b30}
+#lifeApp[data-life-view="agenda"] button.memento-cal-day.has-gcal-event{box-shadow:none}
+#memento-gcal-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:17px 0 10px}
+#memento-gcal-tools .gcal-btn{background:#254b35;border:1px solid #567e62;color:#e9f6eb;padding:9px 11px;border-radius:11px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;min-height:40px}
+#memento-gcal-tools .gcal-btn.primary{background:#afe6be;color:#193e27;border-color:#afe6be}
+#memento-gcal-tools .gcal-btn:disabled{opacity:.6;cursor:not-allowed}
+#memento-gcal-tools .gcal-note{flex-basis:100%;color:#a9c7af;font-size:10px;margin:0}
+#memento-gcal-tools .gcal-settings{position:relative}
+#memento-gcal-tools .gcal-settings summary{list-style:none;cursor:pointer;background:#244434;border:1px solid #466c53;border-radius:11px;padding:10px;color:#d9edde;font-size:12px;min-height:40px}
+#memento-gcal-tools .gcal-settings summary::-webkit-details-marker{display:none}
+#memento-gcal-tools .gcal-settings .gcal-settings-menu{position:absolute;right:0;top:44px;z-index:12;display:grid;gap:5px;padding:8px;background:#1d3929;border:1px solid #547b60;border-radius:12px;box-shadow:0 12px 24px #06120c80;min-width:175px}
+#memento-gcal-tools .gcal-settings .gcal-settings-menu button{text-align:left;justify-content:flex-start}
+#lifeApp .memento-gcal-day-section{margin-top:18px;min-height:110px}
+#lifeApp .memento-gcal-day-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+#lifeApp .memento-gcal-day-head h3{color:#eff8f1;font-size:15px;font-weight:800;margin:0}
+#lifeApp #memento-gcal-count{font-size:11px;color:#a9ceb2}
+#memento-gcal-events{display:grid;gap:8px}
+#memento-gcal-events .gcal-event{display:flex;align-items:center;gap:12px;padding:12px 13px;background:#203c2d;border:1px solid #385a41;border-radius:12px}
+#memento-gcal-events .gcal-event:before{content:'';width:3px;height:39px;flex:none;border-radius:5px;background:#ade9c1}
+#memento-gcal-events .gcal-event-date{min-width:51px;flex:none;font-size:12px;font-weight:800;color:#ade9c1}
+#memento-gcal-events .gcal-event-title{font-size:12px;font-weight:750;color:#edf7f0;overflow-wrap:anywhere}
+#memento-gcal-events .gcal-event-meta{font-size:11px;color:#b9d2c0;margin-top:3px;overflow-wrap:anywhere}
+#memento-gcal-events .gcal-message{color:#c0dac7;font-size:12px;line-height:1.6;padding:14px 0;margin:0}
+#memento-gcal-events .gcal-message strong{color:#eff8f1}
+@media(max-width:420px){#lifeApp[data-life-view="agenda"] .memento-cal-intro h2{font-size:24px}#lifeApp[data-life-view="agenda"] .memento-cal-status{max-width:105px}#memento-gcal-tools .gcal-btn{font-size:11px}}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script id="memento-google-calendar-integration">
 (()=>{'use strict';
-const CLIENT_ID='563005309741-imckfchgrkksdnp6r39r30ggp5671rme.apps.googleusercontent.com';
-const SCOPE='https://www.googleapis.com/auth/calendar.events.readonly';
-let token='',expires=0,items=[],monthKey='',notice='',busy=false,seq=0;
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
-const valid=()=>!!token&&Date.now()<expires;
-const shown=()=>{const p=document.querySelector('#lifeApp[data-life-view="agenda"] .memento-calendar-panel');return p?[+p.dataset.gcalYear,+p.dataset.gcalMonth]:null};
-function controls(){
-const e=$('memento-gcal-tools');if(!e||!shown())return;
-e.innerHTML='<button type="button" class="primary" data-gcal="connect">'+(valid()?'Opnieuw aanmelden':'Google Calendar verbinden')+'</button><button type="button" data-gcal="refresh"'+(!valid()||busy?' disabled':'')+'>Vernieuwen</button><button type="button" data-gcal="disconnect"'+(!valid()?' disabled':'')+'>Ontkoppelen</button><p>Alleen lezen · primaire Google Agenda · geen blijvende opslag van afspraken of toegangstokens.</p>';
-if($('memento-gcal-status'))$('memento-gcal-status').textContent=busy?'Laden…':valid()?'Verbonden':'Niet gekoppeld';
-}
-function display(y,m){
-const e=$('memento-gcal-events');if(!e)return;
-document.querySelectorAll('[data-gcal-day]').forEach(d=>{d.classList.remove('has-gcal-event');d.removeAttribute('title')});
-if(notice){e.innerHTML='<p class="gcal-message" role="status">'+esc(notice)+'</p>';return}
-if(!valid()){e.innerHTML='<p class="gcal-message">Verbind Google Calendar om afspraken te tonen.</p>';return}
-if(monthKey!==y+'-'+m){e.innerHTML='<p class="gcal-message">Afspraken ophalen…</p>';return}
-if(!items.length){e.innerHTML='<p class="gcal-message">Geen afspraken gevonden in deze maand.</p>';return}
-e.innerHTML=items.map(a=>{
-const day=!!a.start?.date;const d=new Date(day?a.start.date+'T12:00:00':a.start?.dateTime||'');
-if(isNaN(d.getTime()))return '';
-const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const cell=document.querySelector('[data-gcal-day="'+iso+'"]');if(cell){cell.classList.add('has-gcal-event');cell.title='Afspraak'}
-const date=new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(d);
-const time=day?'Hele dag':new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit'}).format(d);
-return '<div class="gcal-event"><span class="gcal-date">'+esc(date)+'</span><div><div class="gcal-title">'+esc(a.summary||'Afspraak')+'</div><div class="gcal-meta">'+esc(time)+(a.location?' · '+esc(a.location):'')+'</div></div></div>';
-}).join('');
-}
-async function fetchEvents(y,m){
-if(!valid()){token='';controls();display(y,m);return}
-const run=++seq;busy=true;notice='';controls();
-try{
-const params=new URLSearchParams({timeMin:new Date(y,m,1).toISOString(),timeMax:new Date(y,m+1,1).toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250'});
-let results=[],next='';
-for(let i=0;i<8;i++){
-if(next)params.set('pageToken',next);else params.delete('pageToken');
-const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+params,{headers:{Authorization:'Bearer '+token},cache:'no-store'});
-if(!res.ok){if(res.status===401){token='';throw Error('Je Google-sessie is verlopen. Verbind opnieuw.')}if(res.status===403)throw Error('Toegang geweigerd. Controleer de Calendar API en je testgebruikers.');throw Error('Google Calendar HTTP '+res.status)}
-const payload=await res.json();results.push(...(payload.items||[]));next=payload.nextPageToken||'';if(!next)break;
-}
-if(run!==seq)return;items=results.filter(e=>e.status!=='cancelled');monthKey=y+'-'+m;
-}catch(error){if(run!==seq)return;notice=error.message||'Google Calendar kon niet worden geladen.';monthKey='';items=[]}
-busy=false;controls();const now=shown();if(now)display(...now);
-}
-function render(y,m){if(!shown())return;controls();display(y,m);if(valid()&&monthKey!==y+'-'+m&&!busy)fetchEvents(y,m)}
-function connect(){
-if(location.protocol!=='https:'){notice='Open de Memento-website via HTTPS in Chrome, niet het gedownloade HTML-bestand.';const d=shown();if(d)render(...d);return}
-if(!window.google?.accounts?.oauth2){notice='Google Inloggen kon niet laden. Controleer je verbinding en probeer opnieuw.';const d=shown();if(d)render(...d);return}
-google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:r=>{
-const d=shown();if(r.error||!r.access_token){notice='Google-aanmelding mislukt: '+(r.error||'Geen toestemming');if(d)render(...d);return}
-token=r.access_token;expires=Date.now()+Number(r.expires_in||3500)*1000-30000;notice='';monthKey='';if(d)fetchEvents(...d);
-}}).requestAccessToken({prompt:'consent'});
-}
-document.addEventListener('click',e=>{
-const b=e.target.closest('[data-gcal]');if(!b)return;const d=shown();
-if(b.dataset.gcal==='connect')connect();
-if(b.dataset.gcal==='refresh'&&d)fetchEvents(...d);
-if(b.dataset.gcal==='disconnect'){const old=token;token='';expires=0;items=[];monthKey='';notice='Google Calendar ontkoppeld.';++seq;busy=false;try{if(old)google.accounts.oauth2.revoke(old,()=>{})}catch(_){}if(d)render(...d)}
-});
-window.MementoGoogleCalendar={render};
+ const CLIENT_ID='563005309741-imckfchgrkksdnp6r39r30ggp5671rme.apps.googleusercontent.com';
+ const SCOPE='https://www.googleapis.com/auth/calendar.events.readonly';
+ const PREFERENCE_KEY='memento_gcal_connected_preference_v1'; // only a boolean; never store OAuth tokens
+ let token=null,expires=0,events=[],loadedMonth='',message='',busy=false,requestSeq=0,selectedDay='';
+ const $=id=>document.getElementById(id);
+ const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const active=()=>document.querySelector('#lifeApp[data-life-view="agenda"] .memento-calendar-panel');
+ const monthShown=()=>{const el=active();return el?[Number(el.dataset.gcalYear),Number(el.dataset.gcalMonth)]:null};
+ const valid=()=>!!token&&Date.now()<expires;
+ const previouslyConnected=()=>{try{return localStorage.getItem(PREFERENCE_KEY)==='yes'}catch(e){return false}};
+ const setPreference=v=>{try{if(v)localStorage.setItem(PREFERENCE_KEY,'yes');else localStorage.removeItem(PREFERENCE_KEY)}catch(e){}};
+ const localIso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+ const eventDate=e=>{if(e.start?.date)return e.start.date;const d=new Date(e.start?.dateTime||'');return isNaN(d)?'':localIso(d)};
+ const dateLabel=iso=>{const d=new Date(iso+'T12:00:00');return new Intl.DateTimeFormat('nl-NL',{weekday:'long',day:'numeric',month:'long'}).format(d)};
+ const sameMonth=(iso,y,m)=>iso.startsWith(y+'-'+String(m+1).padStart(2,'0')+'-');
+ function setDefaultDay(y,m){
+  if(selectedDay&&sameMonth(selectedDay,y,m))return;
+  const today=localIso(new Date());selectedDay=sameMonth(today,y,m)?today:y+'-'+String(m+1).padStart(2,'0')+'-01';
+ }
+ function paintControls(){
+  const el=$('memento-gcal-tools');if(!el||!active())return;
+  const known=previouslyConnected();
+  el.innerHTML=(valid()
+    ?'<button type="button" class="gcal-btn" title="Afspraken bijwerken" data-gcal-action="refresh">↻ Vernieuwen</button><details class="gcal-settings"><summary aria-label="Google Calendar-instellingen">⋯</summary><div class="gcal-settings-menu"><button type="button" class="gcal-btn" data-gcal-action="connect">Opnieuw aanmelden</button><button type="button" class="gcal-btn" data-gcal-action="disconnect">Ontkoppelen</button></div></details>'
+    :'<button type="button" class="gcal-btn primary" data-gcal-action="connect">'+(known?'↻ Verbinding herstellen':'Google Calendar verbinden')+'</button>'
+   )+'<p class="gcal-note">'+(valid()?'Google verbonden · alleen lezen.':'Google bewaart je toestemming. Memento bewaart geen toegangstokens.')+'</p>';
+  const status=$('memento-gcal-status');if(status)status.textContent=busy?'Synchroniseren…':valid()?'✓ Google verbonden':known?'Eerder gekoppeld':'Niet verbonden';
+ }
+ function paintEvents(y,m){
+  const el=$('memento-gcal-events');if(!el||!active())return;
+  setDefaultDay(y,m);
+  let own=events.filter(e=>eventDate(e)===selectedDay);
+  if(valid()&&loadedMonth===y+'-'+m&&!events.some(e=>eventDate(e)===selectedDay)){
+   const today=localIso(new Date());
+   if(selectedDay===today&&events.length){const next=events.map(e=>eventDate(e)).filter(d=>d>=today&&sameMonth(d,y,m)).sort()[0];if(next)selectedDay=next}
+   own=events.filter(e=>eventDate(e)===selectedDay);
+  }
+  document.querySelectorAll('[data-gcal-day]').forEach(d=>{
+   const count=(valid()&&loadedMonth===y+'-'+m)?events.filter(e=>eventDate(e)===d.dataset.gcalDay).length:0;
+   d.classList.toggle('has-gcal-event',count>0);d.classList.toggle('selected',selectedDay===d.dataset.gcalDay);
+   d.setAttribute('aria-pressed',String(selectedDay===d.dataset.gcalDay));d.title=count?count+' afspraak'+(count===1?'':'en'):'';
+  });
+  if($('memento-gcal-selected-label'))$('memento-gcal-selected-label').textContent=dateLabel(selectedDay);
+  if($('memento-gcal-count'))$('memento-gcal-count').textContent=valid()&&loadedMonth===y+'-'+m?own.length+' afspraak'+(own.length===1?'':'en'):'';
+  if(message){el.innerHTML='<p class="gcal-message" role="status">'+esc(message)+'</p>';return}
+  if(!valid()){
+   el.innerHTML='<p class="gcal-message">'+(previouslyConnected()?'Je hebt Google Calendar eerder gekoppeld. Tik op <strong>Verbinding herstellen</strong> om afspraken weer te laden.':'Verbind je Google-account om je afspraken te bekijken.')+'</p>';return;
+  }
+  if(loadedMonth!==y+'-'+m){el.innerHTML='<p class="gcal-message">Afspraken ophalen…</p>';return}
+  if(!own.length){el.innerHTML='<p class="gcal-message">Geen afspraken op deze dag. Tik op een dag met een groen stipje.</p>';return}
+  el.innerHTML=own.map(e=>{
+   const allDay=!!e.start?.date;
+   const start=allDay?new Date(e.start.date+'T12:00:00'):new Date(e.start?.dateTime||'');
+   if(isNaN(start))return '';
+   const at=allDay?'Hele dag':new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit'}).format(start);
+   return '<div class="gcal-event"><span class="gcal-event-date">'+esc(at)+'</span><div><div class="gcal-event-title">'+esc(e.summary||'Afspraak')+'</div>'+(e.location?'<div class="gcal-event-meta">'+esc(e.location)+'</div>':'')+'</div></div>';
+  }).join('');
+ }
+ async function load(y,m){
+  if(!valid()){token=null;paintControls();paintEvents(y,m);return}
+  const seq=++requestSeq;busy=true;message='';paintControls();
+  try{
+   const begin=new Date(y,m,1),end=new Date(y,m+1,1);
+   const q=new URLSearchParams({timeMin:begin.toISOString(),timeMax:end.toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250'});
+   const all=[];let page='';
+   for(let i=0;i<8;i++){
+    if(page)q.set('pageToken',page);else q.delete('pageToken');
+    const response=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+q,{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+    if(!response.ok){if(response.status===401){token=null;throw Error('Je Google-sessie is verlopen. Gebruik Verbinding herstellen.')}if(response.status===403)throw Error('Google weigert de toegang. Controleer de Calendar API en testgebruikers.');throw Error('Google Calendar gaf fout '+response.status)}
+    const data=await response.json();all.push(...(data.items||[]));page=data.nextPageToken||'';if(!page)break;
+   }
+   if(seq!==requestSeq)return;
+   events=all.filter(e=>e.status!=='cancelled');loadedMonth=y+'-'+m;
+  }catch(error){if(seq!==requestSeq)return;message=error?.message||'Kon afspraken niet ophalen.';events=[];loadedMonth=''}
+  busy=false;paintControls();const current=monthShown();if(current)paintEvents(...current);
+ }
+ function render(y,m){if(!active())return;setDefaultDay(y,m);paintControls();paintEvents(y,m);if(valid()&&loadedMonth!==y+'-'+m&&!busy)load(y,m)}
+ function connect(){
+  const ym=monthShown();
+  if(location.protocol!=='https:'){message='Open Memento via GitHub Pages in Chrome, niet als gedownload HTML-bestand.';if(ym)render(...ym);return}
+  if(!window.google?.accounts?.oauth2){message='Google Inloggen kon niet laden. Controleer je internetverbinding.';if(ym)render(...ym);return}
+  const client=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:r=>{
+   const current=monthShown();
+   if(r.error||!r.access_token){message='Google-aanmelding niet voltooid: '+(r.error||'Geen toestemming');if(current)render(...current);return}
+   token=r.access_token;expires=Date.now()+Number(r.expires_in||3500)*1000-30000;
+   setPreference(true);message='';loadedMonth='';if(current)load(...current);
+  }});
+  // Unlike prompt:'consent', this reuses an already granted Google permission when available.
+  client.requestAccessToken({prompt:''});
+ }
+ document.addEventListener('click',e=>{
+  const day=e.target.closest('[data-gcal-day]');if(day){selectedDay=day.dataset.gcalDay;const ym=monthShown();if(ym)paintEvents(...ym);return}
+  const button=e.target.closest('[data-gcal-action]');if(!button)return;
+  const action=button.dataset.gcalAction,ym=monthShown();
+  if(action==='connect')connect();
+  if(action==='refresh'&&ym)load(...ym);
+  if(action==='disconnect'){
+   const old=token;token=null;expires=0;events=[];loadedMonth='';message='Google Calendar ontkoppeld.';
+   setPreference(false);++requestSeq;busy=false;
+   try{if(old&&window.google?.accounts?.oauth2)google.accounts.oauth2.revoke(old,()=>{})}catch(e){}
+   if(ym)render(...ym);
+  }
+ });
+ window.MementoGoogleCalendar={render};
 })();
 </script>
 </body></html>
