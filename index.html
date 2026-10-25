@@ -2774,6 +2774,7 @@ const repeats={none:'Niet herhalen',daily:'Dagelijks',weekly:'Wekelijks',monthly
 const categories=['Huishouden','Huis & klussen','Administratie','Persoonlijk','Samen','Gezondheid','Werk'];
 const rooms=['Keuken','Badkamer & toilet','Slaapkamer','Wasruimte','Hele huis'];
 const views=[['today','☀','Mijn dag'],['tasks','☑','Alle taken'],['library','▦','Takenbibliotheek'],['household','🏠','Huishouden'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Notities & ideeën'],['agenda','◷','Agenda'],['backup','⚙','Back-up & instellingen']];
+let quickKind='task',quickDate=null;
 let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',templateTab='active',wishTab='active',wishFilter='all',taskSort='priority',search='',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
 function repeatLabel(t){return t.repeat==='custom'?'Iedere '+t.repeatDays+' '+(t.repeatDays===1?'dag':'dagen'):(repeats[t.repeat]||'Niet herhalen')}
 function templateOf(t){return {id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
@@ -2971,7 +2972,35 @@ function paintTodayAppointments(){
 
 window.MementoLife={getLocalAppointments:()=>localAppointments(),getGoogleRefreshStart:googleRefreshStart,rememberGoogleAppointments,appointmentItemsForDay,appointmentCompletion,renderAppointmentItem:renderUnifiedAppointmentItem,paintTodayAppointments,exportBackup,openBackup:()=>{setArea('life');setView('backup')},linkResearch:(id,researchId,result)=>{const w=state.wishes.find(x=>x.id===id);if(w)return mutate(()=>{w.researchId=researchId;w.researchSummary=String(result||'').slice(0,30000);if(w.status!=='bought')w.status='research'})}};
 
-function quickForm(){return '<form class="life-quick-add memento-quick-note" id="lifeQuickForm">'+(['tasks','household'].includes(view)?'<select id="lifeQuickKind" aria-label="Snel vastleggen als"><option value="task">Taak</option><option value="note">Notitie</option></select>':'')+'<input id="lifeQuickTitle" aria-label="Snel vastleggen" placeholder="Wat wil je onthouden?" required maxlength="2500" autocomplete="off"><button class="memento-voice-btn" type="button" id="mementoVoiceButton" aria-label="Spreek een notitie in" aria-pressed="false" title="Inspreken"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="13" rx="4"></rect><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"></path></svg></button><button class="life-btn life-btn-primary" type="submit">Opslaan</button><div class="memento-voice-message" id="mementoVoiceMessage" aria-live="polite">'+(['tasks','household'].includes(view)?'Kies Taak of Notitie. Nieuwe taken beginnen zonder plandatum.':'Snel vastleggen gaat naar Notities · Inbox. Later zelf indelen.')+'</div></form>'}
+function quickForm(){
+ const task=quickKind==='task',date=quickDate===null?today():quickDate;
+ return '<form class="life-quick-add memento-quick-note memento-capture-card" id="lifeQuickForm">'+
+ '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?"><button type="button" data-life-quick-kind="note" aria-pressed="'+!task+'">Notitie</button><button type="button" data-life-quick-kind="task" aria-pressed="'+task+'">Taak</button></div>'+
+ '<input id="lifeQuickTitle" aria-label="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" placeholder="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" required maxlength="2500" autocomplete="off">'+
+ '<div class="memento-capture-toolbar"><label class="memento-capture-date" id="lifeQuickDateField"'+(task?'':' hidden')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span><input id="lifeQuickDate" type="date" aria-label="Taakdatum (optioneel)" value="'+esc(date)+'"'+(task?'':' disabled')+'></label>'+
+ '<span class="memento-capture-inbox" id="lifeQuickInbox"'+(task?' hidden':'')+'>Notities · Inbox</span>'+
+ '<button class="memento-voice-btn" type="button" id="mementoVoiceButton" aria-label="Spreek tekst in" aria-pressed="false" title="Inspreken"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="13" rx="4"></rect><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"></path></svg></button>'+
+ '<button class="life-btn life-btn-primary" type="submit">Toevoegen</button></div><div class="memento-voice-message" id="mementoVoiceMessage" aria-live="polite"></div></form>';
+}
+function quickDateLabel(date){return date===today()?'Vandaag':date?fmt(date):'Geen datum'}
+function syncQuickForm(){
+ const task=quickKind==='task',input=$('lifeQuickTitle');if(!input)return;
+ input.placeholder=task?'Wat wil je doen?':'Wat wil je onthouden?';input.setAttribute('aria-label',input.placeholder);
+ root.querySelectorAll('[data-life-quick-kind]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lifeQuickKind===quickKind)));
+ $('lifeQuickDateField').hidden=!task;$('lifeQuickDate').disabled=!task;$('lifeQuickInbox').hidden=task;
+ $('lifeQuickDateLabel').textContent=quickDateLabel(quickDate===null?today():quickDate);
+}
+function submitQuickCapture(){
+ const body=$('lifeQuickTitle').value.trim();if(!body)return false;
+ const task=quickKind==='task',date=task?$('lifeQuickDate').value:'';
+ if(task&&!validDate(date)){status('Kies een geldige taakdatum of laat de datum leeg.',false,true);return false}
+ window.MementoVoice?.stop?.();
+ if(task)quickDate=date===today()?null:date;
+ if(task)taskTab='open';
+ const saved=task?mutate(()=>state.tasks.unshift({id:uid(),title:body.slice(0,180),notes:body.length>180?body:'',kind:view==='household'?'routine':'task',category:view==='household'?'Huishouden':'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date,focusDate:'',priority:false,done:false,archived:false,deletedAt:'',lastDone:'',steps:[],history:[],sourceUrl:''}),'Taak opgeslagen.'):noteFromQuick(body);
+ if(!saved&&$('lifeQuickTitle'))$('lifeQuickTitle').value=body;
+ $('lifeQuickTitle')?.focus();return saved;
+}
 function taskRow(t){const late=lateLabel(t),finished=t.done,focus=t.focusDate===today(),inDay=view==='today';
  const meta=[esc(t.kind==='routine'?t.room||'Hele huis':t.category)];if(view==='household')meta.push('Laatst: '+(t.lastDone?fmt(t.lastDone):'nog niet gedaan'));if(t.kind==='routine')meta.push('↻ '+esc(repeatLabel(t)));if(late)meta.push('<span class="life-late-text">'+esc(late)+'</span>');else if(t.date&&!inDay)meta.push(fmt(t.date));if(t.priority)meta.push('<span class="life-priority-label">★ Belangrijk</span>');
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
@@ -3061,6 +3090,7 @@ function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
 root.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.lifeQuickKind){quickKind=d.lifeQuickKind==='note'?'note':'task';syncQuickForm();return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
  if(d.mementoNewEvent!==undefined){editAppointment(null,d.mementoNewEvent||today());return}
  if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
@@ -3089,11 +3119,11 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('input',e=>{if(e.target.id!=='lifeSearch')return;search=e.target.value;if(['household','tasks'].includes(view))renderTasks(view==='household');else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();else if(view==='library')renderLibrary()});
 root.addEventListener('change',e=>{
- const el=e.target;if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks(view==='household');return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks(true);return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks(true);return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
+ const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks(view==='household');return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks(true);return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks(true);return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
  if(el.dataset.lifeBought){const g=state.groceries.find(x=>x.id===el.dataset.lifeBought);mutate(()=>{g.bought=el.checked},'Boodschappen bijgewerkt.',true);return}
  if(el.id==='lifeImportFile'&&el.files[0]){const file=el.files[0],include=$('lifeRestoreFinance').checked;el.value='';importBackup(file,include)}
 });
-root.addEventListener('submit',e=>{if(e.target.id!=='lifeQuickForm')return;e.preventDefault();const body=$('lifeQuickTitle').value.trim();if(!body)return;window.MementoVoice?.stop?.();if($('lifeQuickKind')?.value==='task'){mutate(()=>state.tasks.unshift({id:uid(),title:body.slice(0,180),notes:body.length>180?body:'',kind:view==='household'?'routine':'task',category:view==='household'?'Huishouden':'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date:'',focusDate:'',priority:false,done:false,archived:false,deletedAt:'',lastDone:'',steps:[],history:[],sourceUrl:''}),'Taak opgeslagen.')}else noteFromQuick(body);$('lifeQuickTitle')?.focus()});
+root.addEventListener('submit',e=>{if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;if(b.dataset.mementoDeleteEvent){
  const id=b.dataset.mementoDeleteEvent,entry=localAppointments().find(x=>x.id===id);
  if(entry&&confirm('Afspraak ‘'+entry.title+'’ verwijderen uit Memento?')){
@@ -3425,11 +3455,11 @@ render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').textContent='
  let recognizer=null,isActive=false;
  const $=id=>document.getElementById(id);
  function show(t){const e=$('mementoVoiceMessage');if(e)e.textContent=t}
- function paint(){const b=$('mementoVoiceButton');if(!b)return;b.classList.toggle('recording',isActive);b.setAttribute('aria-pressed',String(isActive));b.setAttribute('aria-label',isActive?'Stop inspreken':'Spreek een notitie in');b.title=isActive?'Stop opname':'Inspreken'}
+ function paint(){const b=$('mementoVoiceButton');if(!b)return;b.classList.toggle('recording',isActive);b.setAttribute('aria-pressed',String(isActive));b.setAttribute('aria-label',isActive?'Stop inspreken':'Spreek tekst in');b.title=isActive?'Stop opname':'Inspreken'}
  function stop(){if(recognizer&&isActive)try{recognizer.stop()}catch(e){}isActive=false;paint()}
  document.addEventListener('click',e=>{
   if(!e.target.closest('#mementoVoiceButton'))return;
-  if(isActive){stop();show('Opname gestopt. Controleer de tekst en druk op Opslaan.');return}
+  if(isActive){stop();show('Opname gestopt. Controleer de tekst en druk op Toevoegen.');return}
   const input=$('lifeQuickTitle');if(!input)return;
   const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!Speech){show('Deze browser ondersteunt spraakherkenning niet. Gebruik eventueel de microfoon van je Android-toetsenbord.');input.focus();return}
@@ -3442,7 +3472,7 @@ render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').textContent='
    input.value=[initial,committed.trim(),interim.trim()].filter(Boolean).join(' ').slice(0,input.maxLength);
   };
   recognizer.onerror=event=>{isActive=false;paint();const names={'not-allowed':'Microfoontoegang geweigerd. Geef Chrome microfoontoegang.','no-speech':'Geen spraak gehoord. Probeer opnieuw.','network':'Spraakherkenning is tijdelijk niet bereikbaar.','audio-capture':'Microfoon niet beschikbaar.'};show(names[event.error]||'Spraakherkenning mislukt. Probeer opnieuw.')};
-  recognizer.onend=()=>{isActive=false;paint();if(input.isConnected&&input.value.trim())show('Tekst klaar. Lees na en druk op Opslaan om de notitie te bewaren.');else show('Geen spraak herkend. Probeer het opnieuw.');recognizer=null};
+  recognizer.onend=()=>{isActive=false;paint();if(input.isConnected&&input.value.trim())show('Tekst klaar. Lees na en druk op Toevoegen.');else show('Geen spraak herkend. Probeer het opnieuw.');recognizer=null};
   try{recognizer.start()}catch(err){isActive=false;paint();show('Microfoon kon niet starten. Probeer opnieuw.')}
  });
  window.MementoVoice={stop};
@@ -3647,6 +3677,42 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
  #lifeApp .memento-unified-event .memento-event-actions{grid-column:3;grid-row:1 / 3}
 }
 
+</style>
+
+<style id="memento-design2-cards-20261025">
+/* Approved proposal 2: note/task capture and individual task cards. */
+#lifeApp .memento-capture-card{display:flex;flex-direction:column;align-items:stretch;gap:16px;padding:18px;margin:16px 0 24px;border:1px solid #3b5142;border-radius:22px;background:#1c3024;box-shadow:none}
+#lifeApp .memento-capture-kinds{display:flex;align-self:flex-start;max-width:100%;padding:3px;border:1px solid #45604c;border-radius:18px;background:#15271c}
+#lifeApp .memento-capture-kinds button{min-height:44px;min-width:104px;padding:8px 20px;border:0;border-radius:14px;background:transparent;color:#edf5ef;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+#lifeApp .memento-capture-kinds button[aria-pressed=true]{background:#bdd3c2;color:#14261a}
+#lifeApp .memento-capture-card input#lifeQuickTitle{box-sizing:border-box;display:block;width:100%;min-height:64px;flex:none;margin:0;padding:14px;background:#15271c!important;border:1px solid #607566!important;border-radius:13px;color:#edf5ef!important;font:inherit;font-size:17px;line-height:1.5}
+#lifeApp .memento-capture-card input#lifeQuickTitle::placeholder{color:#bfd1c3;opacity:1}
+#lifeApp .memento-capture-toolbar{display:flex;align-items:center;gap:10px;min-width:0}
+#lifeApp .memento-capture-date{position:relative;display:flex;align-items:center;gap:8px;min-height:44px;min-width:0;max-width:calc(100% - 160px);padding:8px 11px;border:1px solid #607566;border-radius:12px;color:#edf5ef;font-size:14px;cursor:pointer;box-sizing:border-box}
+#lifeApp .memento-capture-date svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+#lifeApp #lifeQuickDateLabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lifeApp .memento-capture-date input#lifeQuickDate{position:absolute;inset:0;opacity:0;width:100%;height:100%;min-width:0;box-sizing:border-box;cursor:pointer;z-index:1;margin:0;padding:0;color-scheme:dark}
+#lifeApp .memento-capture-date input::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;cursor:pointer}
+#lifeApp .memento-capture-date:focus-within{outline:2px solid #bdd3c2;outline-offset:3px}
+#lifeApp .memento-capture-inbox{color:#bfd1c3;font-size:13px;line-height:1.4;min-width:0}
+#lifeApp .memento-capture-toolbar .memento-voice-btn{margin-left:auto;width:44px;min-width:44px;height:44px;border:0;border-radius:12px;background:transparent;color:#e7f2e9}
+#lifeApp .memento-capture-toolbar .life-btn-primary{min-height:46px;padding:10px 16px;border-radius:15px;background:#bdd3c2!important;border-color:#bdd3c2!important;color:#14261a!important;font-size:15px;white-space:nowrap}
+#lifeApp .memento-capture-card .memento-voice-message{margin:0;color:#bfd1c3;font-size:13px;line-height:1.5}
+#lifeApp .memento-capture-card .memento-voice-message:empty{display:none}
+#lifeApp .memento-capture-card [hidden]{display:none!important}
+#lifeApp .life-list:has(>.life-task){display:grid;gap:9px;background:transparent;border:0;border-radius:0;overflow:visible}
+#lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task{box-sizing:border-box;display:grid;grid-template-columns:44px minmax(0,1fr) 40px;gap:8px;padding:14px 8px;min-height:86px;background:#1c3024;border:1px solid #3b5142;border-radius:17px;box-shadow:none;overflow:visible}
+#lifeApp .life-list>.life-task:is(:first-child,:last-child,:only-child){border-radius:17px}
+#lifeApp .life-list>.life-task.life-task-late{border-left:3px solid #df9aa4}
+#lifeApp .life-task .life-task-title{font-size:16px;line-height:1.4;font-weight:700;color:#edf5ef;min-height:28px;text-align:left;overflow-wrap:anywhere}
+#lifeApp .life-task .life-task-meta{font-size:13px;line-height:1.45;color:#bfd1c3;margin-top:4px;gap:3px 8px}
+#lifeApp .life-task .life-complete,#lifeApp .life-day-column .life-task .life-complete{display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;border-radius:10px;font-size:15px;line-height:1;isolation:isolate;color:#14261a}
+#lifeApp .life-task .life-complete::before{box-sizing:border-box;content:"";position:absolute;inset:12px;width:20px;height:20px;border:1.5px solid #bfd1c3;border-radius:5px;background:transparent;z-index:-1}
+#lifeApp .life-task .life-complete[aria-pressed=true]::before{background:#bdd3c2;border-color:#bdd3c2}
+#lifeApp .life-completed .life-task-title{color:#bfd1c3;text-decoration:line-through}
+#lifeApp .life-task-menu>summary{width:40px;min-width:40px;min-height:44px;color:#bfd1c3}
+#lifeApp .memento-capture-card button:focus-visible,#lifeApp .life-complete:focus-visible{outline:2px solid #bdd3c2;outline-offset:3px}
+@media(max-width:360px){#lifeApp .memento-capture-card{padding:14px;gap:14px}#lifeApp .memento-capture-toolbar{gap:5px}#lifeApp .memento-capture-toolbar .life-btn-primary{font-size:14px;padding:10px 11px}#lifeApp .memento-capture-date{padding:8px;font-size:13px;gap:5px;max-width:calc(100% - 146px)}#lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task{gap:4px;padding:12px 5px}}
 </style>
 </body></html>
 
