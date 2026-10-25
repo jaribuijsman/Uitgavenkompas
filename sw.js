@@ -1,4 +1,4 @@
-const CACHE = "memento-pwa-v1-20261025";
+const CACHE = "memento-pwa-v2-20261025b";
 const CORE = ["./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png"];
 self.addEventListener("install", event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
