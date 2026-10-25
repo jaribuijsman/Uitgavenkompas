@@ -3002,7 +3002,7 @@ function convertNote(id,kind){
 function noteFromQuick(raw){
  const body=String(raw||'').trim();if(!body)return false;
  const title=(body.split(/[\r\n]/)[0]||body).trim().slice(0,84)+(body.split(/[\r\n]/)[0].trim().length>84?'…':'');
- noteTab='active';
+ noteTab='active';noteCategoryFilter='all';
  return mutate(()=>state.notes.unshift({id:uid(),title,body,category:'Inbox',createdAt:new Date().toISOString(),deletedAt:'',sourceUrl:''}),
   'Notitie toegevoegd aan Inbox.');
 }
