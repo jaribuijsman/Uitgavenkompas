@@ -1764,6 +1764,50 @@ body[data-compass-area=finance] .app .salary-period-modern-metrics .account-peri
 #lifeApp .memento-saved-trash #lifeTemplateResults{padding:12px}
 @media(max-width:370px){#lifeApp .memento-task-tabs{gap:3px}#lifeApp .memento-task-tabs button{font-size:9px;padding:7px 1px}}
 </style>
+<style id="memento-notes-mobile-v2">
+/* Notities: compact, sage/forest UI. Scope restricted to #lifeApp notes view. */
+#lifeApp[data-life-view="notes"] .memento-notes-toolbar{display:grid;gap:10px;margin:0 0 14px}
+#lifeApp[data-life-view="notes"] .memento-notes-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:0}
+#lifeApp[data-life-view="notes"] .memento-notes-tabs button{min-width:0;min-height:44px;padding:8px 4px;border:1px solid #45674f;border-radius:11px;background:#21382a;color:#c6dcca;font-size:clamp(10px,2.7vw,12px);font-weight:720}
+#lifeApp[data-life-view="notes"] .memento-notes-tabs button[aria-pressed="true"]{background:#b9dcc3;border-color:#b9dcc3;color:#173724}
+#lifeApp[data-life-view="notes"] .memento-notes-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(126px,35%);gap:8px}
+#lifeApp[data-life-view="notes"] .memento-notes-filters label{min-width:0;display:grid;gap:5px;font-size:11px;font-weight:650;color:#adccb6}
+#lifeApp[data-life-view="notes"] .memento-notes-filters input,#lifeApp[data-life-view="notes"] .memento-notes-filters select{width:100%;min-width:0;min-height:44px;padding:10px 11px;border-radius:11px;background:#1f3428!important;color:#e9f6ec!important;border:1px solid #496b53!important;box-shadow:none;font-size:13px}
+#lifeApp[data-life-view="notes"] .memento-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));align-items:start;gap:9px;margin:0 0 24px}
+#lifeApp[data-life-view="notes"] .memento-note-card{min-width:0;overflow:visible;background:#1b3024;border:1px solid #3c5b44;border-radius:15px;box-shadow:0 4px 14px #07140b1c}
+#lifeApp[data-life-view="notes"] .memento-note-card.is-open{border-color:#729e7f}
+#lifeApp[data-life-view="notes"] .memento-note-card.is-pinned{border-left:3px solid #9dccaa}
+#lifeApp[data-life-view="notes"] .memento-note-toggle{display:block;width:100%;min-height:92px;text-align:left;padding:14px 15px 12px;background:transparent;border:0;border-radius:14px;color:#f3f8f3;cursor:pointer}
+#lifeApp[data-life-view="notes"] .memento-note-head{display:flex;align-items:center;gap:8px;justify-content:space-between}
+#lifeApp[data-life-view="notes"] .memento-note-title{display:block;min-width:0;overflow-wrap:anywhere;font-size:15px;font-weight:760;line-height:1.35;letter-spacing:-.2px}
+#lifeApp[data-life-view="notes"] .memento-note-chevron{flex:0 0 18px;width:18px;height:18px;display:grid;place-items:center;color:#b2cdb8;transition:transform .18s}
+#lifeApp[data-life-view="notes"] .memento-note-chevron svg{display:block;width:17px;height:17px}
+#lifeApp[data-life-view="notes"] .is-open .memento-note-chevron{transform:rotate(180deg)}
+#lifeApp[data-life-view="notes"] .memento-note-meta{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap;min-width:0}
+#lifeApp[data-life-view="notes"] .memento-note-category{color:#b7dcc2;background:#2a4933;border-radius:6px;padding:2px 7px;font-size:10px;line-height:1.5;max-width:100%;overflow-wrap:anywhere}
+#lifeApp[data-life-view="notes"] .memento-note-progress{color:#a2bea9;font-size:11px}
+#lifeApp[data-life-view="notes"] .memento-note-pin{width:16px;height:16px;display:inline-flex;color:#a7dfb5}
+#lifeApp[data-life-view="notes"] .memento-note-pin svg{width:100%;height:100%}
+#lifeApp[data-life-view="notes"] .memento-note-excerpt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:9px;color:#b7cbbd;font-size:12px;line-height:1.5;overflow-wrap:anywhere;white-space:pre-line}
+#lifeApp[data-life-view="notes"] .memento-note-detail{padding:0 15px 13px}
+#lifeApp[data-life-view="notes"] .memento-note-body{color:#d5e9d9;border-top:1px solid #3b5a43;padding-top:12px;max-height:none;overflow:visible;font-size:13px;line-height:1.7}
+#lifeApp[data-life-view="notes"] .memento-note-long-text{white-space:pre-wrap;overflow-wrap:anywhere}
+#lifeApp[data-life-view="notes"] .memento-note-conversions{margin:12px 0 0!important;color:#abc9b5!important;font-size:11px!important}
+#lifeApp[data-life-view="notes"] .memento-note-controls{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:12px;border-top:1px solid #344e3b}
+#lifeApp[data-life-view="notes"] .memento-note-action,#lifeApp[data-life-view="notes"] .memento-note-controls .memento-convert-note>summary{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border:1px solid #53785b;border-radius:10px;background:#294735;color:#e6f5e9;font-size:12px;font-weight:700;cursor:pointer}
+#lifeApp[data-life-view="notes"] .memento-note-action.primary{background:#b6dec0;color:#153d24;border-color:#b6dec0}
+#lifeApp[data-life-view="notes"] .memento-note-action.danger{color:#f6b4bc;background:#422c31;border-color:#75454a}
+#lifeApp[data-life-view="notes"] .memento-note-controls .memento-convert-note{border:0;background:transparent;font-size:12px}
+#lifeApp[data-life-view="notes"] .memento-note-controls .memento-convert-note[open]{flex-basis:100%;order:3}
+#lifeApp[data-life-view="notes"] .memento-note-controls .memento-convert-note>div{padding-top:8px}
+#lifeApp[data-life-view="notes"] .memento-note-controls .memento-convert-note button{min-height:44px}
+#lifeApp[data-life-view="notes"] .memento-note-check{min-height:44px;align-items:center;margin:2px 0}
+#lifeApp[data-life-view="notes"] .memento-note-check input{accent-color:#a9dcb7;width:20px!important;height:20px!important}
+#lifeApp[data-life-view="notes"] .memento-note-empty{padding:22px 16px;text-align:center;border:1px dashed #456a50;border-radius:13px;background:#1b3024;color:#e6f3e9}
+#lifeApp[data-life-view="notes"] .memento-note-empty strong{font-size:14px}
+#lifeApp[data-life-view="notes"] .memento-note-empty p{font-size:12px;color:#afcbb7}
+@media(max-width:440px){#lifeApp[data-life-view="notes"] .memento-notes-filters{grid-template-columns:minmax(0,1fr) minmax(120px,40%)}#lifeApp[data-life-view="notes"] .memento-note-grid{grid-template-columns:minmax(0,1fr)}#lifeApp[data-life-view="notes"] .memento-note-toggle{padding:12px 13px}#lifeApp[data-life-view="notes"] .memento-note-detail{padding:0 13px 13px}}
+</style>
 </head>
 <body><svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none"><defs><filter id="mementoSageInk" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .741 0 0 0 0 .816 0 0 0 0 .749 0 0 0 1 0"/></filter></defs></svg><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><div class="pin-forest-bg" aria-hidden="true"><div class="memento-scene-photo"></div><div class="memento-scene-rays"></div><div class="memento-scene-haze"></div><canvas id="mementoWeatherCanvas"></canvas><div class="memento-scene-shade"></div></div><form class="pin-panel" id="pinForm"><div class="memento-pin-brand"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle" aria-label="Memento"><img class="memento-gold-art" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" decoding="sync"></h1></div><div class="memento-pin-entry"><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••"><div class="pin-dots" id="pinDots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pin-keypad" id="pinKeypad" aria-label="Pincode toetsenbord"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><span aria-hidden="true"></span></div><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p><div class="memento-scene-caption"><span id="mementoSceneStatus" role="status">Beverwijk · Weer ophalen…</span><button type="button" id="mementoSceneToggle" aria-pressed="false">Animatie pauzeren</button></div></div></form></div><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brand-mark memento-app-symbol" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true" focusable="false">
@@ -2786,7 +2830,7 @@ const rooms=['Keuken','Badkamer & toilet','Slaapkamer','Wasruimte','Hele huis'];
 const views=[['today','☀','Mijn dag'],['tasks','☑','Taken'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Notities & ideeën'],['agenda','◷','Agenda'],['backup','⚙','Back-up & instellingen']];
 let quickKind='task',quickDate=null;
 let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false;
-let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',templateTab='active',wishTab='active',wishFilter='all',taskSort='priority',search='',taskScope='all',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
+let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',noteOpenId='',noteCategoryFilter='all',templateTab='active',wishTab='active',wishFilter='all',taskSort='priority',search='',taskScope='all',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
 function repeatLabel(t){return t.repeat==='custom'?'Iedere '+t.repeatDays+' '+(t.repeatDays===1?'dag':'dagen'):(repeats[t.repeat]||'Niet herhalen')}
 function templateOf(t){return {id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
 function storeTemplate(t){const copy=templateOf(t),existing=state.templates.find(x=>!x.deletedAt&&x.sourceTaskId&&x.sourceTaskId===t.id);if(existing){copy.id=existing.id;state.templates[state.templates.indexOf(existing)]=copy}else state.templates.push(copy)}
@@ -3156,7 +3200,64 @@ function saveShoppingProduct(id){
 }
 
 function wishCards(){const arr=state.wishes.filter(w=>wishTab==='trash'?w.deletedAt:!w.deletedAt).filter(w=>wishFilter==='all'||w.status===wishFilter).filter(w=>!search||[w.title,w.notes].join(' ').toLowerCase().includes(search.toLowerCase()));$('lifeWishResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(w=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(w.title)+'</h2><span class="life-pill">'+esc({idea:'Idee',research:'Uitzoeken',bought:'Gekocht'}[w.status]||'Idee')+'</span></div>'+(w.budget?'<p>Budget: € '+esc(w.budget)+'</p>':'')+(w.notes?'<p>'+esc(w.notes)+'</p>':'')+(w.researchSummary?'<details><summary>Onderzoeksuitkomst</summary><div class="life-note-text">'+esc(w.researchSummary)+'</div></details>':'')+(safeLink(w.url)?'<a class="life-source" href="'+esc(safeLink(w.url))+'" target="_blank" rel="noopener noreferrer">Productlink ↗</a>':'')+'<div class="life-card-actions">'+(wishTab==='trash'?'<button class="life-btn" data-life-wish-restore="'+esc(w.id)+'">Terugzetten</button>':'<button class="life-btn life-btn-small" data-life-wish-edit="'+esc(w.id)+'">Bewerken</button><button class="life-btn life-btn-small" data-life-research="'+esc(w.id)+'">Naar Slim Kopen →</button><button class="life-btn life-btn-small life-btn-danger" data-life-wish-delete="'+esc(w.id)+'">Verwijderen</button>')+'</div></article>').join('')+'</div>':'<div class="life-list">'+empty(wishTab==='trash'?'De prullenbak is leeg':'Geen aankoopwensen gevonden','Pas je filters aan of voeg een aankoopwens toe.')+'</div>'}
-function noteCards(){const arr=state.notes.filter(n=>noteTab==='trash'?n.deletedAt:!n.deletedAt).filter(n=>!search||[n.title,n.body].join(' ').toLowerCase().includes(search.toLowerCase()));$('lifeNoteResults').innerHTML=arr.length?'<div class="life-grid">'+arr.map(n=>'<article class="life-panel"><div class="life-card-head"><h2>'+esc(n.title)+'</h2><span class="life-pill">'+esc(n.category||'Notitie')+'</span></div><div class="life-note-text">'+(n.isChecklist?String(n.body||'').split(/\r?\n/).map((line,i)=>'<label class="memento-note-check"><input type="checkbox" data-life-note-check="'+esc(n.id)+'" data-line="'+i+'" '+((n.checkedLines||[]).includes(i)?'checked':'')+(n.deletedAt?' disabled':'')+'><span>'+esc(line)+'</span></label>').join(''):esc(n.body||''))+'</div>'+((n.conversions||[]).length?'<p class="life-footnote">Verwerkt als: '+esc(n.conversions.map(x=>({task:'taak',wish:'aankoopwens',appointment:'afspraak'}[x.kind]||x.kind)).join(', '))+'</p>':'')+'<div class="life-card-actions">'+(noteTab==='trash'?'<button type="button" class="life-btn life-btn-small" data-life-note-restore="'+esc(n.id)+'">Terugzetten</button>':'<button type="button" class="life-btn life-btn-small" data-life-note-edit="'+esc(n.id)+'">Bewerken</button><details class="memento-convert-note"><summary>Verwerken als…</summary><div><button type="button" data-memento-convert="task" data-memento-note-id="'+esc(n.id)+'">Taak</button><button type="button" data-memento-convert="appointment" data-memento-note-id="'+esc(n.id)+'">Afspraak</button><button type="button" data-memento-convert="wish" data-memento-note-id="'+esc(n.id)+'">Wens</button></div></details><button type="button" class="life-btn life-btn-small life-btn-danger" data-life-note-delete="'+esc(n.id)+'">Verwijderen</button>')+'</div></article>').join('')+'</div>':'<div class="life-list">'+empty(noteTab==='trash'?'De prullenbak is leeg':'Geen notities gevonden',noteTab==='trash'?'Verwijderde notities blijven hier herstelbaar.':'Bewaar een idee, inpaklijst of andere informatie.')+'</div>'}
+function noteCards(){
+ const host=$('lifeNoteResults');if(!host)return;
+ const available=state.notes.filter(n=>noteTab==='trash'?Boolean(n.deletedAt):!n.deletedAt);
+ const filtered=available.filter(n=>
+  (noteTab!=='inbox'||(n.category||'').trim().toLowerCase()==='inbox')&&
+  (noteTab!=='pinned'||Boolean(n.pinned))&&
+  (noteCategoryFilter==='all'||(n.category||'Notitie')===noteCategoryFilter)&&
+  (!search||[n.title,n.body,n.category].join(' ').toLowerCase().includes(search.toLowerCase()))
+ );
+ const indexed=filtered.map((note,index)=>({note,index}));
+ indexed.sort((a,b)=>Number(Boolean(b.note.pinned))-Number(Boolean(a.note.pinned))||
+  String(b.note.updatedAt||b.note.createdAt||'').localeCompare(String(a.note.updatedAt||a.note.createdAt||''))||
+  a.index-b.index);
+ const pinIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 3 5 5-3 1-3 5v3l-1 1-4-4-5 7-1-1 7-10-4-4 1-1h3l5-3z"/></svg>';
+ const chevron='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>';
+ const cards=indexed.map(({note:n})=>{
+  const open=noteOpenId===n.id;
+  const checklist=Boolean(n.isChecklist),lines=String(n.body||'').split(/\r?\n/);
+  const checked=checklist?lines.reduce((count,line,i)=>count+(line.trim()&&(n.checkedLines||[]).includes(i)?1:0),0):0;
+  const total=checklist?lines.filter(line=>line.trim()).length:0;
+  const excerpt=(String(n.body||'').trim()||'Geen verdere inhoud').slice(0,220);
+  const count=checklist?'<span class="memento-note-progress">'+checked+'/'+total+' afgevinkt</span>':'';
+  const badge='<span class="memento-note-category">'+esc(n.category||'Notitie')+'</span>';
+  const pin=n.pinned?'<span class="memento-note-pin" aria-label="Vastgezet" title="Vastgezet">'+pinIcon+'</span>':'';
+  const metadata='<div class="memento-note-meta">'+badge+count+pin+'</div>';
+  const content=checklist?
+   lines.map((line,i)=>line.trim()?'<label class="memento-note-check"><input type="checkbox" data-life-note-check="'+esc(n.id)+'" data-line="'+i+'" '+((n.checkedLines||[]).includes(i)?'checked':'')+(n.deletedAt?' disabled':'')+'><span>'+esc(line)+'</span></label>':'').join(''):
+   '<div class="memento-note-long-text">'+esc(n.body||'Geen verdere inhoud')+'</div>';
+  const conversions=(n.conversions||[]).length?
+   '<p class="memento-note-conversions">Verwerkt als: '+esc(n.conversions.map(x=>({task:'taak',wish:'wens',appointment:'afspraak'}[x.kind]||x.kind)).join(', '))+'</p>':'';
+  const controls=noteTab==='trash'?
+   '<button type="button" class="memento-note-action primary" data-life-note-restore="'+esc(n.id)+'">Terugzetten</button>':
+   '<button type="button" class="memento-note-action primary" data-life-note-edit="'+esc(n.id)+'">Bewerken</button>'+
+   '<button type="button" class="memento-note-action" data-memento-note-pin="'+esc(n.id)+'">'+(n.pinned?'Losmaken':'Vastzetten')+'</button>'+
+   '<details class="memento-convert-note"><summary>Verwerken als…</summary><div>'+
+   '<button type="button" data-memento-convert="task" data-memento-note-id="'+esc(n.id)+'">Taak</button>'+
+   '<button type="button" data-memento-convert="appointment" data-memento-note-id="'+esc(n.id)+'">Afspraak</button>'+
+   '<button type="button" data-memento-convert="wish" data-memento-note-id="'+esc(n.id)+'">Wens</button>'+
+   '</div></details>'+
+   '<button type="button" class="memento-note-action danger" data-life-note-delete="'+esc(n.id)+'">Verwijderen</button>';
+  return '<article class="memento-note-card'+(open?' is-open':'')+(n.pinned?' is-pinned':'')+'">'+
+   '<button type="button" class="memento-note-toggle" data-memento-note-toggle="'+esc(n.id)+'" aria-expanded="'+(open?'true':'false')+'">'+
+   '<span class="memento-note-head"><span class="memento-note-title">'+esc(n.title)+'</span><span class="memento-note-chevron">'+chevron+'</span></span>'+
+   metadata+
+   (!open?'<span class="memento-note-excerpt">'+esc(excerpt)+'</span>':'')+
+   '</button>'+
+   (open?'<div class="memento-note-detail"><div class="memento-note-body">'+content+'</div>'+conversions+
+      '<div class="memento-note-controls">'+controls+'</div></div>':'')+
+   '</article>';
+ }).join('');
+ const labels={active:'Er zijn nog geen notities',inbox:'Je Inbox is leeg',pinned:'Nog niets vastgezet',trash:'De prullenbak is leeg'};
+ const emptyCopy=noteTab==='trash'?'Verwijderde notities kun je hier herstellen.':
+  noteTab==='inbox'?'Spreek iets in of bewaar een snelle notitie onder Inbox.':
+  noteTab==='pinned'?'Open een notitie en kies Vastzetten.':
+  'Voeg een notitie toe, of pas de zoekopdracht of categorie aan.';
+ host.innerHTML=cards?'<div class="memento-note-grid">'+cards+'</div>':
+  '<div class="memento-note-empty"><strong>'+esc(search||noteCategoryFilter!=='all'?'Geen resultaten':labels[noteTab]||labels.active)+'</strong><p>'+esc(search||noteCategoryFilter!=='all'?'Pas je zoekopdracht of filter aan.':emptyCopy)+'</p></div>';
+}
 function renderLibrary(){
  const host=$('lifeTemplateResults');if(!host)return;
  const arr=state.templates.filter(t=>templateTab==='trash'?t.deletedAt:!t.deletedAt).filter(taskMatches).sort((a,b)=>a.title.localeCompare(b.title,'nl'));
@@ -3202,7 +3303,25 @@ function render(){
  }
 
  if(view==='groceries'){renderShopping();return}
- if(view==='wishes'||view==='notes'){content.innerHTML=(view==='notes'?segments([['active','Notities'],['trash','Prullenbak']],noteTab,'data-life-note-tab'):segments([['active','Aankoopwensen'],['trash','Prullenbak']],wishTab,'data-life-wish-tab'))+'<div class="life-toolbar"><label>Zoeken<input id="lifeSearch" type="search" value="'+esc(search)+'" placeholder="Zoek in je '+(view==='wishes'?'aankoopwensen':'notities')+'…"></label>'+(view==='wishes'?'<label>Status<select id="lifeWishFilter">'+option([['all','Alle statussen'],['idea','Idee'],['research','Uitzoeken'],['bought','Gekocht']],wishFilter)+'</select></label>':'')+'</div><div id="'+(view==='wishes'?'lifeWishResults':'lifeNoteResults')+'"></div>';view==='wishes'?wishCards():noteCards();return}
+ if(view==='notes'){
+ const categories=[...new Set(state.notes.filter(n=>!n.deletedAt).map(n=>n.category||'Notitie'))].sort((a,b)=>a.localeCompare(b,'nl'));
+ content.innerHTML='<div class="memento-notes-toolbar">'+
+ '<div class="life-segments memento-notes-tabs" role="group" aria-label="Notitieweergave">'+
+ [['active','Alles'],['inbox','Inbox'],['pinned','Vastgezet'],['trash','Prullenbak']].map(([id,label])=>
+ '<button type="button" data-life-note-tab="'+id+'" aria-pressed="'+(noteTab===id)+'">'+label+'</button>').join('')+
+ '</div><div class="memento-notes-filters"><label class="memento-notes-search"><span>Zoeken</span><input id="lifeSearch" type="search" value="'+esc(search)+'" placeholder="Zoek in notities…" autocomplete="off"></label>'+
+ '<label class="memento-notes-category"><span>Categorie</span><select id="lifeNoteCategoryFilter">'+
+ option([['all','Alle categorieën'],...categories.map(x=>[x,x])],noteCategoryFilter)+
+ '</select></label></div></div><div id="lifeNoteResults"></div>';
+ noteCards();return;
+ }
+ if(view==='wishes'){
+ content.innerHTML=segments([['active','Aankoopwensen'],['trash','Prullenbak']],wishTab,'data-life-wish-tab')+
+ '<div class="life-toolbar"><label>Zoeken<input id="lifeSearch" type="search" value="'+esc(search)+'" placeholder="Zoek in je aankoopwensen…"></label><label>Status<select id="lifeWishFilter">'+
+ option([['all','Alle statussen'],['idea','Idee'],['research','Uitzoeken'],['bought','Gekocht']],wishFilter)+
+ '</select></label></div><div id="lifeWishResults"></div>';
+ wishCards();return;
+ }
  if(view==='agenda')renderAgenda();if(view==='backup')renderBackup();
 }
 function showDialog(title,description,body,footer){previousFocus=document.activeElement;$('lifeDialogPanel').innerHTML='<div class="life-dialog-head"><div><h2 id="lifeDialogTitle">'+esc(title)+'</h2><p class="life-dialog-description">'+esc(description)+'</p></div><button type="button" class="life-close" data-life-close aria-label="Sluiten">×</button></div>'+body+'<div class="life-dialog-footer">'+footer+'</div>';dialog.hidden=false;dialog.classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{$('lifeDialogPanel').querySelector('input,textarea,select,button')?.focus()},20)}
@@ -3270,7 +3389,9 @@ root.addEventListener('click',e=>{
  if(d.mementoGcalConnect){window.MementoGoogleCalendar?.connect?.();return}
  if(d.mementoAgendaShift!==undefined){mementoAgendaOffset=d.mementoAgendaShift==='0'?0:mementoAgendaOffset+Number(d.mementoAgendaShift);renderAgenda();return}
  if(d.lifeEditTask){editTask(d.lifeEditTask);return}if(d.lifeDuplicate){duplicateTask(d.lifeDuplicate);return}if(d.lifeTaskDelete){removeTask(d.lifeTaskDelete);return}if(d.lifeTaskRestore){restoreTask(d.lifeTaskRestore);return}
- if(d.lifeWishTab){wishTab=d.lifeWishTab;render();return}if(d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore){const wish=Boolean(d.lifeWishDelete||d.lifeWishRestore),id=d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore,item=(wish?state.wishes:state.groceries).find(x=>x.id===id);if(item)mutate(()=>{item.deletedAt=(d.lifeWishDelete||d.lifeGroceryDelete)?new Date().toISOString():''},(d.lifeWishDelete||d.lifeGroceryDelete)?'Naar prullenbak verplaatst.':'Teruggezet.',true);return}if(d.lifeNoteTab){noteTab=d.lifeNoteTab;render();return}if(d.lifeTemplateTab){templateTab=d.lifeTemplateTab;render();return}
+ if(d.lifeWishTab){wishTab=d.lifeWishTab;render();return}if(d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore){const wish=Boolean(d.lifeWishDelete||d.lifeWishRestore),id=d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore,item=(wish?state.wishes:state.groceries).find(x=>x.id===id);if(item)mutate(()=>{item.deletedAt=(d.lifeWishDelete||d.lifeGroceryDelete)?new Date().toISOString():''},(d.lifeWishDelete||d.lifeGroceryDelete)?'Naar prullenbak verplaatst.':'Teruggezet.',true);return}if(d.mementoNoteToggle){noteOpenId=noteOpenId===d.mementoNoteToggle?'':d.mementoNoteToggle;noteCards();return}
+ if(d.mementoNotePin){const n=state.notes.find(x=>x.id===d.mementoNotePin&&!x.deletedAt);if(n){noteOpenId=n.id;mutate(()=>{n.pinned=!n.pinned;n.updatedAt=new Date().toISOString()},n.pinned?'Notitie losgemaakt.':'Notitie vastgezet.',true)}return}
+ if(d.lifeNoteTab){noteTab=d.lifeNoteTab;noteOpenId='';noteCategoryFilter='all';render();return}if(d.lifeTemplateTab){templateTab=d.lifeTemplateTab;render();return}
  if(d.lifeNoteDelete){removeNote(d.lifeNoteDelete);return}if(d.lifeNoteRestore){const n=state.notes.find(x=>x.id===d.lifeNoteRestore);mutate(()=>{n.deletedAt=''},'Notitie teruggezet.',true);return}
  if(d.lifeTemplateUse){const t=state.templates.find(x=>x.id===d.lifeTemplateUse);if(t){const exists=state.tasks.some(x=>!x.deletedAt&&!x.archived&&!x.done&&(x.templateId===t.id||x.title.toLowerCase()===t.title.toLowerCase()));if(exists&&!confirm('Er staat al een actieve taak met deze naam. Toch een nieuwe taak inplannen?'))return;editTask(null,clone(t))}return}
  if(d.lifeTemplateEdit){editTask(d.lifeTemplateEdit,null,true);return}
@@ -3291,7 +3412,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{
- const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
+ const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeNoteCategoryFilter'){noteCategoryFilter=el.value;noteOpenId='';noteCards();return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
  if(el.dataset.lifeBought){changeShoppingItem(el.dataset.lifeBought,'bought',el.checked);return}
  if(el.id==='lifeImportFile'&&el.files[0]){const file=el.files[0],include=$('lifeRestoreFinance').checked;el.value='';importBackup(file,include)}
 });
@@ -3314,7 +3435,7 @@ dialog.addEventListener('submit',e=>{
  }
  if(mode==='grocery'){saveShoppingProduct(id);return}
  if(mode==='wish'){const title=$('lifeWishTitle').value.trim(),url=$('lifeWishUrl').value.trim();if(!title)return;if(url&&!safeLink(url)){status('Gebruik een geldige http- of https-link.',false,true);return}const old=state.wishes.find(x=>x.id===id),obj={...(old||{id:uid(),sourceUrl:''}),title,url,notes:$('lifeWishNotes').value.trim(),budget:Math.max(0,Number($('lifeWishBudget').value)||0),status:$('lifeWishStatus').value};if(mutate(()=>{if(old)state.wishes[state.wishes.findIndex(x=>x.id===id)]=obj;else {state.wishes.push(obj);trackConversion(obj,'wish')}},'Aankoopwens opgeslagen.'))closeDialog();return}
- if(mode==='note'){if(!id)noteTab='active';const title=$('lifeNoteTitle').value.trim();if(!title)return;const old=state.notes.find(x=>x.id===id),obj={...(old||{id:uid(),sourceUrl:''}),title,category:$('lifeNoteCategory').value.trim()||'Notitie',body:$('lifeNoteBody').value.trim(),isChecklist:$('lifeNoteChecklist').checked,checkedLines:old?.body===$('lifeNoteBody').value.trim()?(old.checkedLines||[]):[]};if(mutate(()=>{if(old)state.notes[state.notes.findIndex(x=>x.id===id)]=obj;else state.notes.push(obj)},'Notitie opgeslagen.'))closeDialog()}
+ if(mode==='note'){if(!id)noteTab='active';const title=$('lifeNoteTitle').value.trim();if(!title)return;const old=state.notes.find(x=>x.id===id),now=new Date().toISOString(),obj={...(old||{id:uid(),sourceUrl:'',createdAt:now}),title,category:$('lifeNoteCategory').value.trim()||'Notitie',body:$('lifeNoteBody').value.trim(),isChecklist:$('lifeNoteChecklist').checked,checkedLines:old?.body===$('lifeNoteBody').value.trim()?(old.checkedLines||[]):[],updatedAt:now};if(mutate(()=>{if(old)state.notes[state.notes.findIndex(x=>x.id===id)]=obj;else state.notes.push(obj)},'Notitie opgeslagen.')){noteOpenId=obj.id;noteTab='active';noteCategoryFilter='all';closeDialog();render()}}
 });
 document.addEventListener('keydown',e=>{if(!dialog.classList.contains('open'))return;if(e.key==='Escape'){closeDialog();return}if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button,input,select,textarea,a[href]')].filter(x=>!x.disabled&&x.getClientRects().length),first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}});
 new MutationObserver(()=>{if(document.body.classList.contains('pin-locked'))closeDialog()}).observe(document.body,{attributes:true,attributeFilter:['class']});
