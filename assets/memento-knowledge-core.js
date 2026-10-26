@@ -74,7 +74,11 @@ function updateNote(life,id,changes){
  if(n.kind==="checklist"){n.isChecklist=true;if(before.body!==n.body||!Array.isArray(n.items))n.items=reconcileItems(before,n.body);}
  else n.isChecklist=false;
  n.revisions=Array.isArray(before.revisions)?before.revisions.slice(-11):[];
- n.revisions.push({revision:Number(before.revision)||1,savedAt:before.updatedAt||before.createdAt||now,title:before.title,body:before.body,kind:typeOf(before),collectionId:collectionOf(life,before),tags:clone(before.tags||[]),recipe:clone(before.recipe||null),items:clone(before.items||null)});
+ // Autosave coalesces nearby edits; keep a useful older snapshot without filling Life storage.
+ const last=n.revisions.at(-1);
+ if(!last||Date.now()-Date.parse(last.savedAt||"")>5*60*1000||before.kind!==n.kind){
+  n.revisions.push({revision:Number(before.revision)||1,savedAt:before.updatedAt||before.createdAt||now,title:before.title,body:before.body,kind:typeOf(before),collectionId:collectionOf(life,before),tags:clone(before.tags||[]),recipe:clone(before.recipe||null),items:clone(before.items||null)});
+ }
  n.revision=(Number(before.revision)||1)+1;n.updatedAt=now;
  validateNote(life,n);
  return n;
@@ -104,8 +108,9 @@ function renameCollection(life,id,name){
  if(!c)throw Error("Verzameling niet gevonden");
  const clean=String(name||"").trim();if(!clean||clean.length>80)throw Error("Ongeldige naam");
  if(k.collections.some(x=>x.id!==id&&!x.archived&&nameKey(x.name)===nameKey(clean)))throw Error("Naam bestaat al");
+ const moved=life.notes.filter(n=>collectionOf(life,n)===id);
  c.name=clean;c.revision++;c.updatedAt=timestamp();k.updatedAt=c.updatedAt;
- for(const note of life.notes)if(collectionOf(life,note)===id)note.category=clean;
+ for(const note of moved){note.category=clean;note.collectionId=id;}
  return c;
 }
 function validateNote(life,n){
