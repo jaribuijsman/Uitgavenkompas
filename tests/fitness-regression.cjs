@@ -296,4 +296,20 @@ test("finishing an unrelated manual workout preserves the next A/B/C position", 
   assert.equal(f.sessions.length, 1);
   C.validate(f);
 });
+test("hypertrophy plan preserves custom exercises, IDs and notes", () => {
+  const f=fresh(), r=f.routines[0], id=r.exercises[0].id;
+  const own=C.exercise({name:"Eigen oefening",type:"strength",muscle:"Borst",equipment:"Machine"});
+  r.exercises.push(own); r.notes="Bewaar mijn tekst";
+  C.applyHypertrophyPlan(f);
+  assert.equal(r.exercises[0].id,id);
+  assert.equal(r.exercises.some(e=>e.id===own.id),true);
+  assert.equal(r.notes,"Bewaar mijn tekst");
+  assert.deepEqual(f.routines.slice(0,3).map(x=>x.exercises.filter(e=>e.catalogId).reduce((n,e)=>n+e.sets,0)),[10,10,13]);
+  C.validate(f);
+});
+test("expanded exercise library has unique IDs and offline technique instructions", () => {
+  assert.equal(C.catalog.length>=60,true);
+  assert.equal(new Set(C.catalog.map(e=>e.id)).size,C.catalog.length);
+  assert.equal(C.catalog.every(e=>e.cue && e.cue.length>=10 && e.demo),true);
+});
 console.log(`${count} fitness regression checks passed.`);
