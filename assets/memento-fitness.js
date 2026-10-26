@@ -128,6 +128,10 @@
     if (f.active) return session();
     return (
       splitOffer(f) +
+      (C.shift(f, C.date()) ? '<div class="ft-shift-hint">Vandaag: ' +
+        esc(shiftDescription[C.shift(f,C.date())]) + 'dienst' +
+        (C.shift(f,C.date()) === "N" ? ' · Houd rekening met je slaap en herstel.' : '') +
+        '</div>' : '') +
       panel(
         r ? esc(r.name) : "Je eerste training",
         r
@@ -451,6 +455,7 @@
       )}</nav><div id="ft-notice" hidden role="status"></div><button id="ft-retry" class="life-btn" data-fit="retry" hidden>Opnieuw opslaan</button>${f.active && tab !== "today" ? '<div class="ft-strip"><span>Training bezig: ' + esc(f.active.name) + "</span>" + button("Hervatten", "tab", "today") + "</div>" : ""}${tab === "today" ? today() : tab === "plan" ? plan() : progress()}<div class="ft-footer">Alleen op dit apparaat · opgenomen in je volledige Memento-back-up</div></div>`;
     host.onclick = click;
     host.oninput = input;
+    host.onchange = (event) => { if (event.target.id === "ft-progress-select") input(event); };
     host.onsubmit = submit;
     if (pending) {
       error("Je laatste invoer is nog niet opgeslagen.");
@@ -516,7 +521,7 @@
         : e
           ? "Oefening bewerken"
           : "Oefening toevoegen",
-      `<input type="hidden" name="exerciseId" value="${esc(id)}"><input type="hidden" name="replacement" value="${sessionReplacement}">${select("Uit de oefenbibliotheek", "catalog", [["", "Eigen oefening"], ...C.catalog.map((e) => [e.id, e.name])], "")}<div class="ft-form-grid">${field("Naam", "name", e?.name || "", "text", 'required maxlength="120"')}${select(
+      `<input type="hidden" name="exerciseId" value="${esc(id)}"><input type="hidden" name="replacement" value="${sessionReplacement}">${select("Spiergroep filter", "muscleFilter", [["", "Alle spiergroepen"], ...[...new Set(C.catalog.map((x) => x.muscle))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Apparatuur filter", "equipmentFilter", [["", "Alle apparatuur"], ...[...new Set(C.catalog.map((x) => x.equipment))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Uit de oefenbibliotheek", "catalog", [["", "Eigen oefening"], ...C.catalog.map((e) => [e.id, e.name])], "")}<div class="ft-form-grid">${field("Naam", "name", e?.name || "", "text", 'required maxlength="120"')}${select(
         "Soort",
         "type",
         [
@@ -530,6 +535,16 @@
       "exercise",
     );
     const sel = document.querySelector("#fitnessDialog [name=catalog]");
+    const muscles = document.querySelector("#fitnessDialog [name=muscleFilter]");
+    const tools = document.querySelector("#fitnessDialog [name=equipmentFilter]");
+    const filterCatalog = () => {
+      const current = sel.value, visible = C.catalog.filter((x) =>
+        (!muscles.value || x.muscle === muscles.value) &&
+        (!tools.value || x.equipment === tools.value));
+      sel.innerHTML = options([["", "Eigen oefening"], ...visible.map((x) => [x.id,x.name])], visible.some((x) => x.id === current) ? current : "");
+    };
+    muscles.onchange = filterCatalog;
+    tools.onchange = filterCatalog;
     sel.onchange = () => {
       const x = C.catalog.find((e) => e.id === sel.value);
       if (!x) return;
@@ -574,30 +589,30 @@
       "start",
     );
   }
+  const shiftDescription = { V: "Ochtend", L: "Middag", N: "Nacht", R: "Vrij" };
   function planForm(id) {
-    const f = data(),
-      b = f.bookings.find((x) => x.id === id);
+    const f = data(), b = f.bookings.find((x) => x.id === id);
     if (!C.available(f).length) {
-      error("Maak eerst een schema met minstens één oefening.");
-      return;
+      error("Maak eerst een schema met minstens één oefening."); return;
     }
-    dialog(
-      "Training plannen",
-      `<input type="hidden" name="bookingId" value="${esc(id || "")}">${select(
-        "Training",
-        "routineId",
-        C.available(f).map((r) => [r.id, r.name]),
-        b?.routineId || C.next(f)?.id,
-      )}<div class="ft-form-grid">${field("Datum", "date", b?.date || C.suggestedDates(f)[0] || C.date(), "date", "required")}${field("Tijd (optioneel)", "time", b?.time || "", "time")}</div><p>Beschikbare dagen volgens je fitnessplanning en diensten: ${C.suggestedDates(
-        f,
-      )
-        .map((d) => fmt(d))
-        .join(
-          ", ",
-        )}. Controleer ook je andere afspraken in Agenda.</p>${b ? '<div class="ft-actions">' + button("Training starten", "start-booking", b.id) + button("Planning annuleren", "cancel-booking", b.id) + "</div>" : ""}`,
-      "In agenda zetten",
-      "booking",
-    );
+    const days = C.suggestedDates(f, b?.date || C.date());
+    const suggestions = days.length ?
+      '<div class="ft-field"><span>Geschikte dagen volgens je rooster</span>' +
+        '<div class="ft-date-choices">' + days.map((date) =>
+          '<button type="button" class="ft-date-choice" data-fit="pick-date" data-id="' +
+            esc(date) + '">' + fmt(date) +
+            '<small>' + esc(shiftDescription[C.shift(f,date)] || "Geen dienst bekend") +
+            '</small></button>').join("") + '</div></div>' : "";
+    dialog("Training plannen",
+      '<input type="hidden" name="bookingId" value="' + esc(id || "") + '">' +
+      select("Training", "routineId", C.available(f).map((r)=>[r.id,r.name]), b?.routineId || C.next(f)?.id) +
+      suggestions + '<div class="ft-form-grid">' +
+        field("Datum","date",b?.date || days[0] || C.date(),"date","required") +
+        field("Tijd (optioneel)","time",b?.time || "","time") + '</div>' +
+      '<p class="ft-hint">Dit zijn suggesties, geen automatische afspraken. Een training op een nachtdienstdag kun je nog steeds zelf plannen. Bekijk ook je overige afspraken in Agenda.</p>' +
+      (b ? '<div class="ft-actions">' + button("Training starten","start-booking",b.id) +
+        button("Planning annuleren","cancel-booking",b.id) + '</div>' : ""),
+      "In agenda zetten", "booking");
   }
   function historyDialog(id) {
     const s = data().sessions.find((x) => x.id === id);
@@ -691,6 +706,9 @@
     } else if (a === "toggle-rir") {
       showRir = !showRir;
       render();
+    } else if (a === "pick-date") {
+      const field = document.querySelector("#fitnessDialog [name=date]");
+      if (field) { field.value = id; field.focus(); }
     } else if (a === "guide") guideDialog(id);
     else if (a === "alternatives") alternativesDialog(id);
     else if (a === "profile") profile();
