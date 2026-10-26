@@ -320,115 +320,118 @@
       `<label class="${k === "rir" ? "ft-rir-field" : ""}">${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="decimal" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
     return `<div class="ft-set${l.done ? " is-done" : ""}" data-set-row="${esc(l.id)}"><div class="ft-set-label">${l.warmup ? "W" : "Set " + (j + 1)}</div><div class="ft-set-fields">${e.type === "strength" ? input("weight", "kg", l.weight, 0.25, 100000) + input("reps", "reps", l.reps, 1, 1000) + input("rir", "over", l.rir, 1, 10) : input("minutes", "min", l.minutes, 0.1, 600) + (e.type === "cardio" ? input("distance", "km", l.distance, 0.01, 10000) : "")}</div><button type="button" class="ft-check" data-fit="toggle-set" data-ex="${esc(e.id)}" data-id="${esc(l.id)}" aria-label="${esc(e.name)} set ${j + 1} ${l.done ? "weer openen" : "afvinken"}" aria-pressed="${l.done}">${l.done ? "✓" : "○"}</button></div>`;
   }
+  function smallChart(points, unit, label) {
+    if (!points.length) return '<p>Er zijn nog geen metingen.</p>';
+    const vals = points.slice(-8).map((p) => p.value),
+      min = Math.min(...vals), max = Math.max(...vals),
+      spread = max - min || Math.max(1, max * .1),
+      coords = vals.map((v, i) => ({
+        x: 18 + i * 264 / Math.max(1, vals.length - 1),
+        y: 86 - ((v - min) / spread) * 60,
+      }));
+    const pairs = coords.map((c) => c.x.toFixed(1) + "," + c.y.toFixed(1)).join(" "),
+      dot = coords.map((c) => '<circle cx="' + c.x.toFixed(1) + '" cy="' + c.y.toFixed(1) +
+        '" r="3.5" fill="#b9cebd" stroke="#203328" stroke-width="1.5"/>').join("");
+    return '<div class="ft-chart"><svg viewBox="0 0 300 105" role="img" aria-label="' + esc(label) +
+      '. ' + vals.length + ' meetpunten van ' + min + ' tot ' + max + ' ' + esc(unit) + '">' +
+      '<path d="M18 86H282" stroke="#597363" stroke-width="1"/>' +
+      (coords.length > 1 ? '<polyline fill="none" stroke="#b9cebd" stroke-width="3" stroke-linejoin="round" points="' +
+      pairs + '"/>' : '') + dot + '</svg><div class="ft-chart-labels"><span>' +
+      esc(points.at(-vals.length).date || '') + '</span><span>' +
+      esc(points.at(-1).date || '') + '</span></div></div>';
+  }
   function progress() {
-    const f = data(),
-      sessions = f.sessions
-        .filter((s) => !s.deletedAt)
-        .slice()
-        .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt));
-    const records = new Map();
-    for (const s of sessions)
-      for (const e of s.exercises) {
-        const key = e.id + "|" + s.location + "|" + e.equipment;
-        if (!records.has(key) && e.logs.some((l) => l.done && !l.warmup))
-          records.set(key, { e, s });
+    const f = data(), sessions = f.sessions.filter((s) => !s.deletedAt).slice()
+      .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt)),
+      records = new Map(), muscleSets = {}, frequency = Array(6).fill(0);
+    for (const session of sessions) {
+      const since = C.days(session.date, C.date());
+      if (since >= 0 && since < 42) frequency[5 - Math.floor(since / 7)]++;
+      for (const e of session.exercises) {
+        const worked = e.logs.filter((l) => l.done && !l.warmup);
+        if (since >= 0 && since < 7 && e.type === "strength")
+          muscleSets[e.muscle] = (muscleSets[e.muscle] || 0) + worked.length;
+        if (!worked.length || e.type !== "strength") continue;
+        const key = C.comparisonKey(e, session.location);
+        if (!records.has(key)) records.set(key, {
+          name: e.name, location: session.location, equipment: e.equipment, points: [],
+        });
+        const eligible = worked.filter((l) => l.weight !== null && l.reps !== null);
+        if (!eligible.length) continue;
+        const best = eligible.reduce((a, b) =>
+          b.weight > a.weight || (b.weight === a.weight && b.reps > a.reps) ? b : a);
+        records.get(key).points.push({
+          date: fmt(session.date), weight: best.weight, reps: best.reps, time: session.finishedAt,
+        });
       }
-    const totals = {};
-    sessions
-      .filter(
-        (s) => C.days(s.date, C.date()) >= 0 && C.days(s.date, C.date()) < 7,
-      )
-      .forEach((s) =>
-        s.exercises
-          .filter((e) => e.type === "strength")
-          .forEach((e) => {
-            totals[e.muscle] =
-              (totals[e.muscle] || 0) +
-              e.logs.filter((l) => l.done && !l.warmup).length;
-          }),
-      );
+    }
+    const sorted = [...records.entries()].filter(([key, v]) => v.points.length)
+      .sort((a, b) => a[1].name.localeCompare(b[1].name, "nl"));
+    const selected = sorted.find(([key]) => key === progressKey) || sorted[0];
+    const rec = selected?.[1];
+    const points = rec ? rec.points.slice().reverse() : [];
+    const bodyOnly = points.length && points.every((p) => p.weight === 0);
+    const measures = f.measurements.filter((m) => m.weight !== null).slice()
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((m) => ({ date: fmt(m.date), value: m.weight }));
+    const maxWeek = Math.max(1, ...frequency);
+    const weekGraph = '<div class="ft-week-bars" role="img" aria-label="Afgeronde trainingen in de laatste zes perioden van zeven dagen: ' +
+      frequency.join(", ") + '">' + frequency.map((n, i) =>
+        '<div class="ft-week-col"><div class="ft-week-bar" style="height:' +
+        Math.max(n ? 10 : 3, n * 84 / maxWeek).toFixed(1) + 'px"></div>' +
+        '<span>' + n + '</span><small>' + (i === 5 ? "Nu" : "-" + (5 - i) + "w") +
+        '</small></div>').join("") + '</div>';
     return (
-      `<div class="ft-strip"><span>Afgeronde trainingen</span><strong>${sessions.length}</strong></div>` +
-      panel(
-        "Prestaties per oefening",
-        records.size
-          ? [...records.values()]
-              .map(({ e, s }) => {
-                const h = C.history(f, e.id, s.location, e.equipment),
-                  prev = h[1],
-                  current = e.logs.filter((l) => l.done && !l.warmup),
-                  desc =
-                    e.type === "strength"
-                      ? current
-                          .map((l) => `${l.weight} kg × ${l.reps}`)
-                          .join(" · ")
-                      : current.reduce((n, l) => n + (l.minutes || 0), 0) +
-                        " min";
-                return `<details class="ft-details"><summary>${esc(e.name)} <span>${esc(desc)}</span></summary><p>${esc(s.location)} · ${esc(e.equipment)} · ${fmt(s.date)}</p><p>${esc(C.recommendation(f, e, s.location).text)}</p>${
-                  prev
-                    ? "<p>Daarvoor: " +
-                      prev.e.logs
-                        .filter((l) => l.done && !l.warmup)
-                        .map((l) =>
-                          e.type === "strength"
-                            ? `${l.weight} kg × ${l.reps}`
-                            : `${l.minutes} min`,
-                        )
-                        .join(" · ") +
-                      "</p>"
-                    : "<p>Nog één training nodig om te vergelijken.</p>"
-                }</details>`;
-              })
-              .join("")
-          : "<p>Je eerste afgeronde training vormt je startpunt. Er worden geen voorbeeldresultaten toegevoegd.</p>",
-      ) +
-      panel(
-        "Getraind in de laatste 7 dagen",
-        Object.keys(totals).length
-          ? Object.entries(totals)
-              .map(
-                ([m, n]) =>
-                  `<div class="ft-row"><span>${esc(m)}</span><strong>${n} werksets</strong></div>`,
-              )
-              .join("") +
-              '<p class="ft-hint">Sets tellen voor de gekozen hoofdspiergroep. Dit is trainingshistorie, geen meting van herstel.</p>'
-          : "<p>Nog geen krachttraining geregistreerd in deze periode.</p>",
-      ) +
-      panel(
-        "Lichaamsmetingen",
-        f.measurements.length
-          ? f.measurements
-              .slice()
-              .sort((a, b) => b.date.localeCompare(a.date))
-              .slice(0, 10)
-              .map(
-                (m) =>
-                  `<div class="ft-row"><span>${fmt(m.date)}<small>${m.weight !== null ? m.weight + " kg" : ""}${m.waist !== null ? " · taille " + m.waist + " cm" : ""}</small></span>${button("Verwijderen", "delete-measurement", m.id)}</div>`,
-              )
-              .join("")
-          : "<p>Optioneel: volg je gewicht en taille over meerdere meetmomenten.</p>",
-        button("＋ Meting", "measurement"),
-      ) +
-      panel(
-        "Trainingshistorie",
-        sessions.length
-          ? sessions
-              .map(
-                (s) =>
-                  `<div class="ft-row"><div><strong>${esc(s.name)}</strong><small>${fmt(s.date)} · ${s.exercises.reduce((n, e) => n + e.logs.filter((l) => l.done && !l.warmup).length, 0)} werksets</small></div>${button("Bekijken", "history", s.id)}</div>`,
-              )
-              .join("")
-          : "<p>Nog geen afgeronde trainingen.</p>",
-      ) +
-      `<details class="ft-details"><summary>Verwijderde trainingen</summary>${
-        f.sessions
-          .filter((s) => s.deletedAt)
-          .map(
-            (s) =>
-              `<div class="ft-row"><span>${esc(s.name)} · ${fmt(s.date)}</span>${button("Terugzetten", "restore-session", s.id)}</div>`,
-          )
-          .join("") || "<p>Geen verwijderde trainingen.</p>"
-      }</details>`
+      '<div class="ft-stats"><div><strong>' + sessions.length +
+      '</strong><span>Trainingen totaal</span></div><div><strong>' +
+      sessions.filter((s) => {const n=C.days(s.date,C.date());return n>=0&&n<7}).length +
+      '</strong><span>Laatste 7 dagen</span></div></div>' +
+      panel("Trainingsfrequentie", weekGraph +
+        '<p class="ft-hint">Aantal afgeronde trainingen per periode van zeven dagen.</p>') +
+      panel("Sterker worden per oefening",
+        (selected ? '<label class="ft-field">Kies oefening en apparaat<select id="ft-progress-select" aria-label="Kies oefening">' +
+          sorted.map(([key, x]) => '<option value="' + esc(key) + '"' +
+            (key === selected[0] ? ' selected' : '') + '>' + esc(x.name + ' · ' + x.equipment + ' · ' +
+              x.location) + '</option>').join("") + '</select></label>' +
+          '<p class="ft-hint">Vergelijkbare resultaten van hetzelfde soort apparaat en dezelfde locatie.</p>' +
+          smallChart(points.map((p) => ({
+            date: p.date, value: bodyOnly ? p.reps : p.weight,
+          })), bodyOnly ? "herhalingen" : "kg", "Beste set per training") +
+          '<div class="ft-chart-facts"><span>Laatste: <strong>' +
+            (bodyOnly ? points.at(-1).reps + ' herh.' : points.at(-1).weight + ' kg × ' + points.at(-1).reps) +
+            '</strong></span><span>Beste: <strong>' +
+            (bodyOnly ? Math.max(...points.map((p) => p.reps)) + ' herh.' :
+              Math.max(...points.map((p) => p.weight)) + ' kg') + '</strong></span></div>' +
+          '<p class="ft-hint">Beste uitgevoerde set per sessie; dit is geen voorspelling van je maximale kracht.</p>'
+        : '<p>Na je eerste afgeronde training verschijnt hier een grafiek. Er worden geen voorbeeldmetingen toegevoegd.</p>')) +
+      panel("Werksets per hoofdspiergroep · 7 dagen",
+        Object.keys(muscleSets).length ? Object.entries(muscleSets)
+          .sort((a,b)=>b[1]-a[1]).map(([m,n]) =>
+            '<div class="ft-row"><span>' + esc(m) + '</span><strong>' + n +
+            ' werksets</strong></div>').join("") +
+            '<p class="ft-hint">Dit is geregistreerde belasting, geen herstelmeting.</p>' :
+          '<p>In deze periode zijn nog geen werksets geregistreerd.</p>') +
+      panel("Lichaamsmetingen",
+        (measures.length > 1 ? smallChart(measures, "kg", "Lichaamsgewicht in kg") : "") +
+        (f.measurements.length ? f.measurements.slice().sort((a,b) => b.date.localeCompare(a.date))
+          .slice(0, 10).map((m) =>
+            '<div class="ft-row"><span>' + fmt(m.date) + '<small>' +
+              (m.weight !== null ? m.weight + " kg" : "") +
+              (m.waist !== null ? " · taille " + m.waist + " cm" : "") +
+            '</small></span>' + button("Verwijderen", "delete-measurement", m.id) + '</div>').join("") :
+          "<p>Optioneel: volg je gewicht en taille.</p>"), button("＋ Meting", "measurement")) +
+      panel("Trainingshistorie",
+        sessions.length ? sessions.map((s) =>
+          '<div class="ft-row"><div><strong>' + esc(s.name) + '</strong><small>' +
+          fmt(s.date) + ' · ' + s.exercises.reduce((n,e) => n +
+          e.logs.filter((l)=>l.done&&!l.warmup).length,0) +
+          ' werksets</small></div>' + button("Bekijken","history",s.id) + '</div>').join("") :
+        '<p>Nog geen afgeronde trainingen.</p>') +
+      '<details class="ft-details"><summary>Verwijderde trainingen</summary>' +
+      (f.sessions.filter((s)=>s.deletedAt).map((s) =>
+        '<div class="ft-row"><span>' + esc(s.name) + ' · ' + fmt(s.date) +
+        '</span>' + button("Terugzetten", "restore-session", s.id) + '</div>').join("") ||
+        '<p>Geen verwijderde trainingen.</p>') + '</details>'
     );
   }
   function render() {
@@ -927,6 +930,11 @@
   }
   function input(event) {
     const el = event.target;
+    if (el.id === "ft-progress-select") {
+      progressKey = el.value;
+      render();
+      return;
+    }
     if (el.dataset.field) {
       if (!el.checkValidity()) {
         error(
