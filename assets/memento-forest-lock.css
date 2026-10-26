@@ -65,3 +65,4 @@
 @media(prefers-reduced-motion:reduce){#pinLock .pin-forest-bg *,#pinLock .mf-bulb{animation:none!important;transition:none!important}#pinLock #mementoWeatherCanvas{display:none}}
 /* Holiday text is intentionally omitted: keep the avatar and Memento wordmark unobstructed. */
 #pinLock .mf-holiday-caption{display:none}
+#pinLock[data-scene-running='false'] .pin-forest-bg *{animation-play-state:paused!important}
