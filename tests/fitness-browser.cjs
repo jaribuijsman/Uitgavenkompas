@@ -77,8 +77,9 @@ const server = http.createServer((req, res) => {
     await click("profile");
     await page.locator("#fitnessDialog [name=starter]").check();
     await page.locator("#fitnessDialog button[type=submit]").click();
-    assert.equal((await stored()).fitness.routines.length, 2);
-    checks.push("Explicit setup creates templates only");
+    assert.equal((await stored()).fitness.routines.length, 3);
+    assert.equal((await stored()).fitness.routineCycle.length, 3);
+    checks.push("Explicit setup creates three split routines without demo results");
     const rid = (await stored()).fitness.routines[0].id;
     await click("plan-new");
     await page.locator("#fitnessDialog [name=time]").fill("17:00");
@@ -107,6 +108,16 @@ const server = http.createServer((req, res) => {
     await page.locator("#fitnessDialog [data-fit=start-booking]").click();
     await page.locator("#fitnessDialog button[type=submit]").click();
     checks.push("Today and Agenda open the same booking");
+    assert.equal(await page.locator("#mementoFitness .ft-muscle-icon").count(), 4);
+    const secondId = (await stored()).fitness.active.exercises[1].id;
+    await page.locator('#mementoFitness [data-fit="guide"]').first().click();
+    assert.equal(await page.locator('#fitnessDialog a[href*="strengthlog.com"]').count(), 1);
+    await page.locator('#fitnessDialog [data-fit="close"]').first().click();
+    await page.locator('#mementoFitness [data-fit="alternatives"][data-id="' + secondId + '"]').click();
+    await page.locator('#fitnessDialog [data-fit="replace-with"]').first().click();
+    assert.notEqual((await stored()).fitness.active.exercises[1].id, secondId);
+    assert.equal((await stored()).fitness.routines[0].exercises[1].id, secondId);
+    checks.push("Inline exercise help and one-workout alternative preserve the template");
     const eid = (await stored()).fitness.active.exercises[0].id;
     await page
       .locator(`[data-ex="${eid}"][data-field=weight]`)
@@ -116,6 +127,7 @@ const server = http.createServer((req, res) => {
       .locator(`[data-ex="${eid}"][data-field=reps]`)
       .first()
       .fill("12");
+    await click("toggle-rir");
     await page.locator(`[data-ex="${eid}"][data-field=rir]`).first().fill("2");
     await page
       .locator(`[data-fit=toggle-set][data-ex="${eid}"]`)
@@ -204,6 +216,9 @@ const server = http.createServer((req, res) => {
     await page.locator("#fitnessDialog [data-fit=close]").first().click();
     checks.push("Exercise editor preserves edited routine fields");
     await click("tab", "progress");
+    assert.equal(await page.locator("#mementoFitness .ft-week-bars").count(), 1);
+    assert.equal(await page.locator("#mementoFitness .ft-chart svg[role=img]").count(), 1);
+    checks.push("Charts show real logged records without placeholder data");
     await click("measurement");
     await page.locator("#fitnessDialog [name=weight]").fill("80.5");
     await page.locator("#fitnessDialog button[type=submit]").click();
