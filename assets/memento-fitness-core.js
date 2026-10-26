@@ -198,6 +198,36 @@
     ["machineshoulder", "Machine shoulder press", "strength", "Schouders", "Machine", "Kies een comfortabele bewegingsuitslag en houd je romp stabiel."],
     ["cablelateral", "Cable lateral raise", "strength", "Schouders", "Kabelmachine", "Til je arm zijwaarts met een licht gewicht en zonder zwaaien."],
     ["cablecrunch", "Cable crunch", "strength", "Buik", "Kabelmachine", "Rond je bovenrug beheerst en houd je heupen rustig."],
+    ["pecdeck","Pec deck / chest fly","strength","Borst","Machine","Stel de zitting op borsthoogte en sluit de armen rustig."],
+    ["cablefly","Cable chest fly","strength","Borst","Kabelmachine","Houd de ellebogen licht gebogen en breng de handen gecontroleerd samen."],
+    ["inclinebench","Incline barbell bench press","strength","Borst","Halterbank","Stel de bank licht schuin in en laat de stang gecontroleerd zakken."],
+    ["assistedpullup","Assisted pull-up","strength","Rug","Machine","Stel de ondersteuning in en trek zonder zwaaien."],
+    ["pullup","Pull-up","strength","Rug","Optrekstang","Trek je borst richting de stang zonder zwaaien."],
+    ["chestrow","Chest-supported row","strength","Rug","Machine","Houd je borst tegen de steun en trek de ellebogen naar achteren."],
+    ["straightarm","Straight-arm pulldown","strength","Rug","Kabelmachine","Trek de armen richting heupen zonder met je romp te zwaaien."],
+    ["reversefly","Reverse pec deck","strength","Schouders","Machine","Beweeg de armen beheerst naar buiten zonder je nek aan te spannen."],
+    ["facepull","Face pull","strength","Schouders","Kabelmachine","Trek het touw richting je gezicht met de ellebogen naar buiten."],
+    ["rearraise","Bent-over rear delt raise","strength","Schouders","Dumbbells","Buig vanuit je heupen en hef lichte gewichten zijwaarts."],
+    ["barbellohp","Standing overhead press","strength","Schouders","Halterstang","Span je romp aan en druk recht omhoog zonder achterover te leunen."],
+    ["preacher","Preacher curl","strength","Biceps","Machine","Houd je bovenarm op de steun en buig je elleboog rustig."],
+    ["inclinecurl","Incline dumbbell curl","strength","Biceps","Dumbbells","Houd je bovenarmen achter je romp en voorkom zwaaien."],
+    ["skullcrusher","Lying triceps extension","strength","Triceps","EZ-stang","Houd de bovenarmen stabiel en buig je ellebogen rustig."],
+    ["closegrip","Close-grip bench press","strength","Triceps","Halterbank","Gebruik een comfortabele smallere greep en rechte polsen."],
+    ["ropetriceps","Rope triceps pushdown","strength","Triceps","Kabelmachine","Houd je ellebogen langs je lichaam en strek beheerst."],
+    ["bulgarian","Bulgarian split squat","strength","Benen","Dumbbells","Steun de achterste voet op een bank en zak gecontroleerd."],
+    ["split","Split squat","strength","Benen","Dumbbells","Plaats de voeten voor en achter elkaar en zak recht naar beneden."],
+    ["lunges","Walking lunges","strength","Benen","Dumbbells","Maak rustige stappen en houd je romp stabiel."],
+    ["smithsquat","Smith machine squat","strength","Benen","Smith-machine","Houd je voeten stevig en kies een comfortabele diepte."],
+    ["barbellsquat","Barbell back squat","strength","Benen","Halterstang","Houd je romp aangespannen en zak gecontroleerd."],
+    ["calfraise","Standing calf raise","strength","Kuiten","Machine","Laat de hielen zakken en druk gecontroleerd omhoog."],
+    ["seatedcalf","Seated calf raise","strength","Kuiten","Machine","Beweeg je enkels volledig maar zonder te veren."],
+    ["hipthrust","Hip thrust","strength","Bilspieren","Halterstang","Span je billen bovenaan aan zonder je rug te overstreken."],
+    ["glutebridge","Glute bridge","strength","Bilspieren","Mat","Duw je heupen omhoog en houd je rug neutraal."],
+    ["backextension","Back extension","strength","Achterzijde benen","Machine","Beweeg vanuit je heupen en eindig met een neutrale rug."],
+    ["lyingcurl","Lying leg curl","strength","Achterzijde benen","Machine","Stel de rol goed af en buig je knieën zonder momentum."],
+    ["hangingknee","Hanging knee raise","strength","Buik","Optrekstang","Til de knieën op zonder te zwaaien."],
+    ["deadbug","Dead bug","strength","Buik","Mat","Houd je onderrug rustig en strek tegenovergestelde ledematen uit."],
+    ["pallof","Pallof press","strength","Buik","Kabelmachine","Houd je romp stabiel en duw de kabel recht voor je uit."],
   ].map(([id, name, type, muscle, equipment, cue]) => ({
     id,
     name,
@@ -259,21 +289,36 @@
       note: "",
     };
   }
+  const hypertrophyPlan = [
+    ["Borst & Triceps", [["chest",3,8,12],["inclinechest",3,8,12],["triceps",2,10,15],["overheadtriceps",2,10,15]]],
+    ["Rug & Biceps", [["pulldown",3,8,12],["row",3,8,12],["curl",2,10,15],["hammercurl",2,10,15]]],
+    ["Benen, Schouders & Buik", [["legpress",4,8,12],["legcurl",3,10,15],["shoulder",2,8,12],["lateral",2,12,20],["crunch",2,12,20]]],
+  ];
   function starter() {
-    const plans = [
-      ["Borst & Triceps", [["chest", 3], ["inclinechest", 2], ["triceps", 3], ["overheadtriceps", 2]]],
-      ["Rug & Biceps", [["pulldown", 3], ["row", 3], ["curl", 3], ["hammercurl", 2]]],
-      ["Benen, Schouders & Buik", [["legpress", 3], ["legcurl", 2], ["shoulder", 2], ["lateral", 2], ["crunch", 2]]],
-    ];
-    return plans.map(([name, items]) => ({
+    return hypertrophyPlan.map(([name, items]) => ({
       id: uid(), name, location: "Sportschool", notes: "", archived: false,
-      exercises: items.map(([id, sets], i) => ({
-        ...exercise(catalog.find((x) => x.id === id)), sets,
-        optional: i >= 3,
-        min: id === "lateral" || id === "crunch" ? 12 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 10 : 8,
-        max: id === "lateral" || id === "crunch" ? 15 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 12 : 12,
+      exercises: items.map(([id, sets, min, max], i) => ({
+        ...exercise(catalog.find((x) => x.id === id)), sets, min, max,
+        rest: i < 2 ? 120 : 75, optional: i >= 3,
       })),
     }));
+  }
+  function applyHypertrophyPlan(f) {
+    for (const template of starter()) {
+      const existing = f.routines.find((r) => !r.archived && r.name === template.name);
+      if (!existing) { f.routines.push(template); continue; }
+      for (const target of template.exercises) {
+        const current = existing.exercises.find((e) =>
+          e.catalogId === target.catalogId ||
+          e.name.toLocaleLowerCase("nl") === target.name.toLocaleLowerCase("nl"));
+        if (!current) { existing.exercises.push(target); continue; }
+        Object.assign(current, {sets: target.sets, min: target.min, max: target.max, rest: target.rest});
+      }
+    }
+    f.routineCycle = hypertrophyPlan.map(([name]) =>
+      f.routines.find((r) => !r.archived && r.name === name).id);
+    if (!f.routineCycle.includes(f.nextRoutineId)) f.nextRoutineId = f.routineCycle[0];
+    f.profile.goal = "muscle"; f.profile.target = 4; f.profile.cycleDays = 7; f.setup = true;
   }
   function validate(f) {
     const fail = () => {
@@ -611,6 +656,7 @@
     catalog,
     exercise,
     starter,
+    applyHypertrophyPlan,
     validate,
     available,
     rotation,
