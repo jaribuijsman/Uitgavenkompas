@@ -95,6 +95,15 @@
       )
       .join("");
   }
+  const personalSplitNames = ["Borst & Triceps", "Rug & Biceps", "Benen, Schouders & Buik"];
+  function splitOffer(f) {
+    const missing = personalSplitNames.filter((name) => !f.routines.some((r) => r.name === name));
+    if (!missing.length) return "";
+    return panel(
+      "Jouw 3-daagse krachtschema",
+      '<p>Borst & triceps · Rug & biceps · Benen, schouders & buik. Circa 45 minuten per training, met sets en herhalingen als startpunt.</p><p class="ft-hint">Je bestaande schema’s en resultaten blijven bewaard. Eerdere schema’s kun je daarna zo nodig archiveren via Bewerken.</p><div class="ft-actions">' + button("Mijn 3-daagse split toevoegen", "starter", "", true) + "</div>",
+    );
+  }
   function today() {
     const f = data(),
       r = C.next(f),
@@ -110,10 +119,11 @@
     if (!f.setup)
       return panel(
         "Een ritme dat bij jou past",
-        `<p>Maak een eigen trainingsschema of begin met een aanpasbaar basisplan. Je trainingen en resultaten blijven in Memento.</p><div class="ft-actions">${button("Fitness instellen", "profile", "", true)}${button("Eigen schema maken", "routine-new")}</div><div class="ft-intro"><span>Kracht & conditie</span><span>Offline bijhouden</span><span>Je eigen tempo</span></div>`,
+        `<p>Maak een eigen trainingsschema of begin met een aanpasbaar basisplan. Je trainingen en resultaten blijven in Memento.</p><div class="ft-actions">${button("Fitness instellen", "profile", "", true)}${button("Mijn 3-daagse split", "starter")}${button("Eigen schema maken", "routine-new")}</div><div class="ft-intro"><span>Kracht & conditie</span><span>Offline bijhouden</span><span>Je eigen tempo</span></div>`,
       );
     if (f.active) return session();
     return (
+      splitOffer(f) +
       panel(
         r ? esc(r.name) : "Je eerste training",
         r
@@ -151,6 +161,7 @@
     const f = data();
     return (
       `<div class="ft-actions ft-toolbar">${button("＋ Schema", "routine-new", "", true)}${button("＋ Plannen", "plan-new")}${button("Voorkeuren", "profile")}</div>` +
+      splitOffer(f) +
       (f.routines.some((r) => !r.archived)
         ? f.routines
             .filter((r) => !r.archived)
@@ -163,7 +174,7 @@
             .join("")
         : panel(
             "Nog geen schema",
-            `<p>Je kunt helemaal zelf beginnen of twee bewerkbare trainingen toevoegen. Gewichten vul je zelf in.</p>${button("Basisplan toevoegen", "starter", "", true)}`,
+            `<p>Je kunt zelf beginnen of drie bewerkbare trainingen voor je persoonlijke split toevoegen. Gewichten vul je zelf in.</p>${button("Basisplan toevoegen", "starter", "", true)}`,
           )) +
       (f.bookings.length
         ? panel(
@@ -403,7 +414,7 @@
       p = f.profile;
     dialog(
       "Jouw trainingsritme",
-      `<div class="ft-form-grid">${select("Doel", "goal", goals, p.goal)}${field("Locatie", "location", p.location, "text", 'maxlength="100" required')}${field("Trainingen per cyclus", "target", p.target, "number", 'min="1" max="30" step="1" required')}${field("Dagen per cyclus", "cycleDays", p.cycleDays, "number", 'min="1" max="60" step="1" required')}</div><details class="ft-details"><summary>Dienstenrooster (optioneel)</summary><p>V = vroeg, L = laat, N = nacht, R = vrij. Bijvoorbeeld VVLLNNRRRR. Dit patroon herhaalt zich vanaf de startdatum.</p>${field("Startdatum patroon", "shiftStart", p.shiftStart, "date")}${field("Patroon", "shifts", p.shifts, "text", 'maxlength="100" pattern="[VvLlNnRr ]*"')}<label class="ft-checkbox"><input type="checkbox" name="avoidNight"${p.avoidNight ? " checked" : ""}> Geen nachtdienstdagen voorstellen</label></details>${!f.setup ? '<label class="ft-checkbox"><input type="checkbox" name="starter"> Voeg een aanpasbaar basisplan met twee trainingen toe</label>' : ""}<p class="ft-hint">Je doel is een voorkeur. Oefeningen en belasting kies je zelf; de app stelt geen persoonlijk medisch trainingsplan op.</p>`,
+      `<div class="ft-form-grid">${select("Doel", "goal", goals, p.goal)}${field("Locatie", "location", p.location, "text", 'maxlength="100" required')}${field("Trainingen per cyclus", "target", p.target, "number", 'min="1" max="30" step="1" required')}${field("Dagen per cyclus", "cycleDays", p.cycleDays, "number", 'min="1" max="60" step="1" required')}</div><details class="ft-details"><summary>Dienstenrooster (optioneel)</summary><p>V = vroeg, L = laat, N = nacht, R = vrij. Bijvoorbeeld VVLLNNRRRR. Dit patroon herhaalt zich vanaf de startdatum.</p>${field("Startdatum patroon", "shiftStart", p.shiftStart, "date")}${field("Patroon", "shifts", p.shifts, "text", 'maxlength="100" pattern="[VvLlNnRr ]*"')}<label class="ft-checkbox"><input type="checkbox" name="avoidNight"${p.avoidNight ? " checked" : ""}> Geen nachtdienstdagen voorstellen</label></details>${!f.setup ? '<label class="ft-checkbox"><input type="checkbox" name="starter"> Voeg jouw drie trainingen (borst/triceps, rug/biceps en benen/schouders/buik) toe</label>' : ""}<p class="ft-hint">Je doel is een voorkeur. Oefeningen en belasting kies je zelf; de app stelt geen persoonlijk medisch trainingsplan op.</p>`,
       "Opslaan",
       "profile",
     );
@@ -607,14 +618,23 @@
     else if (a === "starter") {
       if (
         !confirm(
-          "Twee aanpasbare basisschema’s toevoegen? Er worden geen trainingen of resultaten aangemaakt.",
+          "Jouw drie trainingsschema’s toevoegen en je doel instellen op spieropbouw, 5 keer per week? Ook je 10-daagse ploegendienst vanaf 28 oktober 2026 wordt ingesteld. Bestaande schema’s, planning en resultaten blijven bewaard. Oude schema’s kun je desgewenst later archiveren.",
         )
-      )
-        return;
-      change((f) => {
-        f.routines.push(...C.starter());
+      ) return;
+      if (change((f) => {
+        const proposed = C.starter();
+        const fresh = proposed.filter((r) => !f.routines.some((old) => old.name === r.name));
+        f.routines.push(...fresh);
+        f.profile.goal = "muscle";
+        f.profile.cycleDays = 7;
+        f.profile.target = 5;
+        f.profile.shiftStart = "2026-10-28";
+        f.profile.shifts = "VVLLRNNRRR";
+        f.profile.avoidNight = true;
         f.setup = true;
-      });
+        const first = f.routines.find((r) => r.name === personalSplitNames[0] && !r.archived);
+        if (first) f.nextRoutineId = first.id;
+      })) tab = "plan", render();
     } else if (a === "routine-new") routineForm();
     else if (a === "routine-edit") routineForm(id);
     else if (a === "exercise-new") {
