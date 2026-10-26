@@ -1,0 +1,31 @@
+name: Fitness regression
+
+on:
+  push:
+    paths:
+      - "assets/memento-fitness-core.js"
+      - "assets/memento-fitness.js"
+      - "tests/fitness-regression.cjs"
+      - ".github/workflows/fitness-regression.yml"
+  pull_request:
+    paths:
+      - "assets/memento-fitness-core.js"
+      - "assets/memento-fitness.js"
+      - "tests/fitness-regression.cjs"
+      - ".github/workflows/fitness-regression.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fitness-core:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fitness regression checks
+        run: node tests/fitness-regression.cjs
