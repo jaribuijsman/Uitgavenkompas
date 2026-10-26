@@ -1,0 +1,44 @@
+name: Knowledge and backup regression
+on:
+  push:
+    paths:
+      - "assets/memento-knowledge-core.js"
+      - "assets/memento-knowledge-store.js"
+      - "assets/memento-knowledge.js"
+      - "assets/memento-knowledge.css"
+      - "assets/memento-backup.js"
+      - "index.html"
+      - "sw.js"
+      - "tests/knowledge-regression.cjs"
+      - ".github/workflows/knowledge-regression.yml"
+  pull_request:
+    paths:
+      - "assets/memento-knowledge-core.js"
+      - "assets/memento-knowledge-store.js"
+      - "assets/memento-knowledge.js"
+      - "assets/memento-knowledge.css"
+      - "assets/memento-backup.js"
+      - "index.html"
+      - "sw.js"
+      - "tests/knowledge-regression.cjs"
+      - ".github/workflows/knowledge-regression.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  knowledge-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test migration, revision, attachment and full ZIP integrity
+        run: node tests/knowledge-regression.cjs
+      - name: Validate browser JavaScript syntax
+        run: |
+          node --check assets/memento-knowledge-core.js
+          node --check assets/memento-knowledge-store.js
+          node --check assets/memento-knowledge.js
+          node --check assets/memento-backup.js
