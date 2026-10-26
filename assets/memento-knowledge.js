@@ -76,7 +76,7 @@ function renderList(){
  const title=screen==="collection"?c?.name||"Verzameling":{all:"Alle kennisitems",inbox:"Inbox",archive:"Archief",trash:"Prullenbak",pinned:"Vastgezet"}[screen]||"Kennisitems";
  const availableTags=[...new Set(read().notes.flatMap(n=>n.tags||[]))].sort((a,b)=>a.localeCompare(b,"nl"));
  const items=currentItems(),mode=viewOverride||c?.view||"list";
- return header(title,true,screen==="trash"?"":btn("+ Nieuw","new","",true))+
+ return header(title,true,screen==="trash"?btn("Definitief leegmaken","purge-trash"):btn("+ Nieuw","new","",true))+
  '<div class="kc-filters"><label class="kc-search"><span class="kc-sr">Zoeken</span><input type="search" data-kc-input="search" placeholder="Zoek in titel, tekst en tags…" value="'+esc(query)+'"></label>'+
  '<div class="kc-filterline"><label>Type<select data-kc-change="kind"><option value="">Alles</option>'+Object.entries(kindNames).map(([v,n])=>'<option value="'+v+'"'+(kindFilter===v?" selected":"")+">"+n+"</option>").join("")+"</select></label>"+
  '<label>Tag<select data-kc-change="tag"><option value="">Alle tags</option>'+availableTags.map(v=>'<option value="'+esc(v)+'"'+(tagFilter===v?" selected":"")+">"+esc(v)+"</option>").join("")+"</select></label>"+
@@ -279,6 +279,7 @@ async function openFile(id){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ if(op==="purge-trash"){root.MementoLife?.openTrash?.();return}
  if(op==="back"){back();return}
  if(op==="new"){beginNew(screen==="collection"?collectionId:"inbox");return}
  if(op==="collection"){collectionId=id;viewOverride="";sort="recent";query="";kindFilter="";tagFilter="";screen="collection";render();return}
