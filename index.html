@@ -1583,36 +1583,7 @@ body[data-compass-area="finance"] .app :is(.analysis-tab,.account-scope-switch b
 @media(min-height:850px){#pinLock{padding-top:44px!important;padding-bottom:44px!important}#pinLock .memento-pin-entry{margin-top:44px}#pinLock .pin-mark{width:72px;height:72px;margin-bottom:22px!important}}
 @media(max-width:360px){#pinLock{padding-left:14px!important;padding-right:14px!important}#pinLock .memento-pin-brand{padding:0 12px}#pinLock .memento-pin-entry{padding:22px 17px 12px}#pinLock .pin-keypad{gap:14px}#pinLock .memento-lock-motto{font-size:9px;letter-spacing:1.35px;gap:7px}}
 </style>
-<style id="mementoWeatherSceneStyles">/* Near-realistic forest; all rules scoped to the PIN lock. */
-#pinLock{background:#101d15!important;isolation:isolate}
-#pinLock::before,#pinLock::after{display:none!important}
-#pinLock .pin-forest-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:#14261a;overflow:hidden}
-#pinLock .memento-scene-photo{position:absolute;inset:-2%;background-image:var(--memento-forest-image);background-position:center 54%;background-size:cover;filter:brightness(.62) saturate(.76);transition:filter 3s ease;animation:mementoForestBreathe 80s ease-in-out infinite alternate;will-change:transform}
-#pinLock[data-scene-light=day] .memento-scene-photo{filter:brightness(.80) saturate(.80)}
-#pinLock[data-scene-light=night] .memento-scene-photo{filter:brightness(.36) saturate(.52) hue-rotate(14deg)}
-#pinLock .memento-scene-shade{position:absolute;inset:0;background:linear-gradient(180deg,#08180d40,#08160e25 23%,#06150e69 55%,#07150fd9),radial-gradient(ellipse at 50% 40%,#06150e40,transparent 80%)}
-#pinLock .memento-scene-rays{position:absolute;inset:-15%;opacity:0;background:conic-gradient(from 160deg at 70% 0%,transparent 0deg,#ffe7ab19 10deg,transparent 18deg,#ffe7ab14 23deg,transparent 32deg);transition:opacity 3s;animation:mementoRays 22s ease-in-out infinite alternate}
-#pinLock[data-scene-weather=clear][data-scene-light=day] .memento-scene-rays{opacity:1}
-#pinLock[data-scene-weather=partly][data-scene-light=day] .memento-scene-rays{opacity:.45}
-#pinLock .memento-scene-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 25% 45%,#d0dfd514,transparent 65%),radial-gradient(ellipse at 85% 66%,#c3dfd012,transparent 60%);opacity:.3;transition:opacity 3s;animation:mementoHaze var(--scene-drift-time,65s) ease-in-out infinite alternate;transform:scale(1.25)}
-#pinLock[data-scene-weather=fog] .memento-scene-haze{opacity:1;background:radial-gradient(ellipse at 25% 45%,#cedbd94a,transparent 70%),radial-gradient(ellipse at 85% 66%,#c3dbcf42,transparent 70%)}
-#pinLock[data-scene-weather=rain] .memento-scene-haze,#pinLock[data-scene-weather=storm] .memento-scene-haze{opacity:.7}
-#pinLock[data-scene-weather=cloudy] .memento-scene-haze{opacity:.65}
-#pinLock #mementoWeatherCanvas{position:absolute;inset:0;display:block;opacity:.8;pointer-events:none}
-#pinLock .memento-pin-brand,#pinLock .memento-pin-entry{position:relative}
-#pinLock #pinDescription,#pinLock .memento-lock-motto{text-shadow:0 1px 8px #000c}
-#pinLock .memento-scene-caption{margin:20px auto 0;max-width:340px;font-family:Arial,sans-serif;font-size:10px;line-height:1.6;color:#c2d0c3;text-align:center;text-shadow:0 1px 8px #000}
-#pinLock .memento-scene-caption span{display:block}
-#pinLock #mementoSceneToggle{border:0;border-bottom:1px solid #c5dbc54d;border-radius:0;background:transparent;color:#c2d0c3;padding:5px 2px;margin-top:4px;font-family:Arial,sans-serif;font-size:10px;min-height:36px;box-shadow:none;cursor:pointer}
-#pinLock #mementoSceneToggle:focus-visible{outline:2px solid #e0f1c8;outline-offset:4px}
-#pinLock #mementoSceneToggle:disabled{opacity:.7;cursor:default}
-#pinLock[data-scene-running=false] .pin-forest-bg *{animation-play-state:paused!important}
-@keyframes mementoForestBreathe{from{transform:scale(1) translateX(-.25%)}to{transform:scale(1.02) translateX(.25%)}}
-@keyframes mementoHaze{from{transform:translateX(-6%) scale(1.25)}to{transform:translateX(6%) scale(1.25)}}
-@keyframes mementoRays{from{transform:rotate(-2deg);filter:opacity(.7)}to{transform:rotate(2deg);filter:opacity(1)}}
-@media(prefers-reduced-motion:reduce){#pinLock .pin-forest-bg *{animation:none!important;transition:none!important;will-change:auto}}
-
-#pinLock .memento-scene-photo{background-image:url('./assets/memento-cozy-background.png')}</style>
+<link rel="stylesheet" href="./assets/memento-forest-lock.css">
 <style id="mementoChosenGoldLogo">
 #pinLock #pinTitle{width:100%!important;max-width:354px;margin:0 auto!important;filter:drop-shadow(0 2px 6px #0008)}
 #pinLock .memento-gold-art{display:block;width:100%;height:auto;max-height:none}
@@ -2779,30 +2750,7 @@ init();
   }
 ]</script>
 <script type="text/plain" id="compassAvatarData">./assets/memento-avatar.png</script>
-<script id="mementoWeatherSceneScript">(()=>{'use strict';
-const lock=document.getElementById('pinLock'),canvas=document.getElementById('mementoWeatherCanvas'),ctx=canvas.getContext('2d'),status=document.getElementById('mementoSceneStatus'),toggle=document.getElementById('mementoSceneToggle');
-if(!ctx)return;
-const motion=matchMedia('(prefers-reduced-motion: reduce)');
-let paused=false,raf=0,last=0,w=0,h=0,particles=[],state={kind:'neutral',night:false,wind:0,heavy:false},weather=null;
-const condition=code=>code===0?'clear':[1,2].includes(code)?'partly':code===3?'cloudy':[45,48].includes(code)?'fog':[51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)?'rain':[71,73,75,77,85,86].includes(code)?'snow':[95,96,97,99].includes(code)?'storm':'neutral';
-const labels={clear:'Helder',partly:'Licht bewolkt',cloudy:'Bewolkt',fog:'Mist',rain:'Regen',snow:'Sneeuw',storm:'Onweer',neutral:'Weerbericht'};
-function localNow(){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const d=Object.fromEntries(parts.map(p=>[p.type,p.value]));return Date.UTC(+d.year,+d.month-1,+d.day,+d.hour,+d.minute)}
-function currentAge(c){const a=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(c?.time||'');return a?localNow()-Date.UTC(+a[1],+a[2]-1,+a[3],+a[4],+a[5]):Infinity}
-function valid(entry){const c=entry?.data?.current,age=currentAge(c),fetched=Date.now()-entry?.fetchedAt;return c&&Number.isFinite(c.weather_code)&&Number.isFinite(c.wind_speed_10m)&&[0,1].includes(c.is_day)&&Number.isFinite(entry.fetchedAt)&&fetched>=-300000&&fetched<=90*60000&&age>=-20*60000&&age<=90*60000}
-function seed(){const rainy=['rain','storm'].includes(state.kind),count=rainy?(state.heavy?95:55):state.kind==='snow'?48:0;particles=Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,z:.4+Math.random()*.6,phase:Math.random()*6.28}));ctx.clearRect(0,0,w,h)}
-function apply(){const fresh=valid(weather?.cached),c=weather?.cached?.data?.current;const next=fresh?{kind:condition(c.weather_code),night:c.is_day===0,wind:Math.min(100,Math.max(0,c.wind_speed_10m)),heavy:[55,57,65,67,82,95,96,97,99].includes(c.weather_code)}:{kind:'neutral',night:false,wind:0,heavy:false};const changed=JSON.stringify(next)!==JSON.stringify(state);state=next;lock.dataset.sceneWeather=state.kind;lock.dataset.sceneLight=fresh?(state.night?'night':'day'):'neutral';lock.dataset.sceneFresh=String(Boolean(fresh));lock.style.setProperty('--scene-drift-time',(65-state.wind*.4)+'s');
-if(fresh){status.textContent='Beverwijk · '+labels[state.kind]+' · '+c.time.slice(11,16)+(weather.failed?' · Opgeslagen weer':'');status.title='Modelgegevens van Open-Meteo · '+c.time.replace('T',' ')}else{status.textContent='Beverwijk · '+(weather?.busy?'Weer ophalen…':weather?.cached?'Weer verouderd · rustige achtergrond':'Weer niet beschikbaar · rustige achtergrond');status.title='Er worden geen actuele weerseffecten getoond.'}
-if(changed)seed();sync()}
-function resize(){const rect=lock.getBoundingClientRect();w=rect.width||innerWidth;h=rect.height||innerHeight;const dpr=Math.min(devicePixelRatio||1,1.25);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);seed()}
-function frame(now){raf=0;if(!running())return;if(now-last>=40){const dt=last?Math.min((now-last)/1000,.07):.04;last=now;ctx.clearRect(0,0,w,h);const snow=state.kind==='snow';ctx.strokeStyle=state.night?'rgba(208,225,239,.24)':'rgba(221,239,243,.30)';ctx.fillStyle='rgba(239,245,243,.60)';ctx.lineWidth=.8;
-for(const p of particles){const speed=snow?18+30*p.z:340+390*p.z;p.y+=dt*speed;const dx=state.wind*(snow?.4:1.7);p.x+=dt*(dx+(snow?Math.sin(now/1400+p.phase)*12:8));if(p.y>h+25){p.y=-25;p.x=Math.random()*w}if(p.x>w+25)p.x=-25;if(snow){ctx.beginPath();ctx.arc(p.x,p.y,1+1.5*p.z,0,Math.PI*2);ctx.fill()}else{ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+dx*.026,p.y+9+12*p.z);ctx.stroke()}}
-}raf=requestAnimationFrame(frame)}
-function running(){return !paused&&!motion.matches&&!document.hidden&&lock.classList.contains('visible')}
-function sync(){const run=running();lock.dataset.sceneRunning=String(run);toggle.textContent=motion.matches?'Beweging uit':paused?'Animatie aan':'Animatie pauzeren';toggle.disabled=motion.matches;toggle.setAttribute('aria-pressed',String(paused||motion.matches));if((!run||!particles.length)&&raf){cancelAnimationFrame(raf);raf=0}if(motion.matches)ctx.clearRect(0,0,w,h);if(run&&particles.length&&!raf){last=0;raf=requestAnimationFrame(frame)}}
-toggle.addEventListener('click',()=>{paused=!paused;sync()});motion.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);new MutationObserver(sync).observe(lock,{attributes:true,attributeFilter:['class']});window.addEventListener('resize',resize);window.addEventListener('memento-weather-update',e=>{weather=e.detail;apply()});
-resize();apply();setInterval(apply,60000);
-})();
-</script>
+<script defer src="./assets/memento-forest-art.js"></script>\n<script defer src="./assets/memento-forest-lock.js"></script>
 <script id="compassFlowScript">(()=>{'use strict';
 const root=document,quotes=JSON.parse(document.getElementById('compassQuoteData').textContent),avatar=document.getElementById('compassAvatarData').textContent.trim();
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
