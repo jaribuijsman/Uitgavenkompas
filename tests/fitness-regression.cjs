@@ -280,4 +280,20 @@ test("short workouts remain shorter with old nonoptional routines", () => {
   assert.equal(f.active.exercises.length, 3);
   assert.equal(r.exercises.length, 5);
 });
+test("finishing an unrelated manual workout preserves the next A/B/C position", () => {
+  const f = fresh();
+  const saved = C.starter()[0];
+  saved.name = "Apart oud schema";
+  f.routines.push(saved);
+  f.routineCycle = f.routines.slice(0, 3).map((r) => r.id);
+  f.nextRoutineId = f.routineCycle[1];
+  C.start(f, saved.id);
+  f.active.exercises[0].logs[0].weight = 20;
+  f.active.exercises[0].logs[0].reps = 8;
+  f.active.exercises[0].logs[0].done = true;
+  C.finish(f);
+  assert.equal(f.nextRoutineId, f.routineCycle[1]);
+  assert.equal(f.sessions.length, 1);
+  C.validate(f);
+});
 console.log(`${count} fitness regression checks passed.`);
