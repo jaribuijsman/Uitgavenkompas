@@ -3383,13 +3383,14 @@ function openPermanentTrashDialog(){
   const c=window.MementoTrashCore,fb=window.MementoFinanceTrashBridge;
   if(!c||!fb)throw Error('De opruimmodule is niet beschikbaar. Vernieuw de app.');
   const report=c.summary(state,fb.read()),pending=pendingTrashFileIds();
-  if(!report.total&&!pending.length){status('De prullenbakken zijn al leeg.');return}
-  const rows=Object.entries(report.counts).filter(([,n])=>n>0).map(([label,n])=>'<div class="ft-row"><span>'+esc(label)+'</span><strong>'+n+'</strong></div>').join('');
+  const staleSnapshots=[RECOVERY,'uitgavenkompas_auto_backup_v1'].filter(key=>localStorage.getItem(key)!==null);
+  if(!report.total&&!pending.length&&!staleSnapshots.length){status('De prullenbakken en automatische herstelkopieën zijn al leeg.');return}
+  const rows=Object.entries(report.counts).filter(([,n])=>n>0).map(([label,n])=>'<div class="setting-row"><span>'+esc(label)+'</span><strong>'+n+'</strong></div>').join('');
   modal={mode:'permanent-purge'};
   showDialog('Definitief verwijderen','Dit kan niet ongedaan worden gemaakt.',
-   '<div class="life-detail-summary"><strong>'+report.total+' verwijderde items</strong>'+(rows||'<p>Alleen resterende bijlagen worden opgeruimd.</p>')+'</div>'+
+   '<div class="life-detail-summary"><strong>'+report.total+' verwijderde items</strong>'+(rows||'<p>Geen items in de prullenbak; alleen oude automatische herstelkopieën of bestandsresten worden opgeruimd.</p>')+'</div>'+
    '<p>Ook '+(report.attachmentIds.length+pending.length)+' bijlageverwijzingen kunnen definitief uit de lokale bestandsopslag verdwijnen, mits geen actieve notitie ze gebruikt.</p>'+
-   '<p>De bestaande actieve gegevens blijven behouden. Oude automatische herstelkopieën worden verwijderd zodat deze de gewiste gegevens niet opnieuw bevatten. Eerder gedownloade ZIP- of JSON-bestanden worden niet aangepast.</p>'+
+   '<p>De bestaande actieve gegevens blijven behouden. Sluit andere Memento-tabbladen voordat je verdergaat. De '+staleSnapshots.length+' lokale automatische herstelkopie(ën) worden verwijderd. Eerder gedownloade ZIP- of JSON-bestanden worden niet aangepast.</p>'+
    '<form id="lifePurgeTrashForm"><div class="life-form-field wide"><label for="lifePurgeWord">Typ VERWIJDEREN om te bevestigen</label><input id="lifePurgeWord" required autocomplete="off" autocapitalize="characters" pattern="VERWIJDEREN" placeholder="VERWIJDEREN"></div><p id="lifePurgeFeedback" role="alert"></p></form>',
    '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" class="life-btn life-btn-danger" id="lifePurgeExecute" form="lifePurgeTrashForm">Definitief leegmaken</button>');
  }catch(e){status(e.message||'Prullenbak kan niet veilig worden gecontroleerd.',false,true)}
@@ -3429,10 +3430,16 @@ async function performPermanentTrashPurge(){
   for(const key of [RECOVERY,'uitgavenkompas_auto_backup_v1']){
    try{localStorage.removeItem(key)}catch(e){warnings.push('Een oude automatische herstelkopie kon niet worden gewist.');}
   }
+  const committedLifeRaw=localStorage.getItem(KEY);
   const referenced=new Set(state.notes.flatMap(n=>(n.attachments||[]).map(a=>a.id)));
   const failed=[];
   for(const id of fileIds){
-   if(referenced.has(id)){failed.push(id);continue}
+   if(referenced.has(id))continue; // The file is still in use; never purge a shared/restored attachment.
+   if(localStorage.getItem(KEY)!==committedLifeRaw){
+    failed.push(id);
+    if(!warnings.some(x=>x.includes('ander tabblad')))warnings.push('Leven is tijdens de bestandsopruiming in een ander tabblad gewijzigd.');
+    continue;
+   }
    try{await files.remove(id)}catch(e){failed.push(id)}
   }
   try{if(failed.length)localStorage.setItem(TRASH_PENDING_KEY,JSON.stringify(failed));else localStorage.removeItem(TRASH_PENDING_KEY)}
