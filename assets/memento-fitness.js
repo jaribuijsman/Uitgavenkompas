@@ -211,45 +211,113 @@
           '<p>Geen gearchiveerde schema’s.</p>') + '</details>'
     );
   }
+  function muscleMark(e) {
+    const muscle = String(e?.muscle || "").toLocaleLowerCase("nl");
+    const points = /borst/.test(muscle) ? [18, 18] :
+      /rug/.test(muscle) ? [18, 21] :
+      /schouder/.test(muscle) ? [10, 17] :
+      /triceps|biceps|armen/.test(muscle) ? [6, 23] :
+      /benen|achterzijde/.test(muscle) ? [14, 34] : [18, 26];
+    return '<span class="ft-muscle-icon" aria-hidden="true"><svg viewBox="0 0 36 44" width="30" height="40" fill="none">' +
+      '<circle cx="18" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/>' +
+      '<path d="M13 14L8 17L4 28M23 14L28 17L32 28M13 14L12 27L10 41M23 14L24 27L26 41M12 27H24M13 14H23" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<circle cx="' + points[0] + '" cy="' + points[1] +
+      '" r="4.2" fill="#b9cebd" stroke="#203328" stroke-width="1.1"/></svg></span>';
+  }
+  function findExercise(id) {
+    const f = data();
+    return f.active?.exercises.find((e) => e.id === id) ||
+      f.routines.flatMap((r) => r.exercises).find((e) => e.id === id);
+  }
+  function guideDialog(id) {
+    const e = findExercise(id);
+    if (!e) return error("Deze oefening is niet meer beschikbaar.");
+    const known = C.knownExercise(e), demo = known?.demo ||
+      "https://www.strengthlog.com/exercise-directory/";
+    const searched = "https://www.youtube.com/results?search_query=" +
+      encodeURIComponent((known?.name || e.name) + " exercise technique");
+    dialog("Oefening uitgelegd",
+      '<div class="ft-guide-head">' + muscleMark(e) +
+        '<div><h3>' + esc(e.name) + '</h3><p>' + esc(e.muscle) + ' · ' +
+        esc(e.equipment) + '</p></div></div>' +
+      '<h3>Zo voer je hem uit</h3><p>' +
+        esc(known?.cue || e.cue || "Begin met een comfortabel gewicht en voer de beweging beheerst uit.") +
+      '</p><p class="ft-hint">Stel apparaten passend af. Stop bij pijn. Een instructie vervangt geen begeleiding bij het leren van een oefening.</p>' +
+      '<div class="ft-actions"><a class="life-btn life-btn-primary" href="' +
+        esc(demo) + '" target="_blank" rel="noopener noreferrer">Foto’s en uitleg ↗</a>' +
+        '<a class="life-btn" href="' + esc(searched) +
+        '" target="_blank" rel="noopener noreferrer">Zoek demonstratievideo ↗</a></div>' +
+      '<p class="ft-hint">De korte uitleg werkt offline. De externe demonstraties vereisen internet.</p>',
+      "", "guide");
+  }
+  function alternativesDialog(id) {
+    const e = data().active?.exercises.find((e) => e.id === id);
+    if (!e) return error("Geen actieve oefening gevonden.");
+    if (e.logs.some((l) => l.done)) return error("Maak eerst de afgevinkte sets ongedaan voordat je vervangt.");
+    const candidates = C.alternativeOptions(e);
+    dialog("Oefening vervangen",
+      '<p>Alleen voor deze training. Je vaste schema en eerdere resultaten veranderen niet.</p>' +
+      (candidates.length ? candidates.map((x) =>
+        '<div class="ft-row"><div><strong>' + esc(x.name) + '</strong><small>' +
+          esc(x.equipment) + ' · ' + esc(x.muscle) + '</small></div>' +
+          '<button type="button" class="life-btn" data-fit="replace-with" data-ex="' +
+          esc(e.id) + '" data-id="' + esc(x.id) + '">Kiezen</button></div>'
+        ).join("") : '<p>Geen gecontroleerd vergelijkbaar alternatief in de bibliotheek.</p>') +
+      '<div class="ft-actions">' + button("Zelf een oefening kiezen", "replace", e.id) + '</div>',
+      "", "alternatives");
+  }
   function session() {
-    const f = data(),
-      s = f.active,
-      done = s.exercises.reduce(
-        (n, e) => n + e.logs.filter((l) => l.done).length,
-        0,
-      ),
-      total = s.exercises.reduce((n, e) => n + e.logs.length, 0);
+    const f = data(), s = f.active,
+      done = s.exercises.reduce((n, e) => n + e.logs.filter((l) => l.done && !l.warmup).length, 0),
+      total = s.exercises.reduce((n, e) => n + e.logs.filter((l) => !l.warmup).length, 0);
     return (
-      `<div class="ft-session-head"><div><h2>${esc(s.name)}</h2><p>${esc(s.location)} · ${done} / ${total} sets afgevinkt</p></div>${button("Afronden", "finish", "", true)}</div><div class="ft-timer" role="timer" aria-label="Rusttimer"><span id="ft-clock">Rusttimer</span>${button("Stop rust", "stop-rest")}</div>` +
-      (s.checkin.pain
-        ? '<p class="ft-warning">Je hebt pijn gemeld. Er worden geen verhogingen voorgesteld. Stop een pijnlijke oefening; deze app beoordeelt geen blessures.</p>'
-        : "") +
-      s.exercises
-        .map((e, i) => {
-          const rec = C.recommendation(f, e, s.location);
-          if (
-            rec.increase &&
-            (s.checkin.pain ||
-              s.checkin.energy === "low" ||
-              s.checkin.sleep === "poor")
-          )
-            rec.text =
-              "Vandaag geen verhoging voorgesteld op basis van je check-in. Pas de training aan je gevoel aan.";
-          return panel(
-            `${i + 1}. ${esc(e.name)}`,
-            `<p class="ft-hint">${esc(e.equipment)}${e.group ? " · superset/circuit " + esc(e.group) : ""} · rust ${e.rest}s</p><p>${esc(rec.text)}</p>${e.note ? `<p class="ft-note">${esc(e.note)}</p>` : ""}<div class="ft-sets">${e.logs.map((l, j) => logRow(e, l, j)).join("")}</div><div class="ft-actions">${button("＋ Werkset", "add-set", e.id)}${button("＋ Opwarmset", "warmup", e.id)}${button("Vervangen", "replace", e.id)}</div><details class="ft-details"><summary>Uitvoering & notitie</summary><p>${esc(e.cue || "Kies een beheerst tempo en een comfortabele uitvoering.")}</p><label class="ft-field">Notitie voor deze training<textarea data-note="${esc(e.id)}" maxlength="4000">${esc(e.note)}</textarea></label></details>`,
-          );
-        })
-        .join("") +
-      panel(
-        "Jouw training",
-        `<label class="ft-field">Notitie<textarea data-session-note maxlength="4000">${esc(s.notes)}</textarea></label><div class="ft-actions">${button("Training afronden", "finish", "", true)}${button("Later verder", "later")}</div><details class="ft-details"><summary>Training annuleren</summary><p>Je kunt de laatst geannuleerde training in deze sessie terugzetten.</p>${button("Annuleer training", "cancel")}</details>`,
-      )
+      '<div class="ft-session-head"><div><h2>' + esc(s.name) + '</h2><p>' +
+      esc(s.location) + ' · ' + done + ' / ' + total + ' werksets afgerond</p></div>' +
+      button("Afronden", "finish", "", true) + '</div>' +
+      '<div class="ft-timer" role="timer" aria-label="Rusttimer"><span id="ft-clock">Rusttimer</span>' +
+      button("Stop rust", "stop-rest") + '</div>' +
+      (s.checkin.pain ? '<p class="ft-warning">Je hebt pijn gemeld. Er worden geen verhogingen voorgesteld. Stop een pijnlijke oefening.</p>' : '') +
+      '<div class="ft-session-controls">' +
+        button(showRir ? "Over verbergen" : "Herhalingen over tonen", "toggle-rir") +
+        '<span class="ft-hint">Gewichten en herhalingen worden direct bewaard.</span></div>' +
+      s.exercises.map((e, i) => {
+        const rec = C.recommendation(f, e, s.location);
+        const prior = C.history(f, e, s.location, e.equipment)[0];
+        const prev = prior?.e.logs.filter((l) => l.done && !l.warmup)
+          .map((l) => e.type === "strength" ? l.weight + " kg × " + l.reps : l.minutes + " min")
+          .join(" · ") || "";
+        if (rec.increase && (s.checkin.pain || s.checkin.energy === "low" || s.checkin.sleep === "poor"))
+          rec.text = "Vandaag geen verhoging voorgesteld. Stem de belasting af op je herstel.";
+        return '<section class="life-panel ft-panel ft-exercise-panel" id="ft-exercise-' + esc(e.id) + '">' +
+          '<div class="ft-exercise-head">' + muscleMark(e) +
+            '<div class="ft-exercise-title"><span class="ft-kicker">OEFENING ' + (i + 1) + ' VAN ' +
+              s.exercises.length + '</span><h2>' + esc(e.name) + '</h2>' +
+              '<p>' + esc(e.equipment) + ' · ' + esc(e.muscle) + '</p></div>' +
+            button("Uitleg", "guide", e.id) + '</div>' +
+          (prev ? '<p class="ft-prev">Vorige keer: ' + esc(prev) + '</p>' :
+            '<p class="ft-prev">Eerste registratie met dit apparaat.</p>') +
+          '<div class="ft-sets">' + e.logs.map((l, j) => logRow(e, l, j)).join("") + '</div>' +
+          (rec.increase ? '<p class="ft-hint ft-progress-hint">' + esc(rec.text) + '</p>' : '') +
+          '<div class="ft-actions ft-exercise-actions">' + button("Vervang oefening", "alternatives", e.id) +
+            '<details class="ft-more-actions"><summary>Meer</summary><div class="ft-actions">' +
+              button("＋ Werkset", "add-set", e.id) + button("＋ Opwarmset", "warmup", e.id) +
+              button("Andere oefening kiezen", "replace", e.id) + '</div></details></div>' +
+          '<details class="ft-details"><summary>Notitie en uitvoering</summary>' +
+            '<p>' + esc(e.cue || "Kies een beheerst tempo en een comfortabele uitvoering.") + '</p>' +
+            '<label class="ft-field">Notitie<textarea data-note="' + esc(e.id) +
+            '" maxlength="4000">' + esc(e.note) + '</textarea></label></details></section>';
+      }).join("") +
+      panel("Training afronden",
+        '<label class="ft-field">Trainingnotitie<textarea data-session-note maxlength="4000">' +
+          esc(s.notes) + '</textarea></label><div class="ft-actions">' +
+          button("Afronden", "finish", "", true) + button("Later verder", "later") + '</div>' +
+        '<details class="ft-details"><summary>Training annuleren</summary>' +
+          '<p>Annuleren kun je direct ongedaan maken.</p>' + button("Annuleer training", "cancel") + '</details>')
     );
   }
   function logRow(e, l, j) {
     const input = (k, label, value, step, max) =>
-      `<label>${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="decimal" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
+      `<label class="${k === "rir" ? "ft-rir-field" : ""}">${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="decimal" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
     return `<div class="ft-set${l.done ? " is-done" : ""}" data-set-row="${esc(l.id)}"><div class="ft-set-label">${l.warmup ? "W" : "Set " + (j + 1)}</div><div class="ft-set-fields">${e.type === "strength" ? input("weight", "kg", l.weight, 0.25, 100000) + input("reps", "reps", l.reps, 1, 1000) + input("rir", "over", l.rir, 1, 10) : input("minutes", "min", l.minutes, 0.1, 600) + (e.type === "cardio" ? input("distance", "km", l.distance, 0.01, 10000) : "")}</div><button type="button" class="ft-check" data-fit="toggle-set" data-ex="${esc(e.id)}" data-id="${esc(l.id)}" aria-label="${esc(e.name)} set ${j + 1} ${l.done ? "weer openen" : "afvinken"}" aria-pressed="${l.done}">${l.done ? "✓" : "○"}</button></div>`;
   }
   function progress() {
@@ -366,7 +434,7 @@
   function render() {
     if (!host || !host.isConnected) return;
     const f = data();
-    host.innerHTML = `<div id="mementoFitness"><nav class="ft-tabs" aria-label="Fitness">${[
+    host.innerHTML = `<div id="mementoFitness" class="${showRir ? "ft-show-rir" : ""}"><nav class="ft-tabs" aria-label="Fitness">${[
       ["today", "Vandaag"],
       ["plan", "Schema"],
       ["progress", "Voortgang"],
@@ -617,7 +685,12 @@
     } else if (a === "duration") {
       selectedMinutes = Number(id);
       render();
-    } else if (a === "profile") profile();
+    } else if (a === "toggle-rir") {
+      showRir = !showRir;
+      render();
+    } else if (a === "guide") guideDialog(id);
+    else if (a === "alternatives") alternativesDialog(id);
+    else if (a === "profile") profile();
     else if (a === "close") close();
     else if (a === "starter") {
       if (!confirm("Jouw A/B/C-cyclus activeren? Ontbrekende schema’s worden toegevoegd. Je bestaande rooster, overige schema’s, afspraken en trainingsresultaten blijven bewaard.")) return;
@@ -665,6 +738,27 @@
         return;
       }
       exerciseForm(id, true);
+    } else if (a === "replace-with") {
+      const oldId = b.dataset.ex;
+      const selected = C.catalog.find((x) => x.id === id);
+      if (!selected) return error("Alternatief niet beschikbaar.");
+      if (!change((draft) => {
+        const index = draft.active.exercises.findIndex((e) => e.id === oldId);
+        if (index < 0) throw Error("De oorspronkelijke oefening is niet gevonden.");
+        const old = draft.active.exercises[index];
+        if (old.logs.some((l) => l.done)) throw Error("Maak afgeronde sets eerst ongedaan.");
+        const replacement = C.exercise(selected);
+        Object.assign(replacement, {
+          sets: old.sets, min: old.min, max: old.max, rest: old.rest,
+          optional: old.optional, group: old.group,
+        });
+        replacement.logs = Array.from({ length: replacement.sets }, () => ({
+          id: C.uid(), weight: null, reps: null, minutes: selected.type === "strength" ? null : replacement.minutes,
+          distance: null, rir: null, warmup: false, done: false,
+        }));
+        draft.active.exercises[index] = replacement;
+      })) return;
+      close();
     } else if (a === "exercise-up") {
       if (
         change((f) => {
@@ -942,7 +1036,15 @@
             group: v.group,
             note: v.note,
           };
-          if (cat) e.cue = cat.cue;
+          if (cat && cat.name === e.name && cat.type === e.type && cat.equipment === e.equipment) {
+            e.catalogId = cat.id;
+            e.cue = cat.cue;
+            e.demo = cat.demo;
+          } else if (!old || old.name !== e.name || old.type !== e.type || old.equipment !== e.equipment) {
+            e.catalogId = "";
+            e.demo = "";
+            e.cue = "Beweeg beheerst en kies een comfortabele uitvoering.";
+          }
           // A changed movement gets a new identity; historical machine/variant comparisons stay separate.
           if (
             old &&
