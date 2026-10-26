@@ -239,8 +239,8 @@
     if (!e) return error("Deze oefening is niet meer beschikbaar.");
     const known = C.knownExercise(e), demo = known?.demo ||
       "https://www.strengthlog.com/exercise-directory/";
-    const searched = "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent((known?.name || e.name) + " exercise technique");
+    const searched = known ? "https://www.youtube.com/results?search_query=" +
+      encodeURIComponent(known.name + " exercise technique") : "";
     dialog("Oefening uitgelegd",
       '<div class="ft-guide-head">' + muscleMark(e) +
         '<div><h3>' + esc(e.name) + '</h3><p>' + esc(e.muscle) + ' · ' +
@@ -250,8 +250,8 @@
       '</p><p class="ft-hint">Stel apparaten passend af. Stop bij pijn. Een instructie vervangt geen begeleiding bij het leren van een oefening.</p>' +
       '<div class="ft-actions"><a class="life-btn life-btn-primary" href="' +
         esc(demo) + '" target="_blank" rel="noopener noreferrer">Foto’s en uitleg ↗</a>' +
-        '<a class="life-btn" href="' + esc(searched) +
-        '" target="_blank" rel="noopener noreferrer">Zoek demonstratievideo ↗</a></div>' +
+        (searched ? '<a class="life-btn" href="' + esc(searched) +
+        '" target="_blank" rel="noopener noreferrer">Zoek demonstratievideo ↗</a>' : '') + '</div>' +
       '<p class="ft-hint">De korte uitleg werkt offline. De externe demonstraties vereisen internet.</p>',
       "", "guide");
   }
