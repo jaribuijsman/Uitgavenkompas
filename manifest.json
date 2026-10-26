@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Memento",
   "short_name": "Memento",
-  "description": "Reflect · Refine · Conquer — overzicht van Leven en Financiën.",
+  "description": "Reflect · Refine · Conquer — leven, financiën en persoonlijk kenniscentrum.",
   "lang": "nl-NL",
   "start_url": "./",
   "scope": "./",
@@ -23,5 +23,14 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "./?memento-share=1",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
