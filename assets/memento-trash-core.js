@@ -14,7 +14,7 @@ function summary(life,finance){
  }
  for(const n of life.notes){
   for(const a of n.attachments||[]){
-   if(!a||typeof a.id!=="string"||!a.id)throw Error("Ongeldige bijlageverwijzing.");
+   if(!a||typeof a.id!=="string"||!/^[a-z0-9-]{8,120}$/i.test(a.id))throw Error("Ongeldige bijlageverwijzing.");
    (isTrashed(n)?oldFiles:liveFiles).add(a.id);
   }
  }
