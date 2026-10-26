@@ -96,7 +96,7 @@ async function run(){
  await test("corrupted ZIP entries are rejected by CRC32",async()=>{
   const blob=ZIP.zip([{name:"file.txt",bytes:new TextEncoder().encode("test")}]);
   const raw=new Uint8Array(await blob.arrayBuffer());
-  raw[35]^=1;
+  raw[38]^=1; // local header (30) + 8-byte filename; flip content, not filename
   assert.throws(()=>ZIP.unzip(raw),/Controlegetal/);
  });
  await test("complete ZIP includes exact Life, Finance, preferences and attachment bytes",async()=>{
