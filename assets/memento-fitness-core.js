@@ -178,6 +178,11 @@
       "Mat",
       "Beweeg rustig binnen een comfortabele bewegingsuitslag.",
     ],
+    ["inclinechest", "Incline chest press", "strength", "Borst", "Machine", "Druk schuin omhoog met gecontroleerde beweging."],
+    ["overheadtriceps", "Overhead triceps extension", "strength", "Triceps", "Kabelmachine", "Houd je bovenarmen stabiel en strek je ellebogen."],
+    ["hammercurl", "Hammer curl", "strength", "Biceps", "Dumbbells", "Houd je handpalmen naar binnen gericht."],
+    ["legcurl", "Leg curl", "strength", "Benen", "Machine", "Buig je knieën beheerst zonder te zwaaien."],
+    ["crunch", "Crunch", "strength", "Buik", "Mat", "Til je schouders rustig op zonder aan je nek te trekken."],
   ].map(([id, name, type, muscle, equipment, cue]) => ({
     id,
     name,
@@ -202,18 +207,17 @@
     };
   }
   function starter() {
-    return [
-      ["Training A", ["legpress", "chest", "row", "plank", "cross"]],
-      ["Training B", ["squat", "pulldown", "shoulder", "rdl", "walk"]],
-    ].map(([name, ids]) => ({
-      id: uid(),
-      name,
-      location: "Sportschool",
-      notes: "",
-      archived: false,
-      exercises: ids.map((id, i) => ({
-        ...exercise(catalog.find((x) => x.id === id)),
-        optional: i >= 3,
+    const plans = [
+      ["Borst & Triceps", [["chest", 3], ["inclinechest", 2], ["triceps", 3], ["overheadtriceps", 2]]],
+      ["Rug & Biceps", [["pulldown", 3], ["row", 3], ["curl", 3], ["hammercurl", 2]]],
+      ["Benen, Schouders & Buik", [["legpress", 3], ["legcurl", 2], ["shoulder", 2], ["lateral", 2], ["crunch", 2]]],
+    ];
+    return plans.map(([name, items]) => ({
+      id: uid(), name, location: "Sportschool", notes: "", archived: false,
+      exercises: items.map(([id, sets]) => ({
+        ...exercise(catalog.find((x) => x.id === id)), sets,
+        min: id === "lateral" || id === "crunch" ? 12 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 10 : 8,
+        max: id === "lateral" || id === "crunch" ? 15 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 12 : 12,
       })),
     }));
   }
