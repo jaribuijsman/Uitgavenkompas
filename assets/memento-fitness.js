@@ -192,6 +192,9 @@
       '<div class="ft-actions ft-toolbar">' + button("＋ Schema", "routine-new", "", true) +
         button("Training plannen", "plan-new") + button("Voorkeuren", "profile") + '</div>' +
       splitOffer(f) +
+      panel("Spieropbouw · jouw huidige niveau",
+        '<p>Je traint al ongeveer een maand 3–4 keer per week. Het bijgewerkte A/B/C-programma heeft 10, 10 en 13 werksets, met herhalingsbereiken en rusttijden. Je huidige schema’s veranderen alleen na je bevestiging.</p>' +
+        '<div class="ft-actions">' + button("Voorgesteld schema toepassen", "apply-hypertrophy") + '</div>') +
       '<div class="ft-section-title"><h2>Actieve trainingscyclus</h2>' +
         '<p>De volgorde schuift alleen door wanneer je een training afrondt.</p></div>' +
       (active.length ? active.map((r, i) => card(r, i, true)).join("") :
@@ -409,6 +412,9 @@
               Math.max(...points.map((p) => p.weight)) + ' kg') + '</strong></span></div>' +
           '<p class="ft-hint">Beste uitgevoerde set per sessie; dit is geen voorspelling van je maximale kracht.</p>'
         : '<p>Na je eerste afgeronde training verschijnt hier een grafiek. Er worden geen voorbeeldmetingen toegevoegd.</p>')) +
+      panel("Spieropbouw · voeding en gewicht",
+        '<p>Bij 64 kg en stabiel gewicht: probeer als start ongeveer 250 kcal per dag extra en 110–130 g eiwit. Vergelijk je gemiddelde ochtendgewicht per week. Als het na 2–3 weken niet stijgt, overweeg circa 100–150 kcal extra.</p>' +
+        '<p class="ft-hint">Dit zijn richtwaarden, geen berekende caloriebehoefte. Er wordt niets automatisch bijgehouden of naar een externe dienst verstuurd.</p>') +
       panel("Werksets per hoofdspiergroep · 7 dagen",
         Object.keys(muscleSets).length ? Object.entries(muscleSets)
           .sort((a,b)=>b[1]-a[1]).map(([m,n]) =>
@@ -522,7 +528,7 @@
         : e
           ? "Oefening bewerken"
           : "Oefening toevoegen",
-      `<input type="hidden" name="exerciseId" value="${esc(id)}"><input type="hidden" name="replacement" value="${sessionReplacement}">${select("Spiergroep filter", "muscleFilter", [["", "Alle spiergroepen"], ...[...new Set(C.catalog.map((x) => x.muscle))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Apparatuur filter", "equipmentFilter", [["", "Alle apparatuur"], ...[...new Set(C.catalog.map((x) => x.equipment))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Uit de oefenbibliotheek", "catalog", [["", "Eigen oefening"], ...C.catalog.map((e) => [e.id, e.name])], "")}<div class="ft-form-grid">${field("Naam", "name", e?.name || "", "text", 'required maxlength="120"')}${select(
+      `<input type="hidden" name="exerciseId" value="${esc(id)}"><input type="hidden" name="replacement" value="${sessionReplacement}"><p class="ft-hint">Je ziet eerst oefeningen voor dit schema. Kies een andere spiergroep om de volledige bibliotheek te bekijken.</p>${select("Spiergroep filter", "muscleFilter", [["", "Alle spiergroepen"], ...[...new Set(C.catalog.map((x) => x.muscle))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Apparatuur filter", "equipmentFilter", [["", "Alle apparatuur"], ...[...new Set(C.catalog.map((x) => x.equipment))].sort((a,b)=>a.localeCompare(b,"nl")).map((x) => [x,x])], "")}${select("Uit de oefenbibliotheek", "catalog", [["", "Eigen oefening"], ...C.catalog.map((e) => [e.id, e.name])], "")}<div class="ft-form-grid">${field("Naam", "name", e?.name || "", "text", 'required maxlength="120"')}${select(
         "Soort",
         "type",
         [
@@ -538,14 +544,29 @@
     const sel = document.querySelector("#fitnessDialog [name=catalog]");
     const muscles = document.querySelector("#fitnessDialog [name=muscleFilter]");
     const tools = document.querySelector("#fitnessDialog [name=equipmentFilter]");
+    const suggested = C.catalog.filter((x) => {
+      if (sessionReplacement) return true;
+      const title = r?.name || "";
+      if (/Borst.*Triceps/i.test(title)) return ["Borst","Triceps"].includes(x.muscle) ||
+        (x.muscle === "Armen" && /triceps/i.test(x.name));
+      if (/Rug.*Biceps/i.test(title)) return ["Rug","Biceps"].includes(x.muscle) ||
+        (x.muscle === "Armen" && /biceps|curl/i.test(x.name));
+      if (/Benen.*Schouders.*Buik/i.test(title)) return ["Benen","Achterzijde benen","Bilspieren","Kuiten","Schouders","Buik","Romp"].includes(x.muscle);
+      return true;
+    });
+    const suggestedMuscles = [...new Set(suggested.map((x) => x.muscle))];
+    muscles.innerHTML = options([["", "Alle spiergroepen"], ...suggestedMuscles.sort((a,b)=>a.localeCompare(b,"nl")).map((x)=>[x,x])], "");
     const filterCatalog = () => {
-      const current = sel.value, visible = C.catalog.filter((x) =>
+      const current = sel.value;
+      const visible = (muscles.value || tools.value ? C.catalog : suggested).filter((x) =>
         (!muscles.value || x.muscle === muscles.value) &&
-        (!tools.value || x.equipment === tools.value));
-      sel.innerHTML = options([["", "Eigen oefening"], ...visible.map((x) => [x.id,x.name])], visible.some((x) => x.id === current) ? current : "");
+        (!tools.value || x.equipment === tools.value)).sort((a,b)=>a.name.localeCompare(b.name,"nl"));
+      sel.innerHTML = options([["", "Eigen oefening"], ...visible.map((x) => [x.id,x.name])],
+        visible.some((x)=>x.id===current) ? current : "");
     };
     muscles.onchange = filterCatalog;
     tools.onchange = filterCatalog;
+    filterCatalog();
     sel.onchange = () => {
       const x = C.catalog.find((e) => e.id === sel.value);
       if (!x) return;
@@ -719,6 +740,10 @@
     else if (a === "alternatives") alternativesDialog(id);
     else if (a === "profile") profile();
     else if (a === "close") close();
+    else if (a === "apply-hypertrophy") {
+      if (!confirm("Nieuwe set- en herhalingsdoelen toepassen op jouw A/B/C-schema’s? Bestaande oefeningen met dezelfde naam worden bijgewerkt. Extra eigen oefeningen, notities, resultaten en actieve trainingen blijven behouden.")) return;
+      if (change((f) => C.applyHypertrophyPlan(f))) { tab = "plan"; render(); }
+    }
     else if (a === "starter") {
       if (!confirm("Jouw A/B/C-cyclus activeren? Ontbrekende schema’s worden toegevoegd. Je bestaande rooster, overige schema’s, afspraken en trainingsresultaten blijven bewaard.")) return;
       if (change((f) => {
