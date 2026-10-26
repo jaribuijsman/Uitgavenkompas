@@ -105,7 +105,8 @@ function renderCollectionEditor(){
 function attachmentsHTML(n){
  if(!(n.attachments||[]).length)return "";
  return '<div class="kc-attachments"><h3>Bijlagen</h3>'+
- n.attachments.map(a=>'<div class="kc-attachment"><span aria-hidden="true">'+(a.type==="application/pdf"?"▣":"▧")+'</span><button type="button" data-kc="file" data-id="'+esc(a.id)+'">'+esc(a.name)+'</button><small>'+Math.round(a.size/1024)+' KB</small></div>').join("")+"</div>";
+ n.attachments.map(a=>'<div class="kc-attachment"><span aria-hidden="true">'+(a.type==="application/pdf"?"▣":"▧")+'</span><button type="button" data-kc="file" data-id="'+esc(a.id)+'">'+esc(a.name)+'</button><small>'+Math.round(a.size/1024)+' KB</small>'+
+ (screen==="edit"?'<button type="button" data-kc="remove-file" data-id="'+esc(a.id)+'" aria-label="Bijlage loskoppelen">×</button>':"")+'</div>').join("")+"</div>";
 }
 function linkedHTML(n){
  const links=[...(n.links||[]),...(n.conversions||[]).map(l=>({kind:l.kind,id:l.id}))];
@@ -251,6 +252,11 @@ function back(){
 async function attach(files){
  if(!S){notify("De bestandsopslag is niet beschikbaar.");return}
  if(!files?.length)return;
+ if(!selectedId&&editing&&!editing.body.trim()){
+  editing.title=editing.title==="Naamloze notitie"?String(files[0].name||"Bijlage").slice(0,180):editing.title;
+  editing.kind=String(files[0].type).includes("pdf")?"pdf":"image";
+  dirty=true;
+ }
  if(!flush()){notify("Sla de notitie eerst op voordat je een bijlage toevoegt.");return}
  setSaveIndicator("Bijlagen worden opgeslagen…");
  for(const file of files){
@@ -306,6 +312,11 @@ function click(event){
   field.setRangeText(next,a,b,"end");editing.body=field.value;field.focus();schedule();return;
  }
  if(op==="file"){openFile(id).catch(e=>notify(e.message));return}
+ if(op==="remove-file"){
+  if(!confirm("Bijlage loskoppelen van deze notitie? Het bestand wordt niet direct definitief gewist."))return;
+  if(!flush())return;
+  if(write(s=>{const n=s.notes.find(x=>x.id===selectedId);C.updateNote(s,n.id,{attachments:(n.attachments||[]).filter(a=>a.id!==id)});})){startEdit(selectedId);}return;
+ }
  if(op==="pin"||op==="archive-item"||op==="delete"||op==="restore"){
   if(op==="delete"&&!confirm("Notitie naar de prullenbak verplaatsen? Je kunt haar later herstellen."))return;
   if(write(s=>{const n=s.notes.find(x=>x.id===id);if(!n)return;
@@ -355,6 +366,13 @@ function onChange(event){
  }
  if(el.id==="kc-file-input"){attach(Array.from(el.files||[]));}
 }
+function prefillShared({title="",text="",url=""}={}){
+ const destination="inbox",website=safeURL(url)||safeURL(text.trim());
+ selectedId="";editing=C.makeNote({title:String(title||"").slice(0,180),body:String(text||"").slice(0,20000),collectionId:destination,kind:website?"link":"note"},read());
+ if(website)editing.sourceUrl=website;
+ screen="edit";dirty=true;notice="Gedeeld item staat als concept klaar. Controleer en sla op.";render();
+ setSaveIndicator("Nog niet opgeslagen");
+}
 function mount(container,b){
  host=container;bridge=b;
  if(!bridge?.read||!bridge?.write){host.innerHTML='<p>Kenniscentrum kan niet met Leven verbinden.</p>';return;}
@@ -367,5 +385,5 @@ window.addEventListener("beforeunload",e=>{if(hasPending()&&!flush()){e.preventD
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
-root.MementoKnowledge={mount,hasPending,open:()=>{screen="home";editing=null;notice="";render();},newNote:()=>beginNew("inbox"),showNote:id=>{selectedId=id;screen="detail";render();}};
+root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{screen="home";editing=null;notice="";render();},newNote:()=>beginNew("inbox"),showNote:id=>{selectedId=id;screen="detail";render();}};
 })(window);
