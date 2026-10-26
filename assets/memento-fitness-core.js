@@ -207,24 +207,12 @@
     cue,
   }));
   const exerciseDirectory = "https://www.strengthlog.com/exercise-directory/";
+  // Only links checked against the exercise publisher are direct; other movements use the directory.
   const demoPaths = {
-    chest: "machine-chest-press", triceps: "tricep-pushdown-with-rope",
-    pulldown: "lat-pulldown-with-pronated-grip", lateral: "dumbbell-lateral-raise",
-    dbchest: "dumbbell-chest-press", bench: "bench-press",
-    dbincline: "incline-dumbbell-press", squat: "goblet-squat",
-    legpress: "leg-press", curl: "dumbbell-curl", hammercurl: "hammer-curl",
-    legcurl: "seated-leg-curl", seatedlegcurl: "seated-leg-curl",
-    rdl: "romanian-deadlift", row: "cable-close-grip-seated-row",
-    shoulder: "seated-dumbbell-shoulder-press", crunch: "crunch",
-    cablecrunch: "cable-crunch", legextension: "leg-extension",
-    inclinechest: "smith-machine-incline-bench-press",
-    overheadtriceps: "overhead-cable-triceps-extension-upper-position",
-    dbrow: "dumbbell-row", machinerow: "seated-machine-row",
-    dbtriceps: "dumbbell-standing-triceps-extension",
-    machinepulldown: "machine-lat-pulldown", hack: "hack-squat-machine",
-    machineshoulder: "seated-smith-machine-shoulder-press",
-    cablelateral: "resistance-band-lateral-raise",
-    cablecurl: "cable-curl-with-bar",
+    chest: "machine-chest-press",
+    triceps: "tricep-pushdown-with-rope",
+    pulldown: "lat-pulldown-with-pronated-grip",
+    lateral: "dumbbell-lateral-raise",
   };
   const alternatives = {
     chest: ["dbchest", "pushup", "bench"], inclinechest: ["dbincline", "chest"],
@@ -335,6 +323,8 @@
       if (!arr(f[key])) fail();
       unique(f[key]);
     }
+    if (Array.isArray(f.routineCycle) &&
+      f.routineCycle.some((id) => !f.routines.some((r) => r.id === id))) fail();
     const checkExercise = (e) => {
       if (
         !e ||
