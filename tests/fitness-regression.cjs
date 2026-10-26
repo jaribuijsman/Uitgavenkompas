@@ -37,7 +37,7 @@ test("short training retains core exercises without changing the routine", () =>
     r = f.routines[0];
   C.start(f, r.id, 25);
   assert.equal(f.active.exercises.length, 3);
-  assert.equal(r.exercises.length, 5);
+  assert.equal(r.exercises.length, 4);
   f.active.exercises[0].note = "Session only";
   assert.equal(r.exercises[0].note, "");
   C.validate(f);
@@ -197,5 +197,87 @@ test("deleted sessions do not affect performance suggestions", () => {
       .length,
     0,
   );
+});
+test("personal split has three plans, real short variants and no demo results", () => {
+  const f = fresh();
+  assert.deepEqual(f.routines.map((r) => r.name),
+    ["Borst & Triceps", "Rug & Biceps", "Benen, Schouders & Buik"]);
+  assert.deepEqual(f.routines.map((r) => r.exercises.length), [4, 4, 5]);
+  for (const routine of f.routines) {
+    assert.equal(C.shortExercises(routine).length, 3);
+    assert.equal(routine.exercises.some((e) => e.logs !== undefined), false);
+  }
+});
+test("legacy backups without a routineCycle field remain valid", () => {
+  const f = fresh();
+  delete f.routineCycle;
+  assert.equal(C.validate(f), f);
+  assert.deepEqual(C.rotation(f).map((r) => r.name),
+    ["Borst & Triceps", "Rug & Biceps", "Benen, Schouders & Buik"]);
+});
+test("an older unrelated routine stays saved but out of the active split", () => {
+  const f = fresh();
+  const other = { ...C.starter()[0], name: "Oud schema" };
+  f.routines.unshift(other);
+  f.routineCycle = f.routines.slice(1).map((r) => r.id);
+  f.nextRoutineId = f.routineCycle[0];
+  assert.equal(C.rotation(f).length, 3);
+  for (let i = 0; i < 4; i++) {
+    const current = C.next(f);
+    assert.notEqual(current.id, other.id);
+    C.start(f, current.id);
+    f.active.exercises[0].logs[0].done = true;
+    f.active.exercises[0].logs[0].weight = 10;
+    f.active.exercises[0].logs[0].reps = 8;
+    C.finish(f);
+  }
+  assert.equal(C.next(f).id, f.routineCycle[1]);
+  assert.equal(f.routines[0].id, other.id);
+  C.validate(f);
+});
+test("cycle skips archived plans but keeps references for restoration", () => {
+  const f = fresh();
+  f.routineCycle = f.routines.map((r) => r.id);
+  f.routines[1].archived = true;
+  assert.deepEqual(C.rotation(f).map((r) => r.name),
+    ["Borst & Triceps", "Benen, Schouders & Buik"]);
+  f.routines[1].archived = false;
+  assert.equal(C.rotation(f).length, 3);
+  C.validate(f);
+});
+test("corrupt cycle identifiers or duplicates are rejected", () => {
+  const f = fresh();
+  f.routineCycle = [f.routines[0].id, f.routines[0].id];
+  assert.throws(() => C.validate(f));
+  f.routineCycle = ["deleted-routine-id"];
+  assert.throws(() => C.validate(f));
+});
+test("history matches exercise across routines but never mixes equipment", () => {
+  const f = fresh(), first = f.routines[0];
+  C.start(f, first.id);
+  f.active.exercises[0].logs[0].weight = 60;
+  f.active.exercises[0].logs[0].reps = 8;
+  f.active.exercises[0].logs[0].done = true;
+  C.finish(f);
+  const same = { ...C.clone(first.exercises[0]), id: C.uid() };
+  assert.equal(C.history(f, same, first.location, same.equipment).length, 1);
+  assert.equal(C.history(f, { ...same, equipment: "Dumbbells" }, first.location, "Dumbbells").length, 0);
+  assert.equal(C.history(f, same, "Other gym", same.equipment).length, 0);
+});
+test("library offers known movement-specific equipment alternatives", () => {
+  const f = fresh();
+  const ids = C.alternativeOptions(f.routines[0].exercises[0]).map((e) => e.id);
+  assert.equal(ids.includes("dbchest"), true);
+  assert.equal(ids.includes("pushup"), true);
+  assert.equal(C.catalog.some((e) => e.id === "cablecrunch"), true);
+});
+test("short workouts remain shorter with old nonoptional routines", () => {
+  const f = fresh();
+  const r = f.routines[2];
+  r.exercises.forEach((e) => e.optional = false);
+  assert.equal(C.shortExercises(r).length, 3);
+  C.start(f, r.id, 25);
+  assert.equal(f.active.exercises.length, 3);
+  assert.equal(r.exercises.length, 5);
 });
 console.log(`${count} fitness regression checks passed.`);
