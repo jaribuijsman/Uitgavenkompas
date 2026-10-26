@@ -1,5 +1,5 @@
-const CACHE = "memento-pwa-v18-20261026-fitness-v2";
-const CORE = ["./assets/memento-fitness-core.js?v=20261026-fitness-v2", "./assets/memento-fitness.js?v=20261026-fitness-v2", "./assets/memento-fitness.css?v=20261026-fitness-v2", "./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png", "./assets/memento-forest-art.js", "./assets/memento-forest-lock.css", "./assets/memento-forest-lock.js"];
+const CACHE = "memento-pwa-v19-20261026-fitness-v3";
+const CORE = ["./assets/memento-fitness-core.js?v=20261026-fitness-v3", "./assets/memento-fitness.js?v=20261026-fitness-v3", "./assets/memento-fitness.css?v=20261026-fitness-v3", "./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png", "./assets/memento-forest-art.js", "./assets/memento-forest-lock.css", "./assets/memento-forest-lock.js"];
 self.addEventListener("install", event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith("memento-") && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", event => {
