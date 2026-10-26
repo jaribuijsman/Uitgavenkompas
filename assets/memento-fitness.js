@@ -126,19 +126,20 @@
         `<p>Maak een eigen trainingsschema of begin met een aanpasbaar basisplan. Je trainingen en resultaten blijven in Memento.</p><div class="ft-actions">${button("Fitness instellen", "profile", "", true)}${button("Mijn 3-daagse split", "starter")}${button("Eigen schema maken", "routine-new")}</div><div class="ft-intro"><span>Kracht & conditie</span><span>Offline bijhouden</span><span>Je eigen tempo</span></div>`,
       );
     if (f.active) return session();
+    if (r && selectedMinutes === 25 && C.shortExercises(r).length === r.exercises.length)
+      selectedMinutes = 45;
     return (
       splitOffer(f) +
       (C.shift(f, C.date()) ? '<div class="ft-shift-hint">Vandaag: ' +
-        esc(shiftDescription[C.shift(f,C.date())]) + 'dienst' +
+        esc(shiftDescription[C.shift(f,C.date())]) + (C.shift(f,C.date()) === "R" ? "" : "dienst") +
         (C.shift(f,C.date()) === "N" ? ' · Houd rekening met je slaap en herstel.' : '') +
         '</div>' : '') +
       panel(
         r ? esc(r.name) : "Je eerste training",
         r
-          ? `<div class="ft-kicker">VOLGENDE IN JE SCHEMA</div><p>${esc(r.location)} · ${r.exercises.length} oefeningen</p><div class="ft-choices" aria-label="Training kiezen">${[
-              [25, "Kort"],
-              [45, "Volledig"],
-            ]
+          ? `<div class="ft-kicker">VOLGENDE IN JE SCHEMA</div><p>${esc(r.location)} · ${r.exercises.length} oefeningen</p><div class="ft-choices" aria-label="Training kiezen">${(C.shortExercises(r).length < r.exercises.length
+              ? [[25, "Kort · " + C.shortExercises(r).length + " oefeningen"], [45, "Volledig"]]
+              : [[45, "Volledig"]])
               .map(
                 ([n, l]) =>
                   `<button type="button" data-fit="duration" data-id="${n}" aria-pressed="${selectedMinutes === n}">${l}</button>`,
@@ -598,11 +599,16 @@
     const days = C.suggestedDates(f, b?.date || C.date());
     const suggestions = days.length ?
       '<div class="ft-field"><span>Geschikte dagen volgens je rooster</span>' +
-        '<div class="ft-date-choices">' + days.map((date) =>
-          '<button type="button" class="ft-date-choice" data-fit="pick-date" data-id="' +
-            esc(date) + '">' + fmt(date) +
-            '<small>' + esc(shiftDescription[C.shift(f,date)] || "Geen dienst bekend") +
-            '</small></button>').join("") + '</div></div>' : "";
+        '<div class="ft-date-choices">' + days.map((date) => {
+          const previous = new Date(date + "T12:00:00");
+          previous.setDate(previous.getDate() - 1);
+          const afterNight = C.shift(f, C.date(previous)) === "N";
+          const label = (shiftDescription[C.shift(f,date)] || "Geen dienst bekend") +
+            (afterNight ? " · na nacht" : "");
+          return '<button type="button" class="ft-date-choice" data-fit="pick-date" data-id="' +
+            esc(date) + '">' + fmt(date) + '<small>' + esc(label) +
+            '</small></button>';
+        }).join("") + '</div></div>' : "";
     dialog("Training plannen",
       '<input type="hidden" name="bookingId" value="' + esc(id || "") + '">' +
       select("Training", "routineId", C.available(f).map((r)=>[r.id,r.name]), b?.routineId || C.next(f)?.id) +
