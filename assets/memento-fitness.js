@@ -43,6 +43,8 @@
     tab = "today",
     pending = null,
     selectedMinutes = 45,
+    showRir = false,
+    progressKey = "",
     editingRoutine = "",
     lastFocus = null,
     clock = null;
@@ -97,12 +99,14 @@
   }
   const personalSplitNames = ["Borst & Triceps", "Rug & Biceps", "Benen, Schouders & Buik"];
   function splitOffer(f) {
-    const missing = personalSplitNames.filter((name) => !f.routines.some((r) => r.name === name));
-    if (!missing.length) return "";
-    return panel(
-      "Jouw 3-daagse krachtschema",
-      '<p>Borst & triceps · Rug & biceps · Benen, schouders & buik. Circa 45 minuten per training, met sets en herhalingen als startpunt.</p><p class="ft-hint">Je bestaande schema’s en resultaten blijven bewaard. Eerdere schema’s kun je daarna zo nodig archiveren via Bewerken.</p><div class="ft-actions">' + button("Mijn 3-daagse split toevoegen", "starter", "", true) + "</div>",
-    );
+    const found = personalSplitNames.map((name) => f.routines.find((r) => !r.archived && r.name === name));
+    const cycle = C.rotation(f);
+    const installed = found.every(Boolean);
+    const current = installed && cycle.length === 3 && found.every((r, i) => r.id === cycle[i].id);
+    if (current) return "";
+    return panel("Jouw 3-daagse krachtschema",
+      '<p>Borst & triceps · Rug & biceps · Benen, schouders & buik. Eerdere schema’s en resultaten blijven bewaard.</p><div class="ft-actions">' +
+      button(installed ? "Als vaste A/B/C-cyclus instellen" : "Mijn 3-daagse split toevoegen", "starter", "", true) + "</div>");
   }
   function today() {
     const f = data(),
@@ -158,53 +162,53 @@
     );
   }
   function plan() {
-    const f = data();
+    const f = data(), active = C.rotation(f),
+      ids = new Set(active.map((r) => r.id)),
+      remaining = f.routines.filter((r) => !r.archived && !ids.has(r.id));
+    const card = (r, index, inCycle) =>
+      panel('<span class="ft-routine-heading">' +
+          (inCycle ? '<span class="ft-cycle-label">' + String.fromCharCode(65 + index) + '</span>' : '') +
+          esc(r.name) + '</span>',
+        '<p class="ft-routine-meta">' + esc(r.location) + ' · ' + r.exercises.length +
+          ' oefeningen' + (C.next(f)?.id === r.id ? ' · volgende training' : '') +
+          (inCycle ? ' · in je cyclus' : ' · apart schema') + '</p>' +
+        (r.exercises.length ? '<details class="ft-details ft-routine-details"><summary>Bekijk oefeningen</summary>' +
+          r.exercises.map((e) =>
+            '<div class="ft-row"><div><strong>' + esc(e.name) + '</strong><small>' +
+            (e.type === "strength" ? e.sets + ' × ' + e.min + '–' + e.max : e.sets + ' × ' + e.minutes + ' min') +
+            (e.optional ? ' · optioneel' : '') + '</small></div>' +
+            button("Uitleg", "guide", e.id) + '</div>').join("") +
+          '</details>' : '<p>Voeg oefeningen toe om dit schema te kunnen trainen.</p>') +
+        '<div class="ft-actions">' + (r.exercises.length ? button("Start", "start", r.id, true) : '') +
+          button("Bewerken", "routine-edit", r.id) +
+          (inCycle ? (active.length > 1 ? button("Uit cyclus", "toggle-cycle", r.id) : '') +
+            button("Als volgende", "next", r.id) : button("In cyclus", "toggle-cycle", r.id)) + '</div>');
     return (
-      `<div class="ft-actions ft-toolbar">${button("＋ Schema", "routine-new", "", true)}${button("＋ Plannen", "plan-new")}${button("Voorkeuren", "profile")}</div>` +
+      '<div class="ft-actions ft-toolbar">' + button("＋ Schema", "routine-new", "", true) +
+        button("Training plannen", "plan-new") + button("Voorkeuren", "profile") + '</div>' +
       splitOffer(f) +
-      (f.routines.some((r) => !r.archived)
-        ? f.routines
-            .filter((r) => !r.archived)
-            .map((r) =>
-              panel(
-                esc(r.name),
-                `<p>${esc(r.location)} · ${r.exercises.length} oefeningen${C.next(f)?.id === r.id ? " · volgende training" : ""}</p><div class="ft-exercise-list">${r.exercises.map((e) => `<div class="ft-row"><div><strong>${esc(e.name)}</strong><small>${e.type === "strength" ? `${e.sets} × ${e.min}–${e.max} herhalingen` : `${e.sets} × ${e.minutes} min`}${e.optional ? " · aanvullend" : ""}${e.group ? " · groep " + esc(e.group) : ""}</small></div></div>`).join("")}</div><div class="ft-actions">${button("Start", "start", r.id, true)}${button("Bewerken", "routine-edit", r.id)}${button("Als volgende", "next", r.id)}</div>`,
-              ),
-            )
-            .join("")
-        : panel(
-            "Nog geen schema",
-            `<p>Je kunt zelf beginnen of drie bewerkbare trainingen voor je persoonlijke split toevoegen. Gewichten vul je zelf in.</p>${button("Basisplan toevoegen", "starter", "", true)}`,
-          )) +
-      (f.bookings.length
-        ? panel(
-            "Trainingsagenda",
-            bookingRows(
-              f,
-              f.bookings
-                .filter((b) => b.status === "planned")
-                .sort((a, b) => a.date.localeCompare(b.date)),
-            ),
-            button("＋ Plan", "plan-new"),
-          )
-        : "") +
-      `<details class="ft-details"><summary>Geannuleerde planning</summary>${
-        f.bookings
-          .filter((b) => b.status === "cancelled")
-          .map(
-            (b) =>
-              `<div class="ft-row"><span>${esc(routineLabel(f, b.routineId))} · ${fmt(b.date)}</span>${button("Terugzetten", "restore-booking", b.id)}</div>`,
-          )
-          .join("") || "<p>Geen geannuleerde trainingen.</p>"
-      }</details><details class="ft-details"><summary>Gearchiveerde schema’s</summary>${
-        f.routines
-          .filter((r) => r.archived)
-          .map(
-            (r) =>
-              `<div class="ft-row"><strong>${esc(r.name)}</strong>${button("Terugzetten", "restore-routine", r.id)}</div>`,
-          )
-          .join("") || "<p>Geen gearchiveerde schema’s.</p>"
-      }</details>`
+      '<div class="ft-section-title"><h2>Actieve trainingscyclus</h2>' +
+        '<p>De volgorde schuift alleen door wanneer je een training afrondt.</p></div>' +
+      (active.length ? active.map((r, i) => card(r, i, true)).join("") :
+        panel("Geen actieve schema’s", '<p>Maak een schema of voeg je driedelige split toe.</p>')) +
+      (remaining.length ? '<div class="ft-section-title"><h2>Andere schema’s</h2>' +
+        '<p>Deze blijven bewaard en beïnvloeden je A/B/C-volgorde niet.</p></div>' +
+        remaining.map((r, i) => card(r, i, false)).join("") : '') +
+      (f.bookings.some((b) => b.status === "planned")
+        ? panel("Geplande trainingen", bookingRows(f, f.bookings
+          .filter((b) => b.status === "planned")
+          .sort((a, b) => a.date.localeCompare(b.date))), button("＋ Plan", "plan-new"))
+        : '') +
+      '<details class="ft-details"><summary>Geannuleerde planning</summary>' +
+        (f.bookings.filter((b) => b.status === "cancelled").map((b) =>
+          '<div class="ft-row"><span>' + esc(routineLabel(f, b.routineId)) +
+          ' · ' + fmt(b.date) + '</span>' + button("Terugzetten", "restore-booking", b.id) +
+          '</div>').join("") || '<p>Geen geannuleerde trainingen.</p>') +
+        '</details><details class="ft-details"><summary>Gearchiveerde schema’s</summary>' +
+        (f.routines.filter((r) => r.archived).map((r) =>
+          '<div class="ft-row"><strong>' + esc(r.name) +
+          '</strong>' + button("Terugzetten", "restore-routine", r.id) + '</div>').join("") ||
+          '<p>Geen gearchiveerde schema’s.</p>') + '</details>'
     );
   }
   function session() {
@@ -616,25 +620,33 @@
     } else if (a === "profile") profile();
     else if (a === "close") close();
     else if (a === "starter") {
-      if (
-        !confirm(
-          "Jouw drie trainingsschema’s toevoegen en je doel instellen op spieropbouw, 5 keer per week? Ook je 10-daagse ploegendienst vanaf 28 oktober 2026 wordt ingesteld. Bestaande schema’s, planning en resultaten blijven bewaard. Oude schema’s kun je desgewenst later archiveren.",
-        )
-      ) return;
+      if (!confirm("Jouw A/B/C-cyclus activeren? Ontbrekende schema’s worden toegevoegd. Je bestaande rooster, overige schema’s, afspraken en trainingsresultaten blijven bewaard.")) return;
       if (change((f) => {
         const proposed = C.starter();
-        const fresh = proposed.filter((r) => !f.routines.some((old) => old.name === r.name));
+        const fresh = proposed.filter((r) => !f.routines.some((old) => !old.archived && old.name === r.name));
         f.routines.push(...fresh);
-        f.profile.goal = "muscle";
-        f.profile.cycleDays = 7;
-        f.profile.target = 5;
-        f.profile.shiftStart = "2026-10-28";
-        f.profile.shifts = "VVLLRNNRRR";
-        f.profile.avoidNight = true;
-        f.setup = true;
-        const first = f.routines.find((r) => r.name === personalSplitNames[0] && !r.archived);
-        if (first) f.nextRoutineId = first.id;
-      })) tab = "plan", render();
+        f.routineCycle = personalSplitNames.map((name) => f.routines.find((r) => !r.archived && r.name === name).id);
+        f.profile.goal = "muscle"; f.profile.cycleDays = 7; f.profile.target = 5;
+        if (!f.profile.shiftStart) {
+          f.profile.shiftStart = "2026-10-28";
+          f.profile.shifts = "VVLLRNNRRR"; f.profile.avoidNight = true;
+        }
+        f.setup = true; f.nextRoutineId = f.routineCycle[0];
+      })) { tab = "plan"; render(); }
+    } else if (a === "toggle-cycle") {
+      change((draft) => {
+        const cycle = C.rotation(draft).map((r) => r.id), i = cycle.indexOf(id);
+        if (i >= 0) {
+          if (cycle.length === 1) throw Error("Houd minstens één schema actief in de cyclus.");
+          cycle.splice(i, 1);
+        } else {
+          if (!draft.routines.some((r) => r.id === id && !r.archived && r.exercises.length))
+            throw Error("Voeg eerst oefeningen toe aan dit schema.");
+          cycle.push(id);
+        }
+        draft.routineCycle = cycle;
+        if (!cycle.includes(draft.nextRoutineId)) draft.nextRoutineId = cycle[0] || "";
+      });
     } else if (a === "routine-new") routineForm();
     else if (a === "routine-edit") routineForm(id);
     else if (a === "exercise-new") {
@@ -870,13 +882,12 @@
             shifts: v.shifts.toUpperCase().trim(),
             avoidNight: v.avoidNight === "on",
           };
-          if (v.starter === "on")
-            f.routines.push(
-              ...C.starter().map((r) => ({
-                ...r,
-                location: f.profile.location,
-              })),
-            );
+          if (v.starter === "on") {
+            const plans = C.starter().map((r) => ({ ...r, location: f.profile.location }));
+            f.routines.push(...plans.filter((r) => !f.routines.some((old) => !old.archived && old.name === r.name)));
+            f.routineCycle = personalSplitNames.map((name) => f.routines.find((r) => !r.archived && r.name === name).id);
+            f.nextRoutineId = f.routineCycle[0];
+          }
           f.setup = true;
         });
       if (kind === "routine") {
