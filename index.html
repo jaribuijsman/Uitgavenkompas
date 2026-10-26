@@ -3585,6 +3585,17 @@ window.addEventListener('focus',()=>{refreshDay();scheduleDayRefresh()});
 document.addEventListener('click',e=>{root.querySelectorAll('.life-task-menu[open]').forEach(m=>{if(!m.contains(e.target))m.open=false})});root.addEventListener('toggle',e=>{if(e.target.id==='shoppingBought'&&e.target.isConnected)groceryBoughtOpen=e.target.open;if(e.target.matches('.life-task-menu[open]'))root.querySelectorAll('.life-task-menu[open]').forEach(m=>{if(m!==e.target)m.open=false})},true);document.addEventListener('keydown',e=>{if(e.key==='Escape')root.querySelectorAll('.life-task-menu[open]').forEach(m=>m.open=false)});
 scheduleDayRefresh();
 render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Herstel een back-up';$('lifeSaveStatus').dataset.error='true';status('De bestaande Leven-opslag kon niet worden gelezen en is niet overschreven.',false,true)}
+try{
+ const shared=new URLSearchParams(window.location.search);
+ if(shared.get('memento-share')==='1'&&window.MementoKnowledge){
+  const title=(shared.get('title')||'').slice(0,180),text=(shared.get('text')||'').slice(0,20000),url=(shared.get('url')||'').slice(0,2000);
+  if(title||text||url){
+   setArea('life');setView('notes');
+   window.MementoKnowledge.prefillShared({title,text,url});
+  }
+  window.history.replaceState(null,'',window.location.pathname+window.location.hash);
+ }
+}catch(e){status('Gedeelde inhoud kon niet worden geopend. Probeer handmatig te plakken.',false,true)}
 })();
 
 </script>
