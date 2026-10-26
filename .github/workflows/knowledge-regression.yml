@@ -7,6 +7,8 @@ on:
       - "assets/memento-knowledge.js"
       - "assets/memento-knowledge.css"
       - "assets/memento-backup.js"
+      - "assets/memento-trash-core.js"
+      - "tests/trash-regression.cjs"
       - "index.html"
       - "sw.js"
       - "tests/knowledge-regression.cjs"
@@ -18,6 +20,8 @@ on:
       - "assets/memento-knowledge.js"
       - "assets/memento-knowledge.css"
       - "assets/memento-backup.js"
+      - "assets/memento-trash-core.js"
+      - "tests/trash-regression.cjs"
       - "index.html"
       - "sw.js"
       - "tests/knowledge-regression.cjs"
@@ -35,10 +39,14 @@ jobs:
         with:
           node-version: "22"
       - name: Test migration, revision, attachment and full ZIP integrity
-        run: node tests/knowledge-regression.cjs
+        run: |
+          node tests/knowledge-regression.cjs
+          node tests/trash-regression.cjs
       - name: Validate browser JavaScript syntax
         run: |
           node --check assets/memento-knowledge-core.js
           node --check assets/memento-knowledge-store.js
           node --check assets/memento-knowledge.js
           node --check assets/memento-backup.js
+          node --check assets/memento-trash-core.js
+          node --check tests/trash-regression.cjs
