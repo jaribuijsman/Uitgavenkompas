@@ -41,3 +41,14 @@ node tests/fitness-browser.cjs
 The browser test uses an isolated local origin and fresh test storage. It covers PIN setup, menu navigation, three-routine setup, shared Today/Agenda bookings, exercise help, one-workout substitution, set autosave, persisted rest deadline, reload, narrow layouts, storage failure/retry, progression of the rotation, charts, editor changes, reversible measurements, full/legacy/invalid backup handling and offline reload/start. It does not touch the user's browser data. Browser assertions were updated, but a browser run and on-device visual inspection are still required on this revision.
 
 The existing `tests/memento-regression.cjs` has two failures already present at base `ff61b17`: it directly renders removed library/household views and expects checklist markup that changed earlier. Running the assertions with failure collection produces the same 79 passing checks and the same two failures on the base and this change. Those unrelated tests and app features are not modified here.
+
+## Hypertrophy update (October 2026)
+The user is already training 3–4 days/week after approximately a month back in the gym; the app does not impose a beginner ramp. The revised starter is A: 10 sets (3+3+2+2), B: 10 (3+3+2+2), C: 13 (4+3+2+2+2), with exercise-specific rep ranges and recovery times. Five days/week is a possible later preference, not a required frequency.
+
+The Schema tab offers **Voorgesteld schema toepassen**. This explicitly asks for confirmation and applies only to the three named personal routines, preserving existing routine IDs, custom exercises, notes, bookings, active workout and all logged sessions. Existing named matching exercises receive updated set, rep and rest prescriptions; unrelated saved routines are not modified. Missing defaults are appended, never used to replace other exercises. New users get the revised starter.
+
+The exercise catalogue has 66 named movements with locally available concise execution cues. The editor initially filters to the appropriate muscles for the A/B/C routine and supports other muscle groups and equipment filters. Catalogue demo URLs that are not directly verified open the publisher's exercise directory, not a falsely asserted exercise-specific video. Custom exercise names are not sent to third-party video search.
+
+The Progress tab offers conservative nutrition guidance: roughly 110–130 g protein/day and a trial of +250 kcal/day for someone stable at 64 kg; adjust by observing a 2–3-week weight trend. This is informational only, not a food diary, medical assessment, exact energy calculation, or automatic change to the user's measurements.
+
+Run `node tests/fitness-regression.cjs` (25 checks as of this update). Browser tests and live Android/PWA deployment verification are separate and have not been executed in this environment.
