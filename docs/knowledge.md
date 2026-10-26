@@ -28,3 +28,13 @@ Financiën bewaart de hoofdgegevens in `uitgavenkompas_v1`. De ZIP neemt daarnaa
 5. Uitbreidbare, geteste back-upmanifesten voor toekomstige gegevensbronnen; bij grote collecties een streaming ZIP-export.
 
 Geen echte persoonlijke gegevens of fictieve items zijn toegevoegd.
+
+## Permanent prullenbak leegmaken (26 oktober 2026)
+
+Het menu **Leven → Back-up & instellingen → Prullenbak definitief leegmaken** toont aantallen van reeds verwijderde items in **Leven** (notities, taken, boodschappen, wensen en taaktemplates, plus eventueel verwijderde Fitness-sessies) en **Financiën** (alle arrays onder de bestaande financiële `trash`-opslag). Hetzelfde scherm is bereikbaar vanuit **Financiën → Instellingen & data → Prullenbak Financiën** en vanuit de Kenniscentrum-prullenbak.
+
+Deze handeling werkt alleen nadat de gebruiker expliciet **VERWIJDEREN** heeft ingevoerd. De applicatie verwijdert geen actieve transacties, bonnen, afspraken, notities, trainingssessies of bewaarde sjablonen, en maakt geen gegevens namens de gebruiker schoon zonder toestemming.
+
+De pure regels staan in `assets/memento-trash-core.js` en zijn regressiegetest in `tests/trash-regression.cjs`. De UI controleert beide actuele gegevensbronnen, bewaart alleen noodzakelijke bestands-ID's voor herstelbaar herproberen, schrijft nieuwe Leven- en Financiën-gegevens en probeert een fout vóór voltooiing terug te draaien. Na voltooide schrijfoperaties ruimt de functie de twee **automatische lokale vorige-versie-herstelkopieën** op, zonder nieuw snapshot van de te wissen items te maken. De verwijderde notitiebijlagen worden uit IndexedDB verwijderd als er geen resterende notitie naar verwijst. Een bestandsfout houdt alleen de bestands-ID in een kleine opruimwachtrij over, zodat de gebruiker expliciet opnieuw kan proberen.
+
+**Grenzen:** deze code is geen forensisch veilige overschrijving van fysieke opslag. Eerder gedownloade ZIP-/JSON-back-ups, andere browserprofielen, andere apparaten en gegevens die bewust nog in een actief object staan, worden niet verwijderd. De broncode bevat geen individuele gebruikersnotities. Gegevenssynchronisatie is nog niet aanwezig; bij latere synchronisatie moet definitief verwijderen expliciete tombstones en conflictregels krijgen. De twee `localStorage`-bronnen kunnen niet als één IndexedDB-transactie worden geschreven: bij fouten probeert de UI terug te draaien, maar browsercrashes of gelijktijdig gebruik in meerdere tabbladen kunnen gedeeltelijke resultaten veroorzaken. Sluit andere Memento-tabbladen tijdens leegmaken en bewaar eerst een externe back-up wanneer herstel later gewenst is.
