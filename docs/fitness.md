@@ -18,7 +18,7 @@ Full Life backups include fitness automatically. An older backup without the fit
 
 ## Product rules
 
-- Rotation advances only when finishing a session with at least one completed working set; uncompleted sets never count as completed work.
+- Rotation advances only when finishing a session with at least one completed working set; uncompleted sets never count as completed work. Finishing a manual workout outside the active cycle does not change the next planned A/B/C routine.
 - Short sessions omit optional exercises without modifying the routine. The personal three-way starter makes its last exercise(s) optional; legacy plans with over three nonoptional exercises fall back to the first three. When a session cannot be shortened, the UI hides the short option. Times are not promised as exact durations.
 - Progression is a suggestion, never an automatic weight increase. It requires two comparable complete strength exposures at the selected repetition ceiling with at least two reported repetitions in reserve. Pain or low energy suppresses it; current poor sleep also suppresses the displayed suggestion.
 - Muscle totals count completed non-warmup sets for the exercise's primary group. No recovery percentage, diagnosis or calorie estimate is fabricated.
@@ -32,7 +32,7 @@ Full Life backups include fitness automatically. An older backup without the fit
 ## Verification
 
 ```sh
-node tests/fitness-regression.cjs # 22 core checks as of this revision
+node tests/fitness-regression.cjs # 23 core checks as of this revision
 # With Playwright and a Chromium installation available:
 node tests/fitness-browser.cjs
 # Optional: BROWSER_EXECUTABLE=/path/to/chromium SCREENSHOT_DIR=/path/to/screenshots
