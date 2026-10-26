@@ -2779,9 +2779,9 @@ const update=()=>{mount()};
 window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.classList.contains('visible')||(document.body.dataset.compassArea==='life'&&document.getElementById('lifeApp')?.dataset.lifeView==='today'))refresh(true)});window.addEventListener('focus',update);document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});setInterval(update,60000);mount();
 })();
 </script>
-<link rel="stylesheet" href="./assets/memento-fitness.css">
-<script src="./assets/memento-fitness-core.js?v=20261026-split2"></script>
-<script src="./assets/memento-fitness.js?v=20261026-split2"></script>
+<link rel="stylesheet" href="./assets/memento-fitness.css?v=20261026-fitness-rework">
+<script src="./assets/memento-fitness-core.js?v=20261026-fitness-rework"></script>
+<script src="./assets/memento-fitness.js?v=20261026-fitness-rework"></script>
 <script id="compassLifeScript">
 (()=>{
 'use strict';
