@@ -1,0 +1,460 @@
+/* Scoped matte forest/sage surfaces; shared Life buttons keep Memento's theme. */
+#mementoFitness,
+.ft-day,
+#fitnessDialog {
+  --ft-bg: #19271f;
+  --ft-surface: #203328;
+  --ft-line: #435c4b;
+  --ft-ink: #e6eee8;
+  --ft-muted: #b6c8ba;
+  --ft-accent: #b9cebd;
+  color: var(--ft-ink);
+  font-family: inherit;
+  line-height: 1.5;
+  min-width: 0;
+}
+#mementoFitness *,
+#fitnessDialog * {
+  box-sizing: border-box;
+}
+#lifeApp #mementoFitness .ft-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 0 18px;
+  border: 1px solid #435c4b;
+  border-radius: 13px;
+  background: #15251b;
+}
+#lifeApp #mementoFitness .ft-tabs button {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #c9d8cc;
+  padding: 11px 5px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  min-height: 44px;
+  cursor: pointer;
+}
+#lifeApp #mementoFitness .ft-tabs button[aria-pressed="true"],
+#mementoFitness .ft-choices button[aria-pressed="true"] {
+  background: #b9cebd;
+  color: #15271c;
+}
+#lifeApp #mementoFitness .ft-panel {
+  margin: 0 0 12px;
+  padding: 16px;
+  border-radius: 16px;
+}
+#lifeApp #mementoFitness .ft-panel h2 {
+  font-size: 17px;
+  margin: 0;
+  line-height: 1.4;
+}
+#mementoFitness .ft-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+#lifeApp #mementoFitness p,
+#fitnessDialog p {
+  font-size: 13px;
+  color: var(--ft-muted);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+#mementoFitness .ft-kicker,
+.ft-day .ft-kicker {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #b6c8ba;
+  margin: 6px 0;
+}
+#mementoFitness .ft-actions,
+#fitnessDialog .ft-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+#lifeApp #mementoFitness .life-btn,
+#fitnessDialog .life-btn,
+.ft-day .life-btn {
+  font-size: 12px;
+  min-height: 44px;
+  white-space: normal;
+  line-height: 1.4;
+}
+#mementoFitness .ft-toolbar {
+  margin: 0 0 14px;
+}
+#mementoFitness .ft-row,
+#fitnessDialog .ft-row,
+.ft-day .ft-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #334a3b;
+  min-width: 0;
+  font-size: 13px;
+}
+#mementoFitness .ft-row > div:first-child,
+#fitnessDialog .ft-row > div:first-child,
+.ft-day .ft-row > div:first-child {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+#mementoFitness .ft-row:last-child,
+#fitnessDialog .ft-row:last-child,
+.ft-day .ft-row:last-child {
+  border-bottom: 0;
+}
+#mementoFitness .ft-row small,
+#fitnessDialog .ft-row small,
+.ft-day .ft-row small {
+  display: block;
+  color: #b6c8ba;
+  font-size: 12px;
+  margin-top: 3px;
+}
+#mementoFitness .ft-row .ft-actions,
+#fitnessDialog .ft-row .ft-actions {
+  margin: 0;
+}
+#mementoFitness .ft-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  padding: 12px 2px;
+  margin-bottom: 12px;
+  color: #b6c8ba;
+}
+#mementoFitness .ft-strip strong {
+  color: #e6eee8;
+}
+#mementoFitness .ft-choices {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0;
+}
+#mementoFitness .ft-choices button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #435c4b;
+  border-radius: 10px;
+  min-height: 44px;
+  background: #15251b;
+  color: #e6eee8;
+  cursor: pointer;
+}
+#mementoFitness .ft-intro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  color: #b6c8ba;
+  font-size: 11px;
+  margin-top: 22px;
+}
+#mementoFitness .ft-footer {
+  font-size: 11px;
+  color: #a7bcad;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+#mementoFitness .ft-session-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+#mementoFitness .ft-session-head h2 {
+  font-size: 18px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+#mementoFitness .ft-session-head p {
+  margin: 4px 0;
+}
+#mementoFitness .ft-timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #263d2e;
+  border: 1px solid #435c4b;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  gap: 8px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+#mementoFitness .ft-sets {
+  margin-top: 12px;
+}
+#mementoFitness .ft-set {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 44px;
+  align-items: end;
+  gap: 7px;
+  padding: 9px 0;
+  border-bottom: 1px solid #334a3b;
+}
+#mementoFitness .ft-set-fields {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+#mementoFitness .ft-set-fields label {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  color: #b6c8ba;
+}
+#mementoFitness .ft-set-fields input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 4px;
+  height: 44px;
+  border: 1px solid #58715f;
+  background: #111e17;
+  color: #eef5ee;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+#mementoFitness .ft-set-fields input:disabled {
+  opacity: 1;
+  color: #bdcebf;
+  background: #23382a;
+  border-color: #435c4b;
+}
+#mementoFitness .ft-set-label {
+  font-size: 11px;
+  color: #b6c8ba;
+  padding-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+#mementoFitness .ft-check {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border: 1px solid #728d79;
+  border-radius: 10px;
+  background: #203328;
+  color: #dceadd;
+  font-size: 22px;
+  cursor: pointer;
+}
+#mementoFitness .ft-check[aria-pressed="true"] {
+  background: #b9cebd;
+  color: #15271c;
+  border-color: #b9cebd;
+}
+#mementoFitness .ft-details,
+#fitnessDialog .ft-details {
+  border-top: 1px solid #435c4b;
+  margin-top: 14px;
+  padding-top: 4px;
+  overflow-wrap: anywhere;
+}
+#mementoFitness .ft-details summary,
+#fitnessDialog .ft-details summary {
+  font-size: 13px;
+  min-height: 44px;
+  padding: 12px 0;
+  cursor: pointer;
+  color: #d2e0d4;
+}
+#mementoFitness .ft-details summary span {
+  display: block;
+  font-size: 12px;
+  color: #b6c8ba;
+  margin-top: 3px;
+}
+#mementoFitness .ft-field,
+#fitnessDialog .ft-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #d2e0d4;
+  min-width: 0;
+  margin: 10px 0;
+}
+#mementoFitness textarea,
+#fitnessDialog
+  :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea) {
+  background: #111e17;
+  color: #e6eee8;
+  border: 1px solid #58715f;
+  border-radius: 9px;
+  min-height: 44px;
+  padding: 10px;
+  width: 100%;
+  font: inherit;
+  font-size: 16px;
+  min-width: 0;
+  color-scheme: dark;
+}
+#mementoFitness textarea,
+#fitnessDialog textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+#fitnessDialog {
+  background: #19271f;
+  border: 1px solid #58715f;
+  border-radius: 19px;
+  padding: 0;
+  max-width: 560px;
+  width: calc(100% - 24px);
+  max-height: calc(100dvh - 24px);
+  color: #e6eee8;
+  box-shadow: 0 16px 70px #0008;
+}
+#fitnessDialog::backdrop {
+  background: #07140dd9;
+}
+#fitnessDialog form {
+  margin: 0;
+}
+#fitnessDialog .ft-dialog-head {
+  padding: 16px 18px;
+  border-bottom: 1px solid #435c4b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+#fitnessDialog h2 {
+  font-size: 19px;
+  line-height: 1.4;
+  margin: 0;
+}
+#fitnessDialog h3 {
+  font-size: 15px;
+  margin: 12px 0 4px;
+}
+#fitnessDialog .ft-dialog-head button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #e6eee8;
+  font-size: 25px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+#fitnessDialog .ft-dialog-body {
+  padding: 4px 18px 10px;
+}
+#fitnessDialog .ft-dialog-foot {
+  padding: 12px 18px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#fitnessDialog .life-btn {
+  background: #203328;
+  color: #e6eee8;
+  border: 1px solid #58715f;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: inherit;
+  cursor: pointer;
+}
+#fitnessDialog .life-btn-primary {
+  background: #b9cebd;
+  color: #15271c;
+  border-color: #b9cebd;
+  font-weight: 650;
+}
+#fitnessDialog .ft-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 12px;
+}
+#fitnessDialog .ft-checkbox {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  margin: 12px 0;
+}
+#fitnessDialog .ft-checkbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: #b9cebd;
+  flex-shrink: 0;
+}
+#mementoFitness #ft-notice,
+#mementoFitness .ft-warning,
+#fitnessDialog #ft-dialog-error {
+  background: #3b3022;
+  color: #ffe3b6;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+#fitnessDialog #ft-dialog-error:empty {
+  display: none;
+}
+#fitnessDialog #ft-dialog-error {
+  margin: 0 18px;
+}
+.ft-day {
+  background: #19271f;
+  border: 1px solid #435c4b;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+#mementoFitness button:focus-visible,
+#fitnessDialog button:focus-visible {
+  outline: 2px solid #e1eddd;
+  outline-offset: 3px;
+}
+@media (min-width: 900px) {
+  #lifeApp #mementoFitness {
+    max-width: 880px;
+  }
+  #lifeApp #mementoFitness .ft-panel {
+    padding: 20px;
+  }
+  .ft-set-fields {
+    max-width: 400px;
+  }
+}
+@media (max-width: 360px) {
+  #fitnessDialog .ft-form-grid {
+    grid-template-columns: 1fr;
+  }
+  #lifeApp #mementoFitness .ft-panel {
+    padding: 12px;
+  }
+  #mementoFitness .ft-set {
+    gap: 5px;
+    grid-template-columns: 28px minmax(0, 1fr) 44px;
+  }
+  #mementoFitness .ft-session-head {
+    flex-wrap: wrap;
+  }
+}
