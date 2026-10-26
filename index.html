@@ -1829,9 +1829,9 @@ body[data-compass-area=finance] .app .salary-period-modern-metrics .account-peri
 #lifeDialog .memento-note-ai-status{font-size:11px;color:#b7d5bf;margin:9px 0 0}
 #lifeDialog .memento-note-ai-status[data-error="true"]{color:#ffbdc0}
 #lifeDialog .memento-ai-open-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:44px;padding:9px 12px}
-#lifeDialog .life-dialog-footer:has([data-memento-ai-share]){justify-content:flex-end;gap:7px}
-#lifeDialog .life-dialog-footer [data-memento-ai-share]{background:#bce4c4!important;color:#173b26!important;border-color:#bce4c4!important}
-@media(max-width:410px){#lifeDialog .memento-note-ai-options button{font-size:10px}#lifeDialog .life-dialog-footer:has([data-memento-ai-share]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#lifeDialog .life-dialog-footer [data-memento-ai-share]{grid-column:1/-1;grid-row:1}#lifeDialog .life-dialog-footer [data-memento-ai-copy],#lifeDialog .life-dialog-footer .memento-ai-open-link{min-height:44px;font-size:11px}}
+#lifeDialog .life-dialog-footer:has([data-memento-ai-open]){justify-content:flex-end;gap:7px}
+#lifeDialog .life-dialog-footer [data-memento-ai-open]{background:#bce4c4!important;color:#173b26!important;border-color:#bce4c4!important}
+@media(max-width:410px){#lifeDialog .memento-note-ai-options button{font-size:10px}#lifeDialog .life-dialog-footer:has([data-memento-ai-open]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#lifeDialog .life-dialog-footer [data-memento-ai-open]{grid-column:1/-1;grid-row:1}#lifeDialog .life-dialog-footer [data-memento-ai-copy],#lifeDialog .life-dialog-footer [data-memento-ai-share]{min-height:44px;font-size:11px}}
 </style>
 </head>
 <body><svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none"><defs><filter id="mementoSageInk" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .741 0 0 0 0 .816 0 0 0 0 .749 0 0 0 1 0"/></filter></defs></svg><div id="pinLock" role="dialog" aria-modal="true" aria-labelledby="pinTitle"><div class="pin-forest-bg" aria-hidden="true"><div class="memento-scene-photo"></div><div class="memento-scene-rays"></div><div class="memento-scene-haze"></div><canvas id="mementoWeatherCanvas"></canvas><div class="memento-scene-shade"></div></div><form class="pin-panel" id="pinForm"><div class="memento-pin-brand"><div class="pin-mark" aria-hidden="true"></div><h1 id="pinTitle" aria-label="Memento"><img class="memento-gold-art" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" decoding="sync"></h1></div><div class="memento-pin-entry"><p id="pinDescription">Voer je pincode in om verder te gaan.</p><input class="pin-digits" id="pinInput" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="current-password" aria-label="Zescijferige pincode" placeholder="••••••"><div class="pin-dots" id="pinDots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pin-keypad" id="pinKeypad" aria-label="Pincode toetsenbord"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><span aria-hidden="true"></span></div><button class="pin-submit" id="pinSubmit" type="submit">Ontgrendelen</button><p class="pin-error" id="pinError" role="status" aria-live="polite"></p><p class="pin-foot">Deze vergrendeling is bedoeld voor privacy op je telefoon. Ze vervangt geen volledige versleuteling van appgegevens.</p><div class="memento-scene-caption"><span id="mementoSceneStatus" role="status">Beverwijk · Weer ophalen…</span><button type="button" id="mementoSceneToggle" aria-pressed="false">Animatie pauzeren</button></div></div></form></div><div class="app">
@@ -3050,10 +3050,10 @@ function openMementoNoteAI(id){
   '</div><label class="memento-note-ai-label" for="mementoNoteAIPreview">Dit deel je met ChatGPT</label>'+
   '<textarea id="mementoNoteAIPreview" rows="8" spellcheck="true">'+esc(mementoNoteAIPrompt(note,'research'))+'</textarea>'+
   '<p class="memento-note-ai-privacy">Controleer de tekst en haal privégegevens weg voordat je deelt. Memento verstuurt niets zonder jouw handeling.</p>'+
-  '<p id="mementoNoteAIStatus" class="memento-note-ai-status" role="status" aria-live="polite">Kies bij Delen de ChatGPT-app, als Android die aanbiedt.</p>';
+  '<p id="mementoNoteAIStatus" class="memento-note-ai-status" role="status" aria-live="polite">Open ChatGPT met deze opdracht. Je kunt de tekst ook kopiëren of via Android delen.</p>';
  const footer='<button type="button" class="life-btn" data-memento-ai-copy>Kopieer tekst</button>'+
-  '<a class="life-btn memento-ai-open-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">Open ChatGPT</a>'+
-  '<button type="button" class="life-btn life-btn-primary" data-memento-ai-share>Delen via Android</button>';
+  '<button type="button" class="life-btn" data-memento-ai-share>Delen via Android</button>'+
+  '<button type="button" class="life-btn life-btn-primary memento-ai-open-link" data-memento-ai-open>Open ChatGPT</button>';
  showDialog('Onderzoek met AI','Kies hoe ChatGPT met deze notitie verder moet.',form,footer);
 }
 function shareMementoNoteAI(){
@@ -3508,6 +3508,14 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
   if(note&&$('mementoNoteAIPreview'))$('mementoNoteAIPreview').value=mementoNoteAIPrompt(note,modal.aiMode);
   dialog.querySelectorAll('[data-memento-ai-mode]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.mementoAiMode===modal.aiMode)));
   mementoNoteAIStatus('Controleer de tekst en kies hoe je wilt delen.');
+  return;
+ }
+ if(b.dataset.mementoAiOpen!==undefined&&modal?.mode==='note-ai'){
+  const prompt=$('mementoNoteAIPreview')?.value.trim();
+  if(!prompt){mementoNoteAIStatus('Schrijf eerst een opdracht.',true);return}
+  // Same browser handoff as Slim Kopen: pass the editable prompt as ?q=.
+  const url='https://chatgpt.com/?q='+encodeURIComponent(prompt);
+  window.open(url,'_blank','noopener,noreferrer');
   return;
  }
  if(b.dataset.mementoAiShare!==undefined&&modal?.mode==='note-ai'){shareMementoNoteAI();return}
