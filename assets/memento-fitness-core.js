@@ -573,7 +573,10 @@
     }
     const a = rotation(f),
       i = a.findIndex((r) => r.id === s.routineId);
-    f.nextRoutineId = a.length ? a[i >= 0 ? (i + 1) % a.length : 0].id : "";
+    // A manually started extra workout must not reset the saved A/B/C position.
+    f.nextRoutineId = i >= 0
+      ? a[(i + 1) % a.length].id
+      : (a.some((r) => r.id === f.nextRoutineId) ? f.nextRoutineId : a[0]?.id || "");
     f.active = null;
     return s;
   }
