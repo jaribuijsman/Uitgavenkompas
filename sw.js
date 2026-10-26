@@ -1,5 +1,5 @@
-const CACHE = "memento-pwa-v12-20261025-menu-viewport";
-const CORE = ["./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png"];
+const CACHE = "memento-pwa-v13-20261026-forest-weather";
+const CORE = ["./", "./index.html", "./manifest.json", "./assets/memento-icon.png", "./assets/memento-logo-gold.png", "./assets/memento-cozy-background.png", "./assets/memento-avatar.png", "./assets/memento-forest-art.js", "./assets/memento-forest-lock.css", "./assets/memento-forest-lock.js"];
 self.addEventListener("install", event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith("memento-") && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", event => {
