@@ -2074,6 +2074,21 @@ function restoreFinance(kind,id){
  if(kind==='transactions')(entry.receiptIds||[]).forEach(id=>{const r=state.receipts.find(x=>x.id===id);if(r&&!r.transactionId)r.transactionId=entry.item.id});
  trash[kind]=entries.filter(x=>x.id!==id);if(!save())return;renderAll();renderFinanceTrash();toast('Item teruggezet.');
 }
+// Narrow bridge: the Life settings page may clean already-trashed Finance records.
+// It cannot delete active transactions, and rejects changes from another tab.
+window.MementoFinanceTrashBridge={
+ read:()=>JSON.parse(JSON.stringify(state)),
+ replace:(next,expectedRaw)=>{
+  if(financeStorageBlocked||demoStateBackup!==null)throw Error('Financiën zijn niet beschikbaar voor definitief opruimen.');
+  if(localStorage.getItem(STORAGE_KEY)!==expectedRaw)throw Error('Financiën zijn in een ander tabblad gewijzigd. Vernieuw Memento en probeer opnieuw.');
+  if(!next||!Array.isArray(next.transactions)||!Array.isArray(next.categories))throw Error('Ongeldige financiële gegevens.');
+  const raw=JSON.stringify(next);
+  localStorage.setItem(STORAGE_KEY,raw);
+  state=JSON.parse(raw);lastSavedFinance=raw;
+  return raw;
+ },
+ refresh:()=>{renderAll();renderFinanceTrash();}
+};
 function renderFinanceTrash(){
  let panel=document.getElementById('mementoFinanceTrash');if(!panel){panel=document.createElement('details');panel.id='mementoFinanceTrash';panel.className='card memento-finance-trash';document.getElementById('view-settings').append(panel)}
  const labels={transactions:'Transactie',bills:'Vaste last',goals:'Spaardoel',receipts:'Bon',research:'Onderzoeksdossier'},entries=Object.entries(financeTrash()).flatMap(([kind,items])=>(Array.isArray(items)?items:[]).map(e=>({...e,kind}))).sort((a,b)=>b.deletedAt.localeCompare(a.deletedAt));
