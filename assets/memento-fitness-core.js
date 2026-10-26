@@ -34,6 +34,7 @@
       avoidNight: true,
     },
     routines: [],
+    routineCycle: [],
     sessions: [],
     bookings: [],
     measurements: [],
@@ -183,6 +184,20 @@
     ["hammercurl", "Hammer curl", "strength", "Biceps", "Dumbbells", "Houd je handpalmen naar binnen gericht."],
     ["legcurl", "Leg curl", "strength", "Benen", "Machine", "Buig je knieën beheerst zonder te zwaaien."],
     ["crunch", "Crunch", "strength", "Buik", "Mat", "Til je schouders rustig op zonder aan je nek te trekken."],
+    ["dbchest", "Dumbbell chest press", "strength", "Borst", "Dumbbells", "Houd je polsen neutraal en laat de gewichten beheerst zakken."],
+    ["dbincline", "Incline dumbbell press", "strength", "Borst", "Dumbbells", "Druk vanuit een licht schuin ingestelde bank."],
+    ["bench", "Bench press", "strength", "Borst", "Halterbank", "Gebruik indien nodig een spotter en houd je voeten stabiel."],
+    ["dbtriceps", "Dumbbell triceps extension", "strength", "Triceps", "Dumbbell", "Houd je bovenarmen rustig en beweeg vanuit je ellebogen."],
+    ["machinepulldown", "Machine lat pulldown", "strength", "Rug", "Machine", "Trek je ellebogen naar beneden zonder met je rug te zwaaien."],
+    ["dbrow", "Dumbbell row", "strength", "Rug", "Dumbbells", "Steun op een bank en trek je elleboog richting je heup."],
+    ["machinerow", "Seated machine row", "strength", "Rug", "Machine", "Trek beheerst naar je toe terwijl je romp stil blijft."],
+    ["cablecurl", "Cable biceps curl", "strength", "Biceps", "Kabelmachine", "Houd je bovenarmen op hun plaats tijdens het buigen."],
+    ["legextension", "Leg extension", "strength", "Benen", "Machine", "Stel de machine passend af en strek je knieën beheerst."],
+    ["seatedlegcurl", "Seated leg curl", "strength", "Benen", "Machine", "Stel de machine af en buig je knieën zonder momentum."],
+    ["hack", "Hack squat", "strength", "Benen", "Machine", "Houd je voeten stevig en beweeg binnen een comfortabele diepte."],
+    ["machineshoulder", "Machine shoulder press", "strength", "Schouders", "Machine", "Kies een comfortabele bewegingsuitslag en houd je romp stabiel."],
+    ["cablelateral", "Cable lateral raise", "strength", "Schouders", "Kabelmachine", "Til je arm zijwaarts met een licht gewicht en zonder zwaaien."],
+    ["cablecrunch", "Cable crunch", "strength", "Buik", "Kabelmachine", "Rond je bovenrug beheerst en houd je heupen rustig."],
   ].map(([id, name, type, muscle, equipment, cue]) => ({
     id,
     name,
@@ -191,6 +206,56 @@
     equipment,
     cue,
   }));
+  const exerciseDirectory = "https://www.strengthlog.com/exercise-directory/";
+  const demoPaths = {
+    chest: "machine-chest-press", triceps: "tricep-pushdown-with-rope",
+    pulldown: "lat-pulldown-with-pronated-grip", lateral: "dumbbell-lateral-raise",
+    dbchest: "dumbbell-chest-press", bench: "bench-press",
+    dbincline: "incline-dumbbell-press", squat: "goblet-squat",
+    legpress: "leg-press", curl: "dumbbell-curl", hammercurl: "hammer-curl",
+    legcurl: "seated-leg-curl", seatedlegcurl: "seated-leg-curl",
+    rdl: "romanian-deadlift", row: "cable-close-grip-seated-row",
+    shoulder: "seated-dumbbell-shoulder-press", crunch: "crunch",
+    cablecrunch: "cable-crunch", legextension: "leg-extension",
+    inclinechest: "smith-machine-incline-bench-press",
+    overheadtriceps: "overhead-cable-triceps-extension-upper-position",
+    dbrow: "dumbbell-row", machinerow: "seated-machine-row",
+    dbtriceps: "dumbbell-standing-triceps-extension",
+    machinepulldown: "machine-lat-pulldown", hack: "hack-squat-machine",
+    machineshoulder: "seated-smith-machine-shoulder-press",
+    cablelateral: "resistance-band-lateral-raise",
+    cablecurl: "cable-curl-with-bar",
+  };
+  const alternatives = {
+    chest: ["dbchest", "pushup", "bench"], inclinechest: ["dbincline", "chest"],
+    dbchest: ["chest", "pushup"], dbincline: ["inclinechest", "dbchest"],
+    triceps: ["dbtriceps", "overheadtriceps"], overheadtriceps: ["dbtriceps", "triceps"],
+    pulldown: ["machinepulldown"], machinepulldown: ["pulldown"],
+    row: ["machinerow", "dbrow"], machinerow: ["row", "dbrow"], dbrow: ["row", "machinerow"],
+    curl: ["cablecurl", "hammercurl"], hammercurl: ["curl", "cablecurl"],
+    legpress: ["hack", "squat"], hack: ["legpress", "squat"],
+    legcurl: ["seatedlegcurl", "rdl"], seatedlegcurl: ["legcurl", "rdl"],
+    shoulder: ["machineshoulder"], machineshoulder: ["shoulder"],
+    lateral: ["cablelateral"], cablelateral: ["lateral"],
+    crunch: ["cablecrunch", "plank"], cablecrunch: ["crunch"],
+  };
+  catalog.forEach((item) => { item.demo = demoPaths[item.id] ? "https://www.strengthlog.com/" + demoPaths[item.id] + "/" : exerciseDirectory; });
+  const knownExercise = (e) => catalog.find((c) => c.id === e?.catalogId) ||
+    catalog.find((c) => c.name.toLocaleLowerCase("nl") === String(e?.name || "").toLocaleLowerCase("nl"));
+  const exerciseKey = (e) => {
+    if (typeof e === "string") return "id:" + e;
+    const known = knownExercise(e);
+    return known ? "catalog:" + known.id : "custom:" + String(e?.name || "").trim().toLocaleLowerCase("nl");
+  };
+  const comparisonKey = (e, location) => [
+    exerciseKey(e),
+    String(location || "").trim().toLocaleLowerCase("nl"),
+    String(e?.equipment || "").trim().toLocaleLowerCase("nl"),
+  ].join("|");
+  const alternativeOptions = (exercise) => {
+    const id = knownExercise(exercise)?.id;
+    return (alternatives[id] || []).map((candidate) => catalog.find((x) => x.id === candidate)).filter(Boolean);
+  };
   function exercise(item) {
     return {
       ...clone(item),
@@ -214,8 +279,9 @@
     ];
     return plans.map(([name, items]) => ({
       id: uid(), name, location: "Sportschool", notes: "", archived: false,
-      exercises: items.map(([id, sets]) => ({
+      exercises: items.map(([id, sets], i) => ({
         ...exercise(catalog.find((x) => x.id === id)), sets,
+        optional: i >= 3,
         min: id === "lateral" || id === "crunch" ? 12 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 10 : 8,
         max: id === "lateral" || id === "crunch" ? 15 : id === "triceps" || id === "overheadtriceps" || id === "curl" || id === "hammercurl" || id === "legcurl" ? 12 : 12,
       })),
@@ -245,6 +311,9 @@
       !str(f.nextRoutineId, 200)
     )
       fail();
+    if (f.routineCycle !== undefined &&
+      (!arr(f.routineCycle, 30) || f.routineCycle.some((id) => !str(id, 200) || !id) ||
+       new Set(f.routineCycle).size !== f.routineCycle.length)) fail();
     const p = f.profile;
     if (
       !p ||
@@ -373,8 +442,22 @@
   }
   const available = (f) =>
     f.routines.filter((r) => !r.archived && r.exercises.length);
+  const rotation = (f) => {
+    const all = available(f);
+    if (Array.isArray(f.routineCycle) && f.routineCycle.length)
+      return f.routineCycle.map((id) => all.find((r) => r.id === id)).filter(Boolean);
+    const names = ["Borst & Triceps", "Rug & Biceps", "Benen, Schouders & Buik"];
+    const matched = names.map((name) => all.find((r) => r.name === name));
+    return matched.every(Boolean) ? matched : all;
+  };
   const next = (f) =>
-    available(f).find((r) => r.id === f.nextRoutineId) || available(f)[0];
+    rotation(f).find((r) => r.id === f.nextRoutineId) || rotation(f)[0];
+  const shortExercises = (routine) => {
+    const base = routine.exercises.filter((e) => !e.optional);
+    return base.length === routine.exercises.length && base.length > 3
+      ? base.slice(0, 3)
+      : base;
+  };
   const history = (f, id, location, equipment) =>
     f.sessions
       .filter((s) => !s.deletedAt && s.location === location)
@@ -382,11 +465,12 @@
       .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt))
       .map((s) => ({
         s,
-        e: s.exercises.find((e) => e.id === id && e.equipment === equipment),
+        e: s.exercises.find((e) => (typeof id === "string" ? e.id === id : exerciseKey(e) === exerciseKey(id)) &&
+          e.equipment.trim().toLocaleLowerCase("nl") === String(equipment).trim().toLocaleLowerCase("nl")),
       }))
       .filter((x) => x.e && x.e.logs.some((l) => l.done && !l.warmup));
   function recommendation(f, e, location) {
-    const rows = history(f, e.id, location, e.equipment),
+    const rows = history(f, e, location, e.equipment),
       last = rows[0];
     if (!last)
       return {
@@ -445,7 +529,7 @@
     const r = available(f).find((x) => x.id === rid);
     if (!r) throw Error("Voeg eerst een oefening aan dit schema toe.");
     const selected =
-      minutes === 25 ? r.exercises.filter((e) => !e.optional) : r.exercises;
+      minutes === 25 ? shortExercises(r) : r.exercises;
     if (!selected.length)
       throw Error(
         "Markeer minstens één oefening als basis voor de korte training.",
@@ -465,7 +549,7 @@
       checkin: clone(checkin),
       exercises: selected.map((e) => {
         const old =
-          history(f, e.id, r.location, e.equipment)[0]?.e.logs.filter(
+          history(f, e, r.location, e.equipment)[0]?.e.logs.filter(
             (l) => l.done && !l.warmup,
           ) || [];
         return {
@@ -497,9 +581,9 @@
       b.status = "completed";
       b.sessionId = s.id;
     }
-    const a = available(f),
+    const a = rotation(f),
       i = a.findIndex((r) => r.id === s.routineId);
-    f.nextRoutineId = a.length ? a[(i + 1) % a.length].id : "";
+    f.nextRoutineId = a.length ? a[i >= 0 ? (i + 1) % a.length : 0].id : "";
     f.active = null;
     return s;
   }
@@ -536,7 +620,13 @@
     starter,
     validate,
     available,
+    rotation,
     next,
+    shortExercises,
+    exerciseKey,
+    comparisonKey,
+    alternativeOptions,
+    knownExercise,
     history,
     recommendation,
     start,
