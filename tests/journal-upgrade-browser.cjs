@@ -54,7 +54,7 @@ const server=http.createServer((req,res)=>{
   assert(n);assert.equal(n.body,"");assert.equal(n.journal.checkin.stress,2);
   const journalId=n.id;
   checks.push("Collapsed mood/energy/stress/sleep check-in saves with empty diary text");
-  await page.locator('[data-kc="edit"]').first().click();
+  await page.locator('[data-kc="journal-date-open"]').first().click();
   await page.locator("#kc-body").fill("Vandaag ging alles redlijk goed bij mijn werk");
   await page.locator('[data-kc="journal-ai-copy"]').click();
   const clip=await page.evaluate(()=>navigator.clipboard.readText());
