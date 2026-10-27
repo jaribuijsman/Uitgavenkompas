@@ -68,8 +68,13 @@ jobs:
           MEMENTO_VISUAL_OUT: ${{ runner.temp }}/kc2-review
           MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/kc2-fixture.json
         run: node app/tests/knowledge-v2-browser.cjs
-      - name: PIN forest remains identical
-        run: cmp "$RUNNER_TEMP/kc2-review/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/kc2-review/after/${{ matrix.width }}/pin.jpg"
+      - name: Verify disabled PIN or preserve enabled forest
+        run: |
+          if head -n 3 app/index.html | grep -q 'data-memento-pin-lock="disabled"'; then
+            node app/tests/pin-disabled-regression.cjs
+          else
+            cmp "$RUNNER_TEMP/kc2-review/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/kc2-review/after/${{ matrix.width }}/pin.jpg"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

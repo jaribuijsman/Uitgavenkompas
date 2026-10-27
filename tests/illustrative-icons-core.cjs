@@ -67,7 +67,7 @@ assert(index.includes("memento-illustrative-icons.css?v=20261027-iconset-v2"),"M
 assert(index.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
 assert(index.includes("transactionArt(t)"),"Financial transactions not using icons");
 assert(index.includes("categoryArt(c.name)"),"Budgets not using icons");
-assert(sw.includes("memento-pwa-v33-20261027-illustrative-icons-v2"),"Cache version incorrect");
+assert(sw.includes("memento-pwa-v34-20261027-pin-disabled-v1"),"Cache version incorrect");
 assert(sw.includes("./assets/memento-illustrative-icons.js?v=20261027-iconset-v2"));
 assert(sw.includes("./assets/memento-illustrative-icons.css?v=20261027-iconset-v2"));
 for(const token of [".kc-collection-icon",".kc-icon-picker","#mementoQuickNav","#mementoMenuGrid",".stat-icon",".ft-tabs"]){

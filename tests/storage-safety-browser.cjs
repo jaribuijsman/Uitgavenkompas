@@ -14,6 +14,9 @@ const server = http.createServer((req, res) => {
 });
 async function until(page, predicate, arg) { await page.waitForFunction(predicate, arg, { timeout: 10000 }); }
 async function unlock(page, first = false) {
+  if (await page.locator("html").getAttribute("data-memento-pin-lock") === "disabled") {
+    await page.locator("#pinLock").waitFor({ state: "hidden" }); return;
+  }
   await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click();
   if (first) { await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click(); }
   await page.locator("#pinLock").waitFor({ state: "hidden" });

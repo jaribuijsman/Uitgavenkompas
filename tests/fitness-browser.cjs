@@ -63,10 +63,12 @@ const server = http.createServer((req, res) => {
     );
   try {
     await page.goto(url, { waitUntil: "domcontentloaded" });
-    await page.locator("#pinInput").fill("123456");
-    await page.locator(".pin-submit").click();
-    await page.locator("#pinInput").fill("123456");
-    await page.locator(".pin-submit").click();
+  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
+      await page.locator("#pinInput").fill("123456");
+      await page.locator(".pin-submit").click();
+      await page.locator("#pinInput").fill("123456");
+      await page.locator(".pin-submit").click();
+  }
     await page.locator("#pinLock").waitFor({ state: "hidden" });
     await page.locator('[data-memento-menu="open"]').click();
     await page

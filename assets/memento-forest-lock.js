@@ -1,5 +1,7 @@
 /* Memento PIN scenery v4: six pixel-art forests, hourly Amsterdam rotation, existing Beverwijk weather effects. */
 (()=>{'use strict';
+// Do not initialize hidden scenery or animation when the PIN screen is disabled.
+if(document.documentElement.dataset.mementoPinLock==='disabled')return;
 const lock=document.getElementById('pinLock'),bg=lock?.querySelector('.pin-forest-bg'),canvas=document.getElementById('mementoWeatherCanvas'),status=document.getElementById('mementoSceneStatus'),pauseButton=document.getElementById('mementoSceneToggle');
 if(!lock||!bg||!canvas||!status||!pauseButton)return;
 const ctx=canvas.getContext('2d');if(!ctx)return;

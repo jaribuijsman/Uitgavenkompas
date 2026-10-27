@@ -17,6 +17,7 @@ on:
       - "assets/memento-forest-lock.css"
       - "assets/pin-forests/**"
       - "tests/pin-forest-regression.cjs"
+      - "tests/pin-disabled-regression.cjs"
   pull_request:
     paths:
       - "assets/memento-knowledge-core.js"
@@ -69,6 +70,7 @@ jobs:
       - name: Validate hourly forest rotation and weather integration
         run: |
           node tests/pin-forest-regression.cjs
+          node tests/pin-disabled-regression.cjs
           node --check assets/memento-forest-art.js
           node --check assets/memento-forest-lock.js
           node --check sw.js

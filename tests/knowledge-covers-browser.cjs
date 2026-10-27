@@ -10,8 +10,10 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
  const url="http://127.0.0.1:"+srv.address().port,load=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
  await page.goto(url,{waitUntil:"domcontentloaded"});
- await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
- await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
+  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
+   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
+   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
+  }
  await page.locator("#pinLock").waitFor({state:"hidden"});
  await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
  await page.locator('[data-memento-menu="open"]').click();

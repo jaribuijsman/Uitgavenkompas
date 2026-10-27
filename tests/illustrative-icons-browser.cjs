@@ -92,7 +92,9 @@ try{
   localStorage.setItem('uitgavenkompas_pin_config_v1',JSON.stringify(data.pin));
  },fixture);
  await page.goto(base,{waitUntil:"domcontentloaded"});
- await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
+  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
+   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
+  }
  await page.locator("#pinLock").waitFor({state:"hidden"});
  await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
  assert.equal(await page.locator('#mementoQuickNav button .memento-illustrative-icon').count(),5);
@@ -162,11 +164,11 @@ try{
  // A real service worker must cache every core URL and survive a network-disabled reload.
  await page.evaluate(async()=>{await navigator.serviceWorker.ready});await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>navigator.serviceWorker.controller);
  const cache=await page.evaluate(async()=>{const key=(await caches.keys()).find(k=>k.startsWith('memento-pwa-'));const c=await caches.open(key);return {key,urls:(await c.keys()).map(r=>r.url)};});
- assert(cache.key.includes('illustrative-icons-v2'));assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261027-iconset-v2')));
+ assert(cache.key.includes('memento-pwa-v34-20261027-pin-disabled-v1'));assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261027-iconset-v2')));
  await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
  await knowledgeHome();assert(await page.locator('.kc-art-row .memento-illustrative-icon').count()>=5);await capture(page,'offline-knowledge');
  await navigate('finance','transactions');await noOverflow();await context.setOffline(false);
- checks.push('Real service worker v33 loads app, SVG library, forest scenes and transactions offline');
+ checks.push('Real service worker v34 loads app, SVG library, forest scenes and transactions offline');
  assert.deepEqual(errors,[],"Browser page errors detected");
  if(process.env.ILLUSTRATIVE_SCREENSHOT_DIR)fs.writeFileSync(path.join(process.env.ILLUSTRATIVE_SCREENSHOT_DIR,'evidence.json'),JSON.stringify({width,browserVersion:browser.version(),checks,errors,httpFailures,cache,rasters,visited:[...visited]},null,2));
  console.log(JSON.stringify({width,checks,errors,geometry:{icons:geometry.length,minSmall:Math.min(...geometry.map(x=>x.smallW)),maxSmall:Math.max(...geometry.map(x=>x.smallW))}}));

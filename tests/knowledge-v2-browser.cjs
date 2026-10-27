@@ -50,9 +50,16 @@ async function shot(page, name, log = true) {
       const db = await new Promise((resolve, reject) => { const r = indexedDB.open("memento_knowledge_files_v1", 1); r.onupgradeneeded = () => { const s = r.result.createObjectStore("files", { keyPath: "id" }); s.createIndex("noteId", "noteId", { unique: false }); }; r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });
       await new Promise((resolve, reject) => { const t = db.transaction("files", "readwrite"); t.oncomplete = resolve; t.onerror = () => reject(t.error); for (const { base64, ...meta } of data.files) { const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0)); t.objectStore("files").put({ ...meta, blob: new Blob([bytes], { type: meta.type }) }); } }); db.close();
     }, data);
-    await page.goto(url, { waitUntil: "domcontentloaded" }); await page.locator("#pinLock.visible").waitFor(); await shot(page, "pin", width === 393);
-    await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click(); await page.locator("#pinLock").waitFor({ state: "hidden" });
-    await page.waitForFunction(() => window.MementoStorageGuard?.writable); checks.push("PIN unlocked; fixture writer owns Web Lock");
+    await page.goto(url, { waitUntil: "domcontentloaded" });
+    const pinDisabled = await page.locator("html").getAttribute("data-memento-pin-lock") === "disabled";
+    if (!pinDisabled) {
+      await page.locator("#pinLock.visible").waitFor(); await shot(page, "pin", width === 393);
+      await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click();
+    }
+    await page.locator("#pinLock").waitFor({ state: "hidden" });
+    await page.waitForFunction(() => window.MementoStorageGuard?.writable);
+    if (pinDisabled) await shot(page, "direct-open", width === 393);
+    checks.push((pinDisabled ? "Direct app opening" : "PIN unlocked") + "; fixture writer owns Web Lock");
     await require('./helpers/knowledge-v2-browser-checks.cjs')(page,navigate,shot,context,url,width,checks);
     for(const d of diagnostics)assert(d.scrollWidth<=width+1,"Horizontal overflow: "+d.name);
     const sheets = await page.evaluate(() => [...document.styleSheets].map(sheet => { let rules = []; try { rules = [...sheet.cssRules].map(r => r.cssText); } catch {} return { id: sheet.ownerNode?.id || "", href: sheet.href, rules }; }));
