@@ -3,7 +3,7 @@
 "use strict";
 const DB="memento_knowledge_files_v1",STORE="files",MAX_FILE=25*1024*1024,MAX_EXPORT=180*1024*1024;
 const uid=()=>globalThis.crypto?.randomUUID?.()||"file-"+Date.now()+"-"+Math.random().toString(36).slice(2);
-const validMime=new Set(["application/pdf","image/png","image/jpeg","image/webp"]);
+const validMime=new Set(["application/pdf","image/png","image/jpeg","image/webp","audio/webm","audio/mp4"]);
 function open(){
  return new Promise((resolve,reject)=>{
   if(!globalThis.indexedDB){reject(Error("Bestandsopslag wordt niet ondersteund door deze browser."));return;}
@@ -42,14 +42,17 @@ async function sha256(blob){
  return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
 }
 async function inspect(file){
- if(!(file instanceof Blob)||file.size===0||file.size>MAX_FILE)throw Error("Kies een PDF of afbeelding van maximaal 25 MB.");
+ if(!(file instanceof Blob)||file.size===0||file.size>MAX_FILE)throw Error("Kies een PDF, afbeelding of geluidsopname van maximaal 25 MB.");
  const header=new Uint8Array(await file.slice(0,12).arrayBuffer());
  const pdf=header.length>=5&&header[0]===37&&header[1]===80&&header[2]===68&&header[3]===70&&header[4]===45;
  const png=header.length>=8&&[137,80,78,71,13,10,26,10].every((x,i)=>header[i]===x);
  const jpeg=header[0]===255&&header[1]===216&&header[2]===255;
  const webp=String.fromCharCode(...header.slice(0,4))==="RIFF"&&String.fromCharCode(...header.slice(8,12))==="WEBP";
- const mime=pdf?"application/pdf":png?"image/png":jpeg?"image/jpeg":webp?"image/webp":"";
- if(!validMime.has(mime))throw Error("Alleen echte PDF-, PNG-, JPG- of WebP-bestanden zijn toegestaan.");
+ const webm=header.length>=4&&[26,69,223,163].every((x,i)=>header[i]===x);
+ const mp4=header.length>=12&&String.fromCharCode(...header.slice(4,8))==="ftyp";
+ const audioType=String(file.type||"").split(";")[0];
+ const mime=pdf?"application/pdf":png?"image/png":jpeg?"image/jpeg":webp?"image/webp":webm&&audioType==="audio/webm"?"audio/webm":mp4&&audioType==="audio/mp4"?"audio/mp4":"";
+ if(!validMime.has(mime))throw Error("Alleen echte PDF-, afbeeldingen of ondersteunde audio-opnamen zijn toegestaan.");
  return mime;
 }
 async function save(noteId,file,token){
