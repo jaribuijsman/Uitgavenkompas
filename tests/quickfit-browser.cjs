@@ -14,7 +14,7 @@ const server=http.createServer((req,res)=>{
   const context=await browser.newContext({viewport:{width,height:830},locale:"nl-NL",timezoneId:"Europe/Amsterdam",hasTouch:true,reducedMotion:"reduce"});
   await context.route("https://**/*",r=>r.abort());
   await context.addInitScript(()=>{
-   window.webkitSpeechRecognition=class{
+   window.SpeechRecognition=window.webkitSpeechRecognition=class{
     start(){this.onstart?.();this.onresult?.({resultIndex:0,results:[Object.assign([{transcript:"Herinner me aan de afspraak"}],{isFinal:true})]});this.onend?.();}
     stop(){this.onend?.();}
    };
