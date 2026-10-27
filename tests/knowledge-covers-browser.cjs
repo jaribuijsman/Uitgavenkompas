@@ -55,8 +55,8 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  await page.waitForFunction(()=>!document.querySelector("#kc-collection-form"));
  const changed=(await load()).knowledge.collections.find(x=>x.id===sub.id);
  assert(changed.coverFile?.id&&changed.coverFile.hash?.length===64);
- const cover=await page.evaluate(async id=>window.MementoKnowledgeStore.get(id),changed.coverFile.id);
- assert.equal(cover?.blob?.size,png.length);
+ const coverSize=await page.evaluate(async id=>(await window.MementoKnowledgeStore.get(id))?.blob?.size,changed.coverFile.id);
+ assert.equal(coverSize,png.length);
  checks.push("Custom uploaded cover saved in IndexedDB, referenced by stable collection ID");
  await page.reload({waitUntil:"domcontentloaded"});
  await page.locator("#pinLock").waitFor({state:"hidden"});
