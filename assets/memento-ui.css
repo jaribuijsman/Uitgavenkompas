@@ -169,4 +169,13 @@ body[data-compass-area]>.app,#lifeApp {padding-top:calc(68px + var(--m-notice-ga
 body[data-compass-area]>.app .sidebar,body[data-compass-area]>.app .topbar,#lifeApp .life-side {top:calc(68px + var(--m-notice-gap))}
 #lifeDialog {top:var(--m-notice-gap)}
 #mementoStorageNotice {max-height:min(35dvh,220px)!important}
+#mementoStorageNotice button {min-height:44px;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-editor-head {top:calc(72px + var(--m-notice-gap))}
+
+/* Backup actions previously extended beyond both narrow and desktop cards. */
+body[data-compass-area="finance"] .app #view-settings .setting-row {display:flex;align-items:center;flex-wrap:wrap;gap:10px 8px}
+body[data-compass-area="finance"] .app #view-settings .setting-row>div {min-width:0;flex:1 1 190px;overflow-wrap:anywhere}
+body[data-compass-area="finance"] .app #view-settings .setting-row:has(>#exportBackup)>div {flex-basis:100%}
+body[data-compass-area="finance"] .app #view-settings .setting-row>.btn {max-width:100%;white-space:normal}
+body[data-compass-area="finance"] .app #view-settings :is(.settings-card,.memento-disclosure) {min-width:0}
+body[data-compass-area="finance"] .app #view-settings :is(input,select) {min-height:44px}

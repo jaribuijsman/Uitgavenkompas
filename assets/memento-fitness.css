@@ -198,7 +198,7 @@
   border-radius: 12px;
   margin-bottom: 10px;
   position: sticky;
-  top: calc(72px + env(safe-area-inset-top, 0px));
+  top: calc(72px + var(--m-notice-gap,0px) + env(safe-area-inset-top, 0px));
   z-index: 18;
   box-shadow: 0 6px 22px #0b160d99;
   gap: 8px;
@@ -326,7 +326,7 @@
   padding: 0;
   max-width: 560px;
   width: calc(100% - 24px);
-  max-height: calc(100dvh - 24px);
+  max-height: calc(var(--m-viewport-height,100dvh) - 24px);
   color: #e6eee8;
   box-shadow: 0 16px 70px #0008;
 }
@@ -337,9 +337,10 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  max-height: calc(100dvh - 24px);
+  max-height: calc(var(--m-viewport-height,100dvh) - 24px);
 }
 #fitnessDialog .ft-dialog-head {
+  flex: none;
   padding: 16px 18px;
   border-bottom: 1px solid #435c4b;
   display: flex;

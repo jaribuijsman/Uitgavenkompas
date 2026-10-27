@@ -73,6 +73,6 @@ async function shot(page, name, log = true) {
     fs.writeFileSync(path.join(out, "cssom.json"), JSON.stringify(sheets));
     fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ phase, width, diagnostics, checks, errors }, null, 2)); assert.deepEqual(errors, []);
     console.log("VISUAL_REPORT " + JSON.stringify({ phase, width, checks, errors, diagnostics })); await context.close();
-  } catch (e) { console.error(e);console.log("VISUAL_CHECKS "+JSON.stringify({phase,width,checks,errors}));process.exitCode = 1; }
+  } catch (e) { fs.writeFileSync(path.join(out,"report.json"),JSON.stringify({phase,width,checks,errors,diagnostics,failure:String(e)},null,2));console.error(e);console.log("VISUAL_CHECKS "+JSON.stringify({phase,width,checks,errors}));process.exitCode = 1; }
   finally { if (browser) await browser.close(); server.close(); }
 })();
