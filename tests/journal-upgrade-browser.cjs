@@ -72,8 +72,8 @@ const server=http.createServer((req,res)=>{
   saved=await stored();n=saved.notes.find(x=>x.id===journalId);
   assert(n);assert.equal(n.attachments.length,1);assert.equal(n.attachments[0].type,"audio/webm");
   assert.equal(n.journal.checkin.energy,3);
-  const files=await page.evaluate(()=>window.MementoKnowledgeStore.all());
-  assert.equal(files.some(x=>x.id===n.attachments[0].id&&x.blob.size>0),true);
+  const binaryFound=await page.evaluate(async id=>(await window.MementoKnowledgeStore.all()).some(x=>x.id===id&&x.blob instanceof Blob&&x.blob.size>0),n.attachments[0].id);
+  assert.equal(binaryFound,true);
   checks.push("Start/Stop recorded WebM attaches via guarded IndexedDB and keeps the original day identity");
   await page.locator('[data-kc="save"]').first().click();
   assert.equal((await stored()).notes.filter(x=>x.id===journalId).length,1);
