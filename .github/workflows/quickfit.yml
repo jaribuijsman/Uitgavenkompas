@@ -1,0 +1,50 @@
+name: Memento quick notes and Fitness acceptance
+on:
+  push:
+    branches: [main, work/memento-quickfit-validation]
+    paths: ['assets/memento-knowledge.js', 'assets/memento-knowledge.css', 'assets/memento-fitness.js', 'assets/memento-fitness.css', 'index.html', 'sw.js', 'tests/quickfit-browser.cjs', '.github/workflows/quickfit.yml']
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          node --check assets/memento-knowledge.js
+          node --check assets/memento-fitness.js
+          node --check sw.js
+          node tests/fitness-regression.cjs
+          node tests/knowledge-regression.cjs
+          node tests/storage-safety.cjs
+          node tests/knowledge-v2-core.cjs
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [360, 393, 412]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Test quick notes and Fitness on touch viewport
+        env:
+          MEMENTO_TEST_WIDTH: ${{ matrix.width }}
+          MEMENTO_SCREENSHOT_DIR: ${{ runner.temp }}/quickfit
+        run: node tests/quickfit-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quickfit-${{ matrix.width }}
+          path: ${{ runner.temp }}/quickfit
