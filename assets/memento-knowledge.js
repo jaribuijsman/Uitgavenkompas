@@ -85,7 +85,7 @@ function itemRows(items,mode="list"){
  }).join("")+"</div>";
 }
 function collectionRows(items){
- return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row kc-art-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span class="kc-card-arrow" aria-hidden="true">›</span>'+(ArtUI?.cards(c)||'')+'</button>').join('')+'</div>';
+ return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row kc-art-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span class="kc-card-arrow" aria-hidden="true">›</span>'+(ArtUI?.cards(c,c.parentId?C.collectionName(read(),c.parentId):'')||'')+'</button>').join('')+'</div>';
 }
 function quickBox(){
  return '<section class="kc-quick" aria-label="Snelle notitie"><div class="kc-quick-head"><strong>Snel vastleggen</strong><small>Inbox</small></div>'+

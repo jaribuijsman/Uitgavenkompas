@@ -14,8 +14,11 @@ function scene(c,parent=""){
  return '<span class="kc-art-wrap" aria-hidden="true"><img class="kc-cover-image" src="'+esc(A.url(id))+'" alt="" decoding="async" loading="lazy">'+
  (c?.coverFile?.id?'<img class="kc-cover-image kc-cover-custom" data-kc-cover-file="'+esc(c.coverFile.id)+'" alt="" decoding="async" loading="lazy" style="object-position:'+(Number.isInteger(c.coverFocus)?c.coverFocus:50)+'% center">':"")+"</span>";
 }
-function cards(c){return scene(c);}
-async function hydrate(host,store){if(!host||!store)return;for(const el of host.querySelectorAll("[data-kc-cover-file]")){
+function cards(c,parent=''){return scene(c,parent);}
+async function hydrate(host,store){if(!host||!store)return;
+ const needed=new Set([...host.querySelectorAll('[data-kc-cover-file]')].map(el=>el.dataset.kcCoverFile));
+ for(const [id,url] of urls)if(!needed.has(id)){URL.revokeObjectURL(url);urls.delete(id);}
+ for(const el of host.querySelectorAll("[data-kc-cover-file]")){
  const id=el.dataset.kcCoverFile;if(!id||!el.isConnected)continue;try{
   let url=urls.get(id);if(!url){const rec=await store.get(id);if(!rec?.blob||!["image/png","image/jpeg","image/webp"].includes(rec.type))continue;url=URL.createObjectURL(rec.blob);urls.set(id,url);}
   if(el.isConnected&&el.dataset.kcCoverFile===id)el.src=url;
