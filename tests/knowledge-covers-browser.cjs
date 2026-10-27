@@ -46,7 +46,7 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  assert.equal(await page.locator(".kc-filter-drawer").getAttribute("open"),"");
  checks.push("Auto selection for new subcategories and collapsed search/filter drawer");
  await page.locator('.kc-collection-actions summary').click();
- await page.locator('[data-kc="edit-collection"]').click();
+ await page.locator('.kc-collection-actions [data-kc="edit-collection"]').click();
  await page.locator('[data-kc="cover-mode"][data-id="custom"]').click();
  const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO/eOzcAAAAASUVORK5CYII=","base64");
  await page.locator("#kc-cover-file-input").setInputFiles({name:"forest.png",mimeType:"image/png",buffer:png});

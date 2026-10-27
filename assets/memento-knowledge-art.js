@@ -5,7 +5,7 @@ const names=[
 ["dagboek","Dagboek · maanmeer","journal dagboek schrijven herinneringen diary","cabin",0],
 ["reflecties","Reflecties · lantaarnboom","reflectie inzicht mindfulness gevoelens gedachten","lantern",1],
 ["leren","Leren · bosbibliotheek","leren boek studie ontwikkeling kennis lezen","books",2],
-["reizen","Reizen · bergpas","reis vakantie buitenland avontuur route","mountain",3],
+["reizen","Reizen · bergpas","reizen reis vakantie buitenland avontuur route","mountain",3],
 ["naslag","Naslag · oude kaarten","naslag document informatie gids archief","map",4],
 ["huis","Thuis · boshuis","huis wonen verhuizing kamer interieur","cabin",5],
 ["apparaten","Apparaten · werkbank","apparaten elektronica telefoon computer tv handleiding","device",6],
