@@ -70,6 +70,8 @@ async function addTransaction(page, description) {
     await navigate(b, "life", "backup"); await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
     assert.match(await b.locator("#lifePurgeFeedback").textContent(), /Geen items definitief verwijderd/);
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
+    await b.locator("#mementoStorageNotice [data-storage-dismiss]").click();
+    assert.equal(await b.evaluate(()=>window.MementoStorageGuard.writable),false);
     await b.locator("#lifeDialog [data-life-close]").first().click();
     checks.push("Stale purge is rejected before touching active tasks");
     await navigate(b, "life", "notes"); await b.locator('[data-kc="new"]').first().click(); await b.locator("#kc-title").fill("Notitieconcept B"); await b.locator("#kc-body").fill("Invoer blijft bewaard"); await b.locator('[data-kc="save"]').click();

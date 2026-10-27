@@ -23,6 +23,10 @@
         panel = doc.createElement("aside"); panel.id = "mementoStorageNotice";
         panel.setAttribute("role", "alert");
         panel.style.cssText = "position:fixed;z-index:2147483646;top:8px;left:8px;right:8px;max-width:680px;margin:auto;padding:12px;background:#293c2d;color:#fff;border:2px solid #c6d5b5;border-radius:10px;font:14px/1.4 system-ui;max-height:45dvh;overflow:auto";
+        const dismiss = doc.createElement("button"); dismiss.type = "button"; dismiss.dataset.storageDismiss = ""; dismiss.textContent = "Melding sluiten";
+        dismiss.style.cssText = "float:right;min-height:44px;margin:0 0 8px 8px";
+        dismiss.onclick = () => { panel.hidden = true; }; // Presentation only: never releases or grants a lock.
+        panel.appendChild(dismiss);
         const text = doc.createElement("p"); text.dataset.storageMessage = ""; panel.appendChild(text);
         const reload = doc.createElement("button"); reload.type = "button"; reload.textContent = "Actuele gegevens opnieuw laden";
         reload.onclick = () => {
@@ -30,6 +34,7 @@
         };
         panel.appendChild(reload); doc.body.appendChild(panel);
       }
+      panel.hidden = false;
       if (pending && !panel.querySelector("[data-storage-recovery]")) {
         const download = doc.createElement("button"); download.type = "button"; download.dataset.storageRecovery = ""; download.textContent = "Herstelset downloaden";
         download.onclick = () => {
