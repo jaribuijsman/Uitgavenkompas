@@ -17,7 +17,7 @@ for(const key of I.available){
  assert(mark.endsWith("</svg>"),"Unclosed svg "+key);
  assert(mark.includes('viewBox="0 0 64 64"'),"Wrong viewBox "+key);
  assert(!/<(?:text|foreignObject|script|image|animate|style)\b/i.test(mark),"Disallowed node "+key);
- assert(!/\b(?:https?:|javascript:|xlink:)/i.test(mark),"External URL "+key);
+ assert(!/\b(?:https?:|javascript:|xlink:)/i.test(mark.replace('xmlns="http://www.w3.org/2000/svg"', "")),"External URL "+key);
  assert(mark.includes("<path")||mark.includes("<circle"),"Empty symbol "+key);
  assert(mark.length<4500,"Overlarge symbol "+key);
  const tag=[...mark.matchAll(/<[^>]+>/g)].map(m=>m[0]);
