@@ -459,7 +459,7 @@
     ]
       .map(
         ([id, label]) =>
-          `<button type="button" data-fit="tab" data-id="${id}" aria-pressed="${tab === id}">${label}</button>`,
+          `<button type="button" data-fit="tab" data-id="${id}" aria-pressed="${tab === id}">${window.MementoIllustratedIcons?.svg(id==="today"?"sun":id==="plan"?"tasks":"analysis")||""}<span>${label}</span></button>`,
       )
       .join(
         "",

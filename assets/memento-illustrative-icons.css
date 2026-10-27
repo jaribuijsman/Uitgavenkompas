@@ -1,0 +1,113 @@
+/* Memento Illustrated — coherent forest/sage/brass iconography.
+   Decorative SVGs only; labels, controls and brand logo retain their own semantics. */
+.memento-illustrative-icon{
+ display:inline-block;width:1.55em;height:1.55em;flex:0 0 auto;vertical-align:middle;
+ overflow:visible;fill:none!important;stroke:none!important;
+ filter:drop-shadow(0 1px 1px rgba(4,21,11,.28));
+}
+#lifeApp[data-life-view="notes"] svg.memento-illustrative-icon,
+#lifeApp .life-nav-icon svg.memento-illustrative-icon,
+.nav .ico svg.memento-illustrative-icon,
+#sideNav .ico svg.memento-illustrative-icon,
+#mobileNav .mi svg.memento-illustrative-icon,
+#mementoQuickNav button svg.memento-illustrative-icon,
+#mementoMenuGrid button svg.memento-illustrative-icon{
+ fill:none!important;stroke:none!important;
+}
+#lifeApp[data-life-view="notes"] .kc-collection-icon{
+ overflow:hidden;display:grid;place-items:center;border:1px solid rgba(181,211,161,.20);
+ box-shadow:inset 0 1px 0 rgba(236,214,155,.06);
+}
+#lifeApp[data-life-view="notes"] .kc-art-row .kc-collection-icon{
+ width:54px!important;height:54px!important;min-width:54px!important;
+ background:linear-gradient(145deg,rgba(16,50,36,.97),rgba(21,56,40,.88))!important;
+ border:1px solid rgba(163,199,149,.39);border-radius:13px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-art-row .kc-collection-icon .memento-illustrative-icon{
+ width:45px!important;height:45px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-manage-row .kc-collection-icon .memento-illustrative-icon,
+#lifeApp[data-life-view="notes"] .kc-sort-row .kc-collection-icon .memento-illustrative-icon{
+ width:25px!important;height:25px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-icon-picker button{
+ min-height:88px!important;gap:6px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-icon-picker .memento-illustrative-icon{
+ width:40px!important;height:40px!important;filter:drop-shadow(0 2px 2px #09170b88);
+}
+#lifeApp[data-life-view="notes"] .kc-icon-picker button[aria-pressed="true"]{
+ background:linear-gradient(150deg,#bcd7bf,#a8c7b2)!important;
+}
+#lifeApp[data-life-view="notes"] .kc-inbox>svg.memento-illustrative-icon{
+ width:27px!important;height:27px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-item-icon{
+ display:grid;place-items:center;
+}
+#lifeApp[data-life-view="notes"] .kc-item-icon .memento-illustrative-icon{
+ width:31px!important;height:31px!important;
+}
+#lifeApp[data-life-view="notes"] .kc-icon-btn .memento-illustrative-icon{
+ width:26px!important;height:26px!important;
+}
+#lifeApp .life-nav-icon .memento-illustrative-icon,
+#sideNav .ico .memento-illustrative-icon{width:25px!important;height:25px!important;}
+#mobileNav .mi .memento-illustrative-icon{width:24px!important;height:24px!important;}
+#mementoQuickNav button .memento-illustrative-icon{
+ width:27px!important;height:27px!important;max-width:100%;
+}
+#mementoMenuGrid button .memento-illustrative-icon{
+ width:38px!important;height:38px!important;
+}
+#mementoMenuGrid button{min-height:94px!important;}
+#lifeApp #mementoFitness .ft-tabs .memento-illustrative-icon{
+ width:23px!important;height:23px!important;vertical-align:middle;margin-right:5px;
+}
+#lifeApp #mementoFitness .ft-tabs button{white-space:nowrap;}
+#view-dashboard .stat-icon .memento-illustrative-icon,
+.stat-icon .memento-illustrative-icon{width:32px!important;height:32px!important;}
+.cat-icon .memento-illustrative-icon,.tx-icon .memento-illustrative-icon,
+.tx-card-emoji .memento-illustrative-icon,.insight-icon .memento-illustrative-icon{
+ width:31px!important;height:31px!important;
+}
+.goal-icon .memento-illustrative-icon,
+.mode-icon .memento-illustrative-icon{
+ width:32px!important;height:32px!important;
+}
+.dashboard-card-icon .memento-illustrative-icon,
+.account-card .card-title .memento-illustrative-icon{
+ width:25px!important;height:25px!important;
+}
+.smartbuy-intro-icon .memento-illustrative-icon,
+.moneycoach-intro-icon .memento-illustrative-icon{
+ width:42px!important;height:42px!important;
+}
+#mobileMenu .memento-illustrative-icon,
+#quickSearch .memento-illustrative-icon{width:23px!important;height:23px!important;}
+.mini-icon-btn .memento-illustrative-icon,
+.kc-btn .memento-illustrative-icon,
+.shopping-icon-button .memento-illustrative-icon{
+ width:22px!important;height:22px!important;
+}
+button:focus-visible .memento-illustrative-icon,
+a:focus-visible .memento-illustrative-icon{
+ filter:drop-shadow(0 0 2px rgba(251,232,168,.6));
+}
+@media(max-width:380px){
+ #mementoQuickNav button .memento-illustrative-icon{width:25px!important;height:25px!important;}
+ #lifeApp[data-life-view="notes"] .kc-art-row .kc-collection-icon{width:47px!important;height:47px!important;min-width:47px!important}
+ #lifeApp[data-life-view="notes"] .kc-art-row .kc-collection-icon .memento-illustrative-icon{width:39px!important;height:39px!important;}
+}
+@media(prefers-reduced-motion:reduce){
+ .memento-illustrative-icon{transition:none!important;animation:none!important;}
+}
+
+#lifeApp #mementoFitness .ft-tabs button{display:flex;align-items:center;justify-content:center;gap:4px;}
+#lifeApp #mementoFitness .ft-tabs button .memento-illustrative-icon{margin-right:0!important;flex:0 0 21px!important;}
+#lifeApp #mementoFitness .ft-tabs button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#view-analysis .analysis-tab .memento-illustrative-icon{width:20px!important;height:20px!important;margin-right:5px;}
+#lifeApp[data-life-view="notes"] .kc-art-row{display:flex;align-items:center;}
+#lifeApp[data-life-view="notes"] .kc-art-row .kc-collection-icon{flex:none!important;}
+#lifeApp[data-life-view="notes"] .kc-art-row .kc-card-arrow{flex:none;}
+@media(max-width:375px){#lifeApp #mementoFitness .ft-tabs button{font-size:11px!important;gap:2px!important;padding-inline:3px!important;}#lifeApp #mementoFitness .ft-tabs button .memento-illustrative-icon{width:19px!important;height:19px!important;flex-basis:19px!important;}}

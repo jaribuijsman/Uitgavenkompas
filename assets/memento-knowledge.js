@@ -18,7 +18,7 @@ const iconPaths={
 };
 const iconLabels={folder:'Map',route:'Route',journal:'Dagboek',house:'Huis','book-open':'Boek',heart:'Hart',person:'Persoon',lightbulb:'Lampje','folder-kanban':'Projecten',tools:'Gereedschap',devices:'Apparaten',pet:'Huisdier',recipe:'Recept',drink:'Dranken',travel:'Reizen',document:'Document',search:'Onderzoek',music:'Muziek',camera:'Camera',fitness:'Fitness',leaf:'Natuur'};
 const iconAliases={'flask-conical':'recipe',sparkles:'lightbulb','file-text':'document','panels-top-left':'folder-kanban'};
-function symbol(id){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(iconPaths[iconAliases[id]||id]||iconPaths.folder)+'"/></svg>';}
+function symbol(id){const key=iconAliases[id]||id;return root.MementoIllustratedIcons?.svg(key)||'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(iconPaths[key]||iconPaths.folder)+'"/></svg>';}
 
 const kindNames={note:"Notitie",link:"Link",recipe:"Recept",checklist:"Checklist",pdf:"PDF",image:"Afbeelding"};
 const readable=d=>{try{return new Date(d).toLocaleDateString("nl-NL",{day:"numeric",month:"short"});}catch{return ""}};
@@ -66,10 +66,10 @@ function tryMigration(){
 function notify(t){notice=t;const n=host?.querySelector("#kc-notice");if(n){n.textContent=t;n.hidden=!t;}}
 function counts(id){return read().notes.filter(n=>!n.deletedAt&&!n.archived&&C.collectionOf(read(),n)===id).length;}
 function chips(tags){return (tags||[]).slice(0,3).map(tag=>'<span class="kc-tag">#'+esc(tag)+"</span>").join("");}
-function collectionIcon(c){return '<span class="kc-collection-icon" aria-hidden="true">'+symbol(c?.icon)+"</span>";}
+function collectionIcon(c){return '<span class="kc-collection-icon" aria-hidden="true">'+(root.MementoIllustratedIcons?.forCollection(c)||symbol(c?.icon))+"</span>";}
 function collectionName(id){return C.collectionName(read(),id);}
-function itemIcon(n){return {recipe:"⚗",link:"↗",pdf:"▣",image:"▧",checklist:"☑",note:"▤"}[C.typeOf(n)]||"▤";}
-function backAction(){return '<button type="button" class="kc-icon-btn" data-kc="back" aria-label="Terug">‹</button>';}
+function itemIcon(n){const type=C.typeOf(n),names={recipe:"recipe",link:"link",pdf:"document",image:"image",checklist:"tasks",note:"journal"};return root.MementoIllustratedIcons?.svg(names[type]||"journal")||({recipe:"⚗",link:"↗",pdf:"▣",image:"▧",checklist:"☑",note:"▤"}[type]||"▤");}
+function backAction(){return '<button type="button" class="kc-icon-btn" data-kc="back" aria-label="Terug">'+(root.MementoIllustratedIcons?.svg("arrow-left",{quiet:true})||"‹")+"</button>";}
 function header(title,back=false,actions=""){
  return '<header class="kc-header">'+(back?backAction():'<span class="kc-mark" aria-hidden="true">✦</span>')+
  '<div class="kc-head-label"><span>MEMENTO · KENNISCENTRUM</span><h2>'+esc(title)+'</h2></div>'+actions+"</header>";

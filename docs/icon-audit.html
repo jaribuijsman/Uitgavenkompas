@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memento — pictogrammencontrole</title>
+<link rel="stylesheet" href="../assets/memento-illustrative-icons.css?v=20261027-iconset-v1">
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif}*{box-sizing:border-box}
+body{margin:0;padding:clamp(15px,3vw,35px);background:#091a13;color:#eff4ea}
+main{max-width:1280px;margin:0 auto}
+h1{font-size:clamp(22px,4vw,32px);margin:0 0 5px;font-family:Georgia,serif}
+p{color:#bbd0c1;line-height:1.55;margin:0 0 17px}
+h2{font-size:17px;margin:23px 0 10px;color:#ddeddc}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.tile{min-width:0;background:linear-gradient(145deg,#183628,#122c20);border:1px solid #385744;border-radius:13px;padding:12px;display:flex;align-items:center;flex-direction:column;gap:7px}
+.badge{height:72px;width:72px;display:grid;place-items:center;border:1px solid #516d50;border-radius:14px;background:#183a29}
+.badge .memento-illustrative-icon{height:62px;width:62px}
+.tile small{font-size:11px;text-align:center;overflow-wrap:anywhere;color:#dae9d9}
+.mini{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:auto}
+.mini .memento-illustrative-icon{width:24px;height:24px}
+.mini span{width:32px;height:32px;border-radius:7px;background:#1c422d;display:grid;place-items:center}
+.cards{display:grid;gap:8px;max-width:680px}
+.card{display:flex;align-items:center;gap:12px;min-height:91px;border:1px solid #45614a;border-radius:15px;background:linear-gradient(105deg,#183827,#224e38 72%,#3b5745);padding:13px}
+.card svg{width:52px;height:52px}
+.card .label{font-size:15px;font-weight:700}
+.card .meta{font-size:12px;color:#b8cbb9}
+.status{display:inline-block;border:1px solid #65836b;border-radius:9px;padding:9px 12px;margin:9px 0 17px;font-size:12px}
+@media(max-width:380px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{gap:8px}}
+</style>
+</head><body><main>
+<h1>Memento · pictogrammencontrole</h1>
+<p>De daadwerkelijke SVG-pictogrammen uit de app, getoond in 64 en 24 pixels. Namen staan alleen buiten de illustraties. Dit is een ontwerp- en testpagina, geen verzameling persoonlijke gegevens.</p>
+<div class="status" id="auditStatus" role="status">Controle voorbereiden</div>
+<h2>Hoofd- en subcategorieën · 23</h2><div class="grid" id="categoryGrid"></div>
+<h2>Alle beschikbare pictogrammen · 64</h2><div class="grid" id="iconGrid"></div>
+<h2>Kaartweergave · voorbeelden</h2><div class="cards" id="cardGrid"></div>
+</main>
+<script src="../assets/memento-illustrative-icons.js?v=20261027-iconset-v1"></script>
+<script>
+(()=>{
+ const I=window.MementoIllustratedIcons;
+ if(!I){document.getElementById("auditStatus").textContent="Pictogrammenset ontbreekt";return;}
+ const defs=[
+ ["kc2-levenspad","Levenspad","route"],["kc2-levenspad-dagboek","Dagboek","journal"],["kc2-levenspad-reflecties","Reflecties","heart"],["kc2-levenspad-leren","Leren","book-open"],["kc2-levenspad-reizen","Reizen","travel"],["kc2-levenspad-naslag","Naslag","document"],
+ ["kc2-huis-wonen","Huis & wonen","house"],["kc2-huis-wonen-apparaten","Apparaten","devices"],["kc2-huis-wonen-onderhoud","Onderhoud","tools"],["kc2-huis-wonen-woning","Woning","house"],["kc2-huis-wonen-huisdieren","Huisdieren","pet"],
+ ["kc2-recepten-creaties","Recepten","book-open"],["kc2-recepten-creaties-koken","Koken","recipe"],["kc2-recepten-creaties-dranken","Dranken","drink"],["kc2-recepten-creaties-zelfmaken","Zelf maken","leaf"],
+ ["kc2-projecten-onderzoek","Projecten","folder-kanban"],["kc2-projecten-onderzoek-dossiers","Dossiers","folder"],["kc2-projecten-onderzoek-producten","Productonderzoek","search"],["kc2-projecten-onderzoek-bronnen","Bronnen","document"],
+ ["kc2-ideeen-inspiratie","Inspiratie","lightbulb"],["kc2-ideeen-inspiratie-ideeen","Ideeënbank","lightbulb"],["kc2-ideeen-inspiratie-visueel","Visueel","camera"],["kc2-ideeen-inspiratie-later","Later bekijken","book-open"]
+ ];
+ const tile=(name,svg)=>'<div class="tile"><span class="badge">'+svg+'</span><small>'+name+'</small><div class="mini"><span>'+svg+'</span><small>24px</small></div></div>';
+ document.getElementById("categoryGrid").innerHTML=defs.map(([id,name,icon])=>tile(name,I.forCollection({id,icon}))).join("");
+ document.getElementById("iconGrid").innerHTML=I.available.map(key=>tile(key,I.svg(key))).join("");
+ document.getElementById("cardGrid").innerHTML=defs.slice(0,5).map(([id,name,icon])=>'<div class="card">'+I.forCollection({id,icon})+'<div><div class="label">'+name+'</div><div class="meta">Geïllustreerd pictogram · donker bosgroen</div></div></div>').join("");
+ const svgs=document.querySelectorAll("svg.memento-illustrative-icon");
+ const invalid=[...svgs].filter(el=>!el.querySelector("path,circle,rect")||el.querySelector("text,foreignObject,image,script"));
+ document.getElementById("auditStatus").textContent=invalid.length?"Pictogrammen met fouten: "+invalid.length:svgs.length+" iconen zichtbaar · "+I.available.length+" unieke ontwerpen · geen letters in de beelden";
+})();
+</script></body></html>
