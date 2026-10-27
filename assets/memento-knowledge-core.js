@@ -35,9 +35,10 @@ const validKind=new Set(["note","link","recipe","checklist","pdf","image"]);
 function typeOf(n){return validKind.has(n?.kind)?n.kind:n?.isChecklist?"checklist":"note";}
 function collectionOf(life,n){
  const name=nameKey(n.category);
- if(name==="inbox"||n.collectionId==="inbox")return "inbox";
+ if(n.collectionId==="inbox")return "inbox";
  const k=life.knowledge;
  if(n.collectionId&&k?.collections.some(c=>c.id===n.collectionId))return n.collectionId;
+ if(name==="inbox")return "inbox";
  return k?.collections.find(c=>nameKey(c.name)===name)?.id||"inbox";
 }
 function collectionName(life,id){
@@ -130,7 +131,7 @@ function validateNote(life,n,checkDuplicates=true){
 function validate(life){
  const k=ensure(life),ids=new Set();
  validateHierarchy(life);
- for(const c of k.collections){if(typeof c.id!=="string"||!c.id||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
+ for(const c of k.collections){if(typeof c.id!=="string"||!c.id||c.id==="inbox"||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
  const dates=new Set();for(const n of life.notes){validateNote(life,n,false);if(n.journal&&!n.deletedAt){if(dates.has(n.journal.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');dates.add(n.journal.date);}}
  return true;
 }
@@ -227,7 +228,7 @@ function journalDate(date=new Date()){
 function validDate(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value;}
 function validateJournal(life,n,checkDuplicates=true){
  const j=n.journal;
- if(!j||j.version!==1||!validDate(j.date)||!['','Goed','Prima','Neutraal','Minder','Moeilijk'].includes(j.mood||''))throw Error('Ongeldige dagboekmetadata');
+ if(!j||j.version!==1||!validDate(j.date)||(j.mood!==undefined&&typeof j.mood!=='string')||!['','Goed','Prima','Neutraal','Minder','Moeilijk'].includes(j.mood||''))throw Error('Ongeldige dagboekmetadata');
  // Archived days retain their reservation; deleted days are recoverable separately.
  if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');
 }
