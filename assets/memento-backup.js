@@ -48,6 +48,7 @@ async function createArchive({life,finance,extras={}},store){
  if(!life||!Array.isArray(life.notes)||!finance||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error("Leven of Financiën ontbreekt: geen volledige back-up gemaakt");
  const byId=new Map((await store.all()).map(x=>[x.id,x])),refs=new Map();
  for(const n of life.notes)for(const a of n.attachments||[])refs.set(a.id,a);
+ for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)refs.set(c.coverFile.id,c.coverFile);
  const entries=[
   {name:"data/life.json",bytes:encode(JSON.stringify(life))},
   {name:"data/finance.json",bytes:encode(JSON.stringify(finance))},
@@ -82,6 +83,7 @@ async function prepareArchive(file,store){
   files.push({...f,blob});
  }
  for(const n of life.notes)for(const a of n.attachments||[])if(!ids.has(a.id))throw Error("Een notitie verwijst naar een ontbrekende bijlage");
+ for(const c of life.knowledge?.collections||[])if(c.coverFile?.id&&!ids.has(c.coverFile.id))throw Error('Een verzameling verwijst naar een ontbrekende afbeelding');
  return {life,finance,extras,files,manifest};
 }
 function download(blob,name){

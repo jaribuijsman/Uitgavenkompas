@@ -185,6 +185,10 @@ function validateHierarchy(life){
   if(c.parentId!==undefined&&!iconIds.has(c.icon))throw Error('Ongeldig pictogram');
   if(c.order!==undefined&&(!Number.isSafeInteger(c.order)||c.order<0))throw Error('Ongeldige volgorde');
   if(c.special!==undefined&&c.special!=='journal')throw Error('Onbekende speciale verzameling');
+  if(c.coverId!==undefined&&(typeof c.coverId!=='string'||!/^(?:|[a-z][a-z0-9-]{0,40})$/.test(c.coverId)))throw Error('Ongeldige illustratie-ID');
+  if(c.coverFocus!==undefined&&(!Number.isInteger(c.coverFocus)||c.coverFocus<0||c.coverFocus>100))throw Error('Ongeldige afbeeldingsuitsnede');
+  if(c.coverFile!==undefined&&c.coverFile!==null){const f=c.coverFile;if(!f||typeof f!=='object'||!/^[a-z0-9-]{8,120}$/i.test(f.id||'')||typeof f.name!=='string'||f.name.length>200||!Number.isFinite(f.size)||f.size<=0||f.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(f.type)||typeof f.hash!=='string'||!/^[a-f0-9]{64}$/.test(f.hash))throw Error('Ongeldige categorieafbeelding');}
+
  }
  if(ids.size!==k.collections.length)throw Error('Dubbele verzamelings-ID');
  const names=new Set();for(const c of k.collections){if(c.parentId===undefined)continue;const key=String(c.parentId)+'\0'+nameKey(c.name);if(names.has(key))throw Error('Dubbele verzamelingsnaam');names.add(key)}
@@ -205,6 +209,9 @@ function saveCollection(life,input){
  const previousParent=old?.parentId||null;
  const notes=old?life.notes.filter(n=>collectionOf(life,n)===old.id):[];
  Object.assign(c,{name,icon:input.icon,view:input.view,parentId,updatedAt:timestamp(),revision:(old?.revision||0)+1});
+ if(Object.prototype.hasOwnProperty.call(input,'coverId'))c.coverId=input.coverId||'';
+ if(Object.prototype.hasOwnProperty.call(input,'coverFocus'))c.coverFocus=input.coverFocus;
+ if(Object.prototype.hasOwnProperty.call(input,'coverFile'))c.coverFile=input.coverFile||null;
  if(!old||parentId!==previousParent||c.order===undefined)c.order=Math.max(-1,...k.collections.filter(x=>x.id!==c.id&&(x.parentId||null)===parentId).map(x=>x.order||0))+1;
  if(!old)k.collections.push(c);
  for(const n of notes){n.collectionId=c.id;n.category=name;}

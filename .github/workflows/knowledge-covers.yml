@@ -1,0 +1,53 @@
+name: Memento collection art
+on:
+  push:
+    paths: ["assets/memento-knowledge*.js", "assets/memento-knowledge.css", "assets/memento-backup.js", "index.html", "sw.js", "tests/knowledge-covers*.cjs", ".github/workflows/knowledge-covers.yml"]
+  pull_request:
+    paths: ["assets/memento-knowledge*.js", "assets/memento-knowledge.css", "assets/memento-backup.js", "index.html", "sw.js", "tests/knowledge-covers*.cjs", ".github/workflows/knowledge-covers.yml"]
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: |
+          node --check assets/memento-knowledge-art.js
+          node --check assets/memento-knowledge-cover-ui.js
+          node --check assets/memento-knowledge.js
+          node --check assets/memento-knowledge-core.js
+          node --check assets/memento-backup.js
+          node tests/knowledge-covers.cjs
+          node tests/knowledge-v2-core.cjs
+          node tests/knowledge-regression.cjs
+          node tests/storage-safety.cjs
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [360, 393, 412]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install test Chromium
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Browser acceptance
+        env:
+          COVER_TEST_WIDTH: ${{ matrix.width }}
+          COVER_SCREENSHOT_DIR: ${{ runner.temp }}/screenshots
+        run: node tests/knowledge-covers-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: collection-art-${{ matrix.width }}
+          path: ${{ runner.temp }}/screenshots
