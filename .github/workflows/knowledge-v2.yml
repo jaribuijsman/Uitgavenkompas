@@ -1,0 +1,111 @@
+name: Knowledge 2 acceptance
+on:
+  push:
+    branches: [main, work/memento-kc2-validation]
+    paths: ['assets/memento-knowledge*', 'index.html', 'sw.js', 'tests/knowledge-v2*', 'tests/helpers/knowledge-v2*', '.github/workflows/knowledge-v2.yml']
+permissions:
+  contents: read
+concurrency:
+  group: kc2-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  core-and-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          node tests/knowledge-regression.cjs
+          node tests/knowledge-v2-core.cjs
+          node tests/knowledge-v2-safety.cjs
+          node tests/storage-safety.cjs
+          node tests/storage-lock-native.cjs
+          node tests/fitness-regression.cjs
+          node tests/trash-regression.cjs
+          node tests/pin-forest-regression.cjs
+          node --check assets/memento-knowledge.js
+          node --check assets/memento-knowledge-core.js
+          node --check sw.js
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [360, 393, 412, 1280]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: app
+      - uses: actions/checkout@v4
+        with:
+          ref: f7d1d04fdca7fc26185cb3a7931859ca9c8c903e
+          path: baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated test browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - run: node app/tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/kc2-fixture.json"
+      - name: Existing app baseline
+        env:
+          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/baseline
+          MEMENTO_VISUAL_PHASE: before
+          MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
+          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/kc2-review
+          MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/kc2-fixture.json
+        run: node app/tests/visual-browser.cjs
+      - name: Real hierarchy, touch, diary and restore interactions
+        env:
+          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/app
+          MEMENTO_VISUAL_PHASE: after
+          MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
+          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/kc2-review
+          MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/kc2-fixture.json
+        run: node app/tests/knowledge-v2-browser.cjs
+      - name: PIN forest remains identical
+        run: cmp "$RUNNER_TEMP/kc2-review/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/kc2-review/after/${{ matrix.width }}/pin.jpg"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kc2-review-${{ matrix.width }}
+          path: ${{ runner.temp }}/kc2-review
+  original-storage-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - run: node tests/storage-safety-browser.cjs
+  known-general-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node tests/memento-regression.cjs
+  known-fitness-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - run: node tests/fitness-browser.cjs

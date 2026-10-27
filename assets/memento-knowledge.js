@@ -4,7 +4,22 @@
 const C=root.MementoKnowledgeCore,S=root.MementoKnowledgeStore;
 if(!C)return;
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const icons={recipes:"⚗",inspiration:"✧",documents:"▤",projects:"▦",home:"⌂",research:"◈"};
+const iconPaths={
+ folder:'M3 7h7l2 2h9v11H3z M3 7V4h7l2 3',route:'M5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4 M19 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4 M7 17h8a4 4 0 0 0 0-8h-6a3 3 0 0 1 0-6h8',
+ journal:'M5 3h14v18H5z M3 7h4 M3 12h4 M3 17h4 M10 8h5 M10 12h5',house:'M3 11 12 3l9 8 M5 10v11h5v-7h4v7h5V10',
+ 'book-open':'M12 5v16 M3 4c3-1 6-1 9 1 3-2 6-2 9-1v15c-3-1-6-1-9 1-3-2-6-2-9-1z',heart:'M20 5c-3-3-6 0-8 2-2-2-5-5-8-2-5 5 2 10 8 15 6-5 13-10 8-15',
+ person:'M16 7a4 4 0 1 0-8 0 4 4 0 0 0 8 0 M4 21v-3c0-7 16-7 16 0v3',lightbulb:'M9 18h6 M9 21h6 M8 15c-7-7 0-15 7-11 5 3 3 8 1 11l-1 3H9z',
+ 'folder-kanban':'M3 6h7l2 2h9v13H3z M7 11v6 M12 11v3 M17 11v8',tools:'M14 4a5 5 0 0 0-6 6L3 18l3 3 8-7a5 5 0 0 0 6-6l-4 3-3-3z',
+ devices:'M3 4h18v12H3z M8 21h8 M12 16v5',pet:'M7 11 4 4l7 3h2l7-3-3 7c5 12-15 12-10 0 M9 14h.01 M15 14h.01 M11 17h2',
+ recipe:'M4 5h16v16H4z M8 9h8 M8 13h8 M8 17h5',drink:'M4 3h16l-8 9z M12 12v9 M8 21h8',travel:'M4 7h16v14H4z M9 7V3h6v4 M8 11v6 M16 11v6',
+ document:'M5 3h9l5 5v13H5z M14 3v6h5 M9 13h6 M9 17h6',search:'M15 9a6 6 0 1 0-12 0 6 6 0 0 0 12 0 M14 14l7 7',
+ music:'M9 18V5l12-2v13 M3 18a3 3 0 1 0 6 0 3 3 0 0 0-6 0 M15 16a3 3 0 1 0 6 0 3 3 0 0 0-6 0',camera:'M3 7h5l2-3h4l2 3h5v14H3z M16 14a4 4 0 1 0-8 0 4 4 0 0 0 8 0',
+ fitness:'M3 8v8 M6 5v14 M6 12h12 M18 5v14 M21 8v8',leaf:'M4 20C-2 5 10 3 21 3c0 12-3 19-15 15 M4 20 16 8'
+};
+const iconLabels={folder:'Map',route:'Route',journal:'Dagboek',house:'Huis','book-open':'Boek',heart:'Hart',person:'Persoon',lightbulb:'Lampje','folder-kanban':'Projecten',tools:'Gereedschap',devices:'Apparaten',pet:'Huisdier',recipe:'Recept',drink:'Dranken',travel:'Reizen',document:'Document',search:'Onderzoek',music:'Muziek',camera:'Camera',fitness:'Fitness',leaf:'Natuur'};
+const iconAliases={'flask-conical':'recipe',sparkles:'lightbulb','file-text':'document','panels-top-left':'folder-kanban'};
+function symbol(id){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(iconPaths[iconAliases[id]||id]||iconPaths.folder)+'"/></svg>';}
+
 const kindNames={note:"Notitie",link:"Link",recipe:"Recept",checklist:"Checklist",pdf:"PDF",image:"Afbeelding"};
 const readable=d=>{try{return new Date(d).toLocaleDateString("nl-NL",{day:"numeric",month:"short"});}catch{return ""}};
 function safeURL(s){try{const u=new URL(s);return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return ""}}
@@ -31,13 +46,25 @@ function markdown(value){
  return blocks.join("")||'<p class="kc-muted">Nog geen inhoud</p>';
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
+let colDraft=null,sortState=null,journalFilter="",migrationBusy=false;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 const read=()=>bridge.read();
-const collections=()=>C.ensure(read()).collections.filter(c=>!c.archived);
+const allCollections=()=>C.ensure(read()).collections;
+const collections=()=>allCollections().filter(c=>!c.archived&&!allCollections().some(p=>p.id===c.parentId&&p.archived));
+const children=parent=>collections().filter(c=>parent===null?c.parentId===null:c.parentId===parent).sort((a,b)=>(a.order||0)-(b.order||0));
+const rootCollections=()=>children(null);
+const legacyCollections=()=>collections().filter(c=>c.parentId===undefined);
+const pathName=c=>(c.parentId?C.collectionName(read(),c.parentId)+' › ':'')+c.name;
+function tryMigration(){
+ if(migrationBusy||read().knowledge?.hierarchyVersion===1)return;
+ if(!root.MementoStorageGuard?.writable)return;
+ migrationBusy=true;const ok=write(s=>C.migrateHierarchy(s));migrationBusy=false;
+ if(!ok)notice='De nieuwe indeling kon niet worden opgeslagen. Bestaande verzamelingen blijven beschikbaar. Probeer opnieuw.';
+}
 function notify(t){notice=t;const n=host?.querySelector("#kc-notice");if(n){n.textContent=t;n.hidden=!t;}}
 function counts(id){return read().notes.filter(n=>!n.deletedAt&&!n.archived&&C.collectionOf(read(),n)===id).length;}
 function chips(tags){return (tags||[]).slice(0,3).map(tag=>'<span class="kc-tag">#'+esc(tag)+"</span>").join("");}
-function collectionIcon(c){return '<span class="kc-collection-icon" aria-hidden="true">'+(icons[c?.id]||"▤")+"</span>";}
+function collectionIcon(c){return '<span class="kc-collection-icon" aria-hidden="true">'+symbol(c?.icon)+"</span>";}
 function collectionName(id){return C.collectionName(read(),id);}
 function itemIcon(n){return {recipe:"⚗",link:"↗",pdf:"▣",image:"▧",checklist:"☑",note:"▤"}[C.typeOf(n)]||"▤";}
 function backAction(){return '<button type="button" class="kc-icon-btn" data-kc="back" aria-label="Terug">‹</button>';}
@@ -55,16 +82,24 @@ function itemRows(items,mode="list"){
    '<span class="kc-item-side">'+(n.updatedAt?readable(n.updatedAt):"")+'<span aria-hidden="true">›</span></span></button>';
  }).join("")+"</div>";
 }
+function collectionRows(items){
+ return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span aria-hidden="true">›</span></button>').join('')+'</div>';
+}
 function renderHome(){
- const life=read(),items=C.search(life,{sort:"recent"}),pinned=items.filter(n=>n.pinned).slice(0,3);
- return header("Kenniscentrum",false,btn("+ Nieuw","new","",true))+
- '<div class="kc-capture"><button type="button" data-kc="new" class="kc-capture-btn"><strong>Wat wil je bewaren?</strong><span>Een gedachte, link, recept of document toevoegen…</span></button></div>'+
- '<div class="kc-section-head"><h3>Mijn verzamelingen</h3>'+btn("Beheer","collections")+"</div>"+
- '<div class="kc-collections">'+collections().map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection">'+collectionIcon(c)+'<strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items · '+esc(c.view==="gallery"?"Galerij":c.view==="table"?"Tabel":"Lijst")+"</small></button>").join("")+"</div>"+
- (pinned.length?'<div class="kc-section-head"><h3>Vastgezet</h3></div>'+itemRows(pinned):"")+
- '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn("Bekijk alles","all")+"</div>"+
- itemRows(items.slice(0,6))+
- '<div class="kc-hub-shortcuts">'+btn("Inbox","inbox")+btn("Alle notities","all")+btn("Archief","archive")+btn("Prullenbak","trash")+"</div>";
+ const items=C.search(read(),{sort:'recent'}),pinned=items.filter(n=>n.pinned).slice(0,3);
+ return header('Kenniscentrum',false,btn('+ Notitie','new','',true))+
+ '<button type="button" class="kc-inbox" data-kc="inbox">'+symbol('folder')+'<strong>Inbox</strong><span>'+counts('inbox')+' items</span><span aria-hidden="true">›</span></button>'+
+ (read().knowledge?.hierarchyVersion!==1?'<p class="kc-muted">Je bestaande verzamelingen zijn behouden.</p>'+btn('Nieuwe indeling toevoegen','migrate'):'')+
+ '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections())+
+ (legacyCollections().length?'<div class="kc-section-head"><h3>Bestaande verzamelingen</h3></div><p class="kc-muted">Behouden zonder automatische herindeling. Via Bewerken kun je zelf een bovenliggende verzameling kiezen.</p>'+collectionRows(legacyCollections()):'')+
+ (pinned.length?'<div class="kc-section-head"><h3>Vastgezet</h3></div>'+itemRows(pinned):'')+
+ '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn('Alle items','all')+'</div>'+itemRows(items.slice(0,4))+
+ '<div class="kc-hub-shortcuts">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div>';
+}
+function breadcrumbs(){
+ if(['home','edit','collection-editor','sort'].includes(screen))return '';
+ const c=allCollections().find(c=>c.id===collectionId),parent=c?.parentId?allCollections().find(x=>x.id===c.parentId):null;
+ return '<nav class="kc-breadcrumbs" aria-label="Kruimelpad">'+btn('Kenniscentrum','home')+(parent?'<span>›</span>'+btn(esc(parent.name),'collection',parent.id):'')+(c&&['collection','detail','file','versions'].includes(screen)?'<span>›</span>'+btn(esc(c.name),'collection',c.id):'')+'</nav>';
 }
 function currentItems(){
  const cid=screen==="collection"?collectionId:screen==="inbox"?"inbox":"";
@@ -76,7 +111,10 @@ function renderList(){
  const title=screen==="collection"?c?.name||"Verzameling":{all:"Alle kennisitems",inbox:"Inbox",archive:"Archief",trash:"Prullenbak",pinned:"Vastgezet"}[screen]||"Kennisitems";
  const availableTags=[...new Set(read().notes.flatMap(n=>n.tags||[]))].sort((a,b)=>a.localeCompare(b,"nl"));
  const items=currentItems(),mode=viewOverride||c?.view||"list";
+ if(screen==='collection'&&c?.special==='journal')return renderJournal(c);
+ const subs=screen==='collection'?children(collectionId):[];
  return header(title,true,screen==="trash"?btn("Definitief leegmaken","purge-trash"):btn("+ Nieuw","new","",true))+
+ (screen==='collection'?'<div class="kc-collection-actions"><details class="kc-tools"><summary aria-label="Instellingen van deze verzameling">Instellingen</summary><div>'+btn('Bewerken','edit-collection',collectionId)+(!c?.parentId?btn('Subverzameling toevoegen','new-sub',collectionId)+btn('Volgorde wijzigen','sort-children',collectionId):'')+'</div></details></div>'+collectionRows(subs)+(subs.length?'<h3 class="kc-content-caption">In deze verzameling</h3>':''):'')+
  '<div class="kc-filters"><label class="kc-search"><span class="kc-sr">Zoeken</span><input type="search" data-kc-input="search" placeholder="Zoek in titel, tekst en tags…" value="'+esc(query)+'"></label>'+
  '<div class="kc-filterline"><label>Type<select data-kc-change="kind"><option value="">Alles</option>'+Object.entries(kindNames).map(([v,n])=>'<option value="'+v+'"'+(kindFilter===v?" selected":"")+">"+n+"</option>").join("")+"</select></label>"+
  '<label>Tag<select data-kc-change="tag"><option value="">Alle tags</option>'+availableTags.map(v=>'<option value="'+esc(v)+'"'+(tagFilter===v?" selected":"")+">"+esc(v)+"</option>").join("")+"</select></label>"+
@@ -87,20 +125,48 @@ function renderList(){
  (screen==="collection"?'<div class="kc-bottom-actions">'+btn("Verzameling beheren","edit-collection",collectionId)+"</div>":"");
 }
 function renderCollections(){
- return header("Verzamelingen",true,btn("+ Nieuwe","new-collection","",true))+
- '<p class="kc-muted">Kies een verzameling of pas de naam en standaardweergave aan.</p>'+
- '<div class="kc-manage-collections">'+collections().map(c=>'<div class="kc-manage-row">'+
- '<button type="button" data-kc="collection" data-id="'+esc(c.id)+'">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items</small></span></button>'+
- btn("Bewerk","edit-collection",c.id)+'</div>').join("")+"</div>";
+ return header('Verzamelingen beheren',true,btn('+ Nieuwe','new-collection','',true))+
+ '<p class="kc-muted">Archiveren verbergt een verzameling; alle inhoud en subverzamelingen blijven bewaard. Er worden geen verzamelingen definitief verwijderd.</p><div class="kc-manage-collections">'+allCollections().map(c=>'<div class="kc-manage-row"><span class="kc-manage-name">'+collectionIcon(c)+'<span><strong>'+esc(pathName(c))+'</strong><small>'+(c.archived?'Gearchiveerd':c.parentId?'Subverzameling':c.parentId===null?'Hoofdverzameling':'Nog in te delen')+'</small></span></span>'+btn(c.archived?'Herstellen':'Bewerk',c.archived?'restore-collection':'edit-collection',c.id)+'</div>').join('')+'</div>';
+}
+function openCollectionEditor(id='',parentId=null){
+ const c=allCollections().find(c=>c.id===id);collectionId=id;colDraft={id,name:c?.name||'',icon:iconAliases[c?.icon]||c?.icon||'folder',view:c?.view||'list',parentId:c?.parentId||parentId||'',dirty:false};screen='collection-editor';render();
 }
 function renderCollectionEditor(){
- const c=collections().find(x=>x.id===collectionId);
- return header(c?"Verzameling bewerken":"Nieuwe verzameling",true)+
- '<div class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" value="'+esc(c?.name||"")+'" placeholder="Bijvoorbeeld: Boeken en artikelen"></label>'+
- '<label>Standaardweergave<select id="kc-col-view">'+
- [["list","Lijst"],["gallery","Galerij"],["table","Tabel"]].map(([id,label])=>'<option value="'+id+'"'+((c?.view||"list")===id?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
- btn("Verzameling opslaan","save-collection","",true)+
- (c?btn("Archiveren","archive-collection",c.id):"")+"</div>";
+ const d=colDraft;if(!d)return '';const c=allCollections().find(c=>c.id===d.id);
+ return header(c?'Verzameling bewerken':'Nieuwe verzameling',true,btn('Opslaan','save-collection','',true))+
+ '<form id="kc-collection-form" class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" data-kc-col="name" value="'+esc(d.name)+'" required></label>'+
+ '<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+rootCollections().filter(x=>x.id!==d.id).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>'+
+ '<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+
+ '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+Object.entries(iconLabels).map(([id,label])=>'<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+symbol(id)+'<span>'+label+'</span></button>').join('')+'</div></fieldset>'+
+ '<div class="kc-editor-actions">'+btn('Annuleren','cancel-collection')+(c?btn('Archiveren','archive-collection',c.id):'')+'</div></form>';
+}
+function renderJournal(c){
+ const today=C.journalDate(),days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id).sort((a,b)=>b.journal.date.localeCompare(a.journal.date));
+ const filtered=journalFilter?days.filter(n=>n.journal.date===journalFilter):days;
+ return header(c.name,true,btn('Schrijf vandaag','journal-today',c.id,true))+
+ '<div class="kc-collection-actions">'+btn('Bewerken','edit-collection',c.id)+'</div><div class="kc-journal-today"><span>Vandaag</span><strong>'+journalLabel(today)+'</strong>'+btn(C.findJournal(read(),today)?'Verder schrijven':'Begin met schrijven','journal-today',c.id,true)+'</div>'+
+ '<form id="kc-journal-date-form" class="kc-journal-date"><label>Kies een dag<input type="date" id="kc-journal-picker" value="'+esc(journalFilter||today)+'" required></label><button type="submit" class="kc-btn">Open dag</button></form>'+
+ '<div class="kc-section-head"><h3>Eerdere dagen</h3>'+btn(journalFilter?'Alle dagen':'Zoek datum','journal-filter')+'</div>'+
+ (filtered.length?'<div class="kc-item-list">'+filtered.map(n=>'<button type="button" class="kc-item" data-kc="journal-open" data-id="'+esc(n.id)+'"><span class="kc-item-main"><strong>'+journalLabel(n.journal.date)+'</strong><small>'+esc(n.journal.mood||'Geen stemming')+(n.title&&n.title!==n.journal.date?' · '+esc(n.title):'')+'</small><small>'+esc(n.body.slice(0,110))+'</small></span><span aria-hidden="true">›</span></button>').join('')+'</div>':'<div class="kc-empty"><strong>'+(journalFilter?'Geen tekst voor deze dag':'Nog geen dagboekdagen')+'</strong><p>Schrijf wanneer je wilt. Een gemiste dag is geen probleem.</p></div>');
+}
+function journalLabel(date){return new Date(date+'T12:00:00Z').toLocaleDateString('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function openJournal(date){
+ const existing=C.findJournal(read(),date);
+ if(existing){collectionId=C.collectionOf(read(),existing);startEdit(existing.id);return;}
+ const target=allCollections().find(c=>c.id===collectionId&&c.special==='journal')||collections().find(c=>c.special==='journal');
+ if(!target){notify('Open eerst je dagboekverzameling.');return;}
+ beginNew(target.id);editing.journal={version:1,date,mood:''};editing.title='';dirty=false;render();
+}
+function renderJournalEditor(){
+ const e=editing,j=e.journal;
+ return '<div class="kc-editor-head">'+header('Dagboek',true,btn('Opslaan','save','',true))+'</div><p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?'Niet opgeslagen':'Concept · lege dagen worden niet opgeslagen')+'</p>'+
+ '<div class="kc-editor-fields kc-journal-fields"><label>Datum<input id="kc-journal-date" type="date" value="'+esc(j.date)+'" data-kc-journal="date" required></label><label>Stemming · optioneel<select id="kc-journal-mood" data-kc-journal="mood">'+['','Goed','Prima','Neutraal','Minder','Moeilijk'].map(m=>'<option value="'+m+'"'+(j.mood===m?' selected':'')+'>'+esc(m||'Geen stemming')+'</option>').join('')+'</select></label>'+
+ '<label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?'':e.title)+'"></label><label for="kc-body">Wat wil je bewaren van deze dag?</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="12" placeholder="Gebeurtenissen, gedachten, gevoelens…">'+esc(e.body)+'</textarea>'+
+ '<label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(', '))+'"></label>'+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn('Sluiten / concept annuleren','cancel-journal')+btn('Versiegeschiedenis','versions')+'</div></div>';
+}
+function renderSort(){
+ const list=sortState?.ids||[];
+ return header('Volgorde wijzigen',true,btn('Klaar','sort-done','',true))+'<p class="kc-muted">Houd de sleepgreep even vast en versleep. Alleen de volgorde in deze verzameling verandert. Je kunt ook de pijlen gebruiken.</p><div class="kc-sort-list" role="list">'+list.map((id,i)=>{const c=allCollections().find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'">⠿</button>'+collectionIcon(c)+'<strong>'+esc(c.name)+'</strong><div><button type="button" class="kc-btn" data-kc="sort-up" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" class="kc-btn" data-kc="sort-down" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omlaag"'+(i===list.length-1?' disabled':'')+'>↓</button></div></div>';}).join('')+'</div>';
 }
 function attachmentsHTML(n){
  if(!(n.attachments||[]).length)return "";
@@ -129,18 +195,19 @@ function renderDetail(){
  const actions=n.deletedAt?btn("Herstellen","restore",n.id,true):btn("Bewerken","edit",n.id,true);
  const original=safeURL(n.sourceUrl||"");
  const check=C.typeOf(n)==="checklist"?'<div class="kc-checklist">'+C.checklistItems(n).map(item=>'<label class="kc-check"><input data-kc-check="'+esc(item.id)+'" data-note="'+esc(n.id)+'" type="checkbox"'+(item.done?" checked":"")+(n.deletedAt?" disabled":"")+'><span>'+esc(item.text)+'</span></label>').join("")+"</div>":"";
- return header(n.title,true,actions)+
+ return header(n.journal?journalLabel(n.journal.date):n.title,true,actions)+
+ (n.journal?'<p class="kc-muted">'+esc(n.journal.mood||'Geen stemming')+'</p>':'')+
  '<div class="kc-detail-meta"><span>'+esc(collectionName(cid))+"</span><span>·</span><span>"+esc(kindNames[C.typeOf(n)]||"Notitie")+"</span><span>·</span><span>"+readable(n.updatedAt||n.createdAt)+"</span></div>"+
  '<div class="kc-tagline">'+chips(n.tags)+'</div>'+
  (C.typeOf(n)==="recipe"?recipeHTML(n.recipe):"")+
  (check||'<div class="kc-readable">'+markdown(n.body)+"</div>")+
  (original?'<a class="kc-source" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':"")+
  attachmentsHTML(n)+linkedHTML(n)+
- (n.deletedAt?"":'<div class="kc-detail-actions">'+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+btn("Onderzoeken met AI","ai",n.id)+
+ (n.deletedAt?"":'<div class="kc-detail-actions">'+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Onderzoeken met AI","ai",n.id))+
  '<details><summary>Meer</summary><div>'+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
 }
 function renderEditor(){
- const e=editing;if(!e)return "";
+ const e=editing;if(!e)return "";if(e.journal)return renderJournalEditor();
  const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link";
  const tags=(e.tags||[]).join(", ");
  const recipe=e.recipe||{ingredients:[],status:"concept",version:1,notes:""};
@@ -149,7 +216,7 @@ function renderEditor(){
  '<label>Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
  '<label>Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
  '<option value="inbox"'+(e.collectionId==="inbox"?" selected":"")+'>Inbox</option>'+
- collections().map(c=>'<option value="'+esc(c.id)+'"'+(C.collectionOf(read(),e)===c.id?" selected":"")+">"+esc(c.name)+"</option>").join("")+"</select></label>"+
+ collections().map(c=>'<option value="'+esc(c.id)+'"'+(C.collectionOf(read(),e)===c.id?" selected":"")+">"+esc(pathName(c))+"</option>").join("")+"</select></label>"+
  '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
  (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
  '<label for="kc-body">Inhoud</label>'+
@@ -196,6 +263,7 @@ function render(){
  const life=read();try{C.ensure(life)}catch(e){host.textContent=e.message;return;}
  let output="";
  if(screen==="home")output=renderHome();
+ else if(screen==="sort")output=renderSort();
  else if(screen==="collections")output=renderCollections();
  else if(screen==="collection-editor")output=renderCollectionEditor();
  else if(["collection","all","inbox","archive","trash","pinned"].includes(screen))output=renderList();
@@ -204,18 +272,20 @@ function render(){
  else if(screen==="versions")output=renderVersions();
  else if(screen==="link")output=renderLink();
  else if(screen==="file")output=renderFile();
- host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+output+"</div>";
+ host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+breadcrumbs()+output+"</div>";
 }
 function write(mutator,token){
- try{return bridge.write(life=>{C.ensure(life);mutator(life);C.validate(life);},token);}catch(e){notify(e.message);return false;}
+ try{const ok=bridge.write(life=>{C.ensure(life);try{mutator(life);C.validate(life);}catch(e){notify(e.message);throw e;}},token);if(!ok&&!notice)notify("Opslaan mislukt. Je invoer is behouden; sluit de melding en probeer opnieuw.");return ok;}catch(e){notify(e.message);return false;}
 }
 function flush(){
  if(!editing||!dirty)return true;
  const draft=C.clone(editing),life=read();
- if(!draft.title.trim())draft.title=String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
+ if(!draft.title.trim())draft.title=draft.journal?draft.journal.date:String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
  if(!draft.body.trim()&&draft.title==="Naamloze notitie"&&!draft.attachments?.length&&!selectedId){dirty=false;return true;}
  if(draft.sourceUrl&&!safeURL(draft.sourceUrl)){notify("Gebruik een geldige http- of https-link.");setSaveIndicator("Controleer de bronlink");return false;}
+ if(draft.journal&&!draft.body.trim()){setSaveIndicator('Leeg concept · niet opgeslagen');if(!selectedId){dirty=false;return true;}notify('Een bestaande dagboekdag kan niet leeg worden opgeslagen.');return false;}
  const changed=write(state=>{
+  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
   if(selectedId){C.updateNote(state,selectedId,{title:draft.title,body:draft.body,kind:draft.kind,collectionId:draft.collectionId,tags:draft.tags,sourceUrl:draft.sourceUrl,recipe:draft.recipe||null});}
   else {draft.revision=1;state.notes.unshift(draft);}
  });
@@ -241,7 +311,10 @@ function startEdit(id){
  dirty=false;screen="edit";render();
 }
 function back(){
- if(screen==="edit"){if(!leave(selectedId?"detail":"home"))return;return}
+ if(screen==='sort'){screen=sortState.parentId?'collection':'home';if(sortState.parentId)collectionId=sortState.parentId;sortState=null;render();return;}
+ if(screen==='collection-editor'){cancelCollection();return;}
+ if(screen==='collection'){const c=allCollections().find(c=>c.id===collectionId);if(c?.parentId){collectionId=c.parentId;render();return;}screen='home';render();return;}
+ if(screen==="edit"){if(!leave(selectedId?"detail":editing?.journal?"collection":"home"))return;return}
  if(screen==="file"){if(fileUrl)URL.revokeObjectURL(fileUrl);fileUrl="";fileRecord=null;screen="detail";}
  else if(screen==="versions"||screen==="link")screen="detail";
  else if(screen==="detail"){const note=read().notes.find(x=>x.id===selectedId);collectionId=C.collectionOf(read(),note||{});screen=collectionId==="inbox"?"inbox":"collection";}
@@ -285,27 +358,17 @@ async function openFile(id){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ if(kc2Action(op,id,el))return;
  if(op==="purge-trash"){root.MementoLife?.openTrash?.();return}
  if(op==="back"){back();return}
- if(op==="new"){beginNew(screen==="collection"?collectionId:"inbox");return}
- if(op==="collection"){collectionId=id;viewOverride="";sort="recent";query="";kindFilter="";tagFilter="";screen="collection";render();return}
+ if(op==="new"){const c=allCollections().find(c=>c.id===collectionId);if(screen==='collection'&&c?.special==='journal'){openJournal(C.journalDate());return;}beginNew(screen==="collection"?collectionId:"inbox");return}
+ if(op==="collection"){journalFilter="";collectionId=id;viewOverride="";sort="recent";query="";kindFilter="";tagFilter="";screen="collection";render();return}
  if(op==="collections"){screen="collections";render();return}
- if(op==="new-collection"){collectionId="";screen="collection-editor";render();return}
- if(op==="edit-collection"){collectionId=id;screen="collection-editor";render();return}
- if(op==="save-collection"){
-  const name=host.querySelector("#kc-col-name")?.value||"",view=host.querySelector("#kc-col-view")?.value||"list";
-  const success=write(state=>{if(collectionId){const c=C.renameCollection(state,collectionId,name);c.view=view;}else{const c=C.addCollection(state,name);c.view=view;}});
-  if(success){screen="collections";render();}return;
- }
- if(op==="archive-collection"){
-  if(!confirm("Verzameling archiveren? De inhoud blijft bewaard en wordt niet verwijderd."))return;
-  if(write(s=>{const c=s.knowledge.collections.find(x=>x.id===id);if(c){c.archived=true;c.updatedAt=C.timestamp();c.revision++;}})){screen="collections";render();}return;
- }
  if(["all","inbox","archive","trash","pinned"].includes(op)){screen=op;query="";kindFilter="";tagFilter="";viewOverride="";render();return}
  if(op==="mode"){viewOverride=id;render();return}
  if(op==="open"){selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
- if(op==="save"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}
+ if(op==="save"){clearTimeout(timer);if(flush()){screen=selectedId?"detail":"collection";editing=null;render();}return}
  if(op==="preview"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}
  if(op==="versions"){if(flush()){screen="versions";render();}return}
  if(op==="restore-version"){
@@ -343,10 +406,110 @@ function click(event){
  if(op==="ai"){bridge.openAI?.(id);return}
  if(op.startsWith("convert-")){bridge.convert?.(id,op.slice(8));return}
 }
+function cancelCollection(){
+ if(colDraft?.dirty&&!confirm('Wijzigingen aan deze verzameling annuleren?'))return;
+ const id=colDraft?.id;colDraft=null;screen=id?'collection':'home';if(id)collectionId=id;render();
+}
+function startSort(parentId){sortState={parentId:parentId||null,ids:children(parentId||null).map(c=>c.id)};screen='sort';render();}
+function persistSort(ids){
+ const before=children(sortState.parentId).map(c=>c.id);
+ const ok=write(s=>C.reorderCollections(s,sortState.parentId,ids));
+ sortState.ids=ok?ids:before;notice=ok?'Volgorde opgeslagen.':'Volgorde niet opgeslagen. De eerdere volgorde is teruggezet.';render();return ok;
+}
+function kc2Action(op,id,el){
+ if(op==='migrate'){tryMigration();render();return true;}
+ if(op==='home'){screen='home';query='';journalFilter='';render();return true;}
+ if(op==='new-sub'){openCollectionEditor('',id);return true;}
+ if(op==='new-collection'){openCollectionEditor();return true;}
+ if(op==='edit-collection'){openCollectionEditor(id);return true;}
+ if(op==='choose-icon'&&colDraft){colDraft.icon=id;colDraft.dirty=true;const current=host.querySelector('#kc-col-name');if(current)colDraft.name=current.value;render();host.querySelector('[data-kc="choose-icon"][data-id="'+id+'"]')?.focus();return true;}
+ if(op==='cancel-collection'){cancelCollection();return true;}
+ if(op==='save-collection'){
+  const d=colDraft;if(!d)return true;
+  let savedId=d.id;
+  const ok=write(state=>{savedId=C.saveCollection(state,d).id;});
+  if(ok){collectionId=savedId;colDraft=null;screen='collection';notice='Verzameling opgeslagen.';render();}return true;
+ }
+ if(op==='archive-collection'||op==='restore-collection'){
+  if(op==='archive-collection'&&!confirm('Verzameling archiveren? Notities en subverzamelingen blijven bewaard. Je kunt de verzameling later herstellen.'))return true;
+  if(write(s=>C.setCollectionArchived(s,id,op==='archive-collection'))){colDraft=null;screen='collections';notice=op==='archive-collection'?'Verzameling gearchiveerd.':'Verzameling hersteld.';render();}return true;
+ }
+ if(op==='sort-roots'){startSort(null);return true;}
+ if(op==='sort-children'){startSort(id);return true;}
+ if(op==='sort-done'){back();return true;}
+ if(op==='sort-up'||op==='sort-down'){
+  const ids=[...sortState.ids],index=ids.indexOf(id),target=index+(op==='sort-up'?-1:1);if(index<0||target<0||target>=ids.length)return true;
+  [ids[index],ids[target]]=[ids[target],ids[index]];persistSort(ids);
+  host.querySelector('[data-kc="'+op+'"][data-id="'+id+'"]')?.focus();return true;
+ }
+ if(op==='journal-today'){collectionId=id;openJournal(C.journalDate());return true;}
+ if(op==='journal-open'){const n=read().notes.find(n=>n.id===id);if(n){collectionId=C.collectionOf(read(),n);startEdit(id);}return true;}
+ if(op==='journal-filter'){journalFilter=journalFilter?'':host.querySelector('#kc-journal-picker')?.value||'';render();return true;}
+ if(op==='cancel-journal'){
+  if(dirty&&!confirm('Niet opgeslagen wijzigingen sluiten? Reeds automatisch opgeslagen tekst blijft bewaard.'))return true;
+  clearTimeout(timer);editing=null;dirty=false;screen='collection';render();return true;
+ }
+ return false;
+}
+// The handle alone opts out of native touch scrolling. Other rows retain normal scrolling.
+let drag=null;
+function cancelDrag(){
+ if(!drag)return;clearTimeout(drag.timer);cancelAnimationFrame(drag.frame);
+ const handle=drag.handle,id=drag.pointerId;drag=null;
+ try{if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);}catch{}
+ if(screen==='sort'&&sortState){sortState.ids=children(sortState.parentId).map(c=>c.id);render();}
+}
+function placeDrag(){
+ if(!drag?.active)return;
+ const list=host.querySelector('.kc-sort-list'),row=host.querySelector('[data-sort-id="'+drag.id+'"]');if(!list||!row)return;
+ const rows=[...list.children].filter(n=>n!==row);
+ const before=rows.find(n=>{const r=n.getBoundingClientRect();return drag.y<r.top+r.height/2});
+ if(before)list.insertBefore(row,before);else list.appendChild(row);
+ sortState.ids=[...list.children].map(n=>n.dataset.sortId);
+}
+function scrollDrag(){
+ if(!drag?.active)return;
+ const top=(document.getElementById('compassAreaBar')?.getBoundingClientRect().bottom||0)+60;
+ const bottom=document.getElementById('mementoQuickNav')?.getBoundingClientRect();const edge=bottom?.height?bottom.top-60:innerHeight-65;
+ if(drag.y<top)window.scrollBy(0,-Math.min(14,(top-drag.y)/3+3));
+ else if(drag.y>edge)window.scrollBy(0,Math.min(14,(drag.y-edge)/3+3));
+ placeDrag();drag.frame=requestAnimationFrame(scrollDrag);
+}
+document.addEventListener('pointerdown',e=>{
+ const handle=e.target.closest?.('[data-drag-id]');if(!handle||!host?.contains(handle)||screen!=='sort'||drag||e.button!==0||e.isPrimary===false)return;
+ const state=drag={pointerId:e.pointerId,id:handle.dataset.dragId,handle,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,active:false,timer:0,frame:0};
+ handle.setPointerCapture(e.pointerId);
+ state.timer=setTimeout(()=>{if(drag!==state)return;state.active=true;handle.closest('.kc-sort-row').classList.add('kc-dragging');notify('Verplaatsen. Laat los om op te slaan.');scrollDrag();},300);
+});
+document.addEventListener('pointermove',e=>{
+ if(!drag||e.pointerId!==drag.pointerId)return;
+ drag.x=e.clientX;drag.y=e.clientY;
+ if(!drag.active&&Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>10){cancelDrag();return;}
+ if(drag.active){e.preventDefault();placeDrag();}
+},{passive:false});
+document.addEventListener('pointerup',e=>{
+ if(!drag||drag.pointerId!==e.pointerId)return;
+ const d=drag,list=host.querySelector('.kc-sort-list'),r=list?.getBoundingClientRect(),ids=[...sortState.ids];
+ clearTimeout(d.timer);cancelAnimationFrame(d.frame);drag=null;
+ try{d.handle.releasePointerCapture(e.pointerId);}catch{}
+ const valid=d.active&&r&&e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=Math.max(0,r.top-25)&&e.clientY<=Math.min(innerHeight,r.bottom+25);
+ if(valid)persistSort(ids);else{sortState.ids=children(sortState.parentId).map(c=>c.id);notice=d.active?'Verplaatsen geannuleerd. De volgorde is behouden.':'';render();}
+});
+document.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)cancelDrag();});
+document.addEventListener('lostpointercapture',()=>{if(drag)cancelDrag();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drag){e.preventDefault();cancelDrag();}});
+document.addEventListener('submit',e=>{
+ if(!host?.contains(e.target))return;
+ if(e.target.id==='kc-journal-date-form'){e.preventDefault();const picker=host.querySelector('#kc-journal-picker');if(picker.checkValidity())openJournal(picker.value);}
+ if(e.target.id==='kc-collection-form'){e.preventDefault();kc2Action('save-collection','',e.target);}
+});
+
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
  if(field.dataset.kcInput==="search"){query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
+ if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
+ if(field.dataset.kcJournal&&editing?.journal){if(field.dataset.kcJournal==='date'&&editing.title===editing.journal.date)editing.title=field.value;editing.journal[field.dataset.kcJournal]=field.value;schedule();return;}
  if(!editing||!change)return;
  if(change==="tags")editing.tags=[...new Set(field.value.split(",").map(x=>x.trim().slice(0,60)).filter(Boolean))].slice(0,30);
  else if(change==="recipeStatus"||change==="ingredients"||change==="recipeNotes"){
@@ -366,6 +529,7 @@ function onInput(event){
 }
 function onChange(event){
  const el=event.target;
+ if(el.dataset.kcCol||el.dataset.kcJournal){onInput(event);return;}
  if(el.dataset.kcChange){const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
  if(el.dataset.kcCheck){
   if(write(s=>C.toggleItem(s,el.dataset.note,el.dataset.kcCheck)))render();else el.checked=!el.checked;
@@ -384,13 +548,16 @@ function mount(container,b){
  host=container;bridge=b;
  if(!bridge?.read||!bridge?.write){host.innerHTML='<p>Kenniscentrum kan niet met Leven verbinden.</p>';return;}
  if(editing&&dirty&&screen==="edit"&&host.querySelector("#kc-body"))return;
+ tryMigration();
+ const guard=root.MementoStorageGuard;
+ if(!read().knowledge?.hierarchyVersion&&guard?.ready)guard.ready.then(()=>{if(host&&document.body.contains(host)&&!editing&&!colDraft){tryMigration();render();}});
  render();
 }
-function hasPending(){return Boolean(editing&&dirty);}
+function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&hasPending())flush();});
-window.addEventListener("beforeunload",e=>{if(hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
+window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
-root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{screen="home";editing=null;notice="";render();},newNote:()=>beginNew("inbox"),showNote:id=>{selectedId=id;screen="detail";render();}};
+root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>beginNew("inbox"),showNote:id=>{selectedId=id;screen="detail";render();}};
 })(window);
