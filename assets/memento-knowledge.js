@@ -91,9 +91,9 @@ function renderHome(){
  '<button type="button" class="kc-inbox" data-kc="inbox">'+symbol('folder')+'<strong>Inbox</strong><span>'+counts('inbox')+' items</span><span aria-hidden="true">›</span></button>'+
  (read().knowledge?.hierarchyVersion!==1?'<p class="kc-muted">Je bestaande verzamelingen zijn behouden.</p>'+btn('Nieuwe indeling toevoegen','migrate'):'')+
  '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections())+
- (legacyCollections().length?'<div class="kc-section-head"><h3>Bestaande verzamelingen</h3></div><p class="kc-muted">Behouden zonder automatische herindeling. Via Bewerken kun je zelf een bovenliggende verzameling kiezen.</p>'+collectionRows(legacyCollections()):'')+
  (pinned.length?'<div class="kc-section-head"><h3>Vastgezet</h3></div>'+itemRows(pinned):'')+
  '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn('Alle items','all')+'</div>'+itemRows(items.slice(0,4))+
+ (legacyCollections().length?'<details class="kc-legacy"><summary>Bestaande verzamelingen · '+legacyCollections().length+'</summary><p class="kc-muted">Behouden zonder automatische herindeling. Via Bewerken kies je zelf een bovenliggende verzameling.</p>'+collectionRows(legacyCollections())+'</details>':'')+
  '<div class="kc-hub-shortcuts">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div>';
 }
 function breadcrumbs(){
@@ -133,7 +133,7 @@ function openCollectionEditor(id='',parentId=null){
 }
 function renderCollectionEditor(){
  const d=colDraft;if(!d)return '';const c=allCollections().find(c=>c.id===d.id);
- return header(c?'Verzameling bewerken':'Nieuwe verzameling',true,btn('Opslaan','save-collection','',true))+
+ return '<div class="kc-editor-head">'+header(c?'Verzameling bewerken':'Nieuwe verzameling',true,btn('Opslaan','save-collection','',true))+'</div>'+
  '<form id="kc-collection-form" class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" data-kc-col="name" value="'+esc(d.name)+'" required></label>'+
  '<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+rootCollections().filter(x=>x.id!==d.id).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>'+
  '<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+

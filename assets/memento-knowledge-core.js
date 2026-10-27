@@ -115,14 +115,14 @@ function renameCollection(life,id,name){
  for(const note of moved){note.category=clean;note.collectionId=id;}
  return c;
 }
-function validateNote(life,n){
+function validateNote(life,n,checkDuplicates=true){
  if(!n||!n.id||typeof n.title!=="string"||n.title.length>180||!n.title.trim()||typeof n.body!=="string"||n.body.length>20000)throw Error("Ongeldige kennisnotitie");
  if(n.kind!==undefined&&!validKind.has(n.kind))throw Error("Onbekend itemtype");
  if(n.collectionId!==undefined&&n.collectionId!=="inbox"&&!life.knowledge?.collections.some(c=>c.id===n.collectionId))throw Error("Verzameling ontbreekt");
  for(const key of ["tags","attachments","links","revisions"]){if(n[key]!==undefined&&!Array.isArray(n[key]))throw Error("Ongeldige notitievelden");}
  if(n.tags&&(!n.tags.every(t=>typeof t==="string"&&t.length<=60)||n.tags.length>30))throw Error("Ongeldige tags");
  if(n.attachments&&(n.attachments.length>50||n.attachments.some(a=>!a||typeof a.id!=="string"||typeof a.name!=="string"||a.name.length>200||!Number.isFinite(a.size)||a.size<0)))throw Error("Ongeldige bijlage");
- if(n.journal!==undefined)validateJournal(life,n);
+ if(n.journal!==undefined)validateJournal(life,n,checkDuplicates);
  if(n.revisions&&n.revisions.length>12)throw Error("Te veel versies");
  if(n.links&&n.links.some(l=>!l||typeof l.kind!=="string"||typeof l.id!=="string"))throw Error("Ongeldige koppeling");
  return true;
@@ -130,8 +130,8 @@ function validateNote(life,n){
 function validate(life){
  const k=ensure(life),ids=new Set();
  validateHierarchy(life);
- for(const c of k.collections){if(!c.id||ids.has(c.id)||!c.name||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
- for(const n of life.notes)validateNote(life,n);
+ for(const c of k.collections){if(typeof c.id!=="string"||!c.id||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
+ const dates=new Set();for(const n of life.notes){validateNote(life,n,false);if(n.journal&&!n.deletedAt){if(dates.has(n.journal.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');dates.add(n.journal.date);}}
  return true;
 }
 function search(life,{collectionId="",query="",kind="",status="active",sort="recent",tag=""}={}){
@@ -145,7 +145,7 @@ function search(life,{collectionId="",query="",kind="",status="active",sort="rec
   if(collectionId&&collectionOf(life,n)!==collectionId)return false;
   if(kind&&typeOf(n)!==kind)return false;
   if(tag&&!(n.tags||[]).includes(tag))return false;
-  return !q||[n.title,n.body,n.category,n.sourceUrl,...(n.tags||[])].join(" ").toLocaleLowerCase("nl").includes(q);
+  return !q||[n.title,n.body,n.category,n.sourceUrl,n.journal?.date,n.journal?.mood,...(n.tags||[])].join(" ").toLocaleLowerCase("nl").includes(q);
  }).sort((a,b)=>sort==="title"?a.title.localeCompare(b.title,"nl"):sort==="old"?String(a.updatedAt||a.createdAt||"").localeCompare(String(b.updatedAt||b.createdAt||"")):Number(!!b.pinned)-Number(!!a.pinned)||String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||"")));
 }
 
@@ -225,11 +225,11 @@ function journalDate(date=new Date()){
  return get('year')+'-'+get('month')+'-'+get('day');
 }
 function validDate(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value;}
-function validateJournal(life,n){
+function validateJournal(life,n,checkDuplicates=true){
  const j=n.journal;
  if(!j||j.version!==1||!validDate(j.date)||!['','Goed','Prima','Neutraal','Minder','Moeilijk'].includes(j.mood||''))throw Error('Ongeldige dagboekmetadata');
  // Archived days retain their reservation; deleted days are recoverable separately.
- if(!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');
+ if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');
 }
 function findJournal(life,date){return life.notes.find(n=>!n.deletedAt&&n.journal?.version===1&&n.journal.date===date)||null;}
 function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId}){

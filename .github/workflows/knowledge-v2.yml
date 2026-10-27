@@ -109,3 +109,19 @@ jobs:
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
       - run: node tests/fitness-browser.cjs
+  published-pages:
+    if: github.ref == 'refs/heads/main'
+    needs: [core-and-safety, browser, original-storage-browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify public Pages bytes match this exact commit
+        run: node tests/knowledge-v2-publication.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kc2-publication-evidence
+          path: /tmp/kc2-publication.json
