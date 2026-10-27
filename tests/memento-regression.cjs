@@ -7,11 +7,21 @@ const storage=new Map();
 const dummy=()=>({value:'all',textContent:'',innerHTML:'',hidden:false,dataset:{},style:{},get parentElement(){return this},classList:{add(){},remove(){},toggle(){},contains(){return false}},listeners:{},addEventListener(type,fn){(this.listeners[type]||=[]).push(fn)},reset(){},append(){},appendChild(){},remove(){},querySelectorAll(){return []},querySelector(){return dummy()},setAttribute(){},getAttribute(){return null},focus(){},selectedOptions:[{textContent:'Alle rekeningen'}],children:[],options:[],closest(){return dummy()}});
 const nodes=new Map();const getNode=id=>{if(!nodes.has(id))nodes.set(id,dummy());return nodes.get(id)};
 const sandbox={console,Date,Intl,Math,Number,String,Boolean,Array,Object,JSON,Set,Map,URL,URLSearchParams,TextEncoder,Blob,crypto:require('node:crypto').webcrypto,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{getElementById:getNode,querySelectorAll:()=>[],querySelector:()=>null,addEventListener(){},createElement:dummy,body:dummy(),readyState:'loading'},navigator:{},location:{protocol:'https:'},setTimeout:()=>1,clearTimeout(){},queueMicrotask(){},MutationObserver:class{observe(){}},confirm:()=>true};sandbox.window={addEventListener(){},scrollTo(){},matchMedia:()=>({matches:false}),MementoLife:{}};
+// Domain tests use one isolated writing document per test. Exercise the real
+// guard with a granted Web Lock; multi-document arbitration has its own suite.
+const StorageGuard=require('../assets/memento-storage-guard.js');
+let storageFixture;
+const guardProxy=new Proxy({}, {get:(_,key)=>storageFixture[key]});
+function resetStorageFixture(){
+ storageFixture?.close();
+ storageFixture=StorageGuard.create({localStorage:sandbox.localStorage,isSecureContext:true,navigator:{locks:{request:(name,options,callback)=>callback({name,mode:'exclusive'})}}});
+}
+resetStorageFixture();sandbox.window.MementoStorageGuard=guardProxy;
 const expose=`renderAll=()=>{};globalThis.testApp={get state(){return state},set state(v){state=v},get month(){return selectedMonth},set month(v){selectedMonth=v},loadState,emptyState,budgetRecord,editableBudget,budgetExpenses,billDatesForMonth,billPayment,billOccurrences,planningAmounts,softDeleteFinance,restoreFinance,receiptMatchesTransaction,save,renderPlanning,renderBudgets,renderAccounts,renderReceipts,renderSettings,moneyCoachBuildData,toast,pinUnlock,pinCheckExpiry,pinRestoreRecentSession,getPinTimeoutMinutes,get pinTime(){return pinLastActivity},set pinTime(v){pinLastActivity=v},get pinUnlocked(){return pinUnlocked},loadDemo,exitDemo,saveResearch,loadResearch,get demo(){return demoStateBackup},set blocked(v){financeStorageBlocked=v}};`;
 vm.runInNewContext(first.replace(/\ninit\(\);\s*\n\}\)\(\);\s*$/,`\n${expose}\n})();`),sandbox);
 const app=sandbox.testApp;assert.ok(app,'test exports');
 const fresh=()=>{app.state=app.emptyState();app.month='2026-10';return app.state};
-let count=0;function test(name,run){run();count++;console.log('PASS',name)}
+let count=0;function test(name,run){resetStorageFixture();run();count++;console.log('PASS',name)}
 test('public starter data is empty',()=>{const seed=JSON.parse(html.match(/id="compassLifeSeed"[^>]*>([\s\S]*?)<\/script>/)[1]);for(const k of ['tasks','groceries','wishes','notes','templates'])assert.equal(seed[k].length,0);assert.ok(!html.includes('app.notion.com/p/'))});
 test('monthly budgets preserve legacy values without changing other months',()=>{const s=fresh();s.budgets={Boodschappen:350};s.totalBudget=2200;app.editableBudget('2026-11','all').categories.Boodschappen=425;app.editableBudget('2026-11','all').total=2400;assert.equal(app.budgetRecord('2026-10').categories.Boodschappen,350);assert.equal(app.budgetRecord('2026-11').categories.Boodschappen,425);assert.equal(app.budgetRecord('2026-10').total,2200);assert.equal(app.budgetRecord('2026-11').total,2400)});
 test('budget groups stay independent and zero removes a monthly limit',()=>{fresh();app.editableBudget('2026-10','personalBundle').categories.Test=100;assert.equal(app.budgetRecord('2026-10','joint').categories.Test,undefined);app.editableBudget('2026-10','all').total=0;assert.equal(app.budgetRecord('2026-10').total,0)});

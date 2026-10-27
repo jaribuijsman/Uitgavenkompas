@@ -1,0 +1,62 @@
+name: Phase 1 storage safety
+on:
+  push:
+    branches: ["fix/memento-data-safety-phase-1"]
+  pull_request:
+    paths:
+      - "index.html"
+      - "sw.js"
+      - "uitgavenkompas-v20-pincode-vergrendeling-1.html"
+      - "assets/memento-storage-guard.js"
+      - "assets/memento-knowledge*.js"
+      - "tests/**"
+      - ".github/workflows/storage-safety.yml"
+permissions:
+  contents: read
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Storage regressions and actual lock lifetime
+        run: |
+          node tests/storage-safety.cjs
+          node tests/storage-lock-native.cjs
+          node tests/fitness-regression.cjs
+          node tests/knowledge-regression.cjs
+          node tests/trash-regression.cjs
+      - name: Install pinned browser test tooling outside app source
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Real browser multi-tab, IndexedDB, ZIP and offline regression
+        run: node tests/storage-safety-browser.cjs
+  existing-general:
+    # Keep pre-existing failures visible; do not weaken/skip their assertions.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: node tests/memento-regression.cjs
+  existing-fitness-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install pinned browser test tooling outside app source
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Existing Fitness browser assertions without modifications
+        run: node tests/fitness-browser.cjs

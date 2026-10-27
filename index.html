@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="nl">
 <head>
+<script src="./assets/memento-storage-guard.js?v=20261027-safety-v1"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102b22"><meta name="application-name" content="Memento">
 <meta name="uk-slimbuy-version" content="definitief-v1"><meta name="description" content="Memento — persoonlijk inzicht in je geld, uitgaven en spaardoelen.">
 <title>Memento · Reflect · Refine · Conquer</title>
@@ -1915,6 +1916,7 @@ body[data-compass-area=finance] .app .salary-period-modern-metrics .account-peri
 <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal" id="modalContent"></div></div><div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
+const storageGuard=window.MementoStorageGuard;
 const STORAGE_KEY='uitgavenkompas_v1';const AUTO_BACKUP_KEY='uitgavenkompas_auto_backup_v1';const ACCOUNT_META=[{id:'personal',label:'Persoonlijke rekening',kind:'asset',icon:'◉'},{id:'joint',label:'Gezamenlijke rekening',kind:'asset',icon:'⇄'},{id:'creditcard',label:'Creditcard',kind:'liability',icon:'▤'}];
 const DEFAULT_CATEGORIES=[{"name":"Vaste lasten","icon":"▤","kind":"expense","color":"#688eaa","subcategories":["Wonen","Energie","Water","Zorgverzekering","Autoverzekering","Wegenbelasting","Overige verzekeringen","Internet en telefoon","Abonnementen","Sportschoolabonnement","Gemeentelijke en waterschapslasten","Rente en bankkosten","Overige vaste lasten"]},{"name":"Auto & vervoer","icon":"🚗","kind":"expense","color":"#d39a58","subcategories":["Brandstof","Onderhoud","Reparaties","Banden","Parkeren","Openbaar vervoer","Taxi en deelvervoer","Autowassen","Tol en vignetten","Rijbewijs en keuring","Overig vervoer"]},{"name":"Boodschappen","icon":"🛒","kind":"expense","color":"#477c65","subcategories":["Supermarkt","Huishoudelijke artikelen","Persoonlijke verzorging","Dieren","Overige boodschappen"]},{"name":"Horeca & uit eten","icon":"☕","kind":"expense","color":"#bc7661","subcategories":["Restaurants & uit eten","Afhalen & bezorgen","Koffie & lunch buiten de deur","Snacks & fastfood","Uitgaan","Overige horeca"]},{"name":"Winkelen & persoonlijke aankopen","icon":"◈","kind":"expense","color":"#c17c9e","subcategories":["Elektronica & gaming","Kleding & schoenen","Persoonlijke aankopen","Hobby & sportartikelen","Cadeaus","Overige aankopen"]},{"name":"Vrije tijd & entertainment","icon":"✦","kind":"expense","color":"#a6a34e","subcategories":["Games & digitale content","Bioscoop & evenementen","Concerten & festivals","Overige vrije tijd"]},{"name":"Vakantie & reizen","icon":"✈","kind":"expense","color":"#6c9db1","subcategories":["Vervoer op reis","Verblijf & accommodatie","Eten & drinken op reis","Activiteiten & excursies","Overige reiskosten"]},{"name":"Gezondheid","icon":"✚","kind":"expense","color":"#5c9d9b","subcategories":["Medicijnen & apotheek","Huisarts & specialist","Tandarts","Fysiotherapie & behandelingen","Brillen & lenzen","Overige gezondheidskosten"]},{"name":"Persoonlijke verzorging","icon":"✂","kind":"expense","color":"#8f81b3","subcategories":["Kapper","Schoonheidsverzorging","Massage & wellness","Overige persoonlijke verzorging"]},{"name":"Financiën","icon":"€","kind":"expense","color":"#9aa49b","subcategories":["Bankkosten","Rente","Aflossingen","Belastingen","Overige financiële kosten"]},{"name":"Cadeaus & donaties","icon":"◇","kind":"expense","color":"#7e9aaf","subcategories":["Verjaardagen","Feestdagen","Cadeaus voor partner","Familie & vrienden","Donaties & goede doelen","Overige cadeaus"]},{"name":"Huis & inrichting","icon":"⌂","kind":"expense","color":"#b88a59","subcategories":["Meubels & inrichting","Keuken & huishoudelijke spullen","Gereedschap & klusmateriaal","Decoratie","Tuin & balkon","Overige woninguitgaven"]},{"name":"Salaris","icon":"↗","kind":"income","color":"#3e8066","subcategories":[]},{"name":"Toeslagen","icon":"＋","kind":"income","color":"#73a678","subcategories":[]},{"name":"Inkomsten","icon":"€","kind":"income","color":"#6c9db1","subcategories":["Vakantiegeld & bonus","Bijdrage partner","Terugbetalingen","Overige inkomsten"]},{"name":"Roken","icon":"⋯","kind":"expense","color":"#8ca194","subcategories":[]}];
 const money=(v,opts={})=>new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR',maximumFractionDigits:opts.decimals===false?0:2,minimumFractionDigits:opts.decimals===false?0:2}).format(Number(v)||0);
@@ -1931,9 +1933,20 @@ const categoryEmoji=(name)=>{const n=String(name||'').toLowerCase();if(/boodscha
 const category=(name)=>{const found=state.categories.find(c=>c.name===name);return found?{...found,icon:categoryEmoji(found.name)}:{name:name||'Overig',icon:categoryEmoji(name),kind:'expense',color:'#9aa49b'}};
 const emptyState=()=>({version:3,receipts:[],transactions:[],categories:DEFAULT_CATEGORIES.map(x=>({...x})),budgets:{},totalBudget:0,bills:[],goals:[],monthClosures:{},settings:{startBalance:0,payday:25,monthlyIncomeTarget:0,accountOpening:{personal:0,joint:0,creditcard:0},actualBalances:{personal:'',joint:'',creditcard:''}},createdAt:new Date().toISOString()});
 let financeStorageBlocked=false,demoStateBackup=null;let state=loadState();let lastSavedFinance=JSON.stringify(state);let selectedMonth=monthKey(new Date());let activeView='dashboard';let dashboardPeriodMode=(()=>{try{return localStorage.getItem('UK_DASHBOARD_PERIOD_MODE')==='salary'?'salary':'month'}catch(e){return 'month'}})();let dashboardScope=(()=>{try{return localStorage.getItem('UK_DASHBOARD_SCOPE')==='joint'?'joint':'personal'}catch(e){return 'personal'}})();let txPage=1;const PAGE_SIZE=15;let editingTxId=null;
-function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return emptyState();const s=JSON.parse(raw);const d=emptyState();const loaded={...d,...s,receipts:Array.isArray(s.receipts)?s.receipts:[],settings:{...d.settings,...(s.settings||{})},categories:(Array.isArray(s.categories)&&s.categories.length?s.categories:d.categories).map(c=>({...c,subcategories:Array.isArray(c.subcategories)?c.subcategories:[]})),transactions:Array.isArray(s.transactions)?s.transactions:[],budgets:s.budgets||{},bills:Array.isArray(s.bills)?s.bills:[],goals:Array.isArray(s.goals)?s.goals:[],monthClosures:s.monthClosures||{}};loaded.settings.accountOpening={...d.settings.accountOpening,...(s.settings?.accountOpening||{})};if(!s.settings?.accountOpening&&Number(s.settings?.startBalance)){loaded.settings.accountOpening.personal=Number(s.settings.startBalance)}loaded.settings.actualBalances={...d.settings.actualBalances,...(s.settings?.actualBalances||{})};/* Migration: a previously entered overdraft opening balance is a starting financial position, not a monthly expense. Move it to the personal account's opening balance and remove the false transaction. */const openingTx=loaded.transactions.filter(t=>/^(begin)?saldo\s+roodstand$|^beginsaldo\s+roodstand$/i.test(String(t.description||'').trim()) && (t.account||'personal')==='personal');if(openingTx.length){if(!Number(loaded.settings.accountOpening.personal)){const tx=openingTx[0];loaded.settings.accountOpening.personal=-(Math.abs(Number(tx.amount)||0));}const ids=new Set(openingTx.map(t=>t.id));loaded.transactions=loaded.transactions.filter(t=>!ids.has(t.id));try{localStorage.setItem(STORAGE_KEY,JSON.stringify(loaded));}catch(migrationError){/* State remains corrected in memory; normal save can persist it later. */}}return loaded}catch(e){financeStorageBlocked=true;return emptyState()}}
+function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return emptyState();const s=JSON.parse(raw);const d=emptyState();const loaded={...d,...s,receipts:Array.isArray(s.receipts)?s.receipts:[],settings:{...d.settings,...(s.settings||{})},categories:(Array.isArray(s.categories)&&s.categories.length?s.categories:d.categories).map(c=>({...c,subcategories:Array.isArray(c.subcategories)?c.subcategories:[]})),transactions:Array.isArray(s.transactions)?s.transactions:[],budgets:s.budgets||{},bills:Array.isArray(s.bills)?s.bills:[],goals:Array.isArray(s.goals)?s.goals:[],monthClosures:s.monthClosures||{}};loaded.settings.accountOpening={...d.settings.accountOpening,...(s.settings?.accountOpening||{})};if(!s.settings?.accountOpening&&Number(s.settings?.startBalance)){loaded.settings.accountOpening.personal=Number(s.settings.startBalance)}loaded.settings.actualBalances={...d.settings.actualBalances,...(s.settings?.actualBalances||{})};/* Loading is read-only. Descriptions are not migration provenance. */return loaded}catch(e){financeStorageBlocked=true;return emptyState()}}
 function setSaveStatus(text,error=false){const el=document.getElementById('saveStatus');if(el){el.textContent=text;el.hidden=!error&&!text.startsWith('Demomodus');el.classList.toggle('red',error);el.classList.toggle('green',!error)}}
-function save(){if(demoStateBackup!==null){setSaveStatus('Demomodus · eigen gegevens ongewijzigd');return true}if(financeStorageBlocked){setSaveStatus('Herstel eerst een back-up',true);toast('De financiële opslag is niet leesbaar en blijft behouden. Herstel een back-up via Instellingen & data.','error');return false}try{const raw=JSON.stringify(state);const previous=localStorage.getItem(STORAGE_KEY);localStorage.setItem(STORAGE_KEY,raw);if(previous&&previous!==raw){try{localStorage.setItem(AUTO_BACKUP_KEY,previous)}catch(backupError){/* Current data is saved; recovery snapshot could not be refreshed. */}}lastSavedFinance=raw;setSaveStatus('Alle wijzigingen opgeslagen');return true}catch(e){try{state=JSON.parse(lastSavedFinance)}catch{}setSaveStatus('Opslaan mislukt',true);toast('Opslaan mislukt. Maak direct een back-up.','error');return false}}
+function save(){
+ if(demoStateBackup!==null){setSaveStatus('Demomodus · eigen gegevens ongewijzigd');return true}
+ if(financeStorageBlocked){setSaveStatus('Herstel eerst een back-up',true);toast('De financiële opslag is niet leesbaar en blijft behouden. Herstel een back-up via Instellingen & data.','error');return false}
+ try{
+  if(!storageGuard)throw Error('Veilige opslag is niet geladen. Vernieuw Memento voordat je wijzigingen opslaat.');
+  const raw=JSON.stringify(state);storageGuard.commit({finance:raw});
+  lastSavedFinance=raw;setSaveStatus('Alle wijzigingen opgeslagen');return true;
+ }catch(e){
+  try{state=JSON.parse(lastSavedFinance)}catch{}
+  setSaveStatus('Opslaan mislukt',true);toast(e.message||'Opslaan mislukt. Bewaar je invoer en probeer opnieuw.','error');return false;
+ }
+}
 function toast(message,type='ok'){window.MementoNoticeLayout?.();const el=document.createElement('div');el.className='toast'+(type==='error'?' error':'');el.textContent=message;document.getElementById('toastWrap').append(el);setTimeout(()=>el.remove(),3000)}
 function sum(arr,fn=x=>x){return arr.reduce((a,x)=>a+(Number(fn(x))||0),0)}
 function txParts(t){if(Array.isArray(t.splits)&&t.splits.length)return t.splits;return [{category:t.category||'Overig',amount:t.amount,note:t.note||''}]}
@@ -1961,7 +1974,7 @@ function renderView(view){if(view==='dashboard')renderDashboard();if(view==='tra
 function statCard(label,value,icon,foot='',cls=''){return `<div class="card stat-card"><div class="stat-top"><span>${label}</span><span class="stat-icon">${icon}</span></div><div class="stat-value ${cls}">${value}</div><div class="stat-foot">${foot}</div></div>`}
 function drawBarLineChart(elId,labels,seriesA,seriesB){const el=document.getElementById(elId);if(!el)return;if(!labels.length){el.innerHTML='<div class="empty">Nog geen gegevens om te tonen.</div>';return}const w=640,h=225,pl=8,pr=8,pt=15,pb=24,iw=w-pl-pr,ih=h-pt-pb;const max=Math.max(1,...seriesA,...(seriesB||[]))*1.16;const step=iw/labels.length;let grid='';for(let i=0;i<4;i++){const y=pt+ih*i/3;grid+=`<line x1="${pl}" y1="${y}" x2="${w-pr}" y2="${y}" stroke="#e8ede7" stroke-width="1" stroke-dasharray="3 4"/>`}let bars='';labels.forEach((lab,i)=>{const bw=Math.min(22,step*.27);const x=pl+step*i+step*.19;let ha=Math.max(0,seriesA[i]/max*ih),hb=Math.max(0,(seriesB?.[i]||0)/max*ih);bars+=`<rect x="${x}" y="${pt+ih-ha}" width="${bw}" height="${ha}" rx="4" fill="#286c59"><title>${esc(lab)} — inkomsten ${money(seriesA[i])}</title></rect>`;if(seriesB)bars+=`<rect x="${x+bw+4}" y="${pt+ih-hb}" width="${bw}" height="${hb}" rx="4" fill="#dea66b"><title>${esc(lab)} — uitgaven ${money(seriesB[i])}</title></rect>`});el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Staafdiagram met maandelijkse bedragen">${grid}${bars}</svg>`;const labelsEl=document.getElementById(elId==='cashflowChart'?'cashflowLabels':'analysisLabels');if(labelsEl)labelsEl.innerHTML=labels.map(x=>`<span>${esc(x)}</span>`).join('')}
 function salaryPeriodSums(from,to,accountIds=null){const arr=state.transactions.filter(t=>t.date>=from&&t.date<=to&&t.type!=='transfer'&&(!accountIds||accountIds.includes(t.account||'personal')));const income=sum(arr.filter(t=>t.type==='income'),t=>Math.abs(Number(t.amount)||0));const expense=sum(arr.filter(t=>t.type!=='income'),txExpenseAmount);const byAccount={};['personal','joint','creditcard'].forEach(id=>{const a=arr.filter(t=>(t.account||'personal')===id);const inc=sum(a.filter(t=>t.type==='income'),t=>Math.abs(Number(t.amount)||0));const exp=sum(a.filter(t=>t.type!=='income'),txExpenseAmount);byAccount[id]={income:inc,expense:exp,net:inc-exp,count:a.length}});const byPerson={};['Jari','Daisy','Jari & Daisy'].forEach(id=>{const a=arr.filter(t=>(t.person||'Jari')===id);const inc=sum(a.filter(t=>t.type==='income'),t=>Math.abs(Number(t.amount)||0));const exp=sum(a.filter(t=>t.type!=='income'),txExpenseAmount);byPerson[id]={income:inc,expense:exp,net:inc-exp,count:a.length}});return {income,expense,net:income-expense,count:arr.length,byAccount,byPerson}}
-function renderSalaryPeriod(accountIds=null){if(!state.settings.salaryPeriodStart){state.settings.salaryPeriodStart=dateNow();save()}const start=state.settings.salaryPeriodStart;const today=dateNow();const x=salaryPeriodSums(start,today,accountIds);document.getElementById('salaryPeriodLabel').textContent=`${formatDate(start)} t/m ${formatDate(today)} · ${x.count} transacties`;const core=[['Inkomsten','Loon en overige inkomsten',x.income,'positive'],['Uitgaven','Netto, na terugbetalingen',x.expense,'negative'],['Over van je inkomsten','Inkomsten min uitgaven',x.net,x.net>=0?'positive':'negative']];document.getElementById('salaryPeriodStats').innerHTML=core.map(([title,sub,val,cls])=>`<div class="account-period-card"><h3>${title}</h3><div class="period-label">${sub}</div><div class="period-row net"><span>${title==='Over van je inkomsten'?'Netto resultaat':title==='Inkomsten'?'Totaal ontvangen':'Totaal uitgegeven'}</span><strong class="${cls}">${money(val)}</strong></div></div>`).join('')+`<div class="account-period-card"><h3>Per rekening</h3><div class="period-label">Zelfde loonperiode, gescheiden saldi</div>${(accountIds||['personal','joint','creditcard']).map(id=>[id,id==='personal'?'Persoonlijk':id==='joint'?'Gezamenlijk':'Creditcard']).map(([id,label])=>`<div class="period-row"><span>${label}</span><strong class="${x.byAccount[id].net>=0?'positive':'negative'}">${money(x.byAccount[id].net)}</strong></div>`).join('')}</div>`;document.getElementById('salaryPeriodNote').textContent='Deze periode loopt door totdat je op “Nieuw loon ontvangen” drukt. Overboekingen tellen niet als inkomen of uitgave. Per rekening en per toewijzing kun je de netto geldstroom apart bekijken; kalendermaandrapporten blijven daarnaast bestaan.';const history=state.settings.salaryPeriods||[];document.getElementById('salaryPeriodHistory').innerHTML=history.length?'<div class="section-row" style="margin:12px 0 8px"><h2>Eerdere loonperiodes</h2></div>'+history.slice().reverse().map(h=>`<div class="setting-row"><div><b>${formatDate(h.from)} t/m ${formatDate(h.to)}</b><span>Inkomsten ${money(h.income)} · uitgaven ${money(h.expense)} · Persoonlijk ${h.byAccount?.personal?money(h.byAccount.personal.net):'—'} · Gezamenlijk ${h.byAccount?.joint?money(h.byAccount.joint.net):'—'}</span></div><strong class="${h.net>=0?'positive':'negative'}">${money(h.net)}</strong></div>`).join(''):'<div class="card-subtitle" style="margin-top:10px">Eerdere periodes verschijnen hier nadat je een nieuwe loonperiode start.</div>'}
+function renderSalaryPeriod(accountIds=null){if(!state.settings.salaryPeriodStart&&storageGuard?.writable){state.settings.salaryPeriodStart=dateNow();save()}const start=state.settings.salaryPeriodStart||dateNow();const today=dateNow();const x=salaryPeriodSums(start,today,accountIds);document.getElementById('salaryPeriodLabel').textContent=`${formatDate(start)} t/m ${formatDate(today)} · ${x.count} transacties`;const core=[['Inkomsten','Loon en overige inkomsten',x.income,'positive'],['Uitgaven','Netto, na terugbetalingen',x.expense,'negative'],['Over van je inkomsten','Inkomsten min uitgaven',x.net,x.net>=0?'positive':'negative']];document.getElementById('salaryPeriodStats').innerHTML=core.map(([title,sub,val,cls])=>`<div class="account-period-card"><h3>${title}</h3><div class="period-label">${sub}</div><div class="period-row net"><span>${title==='Over van je inkomsten'?'Netto resultaat':title==='Inkomsten'?'Totaal ontvangen':'Totaal uitgegeven'}</span><strong class="${cls}">${money(val)}</strong></div></div>`).join('')+`<div class="account-period-card"><h3>Per rekening</h3><div class="period-label">Zelfde loonperiode, gescheiden saldi</div>${(accountIds||['personal','joint','creditcard']).map(id=>[id,id==='personal'?'Persoonlijk':id==='joint'?'Gezamenlijk':'Creditcard']).map(([id,label])=>`<div class="period-row"><span>${label}</span><strong class="${x.byAccount[id].net>=0?'positive':'negative'}">${money(x.byAccount[id].net)}</strong></div>`).join('')}</div>`;document.getElementById('salaryPeriodNote').textContent='Deze periode loopt door totdat je op “Nieuw loon ontvangen” drukt. Overboekingen tellen niet als inkomen of uitgave. Per rekening en per toewijzing kun je de netto geldstroom apart bekijken; kalendermaandrapporten blijven daarnaast bestaan.';const history=state.settings.salaryPeriods||[];document.getElementById('salaryPeriodHistory').innerHTML=history.length?'<div class="section-row" style="margin:12px 0 8px"><h2>Eerdere loonperiodes</h2></div>'+history.slice().reverse().map(h=>`<div class="setting-row"><div><b>${formatDate(h.from)} t/m ${formatDate(h.to)}</b><span>Inkomsten ${money(h.income)} · uitgaven ${money(h.expense)} · Persoonlijk ${h.byAccount?.personal?money(h.byAccount.personal.net):'—'} · Gezamenlijk ${h.byAccount?.joint?money(h.byAccount.joint.net):'—'}</span></div><strong class="${h.net>=0?'positive':'negative'}">${money(h.net)}</strong></div>`).join(''):'<div class="card-subtitle" style="margin-top:10px">Eerdere periodes verschijnen hier nadat je een nieuwe loonperiode start.</div>'}
 function startNewSalaryPeriod(){const defaultDate=dateNow();const entered=prompt('Op welke datum is je nieuwe loon ontvangen? Gebruik JJJJ-MM-DD.',defaultDate);if(entered===null)return;const d=entered.trim();if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||Number.isNaN(new Date(d+'T12:00:00').getTime())){toast('Vul een geldige datum in als JJJJ-MM-DD.','error');return}const current=state.settings.salaryPeriodStart||defaultDate;if(d<current){if(!confirm('Deze datum ligt vóór de huidige loonperiode. Wil je de startdatum toch wijzigen?'))return}const oldStart=state.settings.salaryPeriodStart||d;if(d>oldStart){const oldEnd=new Date(d+'T12:00:00');oldEnd.setDate(oldEnd.getDate()-1);const endKey=`${oldEnd.getFullYear()}-${String(oldEnd.getMonth()+1).padStart(2,'0')}-${String(oldEnd.getDate()).padStart(2,'0')}`;const prior=salaryPeriodSums(oldStart,endKey);state.settings.salaryPeriods=state.settings.salaryPeriods||[];state.settings.salaryPeriods.push({from:oldStart,to:endKey,...prior,closedAt:new Date().toISOString()})}state.settings.salaryPeriodStart=d;if(!save())return;renderSalaryPeriod();if(activeView==='dashboard')renderDashboard();toast(`Nieuwe loonperiode gestart op ${formatDate(d)}. Registreer je salaris als inkomst om het mee te tellen in 'Ontvangen sinds loon'.`)}
 function dashboardAccountIds(){return dashboardScope==='joint'?['joint']:['personal','creditcard']}
 function transactionMatchesAccountFilter(t,filter){if(!filter||filter==='all')return true;const id=t.account||'personal';if(filter==='personalBundle')return id==='personal'||id==='creditcard';return id===filter}
@@ -2078,14 +2091,21 @@ function restoreFinance(kind,id){
 // It cannot delete active transactions, and rejects changes from another tab.
 window.MementoFinanceTrashBridge={
  read:()=>JSON.parse(JSON.stringify(state)),
- replace:(next,expectedRaw)=>{
-  if(financeStorageBlocked||demoStateBackup!==null)throw Error('Financiën zijn niet beschikbaar voor definitief opruimen.');
-  if(localStorage.getItem(STORAGE_KEY)!==expectedRaw)throw Error('Financiën zijn in een ander tabblad gewijzigd. Vernieuw Memento en probeer opnieuw.');
+ assertWritable:token=>{
+  if(financeStorageBlocked||demoStateBackup!==null)throw Error('Financiën zijn niet beschikbaar voor deze opslagactie.');
+  if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
+  storageGuard.assertCurrent(token);
+ },
+ replace:(next,expectedRaw,token)=>{
+  window.MementoFinanceTrashBridge.assertWritable(token);
+  if(storageGuard.snapshot('finance')!==expectedRaw)throw Error('Financiën zijn gewijzigd. Laad de actuele gegevens opnieuw.');
   if(!next||!Array.isArray(next.transactions)||!Array.isArray(next.categories))throw Error('Ongeldige financiële gegevens.');
-  const raw=JSON.stringify(next);
-  localStorage.setItem(STORAGE_KEY,raw);
-  state=JSON.parse(raw);lastSavedFinance=raw;
-  return raw;
+  const raw=JSON.stringify(next);storageGuard.commit({finance:raw},{token,backups:false});
+  state=JSON.parse(raw);lastSavedFinance=raw;return raw;
+ },
+ acceptCommitted:token=>{
+  storageGuard.assertCurrent(token);
+  const raw=storageGuard.snapshot('finance');state=raw?JSON.parse(raw):emptyState();lastSavedFinance=JSON.stringify(state);
  },
  refresh:()=>{renderAll();renderFinanceTrash();}
 };
@@ -2485,7 +2505,7 @@ window.addEventListener('focus',()=>{if(pinCheckExpiry())resetPinIdleTimer(false
 window.addEventListener('pageshow',()=>{if(pinCheckExpiry())resetPinIdleTimer(false)});
 // Deliberately do not lock on pagehide: same-tab OAuth return may restore the page.
 }
-function init(){bindEvents();renderAll();setSaveStatus(financeStorageBlocked?'Herstel eerst een back-up':'Lokale opslag actief',financeStorageBlocked);if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPinLock,{once:true});else initPinLock();}
+function init(){(storageGuard?.ready||Promise.resolve(false)).then(()=>{bindEvents();renderAll();setSaveStatus(financeStorageBlocked?'Herstel eerst een back-up':'Lokale opslag actief',financeStorageBlocked);if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPinLock,{once:true});else initPinLock();});}
 init();
 })();
 </script><header id="compassAreaBar" aria-label="Kies hoofdonderdeel"><div class="life-wordmark memento-life-wordmark"><span class="life-mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true" focusable="false">
@@ -2800,12 +2820,13 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <link rel="stylesheet" href="./assets/memento-knowledge.css?v=20261026-kc-v1">
 <script src="./assets/memento-knowledge-core.js?v=20261026-kc-v1"></script>
 <script src="./assets/memento-trash-core.js?v=20261026-purge-v2"></script>
-<script src="./assets/memento-knowledge-store.js?v=20261026-kc-v1"></script>
+<script src="./assets/memento-knowledge-store.js?v=20261027-safety-v1"></script>
 <script src="./assets/memento-backup.js?v=20261026-kc-v1"></script>
-<script src="./assets/memento-knowledge.js?v=20261026-kc-trash-v2"></script>
+<script src="./assets/memento-knowledge.js?v=20261027-safety-v1"></script>
 <script id="compassLifeScript">
 (()=>{
 'use strict';
+const storageGuard=window.MementoStorageGuard;
 const KEY='compass_life_preview_v1',RECOVERY=KEY+'_vorige',FINANCE_KEY='uitgavenkompas_v1';
 const seed=JSON.parse(document.getElementById('compassLifeSeed').textContent);
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -2857,11 +2878,17 @@ if(window.MementoFitnessCore&&state.fitness===undefined)state.fitness=window.Mem
 if(!Array.isArray(state.appointments))state.appointments=[];if(!Array.isArray(state.googleAppointments))state.googleAppointments=[];if(!state.appointmentChecks)state.appointmentChecks={};
 function status(text,canUndo=false,error=false){clearTimeout(messageTimer);window.MementoNoticeLayout?.();$('lifeMessage').innerHTML='<span>'+esc(text)+'</span>'+(canUndo?'<button type="button" data-life-action="undo">Ongedaan maken</button>':'');$('lifeMessage').setAttribute('role',error?'alert':'status');messageTimer=setTimeout(()=>{$('lifeMessage').textContent=''},3000)}
 function savedStatus(){$('lifeSaveStatus').textContent='';$('lifeSaveStatus').hidden=true;$('lifeSaveStatus').dataset.error='false'}
-function save(){
+function save(token){
  if(blocked){status('De opgeslagen gegevens konden niet worden gelezen. Herstel eerst een back-up; de bestaande opslag is behouden.',false,true);return false}
- try{const old=localStorage.getItem(KEY),raw=JSON.stringify(state);localStorage.setItem(KEY,raw);if(old&&old!==raw)try{localStorage.setItem(RECOVERY,old)}catch{}savedStatus();return true}catch(e){$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Opslaan mislukt';$('lifeSaveStatus').dataset.error='true';status('Opslaan is niet gelukt. Maak ruimte vrij of download een back-up.',false,true);return false}
+ try{
+  if(!storageGuard)throw Error('Veilige opslag is niet geladen. Vernieuw Memento.');
+  storageGuard.commit({life:JSON.stringify(state)},{token});savedStatus();return true;
+ }catch(e){
+  $('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Opslaan mislukt';$('lifeSaveStatus').dataset.error='true';
+  status(e.message||'Opslaan is niet gelukt. Bewaar je invoer en probeer opnieuw.',false,true);return false;
+ }
 }
-function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;render();return false}undo=allowUndo?before:null;render();if(text)status(text,allowUndo);return true}
+function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;return false}undo=allowUndo?before:null;render();if(text)status(text,allowUndo);return true}
 function nextDate(base,repeat,days=4){if(repeat==='none')return '';const d=parseDate(base),day=d.getDate();if(['daily','weekly','custom'].includes(repeat)){d.setDate(day+(repeat==='daily'?1:repeat==='weekly'?7:days));return formatISO(d)}const n={monthly:1,quarterly:3,yearly:12}[repeat];d.setDate(1);d.setMonth(d.getMonth()+n);const end=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,end));return formatISO(d)}
 function sourceLink(t){const u=safeLink(t.sourceUrl||'');return u?'<a class="life-source" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':''}
 function setArea(next){if(window.MementoFitness?.hasPending?.()){status('Je fitnessinvoer is nog niet opgeslagen. Open Fitness en probeer opnieuw.',false,true);return}
@@ -3100,11 +3127,11 @@ function paintTodayAppointments(){
 window.MementoFitnessBridge={read:()=>state.fitness||window.MementoFitnessCore.empty(),replace:fitness=>{if(blocked)return false;const before=state.fitness;state.fitness=fitness;if(!save()){state.fitness=before;return false}return true},open:()=>{setArea('life');setView('fitness')},bookingsForDay:d=>state.fitness?.bookings.filter(b=>b.status==='planned'&&b.date===d)||[],dayHTML:(d,carry=false)=>window.MementoFitness?.dayHTML(state.fitness,d,carry)||''};
 window.MementoKnowledgeBridge={
  read:()=>state,
- write:fn=>{
+ write:(fn,token)=>{
   if(blocked)return false;
   const before=clone(state);
   try{fn(state)}catch(e){state=before;status(e.message||'Deze notitie kan niet worden opgeslagen.',false,true);return false}
-  if(!save()){state=before;return false}
+  if(!save(token)){state=before;return false}
   return true;
  },
  convert:(id,kind)=>convertNote(id,kind),
@@ -3383,79 +3410,61 @@ function openPermanentTrashDialog(){
   const c=window.MementoTrashCore,fb=window.MementoFinanceTrashBridge;
   if(!c||!fb)throw Error('De opruimmodule is niet beschikbaar. Vernieuw de app.');
   const report=c.summary(state,fb.read()),pending=pendingTrashFileIds();
-  const staleSnapshots=[RECOVERY,'uitgavenkompas_auto_backup_v1'].filter(key=>localStorage.getItem(key)!==null);
-  if(!report.total&&!pending.length&&!staleSnapshots.length){status('De prullenbakken en automatische herstelkopieën zijn al leeg.');return}
+  if(!report.total&&!pending.length){status('De prullenbakken zijn al leeg. Lokale herstelkopieën blijven behouden.');return}
   const rows=Object.entries(report.counts).filter(([,n])=>n>0).map(([label,n])=>'<div class="setting-row"><span>'+esc(label)+'</span><strong>'+n+'</strong></div>').join('');
   modal={mode:'permanent-purge'};
   showDialog('Definitief verwijderen','Dit kan niet ongedaan worden gemaakt.',
-   '<div class="life-detail-summary"><strong>'+report.total+' verwijderde items</strong>'+(rows||'<p>Geen items in de prullenbak; alleen oude automatische herstelkopieën of bestandsresten worden opgeruimd.</p>')+'</div>'+
+   '<div class="life-detail-summary"><strong>'+report.total+' verwijderde items</strong>'+(rows||'<p>Geen items in de prullenbak; alleen niet-gebruikte bestandsresten worden opgeruimd.</p>')+'</div>'+
    '<p>Ook '+(report.attachmentIds.length+pending.length)+' bijlageverwijzingen kunnen definitief uit de lokale bestandsopslag verdwijnen, mits geen actieve notitie ze gebruikt.</p>'+
-   '<p>De bestaande actieve gegevens blijven behouden. Sluit andere Memento-tabbladen voordat je verdergaat. De '+staleSnapshots.length+' lokale automatische herstelkopie(ën) worden verwijderd. Eerder gedownloade ZIP- of JSON-bestanden worden niet aangepast.</p>'+
+   '<p>De bestaande actieve gegevens blijven behouden. Sluit andere Memento-tabbladen voordat je verdergaat. Lokale herstelkopieën en de bijlagen die ze nodig hebben blijven behouden. Eerder gedownloade ZIP- of JSON-bestanden worden niet aangepast.</p>'+
    '<form id="lifePurgeTrashForm"><div class="life-form-field wide"><label for="lifePurgeWord">Typ VERWIJDEREN om te bevestigen</label><input id="lifePurgeWord" required autocomplete="off" autocapitalize="characters" pattern="VERWIJDEREN" placeholder="VERWIJDEREN"></div><p id="lifePurgeFeedback" role="alert"></p></form>',
    '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" class="life-btn life-btn-danger" id="lifePurgeExecute" form="lifePurgeTrashForm">Definitief leegmaken</button>');
  }catch(e){status(e.message||'Prullenbak kan niet veilig worden gecontroleerd.',false,true)}
 }
 async function performPermanentTrashPurge(){
  const field=$('lifePurgeWord'),feedback=$('lifePurgeFeedback'),button=$('lifePurgeExecute');
- if(!field||field.value.trim()!=='VERWIJDEREN'){if(feedback)feedback.textContent='Typ precies VERWIJDEREN.';return}
- if(button.disabled)return;
+ if(!field||field.value.trim()!=='VERWIJDEREN'){if(feedback)feedback.textContent='Typ precies VERWIJDEREN.';return false}
+ if(button.disabled)return false;
  button.disabled=true;if(feedback)feedback.textContent='Prullenbak wordt gecontroleerd…';
- let committed=false;
+ let committed=false,token;
  try{
+  if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
+  token=storageGuard.beginOperation();
   const c=window.MementoTrashCore,fb=window.MementoFinanceTrashBridge,files=window.MementoKnowledgeStore;
   if(!c||!fb||blocked)throw Error('De gegevens zijn niet beschikbaar voor definitief verwijderen.');
-  const beforeLife=clone(state),beforeFinance=fb.read(),
-   storedLife=localStorage.getItem(KEY),storedFinance=localStorage.getItem(FINANCE_KEY),
-   plan=c.purge(beforeLife,beforeFinance),pending=pendingTrashFileIds();
+  fb.assertWritable(token);
+  const plan=c.purge(clone(state),fb.read()),pending=pendingTrashFileIds();
   const fileIds=[...new Set([...pending,...plan.overview.attachmentIds])];
   if(fileIds.length&&!files)throw Error('Bestandsopslag is niet beschikbaar: er is niets gewist.');
-  // Validate the proposed records before changing either live data source.
   validate(clone(plan.life));window.MementoKnowledgeCore?.validate(plan.life);
-  if(localStorage.getItem(KEY)!==storedLife||localStorage.getItem(FINANCE_KEY)!==storedFinance)
-   throw Error('Gegevens zijn in een ander tabblad gewijzigd. Vernieuw de app.');
-  if(fileIds.length)localStorage.setItem(TRASH_PENDING_KEY,JSON.stringify(fileIds));
-  let newFinanceRaw='';
-  try{
-   newFinanceRaw=fb.replace(plan.finance,storedFinance);
-   if(localStorage.getItem(KEY)!==storedLife)throw Error('Leven is in een ander tabblad gewijzigd.');
-   localStorage.setItem(KEY,JSON.stringify(plan.life));state=plan.life;committed=true;undo=null;
-  }catch(writeError){
-   if(newFinanceRaw)try{fb.replace(beforeFinance,newFinanceRaw)}catch(rollbackError){
-    throw Error('Opslag halverwege mislukt en automatisch terugzetten is ook mislukt. Controleer je huidige gegevens en je externe back-up. '+rollbackError.message);
-   }
-   throw writeError;
-  }
-  // Neither save() helper may run here: both would recreate snapshots containing purged records.
-  const warnings=[];
-  for(const key of [RECOVERY,'uitgavenkompas_auto_backup_v1']){
-   try{localStorage.removeItem(key)}catch(e){warnings.push('Een oude automatische herstelkopie kon niet worden gewist.');}
-  }
-  const committedLifeRaw=localStorage.getItem(KEY);
-  const referenced=new Set(state.notes.flatMap(n=>(n.attachments||[]).map(a=>a.id)));
+  storageGuard.commit({finance:JSON.stringify(plan.finance),life:JSON.stringify(plan.life)},
+   {token,backups:false,extra:fileIds.length?{[TRASH_PENDING_KEY]:JSON.stringify(fileIds)}:{}});
+  state=plan.life;fb.acceptCommitted(token);committed=true;undo=null;
+  const warnings=[],referenced=new Set(state.notes.flatMap(n=>(n.attachments||[]).map(a=>a.id)));
+  // Existing recovery copies are not erased as a side effect. Keep their files usable too.
+  let unreadableRecovery=false;
+  try{const raw=localStorage.getItem(RECOVERY);if(raw){const old=JSON.parse(raw);if(!Array.isArray(old.notes))throw Error();for(const n of old.notes)for(const a of n.attachments||[])referenced.add(a.id)}}
+  catch(e){unreadableRecovery=true;warnings.push('De oude Leven-herstelkopie is niet leesbaar; bijlagen blijven voor de zekerheid behouden.');}
   const failed=[];
   for(const id of fileIds){
-   if(referenced.has(id))continue; // The file is still in use; never purge a shared/restored attachment.
-   if(localStorage.getItem(KEY)!==committedLifeRaw){
-    failed.push(id);
-    if(!warnings.some(x=>x.includes('ander tabblad')))warnings.push('Leven is tijdens de bestandsopruiming in een ander tabblad gewijzigd.');
-    continue;
-   }
-   try{await files.remove(id)}catch(e){failed.push(id)}
+   if(referenced.has(id))continue;
+   if(unreadableRecovery){failed.push(id);continue}
+   try{storageGuard.assertCurrent(token);await files.remove(id,token)}catch(e){failed.push(id)}
   }
-  try{if(failed.length)localStorage.setItem(TRASH_PENDING_KEY,JSON.stringify(failed));else localStorage.removeItem(TRASH_PENDING_KEY)}
-  catch(e){warnings.push('De opruimstatus van resterende bestanden kon niet worden opgeslagen.')}
-  fb.refresh();
-  closeDialog();render();
-  if(failed.length)warnings.push(failed.length+' bijlage(n) konden niet definitief worden gewist. Kies opnieuw Prullenbak leegmaken om het opnieuw te proberen.');
+  try{storageGuard.commit({}, {token,backups:false,extra:{[TRASH_PENDING_KEY]:failed.length?JSON.stringify(failed):null}})}
+  catch(e){warnings.push('Resterende bestanden blijven gemarkeerd voor latere opruiming. '+e.message)}
+  fb.refresh();closeDialog();render();
+  if(failed.length)warnings.push(failed.length+' bijlage(n) zijn nog niet definitief gewist.');
   if(warnings.length)status('Items verwijderd, maar niet alles is opgeruimd: '+warnings.join(' '),false,true);
-  else status(plan.overview.total+' verwijderde items definitief uit Memento gewist. Herstel uit externe back-ups blijft mogelijk.');
+  else status(plan.overview.total+' verwijderde items uit de actieve opslag gewist. Lokale en externe herstelkopieën blijven behouden.');
+  return true;
  }catch(e){
-  const message=e.message||'Definitief leegmaken is mislukt.';
-  if(feedback&&feedback.isConnected)feedback.textContent=(committed?'De gegevens zijn deels verwijderd. ':'Geen items definitief verwijderd. ')+message;
-  else status(message,false,true);
- }finally{if(button.isConnected)button.disabled=false}
+  const message=(committed?'De gegevens zijn deels verwijderd. ':'Geen items definitief verwijderd. ')+(e.message||'Definitief leegmaken is mislukt.');
+  if(feedback&&feedback.isConnected)feedback.textContent=message;else status(message,false,true);
+  return false;
+ }finally{if(token)storageGuard.endOperation(token);if(button.isConnected)button.disabled=false}
 }
-function renderBackup(){content.innerHTML='<div class="life-grid"><section class="life-panel"><h2>Volledige Memento-back-up</h2><p>Leven, Financiën en alle originele kenniscentrumbijlagen in één ZIP-bestand. De PIN wordt niet meegenomen. Het ZIP-bestand is niet versleuteld: bewaar het op een veilige plek.</p><button type="button" class="life-btn life-btn-primary" id="lifeExportBackup">↓ Volledige ZIP downloaden</button><p class="life-footnote">De oudere JSON-export bevat geen PDF’s of foto’s.</p><button type="button" class="life-btn" id="lifeExportLegacyBackup">Oude JSON-export (zonder bijlagen)</button></section><section class="life-panel"><h2>Herstellen</h2><p>Herstel een volledige ZIP met documenten, of een oudere JSON-back-up.</p><input type="file" id="lifeImportFile" accept=".zip,.json,application/zip,application/json" aria-label="Memento-back-up kiezen"><label class="life-checkbox-label"><input type="checkbox" id="lifeRestoreFinance">Bij oude JSON ook Financiën herstellen</label><p class="life-footnote">Een ZIP herstelt na bevestiging altijd Leven én Financiën. Een oudere JSON heeft geen bijlagen.</p></section></div><section class="life-panel memento-pin-settings memento-life-security" aria-label="Beveiliging"><h2>Beveiliging</h2><p>Kies na hoeveel tijd zonder activiteit Memento vergrendelt.</p><div class="memento-pin-control-row"><label for="mementoLifePinTimeout">Automatisch vergrendelen</label><select id="mementoLifePinTimeout" data-memento-pin-timeout aria-label="Automatisch vergrendelen in Leven"><option value="1">1 minuut</option><option value="5">5 minuten</option><option value="15" selected>15 minuten (aanbevolen)</option><option value="30">30 minuten</option></select></div><p class="memento-pin-help">De klok loopt door als de app op de achtergrond staat. Bij een volledig afgesloten browsersessie kan de pincode eerder opnieuw nodig zijn.</p><div class="memento-pin-security-actions"><button class="life-btn" type="button" data-memento-pin-lock-now>Nu vergrendelen</button><span data-memento-pin-status role="status">Beveiliging actief</span></div></section><section class="life-panel"><h2>Opslag & privacy</h2><p>Je pincode beschermt de toegang op je scherm. Deze vergrendeling vervangt geen volledige versleuteling van de appgegevens.</p><p>Het weer voor Beverwijk wordt via Open-Meteo opgehaald. Zonder internet blijven de laatst opgehaalde gegevens zichtbaar met datum en status.</p><p>Je gegevens worden in deze browser bewaard en niet automatisch tussen apparaten gesynchroniseerd. Bewaar regelmatig een back-up buiten je telefoon. Bij het wissen van browsergegevens kun je appgegevens verliezen.</p><p>Gebruik je een ander apparaat, een andere browser of een los HTML-bestand? Neem je gegevens mee via een back-up.</p><div class="life-card-actions"><button type="button" class="life-btn" id="lifeStorageStatus">Controleer opslagruimte</button><button type="button" class="life-btn" id="lifeRequestPersistentStorage">Vraag blijvende apparaatopslag aan</button><button type="button" class="life-btn" id="lifeRestorePrevious">Vorige opgeslagen Leven-versie terugzetten</button></div><p class="life-footnote">Blijvende opslag verkleint het risico op automatisch opruimen, maar vervangt geen ZIP-back-up.</p></section><section class="life-panel" aria-label="Prullenbak definitief leegmaken"><h2>Prullenbak definitief leegmaken</h2><p>Wis uitsluitend items die al in de prullenbak staan, zowel bij Leven als Financiën. Actieve transacties, notities en andere gegevens blijven behouden.</p><button type="button" class="life-btn life-btn-danger" id="lifeOpenPurgeTrash">Bekijk wat definitief verdwijnt</button><p class="life-footnote">Je ziet eerst aantallen en moet de verwijdering bevestigen. Ook oude automatische lokale herstelkopieën worden verwijderd; gedownloade back-ups blijven bestaan.</p></section>'}
+function renderBackup(){content.innerHTML='<div class="life-grid"><section class="life-panel"><h2>Volledige Memento-back-up</h2><p>Leven, Financiën en alle originele kenniscentrumbijlagen in één ZIP-bestand. De PIN wordt niet meegenomen. Het ZIP-bestand is niet versleuteld: bewaar het op een veilige plek.</p><button type="button" class="life-btn life-btn-primary" id="lifeExportBackup">↓ Volledige ZIP downloaden</button><p class="life-footnote">De oudere JSON-export bevat geen PDF’s of foto’s.</p><button type="button" class="life-btn" id="lifeExportLegacyBackup">Oude JSON-export (zonder bijlagen)</button></section><section class="life-panel"><h2>Herstellen</h2><p>Herstel een volledige ZIP met documenten, of een oudere JSON-back-up.</p><input type="file" id="lifeImportFile" accept=".zip,.json,application/zip,application/json" aria-label="Memento-back-up kiezen"><label class="life-checkbox-label"><input type="checkbox" id="lifeRestoreFinance">Bij oude JSON ook Financiën herstellen</label><p class="life-footnote">Een ZIP herstelt na bevestiging altijd Leven én Financiën. Een oudere JSON heeft geen bijlagen.</p></section></div><section class="life-panel memento-pin-settings memento-life-security" aria-label="Beveiliging"><h2>Beveiliging</h2><p>Kies na hoeveel tijd zonder activiteit Memento vergrendelt.</p><div class="memento-pin-control-row"><label for="mementoLifePinTimeout">Automatisch vergrendelen</label><select id="mementoLifePinTimeout" data-memento-pin-timeout aria-label="Automatisch vergrendelen in Leven"><option value="1">1 minuut</option><option value="5">5 minuten</option><option value="15" selected>15 minuten (aanbevolen)</option><option value="30">30 minuten</option></select></div><p class="memento-pin-help">De klok loopt door als de app op de achtergrond staat. Bij een volledig afgesloten browsersessie kan de pincode eerder opnieuw nodig zijn.</p><div class="memento-pin-security-actions"><button class="life-btn" type="button" data-memento-pin-lock-now>Nu vergrendelen</button><span data-memento-pin-status role="status">Beveiliging actief</span></div></section><section class="life-panel"><h2>Opslag & privacy</h2><p>Je pincode beschermt de toegang op je scherm. Deze vergrendeling vervangt geen volledige versleuteling van de appgegevens.</p><p>Het weer voor Beverwijk wordt via Open-Meteo opgehaald. Zonder internet blijven de laatst opgehaalde gegevens zichtbaar met datum en status.</p><p>Je gegevens worden in deze browser bewaard en niet automatisch tussen apparaten gesynchroniseerd. Bewaar regelmatig een back-up buiten je telefoon. Bij het wissen van browsergegevens kun je appgegevens verliezen.</p><p>Gebruik je een ander apparaat, een andere browser of een los HTML-bestand? Neem je gegevens mee via een back-up.</p><div class="life-card-actions"><button type="button" class="life-btn" id="lifeStorageStatus">Controleer opslagruimte</button><button type="button" class="life-btn" id="lifeRequestPersistentStorage">Vraag blijvende apparaatopslag aan</button><button type="button" class="life-btn" id="lifeRestorePrevious">Vorige opgeslagen Leven-versie terugzetten</button></div><p class="life-footnote">Blijvende opslag verkleint het risico op automatisch opruimen, maar vervangt geen ZIP-back-up.</p></section><section class="life-panel" aria-label="Prullenbak definitief leegmaken"><h2>Prullenbak definitief leegmaken</h2><p>Wis uitsluitend items die al in de prullenbak staan, zowel bij Leven als Financiën. Actieve transacties, notities en andere gegevens blijven behouden.</p><button type="button" class="life-btn life-btn-danger" id="lifeOpenPurgeTrash">Bekijk wat definitief verdwijnt</button><p class="life-footnote">Je ziet eerst aantallen en moet de verwijdering bevestigen. Bestaande lokale herstelkopieën en gedownloade back-ups blijven behouden.</p></section>'}
 function render(){
  renderNav();const label=views.find(x=>x[0]===view)[2];$('lifeTitle').textContent=label;$('lifeCrumb').textContent='Leven / '+label;
  const descriptions={};
@@ -3536,58 +3545,80 @@ function removeNote(id){const n=state.notes.find(x=>x.id===id);if(!n)return fals
 function editNote(id=null){const n=state.notes.find(x=>x.id===id)||{title:'',body:'',category:'Persoonlijk'};modal={mode:'note',id};showDialog(id?'Notitie bewerken':'Notitie toevoegen','Een lijstje, gedachte of stukje informatie bewaren.','<form id="lifeNoteForm"><div class="life-form-grid"><div class="life-form-field wide"><label for="lifeNoteTitle">Titel *</label><input id="lifeNoteTitle" required maxlength="180" value="'+esc(n.title)+'"></div><div class="life-form-field wide"><label for="lifeNoteCategory">Onderwerp</label><input id="lifeNoteCategory" maxlength="80" value="'+esc(n.category)+'"></div><div class="life-form-field wide"><label><input type="checkbox" id="lifeNoteChecklist" '+(n.isChecklist?'checked':'')+'> Toon als afvinklijst (één regel per item)</label><label for="lifeNoteBody">Inhoud</label><textarea id="lifeNoteBody" rows="9" maxlength="20000">'+esc(n.body)+'</textarea></div></div></form>',(id?'<button type="button" class="life-btn life-btn-danger" data-life-note-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeNoteForm">Opslaan</button>')}
 function completeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt||t.archived)return;mutate(()=>{if(t.done){t.done=false;return}t.lastDone=today();t.history.push({date:today(),at:new Date().toISOString()});t.focusDate='';t.steps.forEach(x=>x.done=false);if(t.kind==='routine'&&t.repeat!=='none'){t.date=nextDate(today(),t.repeat,t.repeatDays);t.done=false}else{t.done=true}},t.done?'Taak heropend.':t.kind==='routine'&&t.repeat!=='none'?'Afgerond. Volgende datum ingesteld.':'Taak afgerond.',true)}
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
-function exportLegacyBackup(){let finance=null;try{finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null')}catch{status('De financiële opslag kon niet worden gelezen. De back-up is niet gemaakt.',false,true);return}download('compass-leven-financien-'+today()+'.json',JSON.stringify({format:'compass-life-backup',version:1,exportedAt:new Date().toISOString(),lifeState:state,financeState:finance},null,2),'application/json');try{localStorage.setItem('memento_last_backup_v1',new Date().toISOString())}catch{}status('Volledige back-up gedownload.')}
+function exportLegacyBackup(){try{if(blocked||!storageGuard)throw Error('De gegevens zijn niet beschikbaar voor een veilige back-up.');storageGuard.assertCurrent()}catch(e){status(e.message,false,true);return}let finance=null;try{finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null')}catch{status('De financiële opslag kon niet worden gelezen. De back-up is niet gemaakt.',false,true);return}download('compass-leven-financien-'+today()+'.json',JSON.stringify({format:'compass-life-backup',version:1,exportedAt:new Date().toISOString(),lifeState:state,financeState:finance},null,2),'application/json');try{localStorage.setItem('memento_last_backup_v1',new Date().toISOString())}catch{}status('Volledige back-up gedownload.')}
 async function exportBackup(){
  if(!window.MementoCompleteBackup||!window.MementoKnowledgeStore){
   status('De volledige back-upmodule ontbreekt. Vernieuw de app voordat je exporteert.',false,true);return;
  }
+ let token;
  try{
+  if(blocked||!storageGuard)throw Error('De gegevens zijn niet beschikbaar voor een veilige volledige back-up.');
+  token=storageGuard.beginOperation();
   const finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null');
   if(!finance||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error('Financiën zijn niet leesbaar. Er is geen onvolledige back-up gemaakt.');
   const extras={};
   for(const key of ['UK_DASHBOARD_PERIOD_MODE','UK_DASHBOARD_SCOPE']){const val=localStorage.getItem(key);if(val!==null)extras[key]=val;}
   status('Volledige back-up met bestanden voorbereiden…');
   const prepared=await window.MementoCompleteBackup.createArchive({life:clone(state),finance,extras},window.MementoKnowledgeStore);
+  storageGuard.assertCurrent(token);
   window.MementoCompleteBackup.download(prepared.blob,'memento-volledig-'+today()+'.zip');
   try{localStorage.setItem('memento_last_backup_v1',new Date().toISOString())}catch{}
   status('Volledige ZIP gedownload: Leven, Financiën en '+prepared.manifest.files.length+' bijlage(n).');
- }catch(e){status(e.message||'Volledige back-up is mislukt. Geen bestand geëxporteerd.',false,true)}
+ }catch(e){status(e.message||'Volledige back-up is mislukt. Geen bestand geëxporteerd.',false,true)}finally{if(token)storageGuard.endOperation(token)}
 }
 async function importCompleteBackup(file){
- if(!window.MementoCompleteBackup||!window.MementoKnowledgeStore){status('De ZIP-herstelmodule ontbreekt.',false,true);return}
+ if(!window.MementoCompleteBackup||!window.MementoKnowledgeStore){status('De ZIP-herstelmodule ontbreekt.',false,true);return false}
+ let token,committed=false;const incoming=[];
  try{
   status('ZIP en bijlagen controleren…');
   const parsed=await window.MementoCompleteBackup.prepareArchive(file,window.MementoKnowledgeStore);
-  const life=validate(clone(parsed.life));
-  window.MementoKnowledgeCore?.validate(life);
-  if(!confirm('Volledige Memento-back-up herstellen van '+new Date(parsed.manifest.exportedAt).toLocaleString('nl-NL')+'? Dit vervangt Leven EN Financiën. '+life.notes.length+' notities en '+parsed.files.length+' bijlagen worden hersteld. De huidige gegevens blijven als herstelkopie beschikbaar.'))return;
-  const oldLife=localStorage.getItem(KEY),oldFinance=localStorage.getItem(FINANCE_KEY);
+  const life=validate(clone(parsed.life));window.MementoKnowledgeCore?.validate(life);
+  if(!confirm('Volledige Memento-back-up herstellen van '+new Date(parsed.manifest.exportedAt).toLocaleString('nl-NL')+'? Dit vervangt Leven EN Financiën. '+life.notes.length+' notities en '+parsed.files.length+' bijlagen worden hersteld.'))return false;
+  if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
+  token=storageGuard.beginOperation();
   const existing=new Map((await window.MementoKnowledgeStore.all()).map(x=>[x.id,x]));
-  const incoming=[];
   for(const record of parsed.files){
    const prev=existing.get(record.id);
-   if(prev){
-    if(await window.MementoKnowledgeStore.sha256(prev.blob)!==record.hash)throw Error('Bestands-ID bestaat al met andere inhoud: '+record.name+'. Import geannuleerd.');
-   }else incoming.push(record);
+   if(prev){if(await window.MementoKnowledgeStore.sha256(prev.blob)!==record.hash)throw Error('Bestands-ID bestaat al met andere inhoud: '+record.name+'. Import geannuleerd.');}
+   else incoming.push(record);
   }
-  if(incoming.length)await window.MementoKnowledgeStore.putMany(incoming);
-  try{
-   localStorage.setItem(KEY,JSON.stringify(life));
-   localStorage.setItem(FINANCE_KEY,JSON.stringify(parsed.finance));
-   if(oldLife)try{localStorage.setItem(RECOVERY,oldLife)}catch{}
-   for(const key of ['UK_DASHBOARD_PERIOD_MODE','UK_DASHBOARD_SCOPE'])if(typeof parsed.extras?.[key]==='string')localStorage.setItem(key,parsed.extras[key]);
-  }catch(error){
-   try{oldLife===null?localStorage.removeItem(KEY):localStorage.setItem(KEY,oldLife);oldFinance===null?localStorage.removeItem(FINANCE_KEY):localStorage.setItem(FINANCE_KEY,oldFinance);}catch{}
-   for(const record of incoming)try{await window.MementoKnowledgeStore.remove(record.id)}catch{}
-   throw Error('Herstellen mislukt. De oorspronkelijke lokale gegevens zijn zo veel mogelijk teruggezet.');
-  }
-  state=life;blocked=false;status('Back-up hersteld. Memento wordt opnieuw geladen.');
-  location.reload();
- }catch(e){status(e.message||'Herstellen mislukt. Huidige gegevens niet vervangen.',false,true)}
+  storageGuard.assertCurrent(token);
+  if(incoming.length)await window.MementoKnowledgeStore.putMany(incoming,token);
+  const extra={};for(const key of ['UK_DASHBOARD_PERIOD_MODE','UK_DASHBOARD_SCOPE'])if(typeof parsed.extras?.[key]==='string')extra[key]=parsed.extras[key];
+  storageGuard.commit({life:JSON.stringify(life),finance:JSON.stringify(parsed.finance)},{token,extra});
+  committed=true;state=life;blocked=false;undo=null;
+  window.MementoFinanceTrashBridge?.acceptCommitted(token);
+  status('Back-up hersteld. Memento wordt opnieuw geladen.');storageGuard.close();location.reload();return true;
+ }catch(e){
+  // Only newly imported blobs may be removed. Never remove existing/shared files or
+  // files after a metadata commit. A lost lock leaves harmless orphans, not missing data.
+  if(token&&!committed)for(const record of incoming)try{storageGuard.assertCurrent(token);await window.MementoKnowledgeStore.remove(record.id,token)}catch{}
+  status(e.message||'Herstellen mislukt. Bewaar je back-up; de wijziging is niet als geslaagd gemeld.',false,true);return false;
+ }finally{if(token)storageGuard.endOperation(token)}
 }
-async function importBackup(file,includeFinance){let data;try{data=JSON.parse(await file.text());if(data.format!=='compass-life-backup'||data.version!==1)throw Error('Kies een back-up van deze Leven-versie.');if(data.lifeState&&data.lifeState.fitness===undefined&&state.fitness)data.lifeState.fitness=clone(state.fitness);validate(data.lifeState);if(includeFinance&&(!data.financeState||!Array.isArray(data.financeState.transactions)||!Array.isArray(data.financeState.categories)))throw Error('Deze back-up bevat geen geldige financiële gegevens.')}catch(e){status(e.message||'Back-up niet te lezen.',false,true);return}
- if(!confirm('De huidige Leven-gegevens vervangen door '+data.lifeState.tasks.length+' taken uit deze back-up?'+(includeFinance?' Ook de financiële gegevens worden vervangen.':' Je financiële gegevens blijven behouden.')))return;
- let previous,previousFinance;try{previous=localStorage.getItem(KEY);previousFinance=localStorage.getItem(FINANCE_KEY);localStorage.setItem(KEY,JSON.stringify(data.lifeState));if(includeFinance)localStorage.setItem(FINANCE_KEY,JSON.stringify(data.financeState));if(previous)try{localStorage.setItem(RECOVERY,previous)}catch{}state=clone(data.lifeState);blocked=false;savedStatus();render();status('Back-up hersteld.');if(includeFinance)location.reload()}catch(e){try{previous===null?localStorage.removeItem(KEY):localStorage.setItem(KEY,previous);if(includeFinance)previousFinance===null?localStorage.removeItem(FINANCE_KEY):localStorage.setItem(FINANCE_KEY,previousFinance)}catch{}status('Herstellen mislukt. Controleer je browseropslag en bewaar je back-up.',false,true)}
+async function importBackup(file,includeFinance){
+ let data,token;
+ try{
+  data=JSON.parse(await file.text());if(data.format!=='compass-life-backup'||data.version!==1)throw Error('Kies een back-up van deze Leven-versie.');
+  if(data.lifeState&&data.lifeState.fitness===undefined&&state.fitness)data.lifeState.fitness=clone(state.fitness);
+  validate(data.lifeState);
+  if(includeFinance&&(!data.financeState||!Array.isArray(data.financeState.transactions)||!Array.isArray(data.financeState.categories)))throw Error('Deze back-up bevat geen geldige financiële gegevens.');
+  if(!confirm('De huidige Leven-gegevens vervangen door '+data.lifeState.tasks.length+' taken uit deze back-up?'+(includeFinance?' Ook de financiële gegevens worden vervangen.':' Je financiële gegevens blijven behouden.')))return false;
+  if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');token=storageGuard.beginOperation();
+  const changes={life:JSON.stringify(data.lifeState)};if(includeFinance)changes.finance=JSON.stringify(data.financeState);
+  storageGuard.commit(changes,{token});state=clone(data.lifeState);blocked=false;undo=null;savedStatus();render();status('Back-up hersteld.');
+  if(includeFinance){window.MementoFinanceTrashBridge?.acceptCommitted(token);storageGuard.close();location.reload()}
+  return true;
+ }catch(e){status(e.message||'Herstellen mislukt. Bewaar je back-up en je invoer.',false,true);return false}
+ finally{if(token)storageGuard.endOperation(token)}
+}
+function restorePreviousLife(){
+ try{
+  const old=localStorage.getItem(RECOVERY);if(!old)throw Error('Er is nog geen vorige versie beschikbaar.');
+  const parsed=validate(JSON.parse(old));if(!confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.'))return false;
+  if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
+  storageGuard.commit({life:JSON.stringify(parsed)});state=parsed;blocked=false;undo=null;savedStatus();render();status('Vorige Leven-versie teruggezet.');return true;
+ }catch(e){status(e.message,false,true);return false}
 }
 function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');const items=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&t.date),stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+Z$/,'Z');let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Compass//Leven//NL','CALSCALE:GREGORIAN'];items.forEach(t=>{const end=parseDate(t.date);end.setDate(end.getDate()+1);lines.push('BEGIN:VEVENT','UID:'+clean(t.id)+'-'+t.date+'@compass.local','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+t.date.replace(/-/g,''),'DTEND;VALUE=DATE:'+formatISO(end).replace(/-/g,''),'SUMMARY:'+clean(t.title),'DESCRIPTION:'+clean(t.notes),'END:VEVENT')});lines.push('END:VCALENDAR');const encoder=new TextEncoder(),fold=line=>{let out='',len=0;for(const c of line){const n=encoder.encode(c).length;if(len+n>73){out+='\r\n ';len=1}out+=c;len+=n}return out};download('compass-taken-'+today()+'.ics',lines.map(fold).join('\r\n')+'\r\n','text/calendar;charset=utf-8');status('Agenda-bestand gedownload. Dit is een eenmalige export.')}
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
@@ -3630,7 +3661,7 @@ root.addEventListener('click',e=>{
  if(b.id==='lifeStorageStatus'){const store=window.MementoKnowledgeStore;if(!store){status('Bestandsopslag niet beschikbaar.',false,true);return}store.storageInfo().then(info=>{if(!info)throw Error('Browser toont geen opslaginformatie.');const mb=n=>(n/1048576).toLocaleString('nl-NL',{maximumFractionDigits:1});status('Opslag: '+mb(info.used)+' MB van circa '+mb(info.quota)+' MB; '+(info.persisted?'blijvende opslag actief.':'blijvende opslag niet bevestigd.'));}).catch(e=>status(e.message||'Opslaginformatie niet beschikbaar.',false,true));return}
  if(b.id==='lifeRequestPersistentStorage'){const store=window.MementoKnowledgeStore;if(!store){status('Bestandsopslag niet beschikbaar.',false,true);return}store.requestPersistence().then(ok=>status(ok?'Blijvende apparaatopslag toegestaan. Maak daarnaast regelmatig een ZIP-back-up.':'Browser heeft blijvende opslag niet toegestaan. Maak regelmatig een ZIP-back-up.',false,!ok)).catch(e=>status(e.message||'Opslagaanvraag mislukt.',false,true));return}
  if(b.id==='lifeOpenPurgeTrash'){openPermanentTrashDialog();return}if(b.id==='lifeExportBackup'){exportBackup();return}if(b.id==='lifeExportLegacyBackup'){exportLegacyBackup();return}if(b.id==='lifeExportIcs'){exportICS();return}
- if(b.id==='lifeRestorePrevious'){try{const old=localStorage.getItem(RECOVERY);if(!old)throw Error('Er is nog geen vorige versie beschikbaar.');const parsed=validate(JSON.parse(old));if(confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.')){const current=localStorage.getItem(KEY);localStorage.setItem(KEY,JSON.stringify(parsed));if(current)localStorage.setItem(RECOVERY,current);state=parsed;blocked=false;savedStatus();render();status('Vorige Leven-versie teruggezet.')}}catch(e){status(e.message,false,true)}}
+ if(b.id==='lifeRestorePrevious'){restorePreviousLife();return}
 });
 root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{
@@ -3689,7 +3720,8 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshDa
 window.addEventListener('focus',()=>{refreshDay();scheduleDayRefresh()});
 document.addEventListener('click',e=>{root.querySelectorAll('.life-task-menu[open]').forEach(m=>{if(!m.contains(e.target))m.open=false})});root.addEventListener('toggle',e=>{if(e.target.id==='shoppingBought'&&e.target.isConnected)groceryBoughtOpen=e.target.open;if(e.target.matches('.life-task-menu[open]'))root.querySelectorAll('.life-task-menu[open]').forEach(m=>{if(m!==e.target)m.open=false})},true);document.addEventListener('keydown',e=>{if(e.key==='Escape')root.querySelectorAll('.life-task-menu[open]').forEach(m=>m.open=false)});
 scheduleDayRefresh();
-render();setArea(area);if(!blocked)save();else{$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Herstel een back-up';$('lifeSaveStatus').dataset.error='true';status('De bestaande Leven-opslag kon niet worden gelezen en is niet overschreven.',false,true)}
+render();setArea(area);if(!blocked&&storageGuard?.writable)save();else if(blocked){$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Herstel een back-up';$('lifeSaveStatus').dataset.error='true';status('De bestaande Leven-opslag kon niet worden gelezen en is niet overschreven.',false,true)}
+storageGuard?.ready.then(ok=>{if(ok&&!blocked)save();});
 try{
  const shared=new URLSearchParams(window.location.search);
  if(shared.get('memento-share')==='1'&&window.MementoKnowledge){
