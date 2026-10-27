@@ -282,8 +282,9 @@
       '<div class="ft-session-head"><div><h2>' + esc(s.name) + '</h2><p>' +
       esc(s.location) + ' · ' + done + ' / ' + total + ' werksets afgerond</p></div>' +
       button("Afronden", "finish", "", true) + '</div>' +
+      '<div class="ft-session-progress"><span>Voortgang · '+done+' van '+total+' werksets</span><div class="ft-session-track" role="progressbar" aria-label="Afgeronde werksets" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+done+'"><span style="width:'+(total?done*100/total:0).toFixed(1)+'%"></span></div></div>' +
       '<div class="ft-timer" role="timer" aria-label="Rusttimer"><span id="ft-clock">Rusttimer</span>' +
-      button("Stop rust", "stop-rest") + '</div>' +
+      button("Stop rust", "stop-rest") + '<button type="button" class="life-btn" data-fit="next-open-set">Volgende set</button></div>' +
       (s.checkin.pain ? '<p class="ft-warning">Je hebt pijn gemeld. Er worden geen verhogingen voorgesteld. Stop een pijnlijke oefening.</p>' : '') +
       '<div class="ft-session-controls">' +
         button(showRir ? "Over verbergen" : "Herhalingen over tonen", "toggle-rir") +
@@ -291,6 +292,7 @@
       s.exercises.map((e, i) => {
         const rec = C.recommendation(f, e, s.location);
         const prior = C.history(f, e, s.location, e.equipment)[0];
+        const pastSets=prior?.e.logs.filter(l=>l.done&&!l.warmup)||[];let workIndex=0;
         const prev = prior?.e.logs.filter((l) => l.done && !l.warmup)
           .map((l) => e.type === "strength" ? l.weight + " kg × " + l.reps : l.minutes + " min")
           .join(" · ") || "";
@@ -302,9 +304,9 @@
               s.exercises.length + '</span><h2>' + esc(e.name) + '</h2>' +
               '<p>' + esc(e.equipment) + ' · ' + esc(e.muscle) + '</p></div>' +
             button("Uitleg", "guide", e.id) + '</div>' +
-          (prev ? '<p class="ft-prev">Vorige keer: ' + esc(prev) + '</p>' :
+          (prev ? '<p class="ft-prev">Vorige resultaten staan bij je werksets.</p>' :
             '<p class="ft-prev">Eerste registratie met dit apparaat.</p>') +
-          '<div class="ft-sets">' + e.logs.map((l, j) => logRow(e, l, j)).join("") + '</div>' +
+          '<div class="ft-sets">' + e.logs.map((l, j) => logRow(e, l, j, l.warmup?null:pastSets[workIndex++])).join("") + '</div>' +
           (rec.increase ? '<p class="ft-hint ft-progress-hint">' + esc(rec.text) + '</p>' : '') +
           '<div class="ft-actions ft-exercise-actions">' + button("Vervang oefening", "alternatives", e.id) +
             '<details class="ft-more-actions"><summary>Meer</summary><div class="ft-actions">' +
@@ -323,10 +325,10 @@
           '<p>Annuleren kun je direct ongedaan maken.</p>' + button("Annuleer training", "cancel") + '</details>')
     );
   }
-  function logRow(e, l, j) {
+  function logRow(e, l, j, previous=null) {
     const input = (k, label, value, step, max) =>
       `<label class="${k === "rir" ? "ft-rir-field" : ""}">${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="decimal" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
-    return `<div class="ft-set${l.done ? " is-done" : ""}" data-set-row="${esc(l.id)}"><div class="ft-set-label">${l.warmup ? "W" : "Set " + (j + 1)}</div><div class="ft-set-fields">${e.type === "strength" ? input("weight", "kg", l.weight, 0.25, 100000) + input("reps", "reps", l.reps, 1, 1000) + input("rir", "over", l.rir, 1, 10) : input("minutes", "min", l.minutes, 0.1, 600) + (e.type === "cardio" ? input("distance", "km", l.distance, 0.01, 10000) : "")}</div><button type="button" class="ft-check" data-fit="toggle-set" data-ex="${esc(e.id)}" data-id="${esc(l.id)}" aria-label="${esc(e.name)} set ${j + 1} ${l.done ? "weer openen" : "afvinken"}" aria-pressed="${l.done}">${l.done ? "✓" : "○"}</button></div>`;
+    return `<div class="ft-set${l.done ? " is-done" : ""}" data-set-row="${esc(l.id)}"><div class="ft-set-label">${l.warmup ? "W" : "Set " + (j + 1)}</div><div class="ft-set-fields">${e.type === "strength" ? input("weight", "kg", l.weight, 0.25, 100000) + input("reps", "reps", l.reps, 1, 1000) + input("rir", "over", l.rir, 1, 10) : input("minutes", "min", l.minutes, 0.1, 600) + (e.type === "cardio" ? input("distance", "km", l.distance, 0.01, 10000) : "")}</div><button type="button" class="ft-check" data-fit="toggle-set" data-ex="${esc(e.id)}" data-id="${esc(l.id)}" aria-label="${esc(e.name)} set ${j + 1} ${l.done ? "weer openen" : "afvinken"}" aria-pressed="${l.done}">${l.done ? "✓" : "○"}</button>${previous?`<span class="ft-set-reference">Vorige set: ${esc(e.type==="strength"?(previous.weight??"—")+" kg × "+(previous.reps??"—"):(previous.minutes??"—")+" min")}</span>`:""}</div>`;
   }
   function smallChart(points, unit, label) {
     if (!points.length) return '<p>Er zijn nog geen metingen.</p>';
@@ -379,6 +381,8 @@
     const rec = selected?.[1];
     const points = rec ? rec.points.slice().reverse() : [];
     const bodyOnly = points.length && points.every((p) => p.weight === 0);
+    const previousPoint=points.length>1?points[points.length-2]:null,lastPoint=points.at(-1);
+    const delta=previousPoint&&lastPoint?(bodyOnly?lastPoint.reps-previousPoint.reps:lastPoint.weight-previousPoint.weight):null;
     const measures = f.measurements.filter((m) => m.weight !== null).slice()
       .sort((a, b) => a.date.localeCompare(b.date))
       .map((m) => ({ date: fmt(m.date), value: m.weight }));
@@ -410,7 +414,7 @@
             '</strong></span><span>Beste: <strong>' +
             (bodyOnly ? Math.max(...points.map((p) => p.reps)) + ' herh.' :
               Math.max(...points.map((p) => p.weight)) + ' kg') + '</strong></span></div>' +
-          '<p class="ft-hint">Beste uitgevoerde set per sessie; dit is geen voorspelling van je maximale kracht.</p>'
+          '<p class="ft-hint">Beste uitgevoerde set per sessie; dit is geen voorspelling van je maximale kracht.</p>' + (delta===null ? '' : '<p class="ft-change">Verschil met vorige training: <strong>'+(delta>0?'+':'')+delta.toLocaleString('nl-NL')+(bodyOnly?' herhalingen':' kg')+'</strong> · zelfde oefening, apparaat en locatie. Eén meting is geen trend.</p>')
         : '<p>Na je eerste afgeronde training verschijnt hier een grafiek. Er worden geen voorbeeldmetingen toegevoegd.</p>')) +
       panel("Spieropbouw · voeding en gewicht",
         '<p>Bij 64 kg en stabiel gewicht: probeer als start ongeveer 250 kcal per dag extra en 110–130 g eiwit. Vergelijk je gemiddelde ochtendgewicht per week. Als het na 2–3 weken niet stijgt, overweeg circa 100–150 kcal extra.</p>' +
@@ -727,6 +731,9 @@
     if (a === "tab") {
       tab = id;
       render();
+    } else if(a==="next-open-set") {
+      const target=host?.querySelector('.ft-check[aria-pressed="false"]');
+      if(target){target.closest(".ft-set")?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});target.focus({preventScroll:true});}else error("Alle werksets zijn afgevinkt. Je kunt de training afronden.");
     } else if (a === "duration") {
       selectedMinutes = Number(id);
       render();

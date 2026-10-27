@@ -47,6 +47,7 @@ function markdown(value){
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false;
+let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 const read=()=>bridge.read();
 const allCollections=()=>C.ensure(read()).collections;
@@ -85,9 +86,45 @@ function itemRows(items,mode="list"){
 function collectionRows(items){
  return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span aria-hidden="true">›</span></button>').join('')+'</div>';
 }
+function quickBox(){
+ return '<section class="kc-quick" aria-label="Snelle notitie"><div class="kc-quick-head"><strong>Snel vastleggen</strong><small>Inbox</small></div>'+
+ '<label class="kc-sr" for="kc-quick-text">Snelle notitie</label><textarea id="kc-quick-text" data-kc-input="quick" rows="2" maxlength="20000" placeholder="Wat wil je onthouden?">'+esc(quickDraft)+'</textarea>'+
+ '<div class="kc-quick-actions"><button id="kc-quick-mic" type="button" data-kc="quick-speech" aria-label="'+(quickListening?'Stop inspreken':'Spraak transcriberen')+'" aria-pressed="'+quickListening+'" class="kc-quick-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button>'+
+ btn("Uitwerken","quick-expand")+btn("Bewaar notitie","quick-save","",true)+'</div><p role="status" aria-live="polite" id="kc-quick-status">Controleer de transcriptie voordat je bewaart.</p></section>';
+}
+function quickMsg(t){const el=host?.querySelector("#kc-quick-status");if(el)el.textContent=t;}
+function quickPaint(){const el=host?.querySelector("#kc-quick-mic");if(!el)return;el.classList.toggle("kc-listening",quickListening);el.setAttribute("aria-pressed",String(quickListening));el.setAttribute("aria-label",quickListening?"Stop inspreken":"Spraak transcriberen");}
+function quickStop(){quickToken++;const r=quickSpeech;quickSpeech=null;quickListening=false;if(r)try{r.stop()}catch(e){}quickPaint();}
+function quickToggleSpeech(){
+ if(quickSpeech){quickStop();quickMsg("Opname gestopt. Controleer de tekst en bewaar.");return;}
+ const field=host?.querySelector("#kc-quick-text");if(!field)return;
+ const Speech=root.SpeechRecognition||root.webkitSpeechRecognition;
+ if(!Speech){quickMsg("Spraakherkenning ontbreekt. Gebruik de microfoon van je Android-toetsenbord.");field.focus();return;}
+ if(!root.isSecureContext){quickMsg("Inspreken vereist een beveiligde verbinding.");return;}
+ root.MementoVoice?.stop?.();
+ const token=++quickToken,initial=quickDraft.trim();let r;
+ try{r=new Speech();}catch(e){quickMsg("Microfoon niet beschikbaar.");return;}
+ quickSpeech=r;r.lang="nl-NL";r.continuous=false;r.interimResults=true;r.maxAlternatives=1;
+ r.onstart=()=>{if(token!==quickToken)return;quickListening=true;quickPaint();quickMsg("Luisteren… Controleer de tekst na afloop.");};
+ r.onresult=e=>{if(token!==quickToken)return;const words=[];for(let i=0;i<e.results.length;i++){const t=String(e.results[i][0]?.transcript||"").trim();if(t)words.push(t);}quickDraft=[initial,words.join(" ")].filter(Boolean).join(" ").slice(0,20000);const el=host?.querySelector("#kc-quick-text");if(el)el.value=quickDraft;};
+ r.onerror=e=>{if(token!==quickToken)return;const msg={"not-allowed":"Microfoontoegang geweigerd.","no-speech":"Geen spraak herkend.","network":"Spraakherkenning niet bereikbaar.","audio-capture":"Microfoon niet beschikbaar."};quickStop();quickMsg(msg[e.error]||"Inspreken mislukt.");};
+ r.onend=()=>{if(token!==quickToken)return;quickSpeech=null;quickListening=false;quickPaint();quickMsg(quickDraft.trim()?"Transcriptie klaar. Controleer en bewaar.":"Geen tekst herkend. Probeer opnieuw.");};
+ try{r.start()}catch(e){quickStop();quickMsg("Opname kon niet starten.");}
+}
+function quickSave(){
+ quickStop();const body=quickDraft.trim();
+ if(!body){quickMsg("Schrijf of spreek eerst iets in.");host?.querySelector("#kc-quick-text")?.focus();return;}
+ if(!write(s=>s.notes.unshift(C.makeNote({body,kind:"note",collectionId:"inbox"},s)))){quickMsg("Opslaan mislukt; je tekst is nog aanwezig. Probeer opnieuw.");return;}
+ quickDraft="";notice="Snelle notitie opgeslagen in Inbox.";render();
+}
+function quickExpand(){
+ quickStop();if(!quickDraft.trim()){quickMsg("Schrijf of spreek eerst iets in.");return;}
+ selectedId="";editing=C.makeNote({body:quickDraft,kind:"note",collectionId:"inbox"},read());dirty=true;quickDraft="";screen="edit";render();setSaveIndicator("Nog niet opgeslagen");
+}
 function renderHome(){
  const items=C.search(read(),{sort:'recent'}),pinned=items.filter(n=>n.pinned).slice(0,3);
  return header('Kenniscentrum',false,btn('+ Notitie','new','',true))+
+ quickBox()+
  '<button type="button" class="kc-inbox" data-kc="inbox">'+symbol('folder')+'<strong>Inbox</strong><span>'+counts('inbox')+' items</span><span aria-hidden="true">›</span></button>'+
  (read().knowledge?.hierarchyVersion!==1?'<p class="kc-muted">Je bestaande verzamelingen zijn behouden.</p>'+btn('Nieuwe indeling toevoegen','migrate'):'')+
  '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections())+
@@ -359,6 +396,9 @@ function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
  if(kc2Action(op,id,el))return;
+ if(op==="quick-speech"){quickToggleSpeech();return;}
+ if(op==="quick-save"){quickSave();return;}
+ if(op==="quick-expand"){quickExpand();return;}
  if(op==="purge-trash"){root.MementoLife?.openTrash?.();return}
  if(op==="back"){back();return}
  if(op==="new"){const c=allCollections().find(c=>c.id===collectionId);if(screen==='collection'&&c?.special==='journal'){openJournal(C.journalDate());return;}beginNew(screen==="collection"?collectionId:"inbox");return}
@@ -506,6 +546,7 @@ document.addEventListener('submit',e=>{
 
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
+ if(field.dataset.kcInput==="quick"){if(quickSpeech)quickStop();quickDraft=field.value;return;}
  if(field.dataset.kcInput==="search"){query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
@@ -538,6 +579,7 @@ function onChange(event){
  if(el.id==="kc-file-input"){attach(Array.from(el.files||[]));}
 }
 function prefillShared({title="",text="",url=""}={}){
+ if(quickDraft.trim()){notify("Bewaar of werk je snelle notitie eerst uit.");return;}
  const destination="inbox",website=safeURL(url)||safeURL(text.trim());
  selectedId="";editing=C.makeNote({title:String(title||"").slice(0,180),body:String(text||"").slice(0,20000),collectionId:destination,kind:website?"link":"note"},read());
  if(website)editing.sourceUrl=website;
@@ -553,9 +595,9 @@ function mount(container,b){
  if(!read().knowledge?.hierarchyVersion&&guard?.ready)guard.ready.then(()=>{if(host&&document.body.contains(host)&&!editing&&!colDraft){tryMigration();render();}});
  render();
 }
-function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty);}
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&hasPending())flush();});
-window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
+function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||quickDraft.trim()||quickSpeech);}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();if(hasPending())flush();}});
+window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||quickDraft.trim()||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});

@@ -165,3 +165,18 @@
 #lifeApp[data-life-view="notes"] #kc-collection-form>label:nth-child(3){grid-column:auto}
 #lifeApp[data-life-view="notes"] .kc-legacy{margin:18px 0;border-top:1px solid #3c5745;padding-top:6px}
 #lifeApp[data-life-view="notes"] .kc-legacy>summary{min-height:44px;display:flex;align-items:center;font-size:13px;color:#c9decf;cursor:pointer}
+
+/* Snel vastleggen: mobiel, binnen Kenniscentrum. */
+#lifeApp[data-life-view="notes"] .kc-quick{display:grid;gap:9px;padding:12px;margin:0 0 14px;min-width:0;background:linear-gradient(135deg,#294734,#192d22);border:1px solid #4c6b54;border-radius:15px}
+#lifeApp[data-life-view="notes"] .kc-quick-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#lifeApp[data-life-view="notes"] .kc-quick-head strong{font-size:14px}
+#lifeApp[data-life-view="notes"] .kc-quick-head small{font-size:11px;color:#bdd2c0}
+#lifeApp[data-life-view="notes"] #kc-quick-text{min-height:82px;resize:vertical;font-size:16px;line-height:1.5;background:#182e21!important;padding:12px}
+#lifeApp[data-life-view="notes"] .kc-quick-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+#lifeApp[data-life-view="notes"] .kc-quick-actions .kc-btn{flex:1 1 auto;min-height:48px;white-space:nowrap}
+#lifeApp[data-life-view="notes"] .kc-quick-mic{display:grid;place-items:center;min-width:48px;min-height:48px;border-radius:11px;border:1px solid #63866e;color:#e9f3eb;background:#274835;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-quick-mic.kc-listening{color:white;background:#9e5148;border-color:#d6ada8;animation:kc-voice-pulse 1.1s ease-in-out infinite}
+#lifeApp[data-life-view="notes"] #kc-quick-status{font-size:11px;margin:0;color:#bed5c3;min-height:15px}
+@keyframes kc-voice-pulse{50%{box-shadow:0 0 0 6px #9e514830}}
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-quick-mic.kc-listening{animation:none}}
+@media(max-width:360px){#lifeApp[data-life-view="notes"] .kc-quick-actions .kc-btn{padding:8px 6px;font-size:11px}}
