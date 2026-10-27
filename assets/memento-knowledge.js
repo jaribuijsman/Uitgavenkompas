@@ -144,7 +144,7 @@ function renderEditor(){
  const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link";
  const tags=(e.tags||[]).join(", ");
  const recipe=e.recipe||{ingredients:[],status:"concept",version:1,notes:""};
- return header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,'<span class="kc-save-state" id="kc-save-state">'+(dirty?"Niet opgeslagen":"Opgeslagen")+"</span>")+
+ return '<div class="kc-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,btn("Opslaan","save","",true))+'</div><p class="kc-save-state" id="kc-save-state" role="status">'+(dirty?"Niet opgeslagen":"Opgeslagen")+'</p>'+
  '<div class="kc-editor-fields">'+
  '<label>Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
  '<label>Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
@@ -152,7 +152,7 @@ function renderEditor(){
  collections().map(c=>'<option value="'+esc(c.id)+'"'+(C.collectionOf(read(),e)===c.id?" selected":"")+">"+esc(c.name)+"</option>").join("")+"</select></label>"+
  '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
  (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
- '<label>Inhoud</label>'+
+ '<label for="kc-body">Inhoud</label>'+
  '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+"</div>"+
  '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>"+
  (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
@@ -162,7 +162,7 @@ function renderEditor(){
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
  '<p class="kc-muted">Maximaal 25 MB per bestand. PDF’s en afbeeldingen blijven op dit apparaat en worden meegenomen in de volledige ZIP-back-up.</p>'+
  attachmentsHTML(e)+
- '<div class="kc-editor-actions">'+btn("Opslaan","save","",true)+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+"</div></div>";
+ '<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+"</div></div>";
 }
 function renderVersions(){
  const n=read().notes.find(x=>x.id===selectedId);

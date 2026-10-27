@@ -21,7 +21,7 @@
   display: flex;
   gap: 4px;
   padding: 4px;
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   border: 1px solid #435c4b;
   border-radius: 13px;
   background: #15251b;
@@ -47,7 +47,7 @@
 }
 #lifeApp #mementoFitness .ft-panel {
   margin: 0 0 12px;
-  padding: 16px;
+  padding: 14px;
   border-radius: 16px;
 }
 #lifeApp #mementoFitness .ft-panel h2 {
@@ -196,9 +196,9 @@
   background: #263d2e;
   border: 1px solid #708674;
   border-radius: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   position: sticky;
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  top: calc(72px + env(safe-area-inset-top, 0px));
   z-index: 18;
   box-shadow: 0 6px 22px #0b160d99;
   gap: 8px;
@@ -206,14 +206,14 @@
   font-variant-numeric: tabular-nums;
 }
 #mementoFitness .ft-sets {
-  margin-top: 12px;
+  margin-top: 6px;
 }
 #mementoFitness .ft-set {
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr) 48px;
   align-items: end;
   gap: 7px;
-  padding: 9px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #334a3b;
 }
 #mementoFitness .ft-set-fields {
@@ -441,7 +441,7 @@
     max-width: 880px;
   }
   #lifeApp #mementoFitness .ft-panel {
-    padding: 20px;
+    padding: 18px;
   }
   .ft-set-fields {
     max-width: 400px;
