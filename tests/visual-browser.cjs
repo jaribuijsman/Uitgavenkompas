@@ -53,8 +53,11 @@ async function shot(page, name, log = true) {
     await page.goto(url, { waitUntil: "domcontentloaded" }); await page.locator("#pinLock.visible").waitFor(); await shot(page, "pin", width === 393);
     await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click(); await page.locator("#pinLock").waitFor({ state: "hidden" });
     await page.waitForFunction(() => window.MementoStorageGuard?.writable); checks.push("PIN unlocked; fixture writer owns Web Lock");
-    for (const [name, area, view] of [["day", "life", "today"], ["tasks", "life", "tasks"], ["groceries", "life", "groceries"], ["wishes", "life", "wishes"], ["agenda", "life", "agenda"], ["finance", "finance", "dashboard"], ["transactions", "finance", "transactions"], ["budgets", "finance", "budgets"], ["planning", "finance", "planning"], ["knowledge", "life", "notes"], ["fitness", "life", "fitness"], ["settings", "life", "backup"]]) { await navigate(page, area, view); await shot(page, name); }
+    for (const [name, area, view] of [["day", "life", "today"], ["tasks", "life", "tasks"], ["groceries", "life", "groceries"], ["wishes", "life", "wishes"], ["agenda", "life", "agenda"], ["finance", "finance", "dashboard"], ["transactions", "finance", "transactions"], ["analysis","finance","analysis"],["accounts","finance","accounts"],["receipts","finance","receipts"],["finance-settings","finance","settings"],["smartbuy","finance","smartbuy"],["moneycoach","finance","moneycoach"],["budgets", "finance", "budgets"], ["planning", "finance", "planning"], ["knowledge", "life", "notes"], ["fitness", "life", "fitness"], ["settings", "life", "backup"]]) { await navigate(page, area, view); await shot(page, name); }
     await navigate(page, "life", "notes"); await page.locator('[data-kc="all"]').first().click(); await shot(page, "knowledge-list", width === 393);
+    for(const [id,name] of [["visual-checklist","checklist"],["visual-recipe","recipe"],["visual-document","document"]]){
+      await page.locator(`[data-kc="open"][data-id="${id}"]`).first().click();await shot(page,name,false);await page.locator('[data-kc="back"]').click();await page.locator('[data-kc="back"]').click();await page.locator('[data-kc="all"]').first().click();
+    }
     await page.locator('[data-kc="open"][data-id="visual-note"]').first().click(); await shot(page, "note", width === 393);
     await page.locator('[data-kc="edit"]').click(); await page.locator("#kc-body").focus(); await shot(page, "editor", width === 393);
     await page.setViewportSize({ width, height: width > 700 ? 560 : 430 }); await page.locator("#kc-body").scrollIntoViewIfNeeded(); await shot(page, "editor-short", width === 393); await page.setViewportSize({ width, height: width > 700 ? 900 : 852 });
@@ -70,6 +73,6 @@ async function shot(page, name, log = true) {
     fs.writeFileSync(path.join(out, "cssom.json"), JSON.stringify(sheets));
     fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ phase, width, diagnostics, checks, errors }, null, 2)); assert.deepEqual(errors, []);
     console.log("VISUAL_REPORT " + JSON.stringify({ phase, width, checks, errors, diagnostics })); await context.close();
-  } catch (e) { console.error(e); process.exitCode = 1; }
+  } catch (e) { console.error(e);console.log("VISUAL_CHECKS "+JSON.stringify({phase,width,checks,errors}));process.exitCode = 1; }
   finally { if (browser) await browser.close(); server.close(); }
 })();

@@ -48,6 +48,8 @@ jobs:
           MEMENTO_VISUAL_OUT: ${{ runner.temp }}/memento-visual
           MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/memento-fixture.json
         run: node app/tests/visual-browser.cjs
+      - name: Preserve the visible PIN forest
+        run: cmp "$RUNNER_TEMP/memento-visual/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/memento-visual/after/${{ matrix.width }}/pin.jpg"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

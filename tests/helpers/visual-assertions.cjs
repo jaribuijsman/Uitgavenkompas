@@ -1,7 +1,7 @@
 "use strict";
 const assert=require("node:assert/strict");
 module.exports=async function verify(page,navigate,width,checks,shot){
-  async function onScreen(selector){const r=await page.locator(selector).first().boundingBox();const size=page.viewportSize();assert(r&&r.x>=-1&&r.y>=-1&&r.x+r.width<=size.width+1&&r.y+r.height<=size.height+1,selector+" must fit visible viewport: "+JSON.stringify(r));}
+  async function onScreen(selector){await page.waitForFunction(selector=>{const n=document.querySelector(selector),r=n?.getBoundingClientRect();return !!r&&r.x>=-1&&r.y>=-1&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1},selector,{timeout:3000});const r=await page.locator(selector).first().boundingBox();const size=page.viewportSize();assert(r&&r.x>=-1&&r.y>=-1&&r.x+r.width<=size.width+1&&r.y+r.height<=size.height+1,selector+" must fit visible viewport: "+JSON.stringify(r));}
   async function targets(selector){const sizes=await page.locator(selector).evaluateAll(nodes=>nodes.filter(n=>n.getClientRects().length).map(n=>{const r=n.getBoundingClientRect();return {text:n.getAttribute('aria-label')||n.textContent.slice(0,40),w:r.width,h:r.height}}));assert(sizes.length,selector);for(const n of sizes)assert(n.w>=43.9&&n.h>=43.9,selector+" target "+JSON.stringify(n));}
   await navigate(page,"life","today");
   const order=await page.evaluate(()=>{const a=document.querySelector('.memento-day-appointments'),b=document.querySelector('.flow-home');return !!a&&!!b&&Boolean(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING)});assert(order,"Appointments precede inspiration");
@@ -10,6 +10,8 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   await navigate(page,"life","groceries");await targets(".shopping-check,.shopping-icon-button,.shopping-row-title");
   await navigate(page,"life","agenda");await targets("button.memento-cal-day");checks.push("Shopping controls and seven-column calendar targets >=44px");
   await navigate(page,"finance","transactions");
+  await onScreen('#txList .tx-card-title');
+  const firstTitle=await page.locator('#txList .tx-card-title').first().boundingBox(),bottomNav=await page.locator('#mementoQuickNav').boundingBox();if(width<=800)assert(firstTitle.y+firstTitle.height<=bottomNav.y,"First transaction title stays above bottom navigation");
   const before=await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1"));
   await page.locator('#txSearch').fill('geen-uitslag-fictief');await page.locator('.tx-list-empty').waitFor();await shot(page,'transactions-empty',false);await page.locator('#txSearch').fill('');
   await page.locator('#toggleMoreTxFilters').click();await page.locator('#txMoreFilters').waitFor({state:'visible'});await shot(page,'transaction-filters',false);await page.locator('#toggleMoreTxFilters').click();
@@ -30,7 +32,7 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   await page.locator(`[data-life-detail="${task.id}"]`).click();await page.locator(`#lifeDialog [data-life-edit="${task.id}"]`).click();await page.locator('#lifeTaskTitle').fill('Gewijzigde fictieve taak');await page.locator('[type=submit][form=lifeTaskForm]').click();
   assert.equal(await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.id===id).title,task.id),'Gewijzigde fictieve taak');
   await page.locator(`[data-life-complete="${task.id}"]`).click();assert(await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.id===id).done,task.id));checks.push("Life task quick-add, detail, edit and completion work through existing handlers");
-  await navigate(page,'life','notes');await page.locator('[data-kc=new]').first().click();await page.locator('#kc-title').fill('Fictieve lange notitie');await page.locator('#kc-body').fill('Lange tekst met een rustig ritme.\n'.repeat(100));
+  await navigate(page,'life','notes');for(let i=0;i<3&&!await page.locator('[data-kc=new]').count();i++)await page.locator('[data-kc=back]').click();await page.locator('[data-kc=new]').first().click();await page.locator('#kc-title').fill('Fictieve lange notitie');await page.locator('#kc-body').fill('Lange tekst met een rustig ritme.\n'.repeat(100));
   await page.setViewportSize({width,height:width>800?560:430});await page.locator('#kc-body').scrollIntoViewIfNeeded();await onScreen('[data-kc=save]');await shot(page,'editor-long-short',false);await page.locator('[data-kc=save]').click();
   await page.waitForFunction(()=>!window.MementoKnowledge.hasPending());assert(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes.some(n=>n.title==='Fictieve lange notitie'&&n.body.length>2500)));checks.push("Long note persists; editor Save remains visible in short viewport (keyboard size emulation)");
   await page.setViewportSize({width,height:width>800?900:852});await navigate(page,'life','tasks');await page.locator('.life-task-menu>summary').first().click();

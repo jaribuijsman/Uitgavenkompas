@@ -30,6 +30,7 @@
 #lifeApp .life-task-menu>summary {width:44px;min-width:44px;min-height:44px}
 #lifeApp .memento-capture-card {gap:6px;padding:10px;margin:10px 0 16px;border-radius:var(--m-radius)}
 #lifeApp .memento-capture-card .memento-capture-kinds button {min-height:44px;font-weight:600}
+#lifeApp .memento-capture-card .memento-capture-date {grid-column:1/-1;justify-self:end;min-width:112px;width:auto;max-width:calc(100% - 150px)}
 #lifeApp .memento-task-sort {margin:6px 0;max-width:none}
 #lifeApp .memento-task-sort select,#lifeApp .life-toolbar input,#lifeApp .life-toolbar select {min-height:44px}
 #lifeApp[data-life-view="today"] .life-page-head {display:flex}
@@ -134,6 +135,9 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
   body[data-compass-area="finance"] .app .page-head p {grid-row:2;margin:0;line-height:1.5}
   body[data-compass-area="finance"] .app .dashboard-primary-grid {gap:12px}
   body[data-compass-area="finance"] .app .tx-summary-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  body[data-compass-area="finance"] .app #view-transactions .tx-page-head p {display:none}
+  body[data-compass-area="finance"] .app .tx-summary-card small,body[data-compass-area="finance"] .app #dashboardStats .stat-card:not(:last-child) .stat-foot {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  body[data-compass-area="finance"] .app #dashboardStats .stat-icon {display:none}
   body[data-compass-area="finance"] .app #dashboardStats {grid-template-columns:repeat(2,minmax(0,1fr))!important}
   body[data-compass-area="finance"] .app #dashboardStats .stat-card {grid-column:auto!important}
   body[data-compass-area="finance"] .app #dashboardStats .stat-card:last-child {grid-column:1/-1!important;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
