@@ -535,7 +535,7 @@ function click(event){
  if(op==="mode"){viewOverride=id;render();return}
  if(op==="open"){selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
- if(op==="save"){if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder je audio voordat je dit scherm verlaat.");return;}clearTimeout(timer);if(flush()){screen=selectedId?"detail":"collection";editing=null;render();}return}
+ if(op==="save"){if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder je audio voordat je dit scherm verlaat.");return;}const journalDate=editing?.journal?.date||"";clearTimeout(timer);if(flush()){screen=journalDate?"collection":selectedId?"detail":"collection";if(journalDate)journalFilter=journalDate;editing=null;render();}return}
  if(op==="preview"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}
  if(op==="versions"){if(flush()){screen="versions";render();}return}
  if(op==="restore-version"){
