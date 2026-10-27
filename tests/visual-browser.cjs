@@ -61,6 +61,11 @@ async function shot(page, name, log = true) {
     await navigate(page, "finance", "transactions"); await page.locator("#addTransaction").click(); await shot(page, "transaction-modal", width === 393); await page.locator("#cancelTx").click();
     await navigate(page, "life", "fitness"); await page.locator('[data-fit="tab"][data-id="plan"]').click(); await shot(page, "fitness-plan", width === 393); await page.locator('[data-fit="tab"][data-id="progress"]').click(); await shot(page, "fitness-progress", width === 393);
     if(await page.locator('[data-memento-menu="open"]').isVisible())await page.locator('[data-memento-menu="open"]').click(); await shot(page, "navigation", width === 393);
+    if(phase==="after"){
+      if(await page.locator('#mementoMenuLayer:not([hidden])').count())await page.locator('#mementoMenuClose').click();
+      for(const d of diagnostics)assert(d.scrollWidth<=width+1,"Horizontal overflow: "+d.name);
+      await require('./helpers/visual-assertions.cjs')(page,navigate,width,checks,shot);
+    }
     const sheets = await page.evaluate(() => [...document.styleSheets].map(sheet => { let rules = []; try { rules = [...sheet.cssRules].map(r => r.cssText); } catch {} return { id: sheet.ownerNode?.id || "", href: sheet.href, rules }; }));
     fs.writeFileSync(path.join(out, "cssom.json"), JSON.stringify(sheets));
     fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ phase, width, diagnostics, checks, errors }, null, 2)); assert.deepEqual(errors, []);

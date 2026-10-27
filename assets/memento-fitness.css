@@ -335,6 +335,9 @@
 }
 #fitnessDialog form {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 24px);
 }
 #fitnessDialog .ft-dialog-head {
   padding: 16px 18px;
@@ -365,9 +368,14 @@
 }
 #fitnessDialog .ft-dialog-body {
   padding: 4px 18px 10px;
+  overflow: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
 }
 #fitnessDialog .ft-dialog-foot {
   padding: 12px 18px 18px;
+  flex: none;
+  border-top: 1px solid var(--ft-line);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -458,8 +466,9 @@
     gap: 5px;
     grid-template-columns: 30px minmax(0, 1fr) 48px;
   }
-  #mementoFitness .ft-session-head {
-    flex-wrap: wrap;
+  #mementoFitness .ft-session-head > div {
+    min-width: 0;
+    flex: 1;
   }
 }
 

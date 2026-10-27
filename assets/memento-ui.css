@@ -3,10 +3,10 @@
   --m-bg:#101d16; --m-surface:#1b3024; --m-surface-raised:#223c2c;
   --m-ink:#edf4ed; --m-muted:#b6c8ba; --m-line:#3c5745;
   --m-sage:#b9cebd; --m-on-sage:#15271c; --m-danger:#f0b2ac;
-  --m-radius:16px; --m-radius-small:11px; --m-space:12px;
+  --m-notice-gap:0px; --m-radius:16px; --m-radius-small:11px; --m-space:12px;
 }
 #compassAreaBar,#mementoQuickNav {background:var(--m-bg)!important;box-shadow:none!important;backdrop-filter:none}
-#compassAreaBar {border-bottom:1px solid var(--m-line)!important}
+#compassAreaBar {top:var(--m-notice-gap);border-bottom:1px solid var(--m-line)!important}
 #compassAreaBar .life-area-switch button {min-height:44px;font-weight:650}
 #mementoQuickNav button {background:transparent!important;border-color:transparent!important;color:var(--m-muted)!important;min-height:54px;font-weight:600}
 #mementoQuickNav button[aria-current="page"],#mementoQuickNav button.is-active {background:var(--m-sage)!important;border-color:transparent!important;color:var(--m-on-sage)!important;box-shadow:none!important}
@@ -73,19 +73,19 @@ body[data-compass-area="finance"] .app :is(.text-btn,summary) {min-height:44px;d
 body[data-compass-area="finance"] .app .card-title {font-weight:650;line-height:1.4}
 body[data-compass-area="finance"] .app .dashboard-finance-toolbar {margin:12px 0;gap:8px}
 body[data-compass-area="finance"] .app .dashboard-section-head {margin:0;align-items:center}
-body[data-compass-area="finance"] .app .dashboard-section-head h2 {font-size:16px;font-weight:600}
+body[data-compass-area="finance"] .app .dashboard-section-head h2 {display:none}
 body[data-compass-area="finance"] .app .dashboard-section-head>.pill {display:none}
 body[data-compass-area="finance"] .app .dashboard-section-head p {margin:2px 0;font-size:11px}
 body[data-compass-area="finance"] .app .account-scope-switch button,body[data-compass-area="finance"] .app .period-mode-switch button {min-height:44px}
 body[data-compass-area="finance"] .app #dashboardStats {gap:8px;margin-bottom:14px}
-body[data-compass-area="finance"] .app #dashboardStats .stat-card {padding:12px}
+body[data-compass-area="finance"] .app #dashboardStats .stat-card {padding:12px!important;min-height:0!important}
 body[data-compass-area="finance"] .app #dashboardStats .stat-top {margin-bottom:6px;min-height:0}
 body[data-compass-area="finance"] .app #dashboardStats .stat-foot {margin-top:4px;font-size:11px}
-body[data-compass-area="finance"] .app .tx-summary-grid {gap:8px;margin-bottom:12px}
-body[data-compass-area="finance"] .app .tx-summary-card {padding:10px 12px}
-body[data-compass-area="finance"] .app .tx-summary-card span {margin-bottom:4px;font-weight:600}
-body[data-compass-area="finance"] .app .tx-summary-card strong {font-size:21px;font-weight:650;line-height:1.25}
-body[data-compass-area="finance"] .app .tx-summary-card small {margin-top:3px}
+body[data-compass-area="finance"] .app .tx-summary-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px;background:transparent;border:0;padding:0}
+body[data-compass-area="finance"] .app .tx-summary-card {min-width:0;padding:9px 11px;background:var(--m-surface);border:1px solid var(--m-line);border-radius:12px;color:var(--m-ink);box-shadow:none}
+body[data-compass-area="finance"] .app .tx-summary-card span {display:block;margin-bottom:3px;font-size:11px;font-weight:600;color:var(--m-muted)}
+body[data-compass-area="finance"] .app .tx-summary-card strong {display:block;font-size:21px;font-weight:650;line-height:1.3;letter-spacing:-.4px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+body[data-compass-area="finance"] .app .tx-summary-card small {display:block;font-size:10px;color:var(--m-muted);margin-top:3px}
 body[data-compass-area="finance"] .app #view-transactions :is(.tx-filter-select,.tx-more-toggle) {min-height:44px;font-size:14px!important;padding:8px 10px}
 body[data-compass-area="finance"] .app #view-transactions .tx-list-heading {flex-direction:row;align-items:center;gap:8px;padding:8px 0;font-size:12px!important}
 body[data-compass-area="finance"] .app #view-transactions .tx-card-title {font-size:15px!important;font-weight:600;line-height:1.5!important}
@@ -93,9 +93,16 @@ body[data-compass-area="finance"] .app #view-transactions .tx-card-amount {font-
 body[data-compass-area="finance"] .app #view-transactions .tx-date-group {margin-top:10px;font-size:13px!important}
 body[data-compass-area="finance"] .app #view-transactions .memento-tx-filter-summary {font-size:12px!important;gap:8px}
 body[data-compass-area="finance"] .app #view-transactions #txClearQuick {min-height:44px}
+body[data-compass-area="finance"] .app .tx-summary-net {background:var(--m-surface-raised)}
+body[data-compass-area="finance"] .app #view-transactions #txTotal {display:none}
+body[data-compass-area="finance"] .app #view-transactions .memento-tx-filter-summary {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:0 0 8px}
+body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding:6px 0;font-size:11px;white-space:nowrap}
+#lifeApp[data-life-view="agenda"] .memento-cal-toolbar {flex-wrap:wrap;gap:8px}
+#lifeApp[data-life-view="agenda"] .memento-cal-toolbar h3 {flex:1 1 100%;margin:0}
+#lifeApp[data-life-view="agenda"] .memento-cal-actions {width:100%;justify-content:space-between;gap:4px}
 /* Dialog body scrolls independently; primary actions never fall below it. */
-#modalBackdrop {padding:20px;overflow:hidden;overscroll-behavior:contain}
-#modalBackdrop .modal {display:flex;flex-direction:column;max-height:calc(var(--m-viewport-height,100dvh) - 40px);padding:0!important;overflow:hidden;border-radius:20px;box-shadow:0 20px 70px #0006}
+#modalBackdrop {top:var(--m-notice-gap);padding:20px;overflow:hidden;overscroll-behavior:contain}
+#modalBackdrop .modal {display:flex;flex-direction:column;max-height:calc(var(--m-viewport-height,100dvh) - var(--m-notice-gap) - 40px);padding:0!important;overflow:hidden;border-radius:20px;box-shadow:0 20px 70px #0006}
 #modalContent .modal-head {flex:none;padding:18px 20px;margin:0;border-bottom:1px solid var(--m-line);align-items:center}
 #modalContent .modal-head h2 {font-size:22px;font-weight:650}
 #modalContent .modal-head p {font-size:12px;line-height:1.5;margin:4px 0 0}
@@ -106,7 +113,10 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {min-hei
 #modalContent .type-segment button {min-height:44px!important}
 #modalContent .form-field :is(input:not([type=checkbox]),select,textarea) {min-height:44px;font-size:16px}
 #lifeDialog .life-close {min-width:44px;min-height:44px;flex:none}
-#lifeDialog .life-dialog-panel {overscroll-behavior:contain;scroll-padding:16px}
+#lifeDialog .life-dialog-panel {display:flex;flex-direction:column;padding:0;overflow:hidden;overscroll-behavior:contain;scroll-padding:16px}
+#lifeDialog .life-dialog-head {flex:none;padding:14px 16px;margin:0;border-bottom:1px solid var(--m-line)}
+#lifeDialog .life-dialog-body {min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px}
+#lifeDialog .life-dialog-footer {flex:none;margin:0;padding:12px 16px;gap:8px;border-top:1px solid var(--m-line);background:var(--m-surface)}
 #lifeApp[data-life-view="backup"] .life-panel {padding:16px}
 #lifeApp[data-life-view="backup"] .life-panel p {font-size:13px;line-height:1.7;max-width:68ch}
 #lifeApp[data-life-view="backup"] label:has(>input[type=checkbox]) {display:flex;align-items:center;justify-content:flex-start;gap:10px;min-height:44px;font-size:13px;line-height:1.5}
@@ -123,6 +133,7 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {min-hei
   body[data-compass-area="finance"] .app .page-head>div:not(:first-child),body[data-compass-area="finance"] .app .page-head>.btn {grid-row:1}
   body[data-compass-area="finance"] .app .page-head p {grid-row:2;margin:0;line-height:1.5}
   body[data-compass-area="finance"] .app .dashboard-primary-grid {gap:12px}
+  body[data-compass-area="finance"] .app .tx-summary-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
   body[data-compass-area="finance"] .app #dashboardStats {grid-template-columns:repeat(2,minmax(0,1fr))!important}
   body[data-compass-area="finance"] .app #dashboardStats .stat-card {grid-column:auto!important}
   body[data-compass-area="finance"] .app #dashboardStats .stat-card:last-child {grid-column:1/-1!important;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
@@ -130,12 +141,12 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {min-hei
   body[data-compass-area="finance"] .app .dashboard-accounts-modern {padding:14px}
   #lifeApp .memento-calendar-panel .memento-cal-grid {margin-inline:-10px}
   #modalBackdrop {padding:0;align-items:flex-end}
-  #modalBackdrop .modal {width:100%;max-height:calc(var(--m-viewport-height,100dvh) - 12px);border-radius:20px 20px 0 0}
+  #modalBackdrop .modal {width:100%;max-height:calc(var(--m-viewport-height,100dvh) - var(--m-notice-gap) - 12px);border-radius:20px 20px 0 0}
   #modalContent .modal-head {padding:12px 16px}
   #modalContent .modal-body {padding:14px 16px}
   #modalContent .modal-footer {padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
   #lifeDialog {padding:10px}
-  #lifeDialog .life-dialog-panel {max-height:calc(var(--m-viewport-height,100dvh) - 20px)}
+  #lifeDialog .life-dialog-panel {padding:0;max-height:calc(var(--m-viewport-height,100dvh) - var(--m-notice-gap) - 20px)}
 }
 @media(max-width:800px) and (max-height:560px) {
   body.memento-editing #mementoQuickNav {display:none!important}
@@ -148,3 +159,10 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {min-hei
 @media(prefers-reduced-motion:reduce) {
   #lifeApp *,#modalContent *,#mementoQuickNav * {scroll-behavior:auto;transition:none!important;animation:none!important}
 }
+
+/* Existing read-only/failure warning keeps its own dismissal and reload actions. */
+body[data-compass-area]>.app,#lifeApp {padding-top:calc(68px + var(--m-notice-gap))}
+body[data-compass-area]>.app .sidebar,body[data-compass-area]>.app .topbar,#lifeApp .life-side {top:calc(68px + var(--m-notice-gap))}
+#lifeDialog {top:var(--m-notice-gap)}
+#mementoStorageNotice {max-height:min(35dvh,220px)!important}
+#lifeApp[data-life-view="notes"] .kc-editor-head {top:calc(72px + var(--m-notice-gap))}

@@ -1,0 +1,39 @@
+"use strict";
+const assert=require("node:assert/strict");
+module.exports=async function verify(page,navigate,width,checks,shot){
+  async function onScreen(selector){const r=await page.locator(selector).first().boundingBox();const size=page.viewportSize();assert(r&&r.x>=-1&&r.y>=-1&&r.x+r.width<=size.width+1&&r.y+r.height<=size.height+1,selector+" must fit visible viewport: "+JSON.stringify(r));}
+  async function targets(selector){const sizes=await page.locator(selector).evaluateAll(nodes=>nodes.filter(n=>n.getClientRects().length).map(n=>{const r=n.getBoundingClientRect();return {text:n.getAttribute('aria-label')||n.textContent.slice(0,40),w:r.width,h:r.height}}));assert(sizes.length,selector);for(const n of sizes)assert(n.w>=43.9&&n.h>=43.9,selector+" target "+JSON.stringify(n));}
+  await navigate(page,"life","today");
+  const order=await page.evaluate(()=>{const a=document.querySelector('.memento-day-appointments'),b=document.querySelector('.flow-home');return !!a&&!!b&&Boolean(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING)});assert(order,"Appointments precede inspiration");
+  await targets("#compassAreaBar button");if(width<=800)await targets("#mementoQuickNav button");
+  checks.push("Daily appointments precede inspiration; primary navigation targets >=44px");
+  await navigate(page,"life","groceries");await targets(".shopping-check,.shopping-icon-button,.shopping-row-title");
+  await navigate(page,"life","agenda");await targets("button.memento-cal-day");checks.push("Shopping controls and seven-column calendar targets >=44px");
+  await navigate(page,"finance","transactions");
+  const before=await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1"));
+  await page.locator('#txSearch').fill('geen-uitslag-fictief');await page.locator('.tx-list-empty').waitFor();await shot(page,'transactions-empty',false);await page.locator('#txSearch').fill('');
+  await page.locator('#toggleMoreTxFilters').click();await page.locator('#txMoreFilters').waitFor({state:'visible'});await shot(page,'transaction-filters',false);await page.locator('#toggleMoreTxFilters').click();
+  await page.locator('#addTransaction').click();await page.waitForTimeout(70);await onScreen('#modalContent .modal-footer');
+  await page.setViewportSize({width,height:width>800?560:430});await onScreen('#modalContent .modal-footer');
+  await page.locator('#txDescription').fill('Fictieve invoer om te annuleren');await page.keyboard.press('Escape');assert.equal(await page.locator('#modalBackdrop.open').count(),0);assert(await page.locator('#addTransaction').evaluate(n=>n===document.activeElement));
+  assert.equal(await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1")),before);checks.push("Finance modal actions fit short viewport; Escape cancels and returns focus without saving");
+  await page.setViewportSize({width,height:width>800?900:852});await page.locator('#addTransaction').click();await page.waitForTimeout(70);
+  const submit=page.locator('[type=submit][form=txForm]');await submit.click();assert.equal(await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1")),before);assert(await page.locator('#txDescription').evaluate(n=>!n.checkValidity()));
+  await page.locator('#txDescription').fill('Fictieve ergonomische regressietest');await page.locator('#txAmount').fill('12.34');await page.locator('#txDate').fill('2026-10-27');
+  await submit.focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'closeModal');await page.keyboard.press('Shift+Tab');assert(await submit.evaluate(n=>n===document.activeElement));
+  await submit.click();await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem("uitgavenkompas_v1")).transactions.find(t=>t.description==='Fictieve ergonomische regressietest'));assert.equal(saved.amount,12.34);
+  await page.locator('#txSearch').fill('Fictieve ergonomische');await page.locator(`#txList [data-edit-tx="${saved.id}"]`).click();await page.locator('#txAmount').fill('13.45');await submit.click();
+  assert.equal(await page.evaluate(id=>JSON.parse(localStorage.getItem("uitgavenkompas_v1")).transactions.find(t=>t.id===id).amount,saved.id),13.45);checks.push("Finance required validation, trapped focus, save, search and edit retain guarded persistence");
+  await navigate(page,'life','tasks');await page.locator('#lifeQuickTitle').fill('Fictieve taak voor touchtest');await page.locator('#lifeQuickForm [type=submit]').click();
+  const task=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.title==='Fictieve taak voor touchtest'));assert(task);
+  await page.locator(`[data-life-detail="${task.id}"]`).click();await page.locator(`#lifeDialog [data-life-edit="${task.id}"]`).click();await page.locator('#lifeTaskTitle').fill('Gewijzigde fictieve taak');await page.locator('[type=submit][form=lifeTaskForm]').click();
+  assert.equal(await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.id===id).title,task.id),'Gewijzigde fictieve taak');
+  await page.locator(`[data-life-complete="${task.id}"]`).click();assert(await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.id===id).done,task.id));checks.push("Life task quick-add, detail, edit and completion work through existing handlers");
+  await navigate(page,'life','notes');await page.locator('[data-kc=new]').first().click();await page.locator('#kc-title').fill('Fictieve lange notitie');await page.locator('#kc-body').fill('Lange tekst met een rustig ritme.\n'.repeat(100));
+  await page.setViewportSize({width,height:width>800?560:430});await page.locator('#kc-body').scrollIntoViewIfNeeded();await onScreen('[data-kc=save]');await shot(page,'editor-long-short',false);await page.locator('[data-kc=save]').click();
+  await page.waitForFunction(()=>!window.MementoKnowledge.hasPending());assert(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes.some(n=>n.title==='Fictieve lange notitie'&&n.body.length>2500)));checks.push("Long note persists; editor Save remains visible in short viewport (keyboard size emulation)");
+  await page.setViewportSize({width,height:width>800?900:852});await navigate(page,'life','tasks');await page.locator('.life-task-menu>summary').first().click();
+  const menu=await page.locator('.life-task-menu[open] .life-task-actions').first().boundingBox();assert(menu.x>=0&&menu.x+menu.width<=width+1);await shot(page,'task-menu',false);await page.locator('.life-task-menu[open]>summary').click();checks.push("Task disclosure stays within viewport");
+  await page.evaluate(async()=>{await navigator.serviceWorker.ready});await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>navigator.serviceWorker.controller);await page.context().setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.MementoStorageGuard?.writable);assert(await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--m-surface').trim()==='#1b3024'));await page.context().setOffline(false);checks.push("Updated UI assets load offline and native writer protection remains active");
+};
