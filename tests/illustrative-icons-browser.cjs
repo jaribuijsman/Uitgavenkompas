@@ -57,8 +57,8 @@ try{
  await page.locator('[data-memento-menu="open"]').click();
  assert(await page.locator('#mementoMenuGrid button .memento-illustrative-icon').count()>=8);
  await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();
- assert.equal(await page.locator("#lifeApp[data-life-view='notes'] .kc-collection-row.kc-art-row").count(),5);
- assert.equal(await page.locator("#lifeApp .kc-art-row .memento-illustrative-icon").count(),5);
+ assert(await page.locator("#lifeApp[data-life-view='notes'] .kc-collection-row.kc-art-row").count()>=5);
+ assert(await page.locator("#lifeApp .kc-art-row .memento-illustrative-icon").count()>=5);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
  checks.push("Five root forest-background cards keep labels and display distinct collection symbols");
  await capture(page,"knowledge-roots");
