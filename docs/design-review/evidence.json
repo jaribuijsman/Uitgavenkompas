@@ -1,0 +1,82 @@
+{
+  "baseline": "f77a8d20b65def564dd86a1ab59592c34b4ab889",
+  "testedCodeCommit": "5af288c1e6a30fec9b89d6d2a73d6bfb5b52ec9d",
+  "browser": "Playwright 1.62.1 / Chromium 151 on GitHub Actions Linux; viewport emulation, not physical Android",
+  "visualRun": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40441541375",
+  "safetyRun": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40441541376",
+  "data": "Fictional isolated fixture only",
+  "widths": {
+    "360": {
+      "beforeScreens": 30,
+      "afterScreens": 34,
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Daily appointments precede inspiration; primary navigation targets >=44px",
+        "Shopping controls and seven-column calendar targets >=44px",
+        "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+        "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+        "Life task quick-add, detail, edit and completion work through existing handlers",
+        "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+        "Task disclosure stays within viewport",
+        "Updated UI assets load offline and native writer protection remains active"
+      ],
+      "errors": [],
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "393": {
+      "beforeScreens": 30,
+      "afterScreens": 34,
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Daily appointments precede inspiration; primary navigation targets >=44px",
+        "Shopping controls and seven-column calendar targets >=44px",
+        "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+        "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+        "Life task quick-add, detail, edit and completion work through existing handlers",
+        "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+        "Task disclosure stays within viewport",
+        "Updated UI assets load offline and native writer protection remains active"
+      ],
+      "errors": [],
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "412": {
+      "beforeScreens": 30,
+      "afterScreens": 34,
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Daily appointments precede inspiration; primary navigation targets >=44px",
+        "Shopping controls and seven-column calendar targets >=44px",
+        "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+        "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+        "Life task quick-add, detail, edit and completion work through existing handlers",
+        "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+        "Task disclosure stays within viewport",
+        "Updated UI assets load offline and native writer protection remains active"
+      ],
+      "errors": [],
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "1280": {
+      "beforeScreens": 30,
+      "afterScreens": 34,
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Daily appointments precede inspiration; primary navigation targets >=44px",
+        "Shopping controls and seven-column calendar targets >=44px",
+        "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+        "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+        "Life task quick-add, detail, edit and completion work through existing handlers",
+        "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+        "Task disclosure stays within viewport",
+        "Updated UI assets load offline and native writer protection remains active"
+      ],
+      "errors": [],
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    }
+  }
+}

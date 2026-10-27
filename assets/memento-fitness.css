@@ -21,7 +21,7 @@
   display: flex;
   gap: 4px;
   padding: 4px;
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   border: 1px solid #435c4b;
   border-radius: 13px;
   background: #15251b;
@@ -47,7 +47,7 @@
 }
 #lifeApp #mementoFitness .ft-panel {
   margin: 0 0 12px;
-  padding: 16px;
+  padding: 14px;
   border-radius: 16px;
 }
 #lifeApp #mementoFitness .ft-panel h2 {
@@ -196,9 +196,9 @@
   background: #263d2e;
   border: 1px solid #708674;
   border-radius: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   position: sticky;
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  top: calc(72px + var(--m-notice-gap,0px) + env(safe-area-inset-top, 0px));
   z-index: 18;
   box-shadow: 0 6px 22px #0b160d99;
   gap: 8px;
@@ -206,14 +206,14 @@
   font-variant-numeric: tabular-nums;
 }
 #mementoFitness .ft-sets {
-  margin-top: 12px;
+  margin-top: 6px;
 }
 #mementoFitness .ft-set {
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr) 48px;
   align-items: end;
   gap: 7px;
-  padding: 9px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #334a3b;
 }
 #mementoFitness .ft-set-fields {
@@ -326,7 +326,7 @@
   padding: 0;
   max-width: 560px;
   width: calc(100% - 24px);
-  max-height: calc(100dvh - 24px);
+  max-height: calc(var(--m-viewport-height,100dvh) - 24px);
   color: #e6eee8;
   box-shadow: 0 16px 70px #0008;
 }
@@ -335,8 +335,12 @@
 }
 #fitnessDialog form {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--m-viewport-height,100dvh) - 24px);
 }
 #fitnessDialog .ft-dialog-head {
+  flex: none;
   padding: 16px 18px;
   border-bottom: 1px solid #435c4b;
   display: flex;
@@ -365,9 +369,14 @@
 }
 #fitnessDialog .ft-dialog-body {
   padding: 4px 18px 10px;
+  overflow: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
 }
 #fitnessDialog .ft-dialog-foot {
   padding: 12px 18px 18px;
+  flex: none;
+  border-top: 1px solid var(--ft-line);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -441,7 +450,7 @@
     max-width: 880px;
   }
   #lifeApp #mementoFitness .ft-panel {
-    padding: 20px;
+    padding: 18px;
   }
   .ft-set-fields {
     max-width: 400px;
@@ -458,8 +467,9 @@
     gap: 5px;
     grid-template-columns: 30px minmax(0, 1fr) 48px;
   }
-  #mementoFitness .ft-session-head {
-    flex-wrap: wrap;
+  #mementoFitness .ft-session-head > div {
+    min-width: 0;
+    flex: 1;
   }
 }
 
