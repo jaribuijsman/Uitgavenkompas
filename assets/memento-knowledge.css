@@ -191,8 +191,8 @@
 #lifeApp[data-life-view="notes"] .kc-diary-hero>div strong{font-size:18px;letter-spacing:-.3px}
 #lifeApp[data-life-view="notes"] .kc-diary-week{display:flex;gap:6px;min-width:0;align-items:center;margin:0 0 11px}
 #lifeApp[data-life-view="notes"] .kc-diary-week>button{flex:0 0 36px;height:46px;border:1px solid #5d8065;border-radius:999px;background:#1a3427;color:#d8e9da;font-size:24px;cursor:pointer;padding:0}
-#lifeApp[data-life-view="notes"] .kc-diary-days{min-width:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;flex:1}
-#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-width:0;min-height:64px;border:1px solid #3a5e44;border-radius:11px;background:#1d3528;color:#dceadd;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:inherit;font-size:13px;cursor:pointer;padding:4px 0}
+#lifeApp[data-life-view="notes"] .kc-diary-days{min-width:0;display:flex;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;scrollbar-width:none;gap:5px;flex:1}
+#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-width:44px;flex:0 0 44px;scroll-snap-align:center;min-height:64px;border:1px solid #3a5e44;border-radius:11px;background:#1d3528;color:#dceadd;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:inherit;font-size:13px;cursor:pointer;padding:4px 0}
 #lifeApp[data-life-view="notes"] .kc-diary-days>button small{font-size:10px;color:#c4d9c8;text-transform:capitalize}
 #lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:15px;font-weight:650}
 #lifeApp[data-life-view="notes"] .kc-diary-days>button i{height:4px;width:4px;border-radius:50%;background:transparent}
