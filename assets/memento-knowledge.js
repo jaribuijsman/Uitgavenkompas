@@ -510,7 +510,7 @@ function click(event){
   if(voiceRecorder||voiceFile||voiceStarting){notify("Bewaar of verwijder eerst de opname.");return;}
   const current=editing?.journal?.date||journalFilter||C.journalDate(),next=op==="journal-move"?diaryOffset(current,Number(id)):id;
   if(screen==="edit"){clearTimeout(timer);if(!flush())return;}
-  journalFilter=next;openJournal(next);return;
+  journalFilter=next;if(screen==="collection"&&op!=="journal-date-open")render();else openJournal(next);return;
  }
  if(op==="journal-mood"&&editing?.journal){
   editing.journal.mood=editing.journal.mood===id?"":id;
