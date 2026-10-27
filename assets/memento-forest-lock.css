@@ -1,4 +1,4 @@
-/* Memento PIN scenery v3: local illustrations and weather, no change to PIN controls. */
+/* Memento PIN scenery v4: original pixel-art scenes, unchanged weather/Christmas/PIN layers. */
 #pinLock{background:#0c211b!important;isolation:isolate}
 #pinLock::before,#pinLock::after{display:none!important}
 #pinLock .pin-forest-bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none;background:#10251d url('./memento-cozy-background.png') center/cover no-repeat}
@@ -66,3 +66,12 @@
 /* Holiday text is intentionally omitted: keep the avatar and Memento wordmark unobstructed. */
 #pinLock .mf-holiday-caption{display:none}
 #pinLock[data-scene-running='false'] .pin-forest-bg *{animation-play-state:paused!important}
+
+/* Pixel forest picker: hourly auto mode and six manually fixed scenes. */
+#mfPicker .mf-choices{max-height:min(52dvh,470px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
+#mfPicker .mf-choice[data-scene='auto']{grid-column:1/-1;display:flex;align-items:center;text-align:left;padding:0;min-height:56px;font-size:12px}
+#mfPicker .mf-choice[data-scene='auto'] img{flex:0 0 58px;width:58px;height:56px;margin:0 12px 0 0}
+#mfPicker .mf-choice:not([data-scene='auto']){min-height:120px}
+#pinLock .mf-control-row button{min-height:44px}
+#pinLock[data-mf-scene='maanmeer'][data-mf-night='true'] .mf-image{filter:brightness(.77) saturate(.96)!important}
+#pinLock[data-mf-scene='schemermeer'][data-mf-night='true'] .mf-image{filter:brightness(.71) saturate(.93)!important}

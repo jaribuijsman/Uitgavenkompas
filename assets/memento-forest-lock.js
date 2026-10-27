@@ -1,15 +1,14 @@
-/* Memento PIN scenery v3. Reuses the existing Beverwijk weather provider. */
+/* Memento PIN scenery v4: six pixel-art forests, hourly Amsterdam rotation, existing Beverwijk weather effects. */
 (()=>{'use strict';
 const lock=document.getElementById('pinLock'),bg=lock?.querySelector('.pin-forest-bg'),canvas=document.getElementById('mementoWeatherCanvas'),status=document.getElementById('mementoSceneStatus'),pauseButton=document.getElementById('mementoSceneToggle');
 if(!lock||!bg||!canvas||!status||!pauseButton)return;
 const ctx=canvas.getContext('2d');if(!ctx)return;
-const scenes={lantaarnpad:'Lantaarnpad',bosbrug:'Bosbrug',boshuis:'Boshuisje'};
-const asset={sun:'sun',rain:'rain',storm:'rain',snow:'snow',fog:'fog',clouds:'fog'};
-const label={sun:'Zonnig',rain:'Regen',storm:'Onweer',snow:'Sneeuw',fog:'Mist',clouds:'Bewolkt'};
 const artworks=window.MementoForestArt||{};
-const artwork=(scene,weather)=>artworks[scene]?.[weather]||'./assets/memento-cozy-background.png';
+const scenes=Object.fromEntries(Object.entries(artworks.scenes||{}).map(([id,info])=>[id,info.name]));
+const artwork=id=>artworks.asset?.(id)||'./assets/memento-cozy-background.png';
+const label={sun:'Zonnig',rain:'Regen',storm:'Onweer',snow:'Sneeuw',fog:'Mist',clouds:'Bewolkt'};
 const WEATHER_KEY='compass_weather_beverwijk_v1',PREF_KEY='memento_forest_choice_v1';
-let theme='lantaarnpad';try{const stored=localStorage.getItem(PREF_KEY);if(Object.hasOwn(scenes,stored))theme=stored}catch{}
+let theme='auto';try{const stored=localStorage.getItem(PREF_KEY);if(stored==='auto'||Object.hasOwn(scenes,stored))theme=stored}catch{}
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const layers=[document.createElement('div'),document.createElement('div')];let front=0,imageVersion=0;
 for(const el of layers){el.className='mf-image';bg.prepend(el)}
@@ -25,11 +24,11 @@ const choiceButton=document.createElement('button');choiceButton.type='button';c
 pauseButton.replaceWith(controls);controls.append(pauseButton,choiceButton);
 const picker=document.createElement('dialog');picker.id='mfPicker';picker.setAttribute('aria-label','Kies een bosachtergrond');
 const h=document.createElement('h2');h.textContent='Jouw Memento-bos';
-const p=document.createElement('p');p.textContent='Kies het landschap. Zon, regen, sneeuw en mist volgen automatisch het weer in Beverwijk.';
+const p=document.createElement('p');p.textContent='Automatisch wisselt ieder uur tussen passende pixelbossen. Het weer in Beverwijk blijft erboven bewegen. Je kunt ook een bos vastzetten.';
 const choices=document.createElement('div');choices.className='mf-choices';
 const close=document.createElement('button');close.className='mf-close';close.type='button';close.textContent='Sluiten';
 picker.append(h,p,choices,close);document.body.append(picker);
-for(const [id,name] of Object.entries(scenes)){const button=document.createElement('button');button.type='button';button.className='mf-choice';button.dataset.scene=id;button.setAttribute('aria-pressed',String(id===theme));const img=new Image();img.src=artwork(id,'sun');img.alt='';img.loading='lazy';const caption=document.createElement('span');caption.textContent=name;button.append(img,caption);choices.append(button);button.addEventListener('click',()=>{theme=id;try{localStorage.setItem(PREF_KEY,theme)}catch{}updateScene();picker.close();choiceButton.focus()})}
+for(const [id,name] of [['auto','Automatisch · ieder uur'],...Object.entries(scenes)]){const button=document.createElement('button');button.type='button';button.className='mf-choice';button.dataset.scene=id;button.setAttribute('aria-pressed',String(id===theme));const img=new Image();img.src=artwork(id==='auto'?(artworks.sceneForHour?.(new Date())||'ochtendmist'):id);img.alt='';img.loading='lazy';const caption=document.createElement('span');caption.textContent=name;button.append(img,caption);choices.append(button);button.addEventListener('click',()=>{theme=id;try{localStorage.setItem(PREF_KEY,theme)}catch{}updateScene();picker.close();choiceButton.focus()})}
 choiceButton.addEventListener('click',()=>{if(!picker.open)picker.showModal()});close.addEventListener('click',()=>picker.close());picker.addEventListener('click',e=>{if(e.target===picker)picker.close()});
 let weather=null,paused=false,kind='sun',night=false,wind=0,lastWeatherText='',w=0,height=0,particles=[],raf=0,lastFrame=0,nextLightning=0,alive=true;
 function dateAmsterdam(){return new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Amsterdam',month:'numeric'}).format(new Date())}
@@ -44,8 +43,9 @@ const previousKind=kind;kind=fresh?weatherKind(current.weather_code):'sun';night
 lastWeatherText=fresh?`Beverwijk · ${label[kind]} · ${current.time.slice(11,16)}${weather?.failed?' · Opgeslagen weer':''}`:'Beverwijk · Weer niet beschikbaar · Rustige achtergrond';
 status.textContent=lastWeatherText;status.title=fresh?'Weer van Open-Meteo · '+current.time:'Geen betrouwbare actuele weersgegevens beschikbaar';
 if(previousKind!==kind)seed();updateScene();holiday();}
-function imagePath(){return artwork(theme,asset[kind]||'sun')}
-function updateScene(){lock.dataset.mfKind=kind;lock.dataset.mfNight=String(night);for(const b of choices.querySelectorAll('button'))b.setAttribute('aria-pressed',String(b.dataset.scene===theme));
+function selectedScene(){return theme==='auto'?(artworks.sceneForHour?.(new Date())||'ochtendmist'):theme}
+function imagePath(){return artwork(selectedScene())}
+function updateScene(){lock.dataset.mfKind=kind;lock.dataset.mfNight=String(night);lock.dataset.mfScene=selectedScene();for(const b of choices.querySelectorAll('button')){b.setAttribute('aria-pressed',String(b.dataset.scene===theme));if(b.dataset.scene==='auto'){const preview=b.querySelector('img');if(preview)preview.src=artwork(selectedScene())}}
 const url=imagePath();if(layers[front].dataset.src===url){sync();return}
 const token=++imageVersion,loader=new Image();loader.onload=()=>{if(token!==imageVersion)return;const back=1-front;layers[back].style.backgroundImage=`url("${url}")`;layers[back].dataset.src=url;layers[back].classList.add('mf-active');layers[front].classList.remove('mf-active');front=back};loader.onerror=()=>{if(token===imageVersion&&layers[front].dataset.src!==url)status.textContent=lastWeatherText+' · Afbeelding niet geladen'};loader.src=url;sync()}
 function seed(){const n=kind==='storm'?145:kind==='rain'?118:kind==='snow'?74:kind==='sun'?24:0;particles=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*height,z:.35+Math.random()*.95,t:Math.random()*6.28}));ctx.clearRect(0,0,w,height)}

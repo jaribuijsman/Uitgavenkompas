@@ -1,4 +1,4 @@
-name: Knowledge and backup regression
+name: Knowledge, backup and PIN forest regression
 on:
   push:
     paths:
@@ -13,6 +13,10 @@ on:
       - "sw.js"
       - "tests/knowledge-regression.cjs"
       - ".github/workflows/knowledge-regression.yml"
+      - "assets/memento-forest-*.js"
+      - "assets/memento-forest-lock.css"
+      - "assets/pin-forests/**"
+      - "tests/pin-forest-regression.cjs"
   pull_request:
     paths:
       - "assets/memento-knowledge-core.js"
@@ -26,6 +30,10 @@ on:
       - "sw.js"
       - "tests/knowledge-regression.cjs"
       - ".github/workflows/knowledge-regression.yml"
+      - "assets/memento-forest-*.js"
+      - "assets/memento-forest-lock.css"
+      - "assets/pin-forests/**"
+      - "tests/pin-forest-regression.cjs"
 
 permissions:
   contents: read
@@ -50,3 +58,17 @@ jobs:
           node --check assets/memento-backup.js
           node --check assets/memento-trash-core.js
           node --check tests/trash-regression.cjs
+
+  pin-forests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate hourly forest rotation and weather integration
+        run: |
+          node tests/pin-forest-regression.cjs
+          node --check assets/memento-forest-art.js
+          node --check assets/memento-forest-lock.js
+          node --check sw.js
