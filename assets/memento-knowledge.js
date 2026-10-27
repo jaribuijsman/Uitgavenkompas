@@ -1,7 +1,7 @@
 /* Memento Kenniscentrum UI. Mounts within the existing Life view; no network access. */
 (function(root){
 "use strict";
-const C=root.MementoKnowledgeCore,S=root.MementoKnowledgeStore;
+const C=root.MementoKnowledgeCore,S=root.MementoKnowledgeStore,ArtUI=root.MementoKnowledgeCoverUI;
 if(!C)return;
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const iconPaths={
@@ -46,7 +46,7 @@ function markdown(value){
  return blocks.join("")||'<p class="kc-muted">Nog geen inhoud</p>';
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
-let colDraft=null,sortState=null,journalFilter="",migrationBusy=false;
+let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
 let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
 let voiceRecorder=null,voiceStream=null,voiceFile=null,voiceURL="",voiceNotice="",voiceStarting=false,voiceToken=0;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
@@ -85,7 +85,7 @@ function itemRows(items,mode="list"){
  }).join("")+"</div>";
 }
 function collectionRows(items){
- return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span aria-hidden="true">›</span></button>').join('')+'</div>';
+ return '<div class="kc-collection-rows">'+items.map(c=>'<button type="button" data-kc="collection" data-id="'+esc(c.id)+'" class="kc-collection-row kc-art-row">'+collectionIcon(c)+'<span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' items'+(children(c.id).length?' · '+children(c.id).length+' subverzamelingen':'')+'</small></span><span class="kc-card-arrow" aria-hidden="true">›</span>'+(ArtUI?.cards(c)||'')+'</button>').join('')+'</div>';
 }
 function quickBox(){
  return '<section class="kc-quick" aria-label="Snelle notitie"><div class="kc-quick-head"><strong>Snel vastleggen</strong><small>Inbox</small></div>'+
@@ -153,11 +153,11 @@ function renderList(){
  const subs=screen==='collection'?children(collectionId):[];
  return header(title,true,screen==="trash"?btn("Definitief leegmaken","purge-trash"):btn("+ Nieuw","new","",true))+
  (screen==='collection'?'<div class="kc-collection-actions"><details class="kc-tools"><summary aria-label="Instellingen van deze verzameling">Instellingen</summary><div>'+btn('Bewerken','edit-collection',collectionId)+(!c?.parentId?btn('Subverzameling toevoegen','new-sub',collectionId)+btn('Volgorde wijzigen','sort-children',collectionId):'')+'</div></details></div>'+collectionRows(subs)+(subs.length?'<h3 class="kc-content-caption">In deze verzameling</h3>':''):'')+
- '<div class="kc-filters"><label class="kc-search"><span class="kc-sr">Zoeken</span><input type="search" data-kc-input="search" placeholder="Zoek in titel, tekst en tags…" value="'+esc(query)+'"></label>'+
+ '<details id="kc-filter-drawer" class="kc-filter-drawer"'+(filtersExpanded||query||kindFilter||tagFilter?' open':'')+'><summary>Zoeken en filteren'+(query||kindFilter||tagFilter?' · actief':'')+'</summary><div class="kc-filters"><label class="kc-search"><span class="kc-sr">Zoeken</span><input type="search" data-kc-input="search" placeholder="Zoek in titel, tekst en tags…" value="'+esc(query)+'"></label>'+
  '<div class="kc-filterline"><label>Type<select data-kc-change="kind"><option value="">Alles</option>'+Object.entries(kindNames).map(([v,n])=>'<option value="'+v+'"'+(kindFilter===v?" selected":"")+">"+n+"</option>").join("")+"</select></label>"+
  '<label>Tag<select data-kc-change="tag"><option value="">Alle tags</option>'+availableTags.map(v=>'<option value="'+esc(v)+'"'+(tagFilter===v?" selected":"")+">"+esc(v)+"</option>").join("")+"</select></label>"+
  '<label>Sortering<select data-kc-change="sort"><option value="recent"'+(sort==="recent"?" selected":"")+'>Recent</option><option value="title"'+(sort==="title"?" selected":"")+'>Titel</option><option value="old"'+(sort==="old"?" selected":"")+'>Oudste</option></select></label></div>'+
- '<div class="kc-mode-switch">'+btn("Lijst","mode","list",mode==="list")+btn("Galerij","mode","gallery",mode==="gallery")+btn("Tabel","mode","table",mode==="table")+'</div></div>'+
+ '<div class="kc-mode-switch">'+btn("Lijst","mode","list",mode==="list")+btn("Galerij","mode","gallery",mode==="gallery")+btn("Tabel","mode","table",mode==="table")+'</div></div></details>'+
  '<p class="kc-count">'+items.length+' kennisitems</p>'+
  itemRows(items,mode)+
  (screen==="collection"?'<div class="kc-bottom-actions">'+btn("Verzameling beheren","edit-collection",collectionId)+"</div>":"");
@@ -167,7 +167,7 @@ function renderCollections(){
  '<p class="kc-muted">Archiveren verbergt een verzameling; alle inhoud en subverzamelingen blijven bewaard. Er worden geen verzamelingen definitief verwijderd.</p><div class="kc-manage-collections">'+allCollections().map(c=>'<div class="kc-manage-row"><span class="kc-manage-name">'+collectionIcon(c)+'<span><strong>'+esc(pathName(c))+'</strong><small>'+(c.archived?'Gearchiveerd':c.parentId?'Subverzameling':c.parentId===null?'Hoofdverzameling':'Nog in te delen')+'</small></span></span>'+btn(c.archived?'Herstellen':'Bewerk',c.archived?'restore-collection':'edit-collection',c.id)+'</div>').join('')+'</div>';
 }
 function openCollectionEditor(id='',parentId=null){
- const c=allCollections().find(c=>c.id===id);collectionId=id;colDraft={id,name:c?.name||'',icon:iconAliases[c?.icon]||c?.icon||'folder',view:c?.view||'list',parentId:c?.parentId||parentId||'',dirty:false};screen='collection-editor';render();
+ const c=allCollections().find(c=>c.id===id);collectionId=id;ArtUI?.start(c);colDraft={id,name:c?.name||'',icon:iconAliases[c?.icon]||c?.icon||'folder',view:c?.view||'list',parentId:c?.parentId||parentId||'',coverFile:c?.coverFile||null,dirty:false};screen='collection-editor';render();
 }
 function renderCollectionEditor(){
  const d=colDraft;if(!d)return '';const c=allCollections().find(c=>c.id===d.id);
@@ -175,7 +175,7 @@ function renderCollectionEditor(){
  '<form id="kc-collection-form" class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" data-kc-col="name" value="'+esc(d.name)+'" required></label>'+
  '<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+collections().filter(x=>!x.parentId&&x.id!==d.id).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>'+
  '<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+
- '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+Object.entries(iconLabels).map(([id,label])=>'<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+symbol(id)+'<span>'+label+'</span></button>').join('')+'</div></fieldset>'+
+ '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+Object.entries(iconLabels).map(([id,label])=>'<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+symbol(id)+'<span>'+label+'</span></button>').join('')+'</div></fieldset>'+(ArtUI?.render(d,allCollections().find(x=>x.id===d.parentId)?.name||'')||'')+
  '<div class="kc-editor-actions">'+btn('Annuleren','cancel-collection')+(c?btn('Archiveren','archive-collection',c.id):'')+'</div></form>';
 }
 
@@ -356,6 +356,7 @@ function render(){
  else if(screen==="link")output=renderLink();
  else if(screen==="file")output=renderFile();
  host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+breadcrumbs()+output+"</div>";
+ ArtUI?.hydrate(host,S);
 }
 function write(mutator,token){
  try{const ok=bridge.write(life=>{C.ensure(life);try{mutator(life);C.validate(life);}catch(e){notify(e.message);throw e;}},token);if(!ok&&!notice)notify("Opslaan mislukt. Je invoer is behouden; sluit de melding en probeer opnieuw.");return ok;}catch(e){notify(e.message);return false;}
@@ -529,10 +530,10 @@ function click(event){
  if(op==="purge-trash"){root.MementoLife?.openTrash?.();return}
  if(op==="back"){back();return}
  if(op==="new"){const c=allCollections().find(c=>c.id===collectionId);if(screen==='collection'&&c?.special==='journal'){openJournal(C.journalDate());return;}beginNew(screen==="collection"?collectionId:"inbox");return}
- if(op==="collection"){journalFilter="";collectionId=id;viewOverride="";sort="recent";query="";kindFilter="";tagFilter="";screen="collection";render();return}
+ if(op==="collection"){filtersExpanded=false;journalFilter="";collectionId=id;viewOverride="";sort="recent";query="";kindFilter="";tagFilter="";screen="collection";render();return}
  if(op==="collections"){screen="collections";render();return}
- if(["all","inbox","archive","trash","pinned"].includes(op)){screen=op;query="";kindFilter="";tagFilter="";viewOverride="";render();return}
- if(op==="mode"){viewOverride=id;render();return}
+ if(["all","inbox","archive","trash","pinned"].includes(op)){filtersExpanded=false;screen=op;query="";kindFilter="";tagFilter="";viewOverride="";render();return}
+ if(op==="mode"){filtersExpanded=true;viewOverride=id;render();return}
  if(op==="open"){selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
  if(op==="save"){if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder je audio voordat je dit scherm verlaat.");return;}const journalDate=editing?.journal?.date||"";clearTimeout(timer);if(flush()){screen=journalDate?"collection":selectedId?"detail":"collection";if(journalDate)journalFilter=journalDate;editing=null;render();}return}
@@ -575,7 +576,7 @@ function click(event){
 }
 function cancelCollection(){
  if(colDraft?.dirty&&!confirm('Wijzigingen aan deze verzameling annuleren?'))return;
- const id=colDraft?.id;colDraft=null;screen=id?'collection':'home';if(id)collectionId=id;render();
+ const id=colDraft?.id;ArtUI?.clearPending();colDraft=null;screen=id?'collection':'home';if(id)collectionId=id;render();
 }
 function startSort(parentId){sortState={parentId:parentId||null,ids:children(parentId||null).map(c=>c.id)};screen='sort';render();}
 function persistSort(ids){
@@ -589,13 +590,14 @@ function kc2Action(op,id,el){
  if(op==='new-sub'){openCollectionEditor('',id);return true;}
  if(op==='new-collection'){openCollectionEditor();return true;}
  if(op==='edit-collection'){openCollectionEditor(id);return true;}
+ if(colDraft&&ArtUI?.interact(op,id,colDraft,host,render,notify))return true;
  if(op==='choose-icon'&&colDraft){colDraft.icon=id;colDraft.dirty=true;const current=host.querySelector('#kc-col-name');if(current)colDraft.name=current.value;render();host.querySelector('[data-kc="choose-icon"][data-id="'+id+'"]')?.focus();return true;}
  if(op==='cancel-collection'){cancelCollection();return true;}
  if(op==='save-collection'){
-  const d=colDraft;if(!d)return true;
-  let savedId=d.id;
-  const ok=write(state=>{savedId=C.saveCollection(state,d).id;});
-  if(ok){collectionId=savedId;colDraft=null;screen='collection';notice='Verzameling opgeslagen.';render();}return true;
+  if(!colDraft)return true;
+  if(ArtUI)ArtUI.save(colDraft,{store:S,core:C,guard:root.MementoStorageGuard,write,onSaved:id=>{collectionId=id;colDraft=null;screen='collection';notice='Verzameling en illustratie opgeslagen.';render();},notify});
+  else {let id=colDraft.id;if(write(state=>{id=C.saveCollection(state,colDraft).id;})){collectionId=id;colDraft=null;screen='collection';render();}}
+  return true;
  }
  if(op==='archive-collection'||op==='restore-collection'){
   if(op==='archive-collection'&&!confirm('Verzameling archiveren? Notities en subverzamelingen blijven bewaard. Je kunt de verzameling later herstellen.'))return true;
@@ -675,8 +677,9 @@ document.addEventListener('submit',e=>{
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
  if(field.dataset.kcInput==="quick"){if(quickSpeech)quickStop();quickDraft=field.value;return;}
- if(field.dataset.kcInput==="search"){query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
+ if(field.dataset.kcInput==="search"){filtersExpanded=true;query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
+ if(colDraft&&ArtUI?.changed(field,host))return;
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
  if(field.dataset.kcCheckin&&editing?.journal){const key=field.dataset.kcCheckin,c=editing.journal.checkin||(editing.journal.checkin={});c[key]=["energy","stress","latency","awake","nap"].includes(key)?(field.value===""?null:Number(field.value)):field.value;diaryRefresh();schedule();return;}
  if(field.dataset.kcJournal&&editing?.journal){if(field.dataset.kcJournal==='date'&&editing.title===editing.journal.date)editing.title=field.value;editing.journal[field.dataset.kcJournal]=field.value;schedule();return;}
@@ -700,12 +703,13 @@ function onInput(event){
 function onChange(event){
  const el=event.target;
  if(el.dataset.kcCol||el.dataset.kcJournal){onInput(event);return;}
- if(el.dataset.kcChange){const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
+ if(el.dataset.kcChange){filtersExpanded=true;const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
  if(el.dataset.kcCheck){
   if(write(s=>C.toggleItem(s,el.dataset.note,el.dataset.kcCheck)))render();else el.checked=!el.checked;
   return;
  }
  if(el.id==="kc-file-input"){attach(Array.from(el.files||[]));}
+ if(el.id==="kc-cover-file-input"&&colDraft)ArtUI?.fileChanged(el.files?.[0],colDraft,S,render,notify);
 }
 function prefillShared({title="",text="",url=""}={}){
  if(quickDraft.trim()){notify("Bewaar of werk je snelle notitie eerst uit.");return;}
@@ -724,9 +728,10 @@ function mount(container,b){
  if(!read().knowledge?.hierarchyVersion&&guard?.ready)guard.ready.then(()=>{if(host&&document.body.contains(host)&&!editing&&!colDraft){tryMigration();render();}});
  render();
 }
-function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||quickDraft.trim()||quickSpeech||voiceRecorder||voiceStarting||voiceFile);}
+function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickSpeech||voiceRecorder||voiceStarting||voiceFile);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();if(hasPending())flush();}});
 window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||quickDraft.trim()||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
+document.addEventListener("toggle",e=>{if(e.target.id==="kc-filter-drawer")filtersExpanded=e.target.open;},true);
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
