@@ -85,7 +85,7 @@ const server=http.createServer((req,res)=>{
   await page.locator('[data-ex="'+eid+'"][data-field="weight"]').first().fill("41");
   await page.locator('[data-fit="toggle-set"][data-ex="'+eid+'"]').first().click();
   await page.locator('#mementoFitness [data-fit="finish"]').first().click();
-  await page.locator('#mementoFitness [data-fit="tab"][data-id="progress"]').click();
+  await page.locator('#mementoFitness .ft-tabs [data-fit="tab"][data-id="progress"]').click();
   assert.match(await page.locator(".ft-change").first().innerText(),/1 kg/);
   assert.equal((await stored()).fitness.sessions.length,2);
   checks.push("Prior worksets and actual previous-session difference, unchanged history");
