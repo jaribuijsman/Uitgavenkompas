@@ -495,7 +495,7 @@ async function saveVoice(){
 function copyDiaryAI(){
  const t=String(editing?.body||"").trim(),el=host?.querySelector("#kc-ai-status");
  if(!t){if(el)el.textContent="Schrijf eerst tekst. Audio wordt zonder transcriptiedienst niet automatisch tekst.";return;}
- const prompt="Corrigeer spelling, interpunctie en zinsopbouw van deze Nederlandse dagboektekst. Behoud mijn ik-vorm, bedoeling en feiten. Verzin niets. Geef alleen de verbeterde versie en een optionele korte titel.\\n\\n"+t;
+ const prompt="Corrigeer spelling, interpunctie en zinsopbouw van deze Nederlandse dagboektekst. Behoud mijn ik-vorm, bedoeling en feiten. Verzin niets. Geef alleen de verbeterde versie en een optionele korte titel.\n\n"+t;
  if(!navigator.clipboard?.writeText){if(el)el.textContent="Klembord niet beschikbaar.";return;}
  navigator.clipboard.writeText(prompt).then(()=>{if(el)el.textContent="Opdracht gekopieerd. Open de ChatGPT-app en plak de opdracht.";}).catch(()=>{if(el)el.textContent="Kopiëren mislukt; controleer de klembordrechten.";});
 }
