@@ -11,6 +11,11 @@ const server = http.createServer((req, res) => {
   res.setHeader("Content-Type", ({ ".html": "text/html", ".css": "text/css", ".js": "application/javascript", ".json": "application/json", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml" })[path.extname(file)] || "application/octet-stream"); res.end(fs.readFileSync(file));
 });
 async function navigate(page, area, view) {
+  if(width>800){
+    if(await page.evaluate(()=>document.body.dataset.compassArea)!==area)await page.locator(`#compassAreaBar [data-compass-area="${area}"]`).click();
+    await page.locator(area==="life"?`#lifeNavigation [data-life-view="${view}"]`:`#sideNav [data-view="${view}"]`).click();
+    await page.evaluate(()=>window.scrollTo(0,0));return;
+  }
   await page.locator('[data-memento-menu="open"]').click();
   if (await page.evaluate(() => document.body.dataset.compassArea) !== area) await page.locator(`[data-memento-switch="${area}"]`).click();
   await page.locator(`#mementoMenuGrid [data-memento-dest="${area}:${view}"]`).click();
@@ -20,7 +25,7 @@ async function shot(page, name, log = true) {
   await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(80);
   await page.screenshot({ path: path.join(out, name + ".png"), fullPage: true, animations: "disabled" });
   const bytes = await page.screenshot({ path: path.join(out, name + ".jpg"), type: "jpeg", quality: 62, animations: "disabled" });
-  if (log) { const b64 = bytes.toString("base64"), count = Math.ceil(b64.length / 6000); for (let i = 0; i < count; i++) console.log(`VISUAL_IMAGE ${phase} ${width} ${name} ${i}/${count} ${b64.slice(i * 6000, (i + 1) * 6000)}`); }
+  if (log && process.env.MEMENTO_VISUAL_INLINE === "1") { const b64 = bytes.toString("base64"), count = Math.ceil(b64.length / 6000); for (let i = 0; i < count; i++) console.log(`VISUAL_IMAGE ${phase} ${width} ${name} ${i}/${count} ${b64.slice(i * 6000, (i + 1) * 6000)}`); }
   const measured = await page.evaluate(() => {
     const visible = el => { const r = el.getBoundingClientRect(), s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none"; };
     const overflow = [...document.querySelectorAll("body *")].filter(visible).map(el => ({ tag: el.tagName, id: el.id, class: String(el.className).slice(0, 90), rect: el.getBoundingClientRect().toJSON() })).filter(x => x.rect.right > innerWidth + 2 || x.rect.left < -2).slice(0, 30);
@@ -55,7 +60,7 @@ async function shot(page, name, log = true) {
     await page.setViewportSize({ width, height: width > 700 ? 560 : 430 }); await page.locator("#kc-body").scrollIntoViewIfNeeded(); await shot(page, "editor-short", width === 393); await page.setViewportSize({ width, height: width > 700 ? 900 : 852 });
     await navigate(page, "finance", "transactions"); await page.locator("#addTransaction").click(); await shot(page, "transaction-modal", width === 393); await page.locator("#cancelTx").click();
     await navigate(page, "life", "fitness"); await page.locator('[data-fit="tab"][data-id="plan"]').click(); await shot(page, "fitness-plan", width === 393); await page.locator('[data-fit="tab"][data-id="progress"]').click(); await shot(page, "fitness-progress", width === 393);
-    await page.locator('[data-memento-menu="open"]').click(); await shot(page, "navigation", width === 393);
+    if(await page.locator('[data-memento-menu="open"]').isVisible())await page.locator('[data-memento-menu="open"]').click(); await shot(page, "navigation", width === 393);
     const sheets = await page.evaluate(() => [...document.styleSheets].map(sheet => { let rules = []; try { rules = [...sheet.cssRules].map(r => r.cssText); } catch {} return { id: sheet.ownerNode?.id || "", href: sheet.href, rules }; }));
     fs.writeFileSync(path.join(out, "cssom.json"), JSON.stringify(sheets));
     fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ phase, width, diagnostics, checks, errors }, null, 2)); assert.deepEqual(errors, []);
