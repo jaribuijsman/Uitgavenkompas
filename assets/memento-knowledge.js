@@ -48,6 +48,7 @@ function markdown(value){
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false;
 let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
+let voiceRecorder=null,voiceStream=null,voiceFile=null,voiceURL="",voiceNotice="",voiceStarting=false,voiceToken=0;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 const read=()=>bridge.read();
 const allCollections=()=>C.ensure(read()).collections;
@@ -177,29 +178,73 @@ function renderCollectionEditor(){
  '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+Object.entries(iconLabels).map(([id,label])=>'<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+symbol(id)+'<span>'+label+'</span></button>').join('')+'</div></fieldset>'+
  '<div class="kc-editor-actions">'+btn('Annuleren','cancel-collection')+(c?btn('Archiveren','archive-collection',c.id):'')+'</div></form>';
 }
-function renderJournal(c){
- const today=C.journalDate(),days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id).sort((a,b)=>b.journal.date.localeCompare(a.journal.date));
- const filtered=journalFilter?days.filter(n=>n.journal.date===journalFilter):days;
- return header(c.name,true,btn('Schrijf vandaag','journal-today',c.id,true))+
- '<div class="kc-collection-actions">'+btn('Bewerken','edit-collection',c.id)+'</div><div class="kc-journal-today"><span>Vandaag</span><strong>'+journalLabel(today)+'</strong>'+btn(C.findJournal(read(),today)?'Verder schrijven':'Begin met schrijven','journal-today',c.id,true)+'</div>'+
- '<form id="kc-journal-date-form" class="kc-journal-date"><label>Kies een dag<input type="date" id="kc-journal-picker" value="'+esc(journalFilter||today)+'" required></label><button type="submit" class="kc-btn">Open dag</button></form>'+
- '<div class="kc-section-head"><h3>Eerdere dagen</h3>'+btn(journalFilter?'Alle dagen':'Zoek datum','journal-filter')+'</div>'+
- (filtered.length?'<div class="kc-item-list">'+filtered.map(n=>'<button type="button" class="kc-item" data-kc="journal-open" data-id="'+esc(n.id)+'"><span class="kc-item-main"><strong>'+journalLabel(n.journal.date)+'</strong><small>'+esc(n.journal.mood||'Geen stemming')+(n.title&&n.title!==n.journal.date?' · '+esc(n.title):'')+'</small><small>'+esc(n.body.slice(0,110))+'</small></span><span aria-hidden="true">›</span></button>').join('')+'</div>':'<div class="kc-empty"><strong>'+(journalFilter?'Geen tekst voor deze dag':'Nog geen dagboekdagen')+'</strong><p>Schrijf wanneer je wilt. Een gemiste dag is geen probleem.</p></div>');
+
+const diaryScenes=["schemermeer.webp","zonnestralen.webp","maanmeer.webp","ochtendmist.webp","herfstbrug.webp","bosruines.webp"];
+const diaryQuestions=["Wat ging er vandaag goed?","Wat kostte je vandaag energie?","Waar ben je dankbaar voor?","Wat heb je geleerd?","Wat heeft je verrast?","Wat gaf je rust?","Wat wil je onthouden?","Wat wil je morgen anders doen?","Waar was je trots op?"];
+function diaryOffset(day,delta){const d=new Date(day+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+delta);return d.toISOString().slice(0,10);}
+function diaryScene(day){const n=Math.floor(Date.parse(day+"T12:00:00Z")/86400000);return diaryScenes[((n%6)+6)%6];}
+function journalLabel(date){return new Date(date+"T12:00:00Z").toLocaleDateString("nl-NL",{timeZone:"Europe/Amsterdam",weekday:"long",day:"numeric",month:"long",year:"numeric"});}
+function diaryHero(date){return '<div class="kc-diary-hero"><img src="./assets/pin-forests/'+diaryScene(date)+'" alt="" decoding="async"><div><span>MEMENTO · LEVENSPAD</span><strong>Een moment voor jezelf</strong></div></div>';}
+function diaryWeek(date){
+ const marked=new Set(read().notes.filter(n=>!n.deletedAt&&n.journal).map(n=>n.journal.date));
+ return '<nav class="kc-diary-week" aria-label="Dagboekdagen"><button type="button" data-kc="journal-move" data-id="-7" aria-label="Vorige week">‹</button><div class="kc-diary-days">'+
+ Array.from({length:7},(_,i)=>{const d=diaryOffset(date,i-3),t=new Date(d+"T12:00:00Z");return '<button type="button" data-kc="journal-jump" data-id="'+d+'" aria-label="'+esc(journalLabel(d))+'" aria-current="'+(d===date?"date":"false")+'" class="'+(d===date?"selected":"")+'"><small>'+t.toLocaleDateString("nl-NL",{timeZone:"UTC",weekday:"short"}).replace(".","")+'</small><strong>'+t.getUTCDate()+'</strong><i class="'+(marked.has(d)?"written":"")+'"></i></button>';}).join("")+'</div><button type="button" data-kc="journal-move" data-id="7" aria-label="Volgende week">›</button></nav>';
 }
-function journalLabel(date){return new Date(date+'T12:00:00Z').toLocaleDateString('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long',year:'numeric'});}
-function openJournal(date){
- const existing=C.findJournal(read(),date);
- if(existing){collectionId=C.collectionOf(read(),existing);startEdit(existing.id);return;}
- const target=allCollections().find(c=>c.id===collectionId&&c.special==='journal')||collections().find(c=>c.special==='journal');
- if(!target){notify('Open eerst je dagboekverzameling.');return;}
- beginNew(target.id);editing.journal={version:1,date,mood:''};editing.title='';dirty=false;render();
+function sleepMinutes(c){
+ if(!c?.sleepStart||!c?.sleepEnd)return null;
+ const minutes=(new Date(c.sleepEnd)-new Date(c.sleepStart))/60000,awake=(c.latency||0)+(c.awake||0);
+ return Number.isFinite(minutes)&&minutes>0&&minutes<=2160&&awake<=minutes?Math.round(minutes-awake):null;
+}
+function diarySummary(j){
+ const c=j?.checkin||{},parts=[j?.mood||"",c.energy?"Energie "+c.energy+"/5":"",c.stress?"Stress "+c.stress+"/5":""],s=sleepMinutes(c);
+ if(s!==null)parts.push("Slaap "+Math.floor(s/60)+"u "+String(s%60).padStart(2,"0")+"m");
+ return parts.filter(Boolean).join(" · ")||"Stemming · Energie · Stress · Slaap";
+}
+function diaryCheckin(j){
+ const c=j.checkin||{},opt=(key,title)=>'<label>'+title+'<select data-kc-checkin="'+key+'"><option value="">Niet ingevuld</option>'+[1,2,3,4,5].map(n=>'<option value="'+n+'"'+(c[key]===n?" selected":"")+'>'+n+" / 5"+'</option>').join("")+'</select></label>';
+ const dt=(key,title)=>'<label>'+title+'<input type="datetime-local" data-kc-checkin="'+key+'" value="'+esc(c[key]||"")+'"></label>';
+ const num=(key,title)=>'<label>'+title+'<input type="number" min="0" max="1440" step="1" inputmode="numeric" placeholder="0" data-kc-checkin="'+key+'" value="'+esc(c[key]??"")+'"></label>';
+ return '<details class="kc-diary-checkin"><summary><span class="kc-diary-heart">♡</span><span><strong>Hoe voel je je vandaag?</strong><small id="kc-diary-summary">'+esc(diarySummary(j))+'</small></span><b>⌄</b></summary><div class="kc-diary-checkin-body">'+
+ '<fieldset><legend>Stemming · optioneel</legend><div class="kc-diary-moods">'+[["Moeilijk","Slecht"],["Minder","Minder"],["Neutraal","Oké"],["Prima","Goed"],["Goed","Heel goed"]].map(([v,n])=>'<button type="button" data-kc="journal-mood" data-id="'+v+'" aria-pressed="'+(j.mood===v)+'">'+n+'</button>').join("")+'</div></fieldset>'+
+ '<div class="kc-diary-fields">'+opt("energy","Energie")+opt("stress","Stress")+'</div>'+
+ '<section class="kc-diary-sleep"><strong>◕ Slaap</strong><p>Ook overdag na een nachtdienst. Vul begin- en einddatum in; wakker gelegen tijd wordt afgetrokken.</p><div class="kc-diary-fields">'+dt("sleepStart","In bed vanaf")+dt("sleepEnd","Opgestaan op")+num("latency","Inslapen (min.)")+num("awake","Tussendoor wakker (min.)")+num("nap","Dutje (min.)")+'</div><small id="kc-diary-sleep-result">'+(sleepMinutes(c)===null?"Nog geen berekening":"Geschat: "+Math.floor(sleepMinutes(c)/60)+"u "+String(sleepMinutes(c)%60).padStart(2,"0")+"m")+'</small></section></div></details>';
+}
+function diaryPrompts(date){const seed=Math.floor(Date.parse(date+"T12:00:00Z")/86400000);return '<div class="kc-diary-prompts"><div class="kc-diary-heading"><strong>✧ Reflectievragen</strong><small>optioneel</small></div>'+[0,1,2].map(i=>{const q=diaryQuestions[((seed+i*3)%9+9)%9];return '<button type="button" data-kc="journal-prompt" data-id="'+esc(q)+'"><span>'+esc(q)+'</span><b>＋</b></button>';}).join("")+'</div>';}
+function diaryVoice(){
+ return '<section class="kc-diary-voice"><div class="kc-diary-heading"><strong>◉ Inspreken</strong><small>Start / Stop</small></div><p>Spreekpauzes stoppen de opname niet. Zonder transcriptiedienst wordt audio niet automatisch naar tekst omgezet.</p>'+
+ (voiceRecorder||voiceStarting?btn(voiceStarting?"Microfoon openen…":"■ Stop opname",voiceStarting?"voice-wait":"voice-stop"):btn("◉ Start opname","voice-start","",true))+
+ (voiceRecorder?'<span class="kc-diary-live"> ● Opname loopt</span>':"")+
+ (voiceFile&&voiceURL?'<div class="kc-diary-audio"><audio controls preload="metadata" src="'+esc(voiceURL)+'"></audio>'+btn("Opname bewaren bij deze dag","voice-save","",true)+btn("Opname verwijderen","voice-discard")+'<a href="'+esc(voiceURL)+'" download="'+esc(voiceFile.name)+'">Audio apart downloaden</a></div>':"")+
+ '<p id="kc-voice-status" role="status">'+esc(voiceNotice||"Alleen lokaal · maximaal 25 MB per opname")+'</p></section>';
+}
+function diaryAI(){
+ const android=/Android/i.test(navigator.userAgent);
+ return '<section class="kc-diary-ai"><div class="kc-diary-heading"><strong>✧ AI-schrijfhulp</strong><small>Gratis kopiëren</small></div><p>Kopieer de opdracht, open ChatGPT en plak hem daar. Het resultaat kun je na controle terugplakken in Memento.</p><div>'+btn("1. Kopieer opdracht","journal-ai-copy")+
+ '<a class="kc-btn kc-primary" href="'+(android?"intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;end":"https://chatgpt.com/")+'" rel="noopener noreferrer">2. Open ChatGPT'+(android?"-app":"")+'</a></div><small id="kc-ai-status" role="status">Niets wordt automatisch verzonden of vervangen.</small></section>';
+}
+function renderJournal(c){
+ const today=C.journalDate(),day=journalFilter||today,days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id).sort((a,b)=>b.journal.date.localeCompare(a.journal.date)),note=C.findJournal(read(),day);
+ return header("Mijn dagboek",true,btn("Vandaag","journal-today",c.id))+
+ diaryHero(day)+diaryWeek(day)+
+ '<div class="kc-diary-selected"><div><small>'+(day===today?"VANDAAG":"GEKOZEN DAG")+'</small><h3>'+esc(journalLabel(day))+'</h3></div>'+btn(note?"Open dag":"Schrijf","journal-date-open",day,true)+'</div>'+
+ (note?'<button class="kc-diary-daypreview" type="button" data-kc="journal-date-open" data-id="'+day+'"><strong>'+esc(note.title===day?"Dagboek":note.title)+'</strong><small>'+esc(diarySummary(note.journal))+'</small><span>'+esc(note.body.slice(0,160)||"Check-in of opname bekijken")+'</span></button>':'<p class="kc-diary-empty">Nog niets vastgelegd voor deze dag. Een gemiste dag is geen probleem.</p>')+
+ '<div class="kc-diary-heading kc-diary-history-title"><strong>Eerdere dagen</strong>'+btn("Beheer","edit-collection",c.id)+'</div>'+
+ (days.length?'<div class="kc-diary-history">'+days.slice(0,20).map(n=>'<button type="button" data-kc="journal-open" data-id="'+esc(n.id)+'"><span style="background-image:url(./assets/pin-forests/'+diaryScene(n.journal.date)+')"></span><span><strong>'+esc(journalLabel(n.journal.date))+'</strong><small>'+esc(diarySummary(n.journal))+'</small></span><b>›</b></button>').join("")+'</div>':'<p class="kc-diary-empty">Je eerdere dagboekdagen verschijnen hier.</p>');
+}
+function openJournal(day){
+ const existing=C.findJournal(read(),day);if(existing){collectionId=C.collectionOf(read(),existing);startEdit(existing.id);return;}
+ const target=allCollections().find(c=>c.id===collectionId&&c.special==="journal")||collections().find(c=>c.special==="journal");
+ if(!target){notify("Open eerst je dagboekverzameling.");return;}
+ beginNew(target.id);editing.journal={version:1,date:day,mood:""};editing.title="";dirty=false;render();
 }
 function renderJournalEditor(){
  const e=editing,j=e.journal;
- return '<div class="kc-editor-head">'+header('Dagboek',true,btn('Opslaan','save','',true))+'</div><p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?'Niet opgeslagen':'Concept · lege dagen worden niet opgeslagen')+'</p>'+
- '<div class="kc-editor-fields kc-journal-fields"><label>Datum<input id="kc-journal-date" type="date" value="'+esc(j.date)+'" data-kc-journal="date" required></label><label>Stemming · optioneel<select id="kc-journal-mood" data-kc-journal="mood">'+['','Goed','Prima','Neutraal','Minder','Moeilijk'].map(m=>'<option value="'+m+'"'+(j.mood===m?' selected':'')+'>'+esc(m||'Geen stemming')+'</option>').join('')+'</select></label>'+
- '<label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?'':e.title)+'"></label><label for="kc-body">Wat wil je bewaren van deze dag?</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="12" placeholder="Gebeurtenissen, gedachten, gevoelens…">'+esc(e.body)+'</textarea>'+
- '<label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(', '))+'"></label>'+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn('Sluiten / concept annuleren','cancel-journal')+btn('Versiegeschiedenis','versions')+'</div></div>';
+ return '<div class="kc-editor-head">'+header("Mijn dagboek",true,btn("Opslaan","save","",true))+'</div>'+
+ '<p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?"Niet opgeslagen":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
+ diaryHero(j.date)+diaryWeek(j.date)+'<div class="kc-diary-selected"><div><small>DAGBOEK</small><h3>'+esc(journalLabel(j.date))+'</h3></div></div>'+
+ diaryCheckin(j)+diaryPrompts(j.date)+
+ '<section class="kc-diary-write"><div class="kc-diary-heading"><strong>✎ Mijn verhaal</strong><small>Vrij schrijven</small></div><label for="kc-body" class="kc-sr">Dagboektekst</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="9" placeholder="Wat heb je vandaag meegemaakt?">'+esc(e.body)+'</textarea><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?"":e.title)+'" placeholder="Titel van deze dag"></label><label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(", "))+'"></label><div class="kc-diary-actions">'+btn("Bewaar dag","save","",true)+btn("Versiegeschiedenis","versions")+'</div></section>'+
+ diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+'</div>';
 }
 function renderSort(){
  const list=sortState?.ids||[];
@@ -208,7 +253,7 @@ function renderSort(){
 function attachmentsHTML(n){
  if(!(n.attachments||[]).length)return "";
  return '<div class="kc-attachments"><h3>Bijlagen</h3>'+
- n.attachments.map(a=>'<div class="kc-attachment"><span aria-hidden="true">'+(a.type==="application/pdf"?"▣":"▧")+'</span><button type="button" data-kc="file" data-id="'+esc(a.id)+'">'+esc(a.name)+'</button><small>'+Math.round(a.size/1024)+' KB</small>'+
+ n.attachments.map(a=>'<div class="kc-attachment"><span aria-hidden="true">'+(a.type==="application/pdf"?"▣":String(a.type).startsWith("audio/")?"♫":"▧")+'</span><button type="button" data-kc="file" data-id="'+esc(a.id)+'">'+esc(a.name)+'</button><small>'+Math.round(a.size/1024)+' KB</small>'+
  (screen==="edit"?'<button type="button" data-kc="remove-file" data-id="'+esc(a.id)+'" aria-label="Bijlage loskoppelen">×</button>':"")+'</div>').join("")+"</div>";
 }
 function linkedHTML(n){
@@ -292,7 +337,8 @@ function renderFile(){
  (fileRecord?.type==="application/pdf"&&fileUrl?'<iframe class="kc-pdf-frame" title="PDF-lezer" src="'+esc(fileUrl)+'#toolbar=1" loading="lazy"></iframe>'+
  '<p class="kc-muted">Werkt de PDF-lezer niet in jouw Android-browser? Gebruik ‘Open origineel’ om de ingebouwde documentviewer te openen.</p>'+
  '<a class="kc-source" href="'+esc(fileUrl)+'" target="_blank" rel="noopener noreferrer">Open origineel ↗</a>':
- fileRecord?.type?.startsWith("image/")&&fileUrl?'<img class="kc-image" src="'+esc(fileUrl)+'" alt="'+esc(a?.name||"Bijlage")+'">':
+ fileRecord?.type?.startsWith("audio/")&&fileUrl?'<audio controls class="kc-diary-audio-player" src="'+esc(fileUrl)+'"></audio>':
+  fileRecord?.type?.startsWith("image/")&&fileUrl?'<img class="kc-image" src="'+esc(fileUrl)+'" alt="'+esc(a?.name||"Bijlage")+'">':
  '<div class="kc-empty">Bestand wordt geladen of is niet beschikbaar.</div>')+link;
 }
 function render(){
@@ -320,9 +366,9 @@ function flush(){
  if(!draft.title.trim())draft.title=draft.journal?draft.journal.date:String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
  if(!draft.body.trim()&&draft.title==="Naamloze notitie"&&!draft.attachments?.length&&!selectedId){dirty=false;return true;}
  if(draft.sourceUrl&&!safeURL(draft.sourceUrl)){notify("Gebruik een geldige http- of https-link.");setSaveIndicator("Controleer de bronlink");return false;}
- if(draft.journal&&!draft.body.trim()){setSaveIndicator('Leeg concept · niet opgeslagen');if(!selectedId){dirty=false;return true;}notify('Een bestaande dagboekdag kan niet leeg worden opgeslagen.');return false;}
+ if(draft.journal&&!C.journalHasContent(draft.body,draft.journal)){setSaveIndicator("Leeg concept · niet opgeslagen");if(!selectedId){dirty=false;return true;}notify("Vul eerst iets in voordat je je dagboek leegmaakt.");return false;}
  const changed=write(state=>{
-  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
+  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
   if(selectedId){C.updateNote(state,selectedId,{title:draft.title,body:draft.body,kind:draft.kind,collectionId:draft.collectionId,tags:draft.tags,sourceUrl:draft.sourceUrl,recipe:draft.recipe||null});}
   else {draft.revision=1;state.notes.unshift(draft);}
  });
@@ -333,6 +379,7 @@ function flush(){
 function setSaveIndicator(label){const el=host?.querySelector("#kc-save-state");if(el)el.textContent=label;}
 function schedule(){dirty=true;setSaveIndicator("Bezig met opslaan…");clearTimeout(timer);timer=setTimeout(()=>flush(),850);}
 function leave(next,id=""){
+ if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder eerst de opname.");return false;}
  clearTimeout(timer);if(!flush())return false;
  editing=null;screen=next;if(id)collectionId=id;notice="";render();return true;
 }
@@ -392,6 +439,66 @@ async function openFile(id){
  if(fileUrl)URL.revokeObjectURL(fileUrl);
  fileUrl=S.preview(record);fileRecord=record;fileId=id;screen="file";render();
 }
+
+function diaryRefresh(){
+ const j=editing?.journal;if(!j)return;const sum=host?.querySelector("#kc-diary-summary");if(sum)sum.textContent=diarySummary(j);
+ const span=host?.querySelector("#kc-diary-sleep-result"),n=sleepMinutes(j.checkin);
+ if(span)span.textContent=n===null?"Nog geen geldige berekening":"Geschat: "+Math.floor(n/60)+"u "+String(n%60).padStart(2,"0")+"m";
+}
+function voiceStatus(msg){voiceNotice=msg;const el=host?.querySelector("#kc-voice-status");if(el)el.textContent=msg;}
+function releaseMic(){if(voiceStream){voiceStream.getTracks().forEach(t=>t.stop());voiceStream=null;}}
+function discardVoice(){
+ voiceToken++;if(voiceRecorder&&voiceRecorder.state!=="inactive")try{voiceRecorder.stop()}catch(e){}
+ releaseMic();voiceRecorder=null;voiceStarting=false;voiceFile=null;
+ if(voiceURL)URL.revokeObjectURL(voiceURL);voiceURL="";voiceNotice="";
+}
+function stopVoice(){if(voiceRecorder&&voiceRecorder.state!=="inactive")try{voiceRecorder.stop()}catch(e){voiceStatus("Stoppen mislukt.");}}
+async function startVoice(){
+ if(!editing?.journal||voiceRecorder||voiceFile||voiceStarting)return;
+ if(!isSecureContext||!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){voiceStatus("Veilige microfoonopname niet beschikbaar. Open Memento via HTTPS in Chrome.");return;}
+ const mime=["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(t=>MediaRecorder.isTypeSupported?.(t));
+ if(!mime){voiceStatus("Dit apparaat ondersteunt geen geschikte audio-opname.");return;}
+ voiceStarting=true;const token=++voiceToken;voiceStatus("Microfoon openen…");
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  if(token!==voiceToken||!editing?.journal){stream.getTracks().forEach(t=>t.stop());return;}
+  voiceStream=stream;const r=new MediaRecorder(stream,{mimeType:mime,audioBitsPerSecond:64000}),chunks=[];
+  voiceRecorder=r;voiceStarting=false;
+  r.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data);};
+  r.onerror=()=>{releaseMic();voiceRecorder=null;voiceStatus("Opname mislukt.");render();};
+  r.onstop=()=>{
+   releaseMic();if(token!==voiceToken)return;
+   voiceRecorder=null;const type=r.mimeType.split(";")[0],blob=new Blob(chunks,{type});
+   if(blob.size<16){voiceStatus("Geen bruikbaar geluid opgenomen.");render();return;}
+   voiceFile=new File([blob],"Dagboek-"+editing.journal.date+"."+(type==="audio/mp4"?"m4a":"webm"),{type});
+   voiceURL=URL.createObjectURL(blob);voiceNotice=blob.size>25*1024*1024?"Opname te groot; download het bestand of neem korter op.":"Opname gereed. Bewaar haar bij deze dag.";render();
+  };
+  r.start();voiceNotice="Opname loopt · korte pauzes zijn toegestaan.";render();
+ }catch(e){releaseMic();voiceStarting=false;voiceStatus(e.name==="NotAllowedError"?"Microfoontoegang geweigerd.":"Opnemen mislukt.");}
+}
+async function saveVoice(){
+ if(!voiceFile||!editing?.journal||!S)return;
+ if(voiceFile.size>25*1024*1024){voiceStatus("Maximaal 25 MB. Download deze opname afzonderlijk.");return;}
+ const guard=root.MementoStorageGuard;let token,metadata=null,linked=false;
+ try{
+  if(!guard?.writable)throw Error("Memento is nu alleen-lezen. Probeer opnieuw.");
+  editing.journal.audioOnly=true;dirty=true;clearTimeout(timer);
+  if(!flush())throw Error("Dagboek niet opgeslagen. De audio blijft beschikbaar.");
+  token=guard.beginOperation();metadata=await S.save(selectedId,voiceFile,token);
+  linked=write(state=>{const n=state.notes.find(x=>x.id===selectedId);C.updateNote(state,n.id,{attachments:[...(n.attachments||[]),metadata]});},token);
+  if(!linked)throw Error("Audio niet gekoppeld; probeer opnieuw.");
+  voiceFile=null;if(voiceURL)URL.revokeObjectURL(voiceURL);voiceURL="";voiceNotice="Opname veilig lokaal bewaard bij deze dag.";
+  startEdit(selectedId);notify(voiceNotice);
+ }catch(e){voiceStatus(e.message||"Bewaren mislukt. Probeer opnieuw.");if(metadata&&!linked&&token)try{await S.remove(metadata.id,token)}catch{}}
+ finally{if(token)guard.endOperation(token);}
+}
+function copyDiaryAI(){
+ const t=String(editing?.body||"").trim(),el=host?.querySelector("#kc-ai-status");
+ if(!t){if(el)el.textContent="Schrijf eerst tekst. Audio wordt zonder transcriptiedienst niet automatisch tekst.";return;}
+ const prompt="Corrigeer spelling, interpunctie en zinsopbouw van deze Nederlandse dagboektekst. Behoud mijn ik-vorm, bedoeling en feiten. Verzin niets. Geef alleen de verbeterde versie en een optionele korte titel.\\n\\n"+t;
+ if(!navigator.clipboard?.writeText){if(el)el.textContent="Klembord niet beschikbaar.";return;}
+ navigator.clipboard.writeText(prompt).then(()=>{if(el)el.textContent="Opdracht gekopieerd. Open de ChatGPT-app en plak de opdracht.";}).catch(()=>{if(el)el.textContent="Kopiëren mislukt; controleer de klembordrechten.";});
+}
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
@@ -399,6 +506,26 @@ function click(event){
  if(op==="quick-speech"){quickToggleSpeech();return;}
  if(op==="quick-save"){quickSave();return;}
  if(op==="quick-expand"){quickExpand();return;}
+ if(op==="journal-jump"||op==="journal-date-open"||op==="journal-move"){
+  if(voiceRecorder||voiceFile||voiceStarting){notify("Bewaar of verwijder eerst de opname.");return;}
+  const current=editing?.journal?.date||journalFilter||C.journalDate(),next=op==="journal-move"?diaryOffset(current,Number(id)):id;
+  if(screen==="edit"){clearTimeout(timer);if(!flush())return;}
+  journalFilter=next;openJournal(next);return;
+ }
+ if(op==="journal-mood"&&editing?.journal){
+  editing.journal.mood=editing.journal.mood===id?"":id;
+  host.querySelectorAll('[data-kc="journal-mood"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===editing.journal.mood)));
+  diaryRefresh();schedule();return;
+ }
+ if(op==="journal-prompt"&&editing?.journal){
+  const input=host.querySelector("#kc-body");if(input){input.value+=(input.value.trim()?"\n\n":"")+id+"\n";editing.body=input.value;input.focus();schedule();}
+  return;
+ }
+ if(op==="voice-start"){startVoice();return;}
+ if(op==="voice-stop"){stopVoice();return;}
+ if(op==="voice-save"){saveVoice();return;}
+ if(op==="voice-discard"){discardVoice();render();return;}
+ if(op==="journal-ai-copy"){copyDiaryAI();return;}
  if(op==="purge-trash"){root.MementoLife?.openTrash?.();return}
  if(op==="back"){back();return}
  if(op==="new"){const c=allCollections().find(c=>c.id===collectionId);if(screen==='collection'&&c?.special==='journal'){openJournal(C.journalDate());return;}beginNew(screen==="collection"?collectionId:"inbox");return}
@@ -408,7 +535,7 @@ function click(event){
  if(op==="mode"){viewOverride=id;render();return}
  if(op==="open"){selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
- if(op==="save"){clearTimeout(timer);if(flush()){screen=selectedId?"detail":"collection";editing=null;render();}return}
+ if(op==="save"){if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder je audio voordat je dit scherm verlaat.");return;}clearTimeout(timer);if(flush()){screen=selectedId?"detail":"collection";editing=null;render();}return}
  if(op==="preview"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}
  if(op==="versions"){if(flush()){screen="versions";render();}return}
  if(op==="restore-version"){
@@ -482,10 +609,11 @@ function kc2Action(op,id,el){
   [ids[index],ids[target]]=[ids[target],ids[index]];persistSort(ids);
   host.querySelector('[data-kc="'+op+'"][data-id="'+id+'"]')?.focus();return true;
  }
- if(op==='journal-today'){collectionId=id;openJournal(C.journalDate());return true;}
- if(op==='journal-open'){const n=read().notes.find(n=>n.id===id);if(n){collectionId=C.collectionOf(read(),n);startEdit(id);}return true;}
+ if(op==='journal-today'){collectionId=id;journalFilter=C.journalDate();openJournal(C.journalDate());return true;}
+ if(op==='journal-open'){const n=read().notes.find(n=>n.id===id);if(n){journalFilter=n.journal.date;collectionId=C.collectionOf(read(),n);startEdit(id);}return true;}
  if(op==='journal-filter'){journalFilter=journalFilter?'':host.querySelector('#kc-journal-picker')?.value||'';render();return true;}
  if(op==='cancel-journal'){
+  if(voiceRecorder||voiceStarting||voiceFile){notify('Bewaar of verwijder eerst je opname.');return true;}
   if(dirty&&!confirm('Niet opgeslagen wijzigingen sluiten? Reeds automatisch opgeslagen tekst blijft bewaard.'))return true;
   clearTimeout(timer);editing=null;dirty=false;screen='collection';render();return true;
  }
@@ -550,6 +678,7 @@ function onInput(event){
  if(field.dataset.kcInput==="search"){query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
+ if(field.dataset.kcCheckin&&editing?.journal){const key=field.dataset.kcCheckin,c=editing.journal.checkin||(editing.journal.checkin={});c[key]=["energy","stress","latency","awake","nap"].includes(key)?(field.value===""?null:Number(field.value)):field.value;diaryRefresh();schedule();return;}
  if(field.dataset.kcJournal&&editing?.journal){if(field.dataset.kcJournal==='date'&&editing.title===editing.journal.date)editing.title=field.value;editing.journal[field.dataset.kcJournal]=field.value;schedule();return;}
  if(!editing||!change)return;
  if(change==="tags")editing.tags=[...new Set(field.value.split(",").map(x=>x.trim().slice(0,60)).filter(Boolean))].slice(0,30);
@@ -595,7 +724,7 @@ function mount(container,b){
  if(!read().knowledge?.hierarchyVersion&&guard?.ready)guard.ready.then(()=>{if(host&&document.body.contains(host)&&!editing&&!colDraft){tryMigration();render();}});
  render();
 }
-function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||quickDraft.trim()||quickSpeech);}
+function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||quickDraft.trim()||quickSpeech||voiceRecorder||voiceStarting||voiceFile);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();if(hasPending())flush();}});
 window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||quickDraft.trim()||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
