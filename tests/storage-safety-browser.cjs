@@ -24,7 +24,7 @@ async function navigate(page, area, view) {
   await page.locator(`#mementoMenuGrid [data-memento-dest="${area}:${view}"]`).click();
 }
 async function addTransaction(page, description) {
-  await navigate(page, "finance", "transactions"); await page.locator("#addTransactionTop").click();
+  await navigate(page, "finance", "transactions"); await page.locator("#addTransaction").click();
   await page.locator("#txDescription").fill(description); await page.locator("#txAmount").fill("12.34"); await page.locator("#txDate").fill("2026-10-26");
   await page.locator('[type="submit"][form="txForm"]').click();
 }
@@ -61,6 +61,8 @@ async function addTransaction(page, description) {
     checks.push("Native two-tab transaction conflict preserves A and B's unsaved form");
     await b.locator("#cancelTx").click(); await navigate(a, "life", "tasks");
     await a.locator("#lifeQuickTitle").fill("Taak A"); await a.locator("#lifeQuickForm button[type=submit]").click();
+    await a.locator('[data-life-quick-kind="note"]').click(); await a.locator("#lifeQuickTitle").fill("Notitie A"); await a.locator("#lifeQuickForm button[type=submit]").click();
+    await until(a,()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n=>n.title==="Notitie A"));
     await navigate(b, "life", "tasks"); await b.locator("#lifeQuickTitle").fill("Taakconcept B"); await b.locator("#lifeQuickForm button[type=submit]").click();
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
@@ -75,6 +77,7 @@ async function addTransaction(page, description) {
     checks.push("Read-only note editor retains failed autosave/manual-save draft");
     // A real storage fault on a writable page must keep the DOM input for retry.
     await a.evaluate(() => { window.originalSetItem = Storage.prototype.setItem; Storage.prototype.setItem = function (key, value) { if (key === "compass_life_preview_v1") throw Error("Quota fixture"); return window.originalSetItem.call(this, key, value); }; });
+    await a.locator('[data-life-quick-kind="task"]').click();
     await a.locator("#lifeQuickTitle").fill("Quotaconcept"); await a.locator("#lifeQuickForm button[type=submit]").click(); assert.equal(await a.locator("#lifeQuickTitle").inputValue(), "Quotaconcept");
     await a.evaluate(() => { Storage.prototype.setItem = window.originalSetItem; }); await a.locator("#lifeQuickForm button[type=submit]").click();
     checks.push("Writable-tab quota failure preserves input and retry saves it");
@@ -87,8 +90,9 @@ async function addTransaction(page, description) {
     await navigate(c, "life", "backup"); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;
     const archive = fs.readFileSync(await download.path()); assert.equal(archive.readUInt32LE(0), 0x04034b50);
     const before = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
+    const restoredNavigation=c.waitForNavigation({waitUntil:"domcontentloaded"});
     await c.locator("#lifeImportFile").setInputFiles({ name: "original-format.zip", mimeType: "application/zip", buffer: archive });
-    await c.waitForLoadState("domcontentloaded"); await until(c, () => window.MementoStorageGuard?.writable);
+    await restoredNavigation; await until(c, () => window.MementoStorageGuard?.writable);
     const after = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     assert.deepEqual(after, before); checks.push("UI ZIP export/restore retains complete objects and existing attachment IDs");
     await c.evaluate(async () => { await navigator.serviceWorker.ready; }); await c.reload({ waitUntil: "domcontentloaded" }); await until(c, () => navigator.serviceWorker.controller !== null);
@@ -97,6 +101,6 @@ async function addTransaction(page, description) {
     assert(historical.type === "opaqueredirect" || historical.status === 302); checks.push("Offline app obtains lock; historical URL is redirected by the current worker");
     assert.deepEqual(errors, []); console.log(JSON.stringify({ checks, errors }, null, 2)); await context.close();
   } catch (e) {
-    console.error(e); process.exitCode = 1;
+    console.error(e); console.log(JSON.stringify({completedChecks:checks,errors},null,2)); process.exitCode = 1;
   } finally { if (browser) await browser.close(); server.close(); }
 })();
