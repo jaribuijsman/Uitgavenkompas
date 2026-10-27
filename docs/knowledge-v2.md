@@ -78,3 +78,26 @@ Alle nieuwe kern-/veiligheidscontroles en alle vier browserjobs zijn geslaagd op
 
 De volledige PNGs en overige schermen staan in de artifacts van de run. Het openen van de lokale PDF-blob en downloaden van PDF-bytes zijn gecontroleerd. Dit is geen bewijs dat de native PDF-viewer in headless Chromium of elke Android-browser pagina-inhoud tekent; die apparaatcontrole blijft expliciet open.
 
+
+## Dagboekuitbreiding — 27 oktober 2026
+
+De dagboekverzameling gebruikt nog steeds de bestaande `journal.version === 1`-notities en identifiers. Dagboekdagen tonen een datumafhankelijke bosachtergrond uit de zes al aanwezige offline PIN-bosafbeeldingen. De weekstrook wisselt de datum, zonder lege dagen op te slaan.
+
+De optionele, standaard ingeklapte check-in bewaart `journal.checkin`:
+- `energy` en `stress`: gehele waarden van 1–5, optioneel.
+- `sleepStart`, `sleepEnd`: lokale datum/tijd (`YYYY-MM-DDTHH:mm`), ook over middernacht of overdag.
+- `latency`, `awake`, `nap`: geschatte minuten, optioneel.
+
+Geschatte hoofdslaap = tijd tussen begin/eind, minus inslapen en wakkergelegen minuten. Dutjes staan los. Het is een handmatige schatting, geen medisch of automatisch meetresultaat. Ook check-in zonder vrije tekst mag worden bewaard. Bestaande notities/back-ups zonder deze velden blijven compatibel.
+
+De handmatige start/stop-audio gebruikt `getUserMedia` en `MediaRecorder`. Er vindt geen betaalde transcriptie plaats. Een bewaarde opname is een echte, op bestandsheader en SHA-256 gecontroleerde `audio/webm`-/`audio/mp4`-bijlage via de bestaande guarded IndexedDB, per bestand maximaal 25 MB. **Alleen een volledige ZIP-back-up bevat het geluidsbestand; een JSON-back-up niet.** Opnemen zonder de knop 'Opname bewaren' koppelt niets aan de dagboekdag. Openstaande opnames worden bij navigatie niet stilzwijgend gewist.
+
+AI-schrijfhulp kopieert alleen op een expliciete klik tekst plus een beperkte instructie naar het klembord. De Android-knop probeert de geïnstalleerde ChatGPT-app via een Chrome-intent met pakket `com.openai.chatgpt` te openen. Ondersteunde Android-linkafhandeling en aanwezigheid van de app blijven apparaat-afhankelijk; de browsercode kan het resultaat niet controleren. De gebruiker plakt de AI-tekst handmatig terug. Er is geen API-sleutel en er wordt geen tekst automatisch naar een dienst verzonden.
+
+### Bewuste vervolgopties (nog niet geïmplementeerd)
+
+- Eventueel **GPT Transcribe** of een andere transcriptie-API toevoegen voor audiobestanden, pas na afzonderlijke toestemming, privacyafweging, veilige backend en kosteninschatting.
+- Eventueel een beveiligde OpenAI-API-koppeling voor AI-tekstvoorstellen **zonder** automatisch overschrijven van dagboeknotities.
+- Eventueel automatische slaapimport via Android Health Connect, maar de handmatige begin-/eindregistratie blijft de eerste gegevensbron totdat er een expliciete synchronisatiekeuze is.
+
+De nieuwe workflow `journal-upgrade.yml` controleert data-compatibiliteit, slaapovergangen, dagboekinteractie, lokale opnamebestanden en mobiele overloop. Browseremulatie is geen test op een fysiek Android-apparaat.
