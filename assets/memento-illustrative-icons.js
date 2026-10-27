@@ -122,10 +122,11 @@ function svg(key,{quiet=false}={}){
  const name=resolve(key),inner=artwork[name],small=quiet||["menu","check","plus","arrow","arrow-left","close","edit","download","upload","filter","link","trash"].includes(name);
  const uid="mit"+(++counter);
  const background=small?"":base;
+ const body=inner.replaceAll('fill="'+G+'"','fill="url(#'+uid+'Gold)"').replaceAll('fill="'+W+'"','fill="url(#'+uid+'Wood)"').replaceAll('fill="'+P+'"','fill="url(#'+uid+'Paper)"').replaceAll('fill="'+S+'"','fill="url(#'+uid+'Sage)"');
  return '<svg class="memento-illustrative-icon'+(small?' memento-illustrative-icon--quiet':'')+'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="fill:none;stroke:none">'+
- '<defs><radialGradient id="'+uid+'"><stop offset="0" stop-color="#e8bd76" stop-opacity=".28"/><stop offset="1" stop-color="#e8bd76" stop-opacity="0"/></radialGradient></defs>'+
+ '<defs><radialGradient id="'+uid+'"><stop offset="0" stop-color="#e8bd76" stop-opacity=".28"/><stop offset="1" stop-color="#e8bd76" stop-opacity="0"/></radialGradient><linearGradient id="'+uid+'Gold" x1="0" y1="0" x2=".95" y2="1"><stop stop-color="#ffdfa1"/><stop offset=".52" stop-color="#e8bd76"/><stop offset="1" stop-color="#bb874c"/></linearGradient><linearGradient id="'+uid+'Wood" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#ad7552"/><stop offset=".55" stop-color="#815438"/><stop offset="1" stop-color="#51372c"/></linearGradient><linearGradient id="'+uid+'Paper" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#fff0c9"/><stop offset=".6" stop-color="#e5d8ac"/><stop offset="1" stop-color="#c5b788"/></linearGradient><linearGradient id="'+uid+'Sage" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#b3cf9b"/><stop offset=".55" stop-color="#7faa85"/><stop offset="1" stop-color="#4a815f"/></linearGradient></defs>'+
  (small?"":'<ellipse cx="32" cy="34" rx="28" ry="27" fill="url(#'+uid+')"/>')+
- background+inner+(small?'':'<circle cx="52" cy="10" r="1.6" fill="'+Y+'" opacity=".74"/>')+'</svg>';
+ background+body+(small?'':'<circle cx="52" cy="10" r="1.6" fill="'+Y+'" opacity=".74"/>')+'</svg>';
 }
 function render(key){return svg(key);}
 function forCollection(c){return svg(collection(c));}
