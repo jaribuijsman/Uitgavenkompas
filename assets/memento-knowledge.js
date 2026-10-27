@@ -206,8 +206,8 @@ function render(){
  else if(screen==="file")output=renderFile();
  host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+output+"</div>";
 }
-function write(mutator){
- try{return bridge.write(life=>{C.ensure(life);mutator(life);C.validate(life);});}catch(e){notify(e.message);return false;}
+function write(mutator,token){
+ try{return bridge.write(life=>{C.ensure(life);mutator(life);C.validate(life);},token);}catch(e){notify(e.message);return false;}
 }
 function flush(){
  if(!editing||!dirty)return true;
@@ -258,16 +258,22 @@ async function attach(files){
   dirty=true;
  }
  if(!flush()){notify("Sla de notitie eerst op voordat je een bijlage toevoegt.");return}
- setSaveIndicator("Bijlagen worden opgeslagen…");
+ const guard=root.MementoStorageGuard;let token;
+ try{
+  if(!guard)throw Error("Veilige opslag ontbreekt. Vernieuw Memento.");
+  token=guard.beginOperation();
+  setSaveIndicator("Bijlagen worden opgeslagen…");
  for(const file of files){
   let saved=null;
   try{
-   saved=await S.save(selectedId,file);
-   const success=write(state=>{const n=state.notes.find(x=>x.id===selectedId);C.updateNote(state,n.id,{attachments:[...(n.attachments||[]),saved]});});
-   if(!success){await S.remove(saved.id);throw Error("De bijlage kon niet aan de notitie worden gekoppeld.");}
+   saved=await S.save(selectedId,file,token);
+   const success=write(state=>{const n=state.notes.find(x=>x.id===selectedId);C.updateNote(state,n.id,{attachments:[...(n.attachments||[]),saved]});},token);
+   if(!success){await S.remove(saved.id,token);throw Error("De bijlage kon niet aan de notitie worden gekoppeld.");}
   }catch(e){notify(e.message||"Bijlage kon niet worden opgeslagen.");}
  }
- startEdit(selectedId);
+  startEdit(selectedId);
+ }catch(e){notify(e.message||"Bijlage kon niet worden opgeslagen.");}
+ finally{if(token)guard.endOperation(token)}
 }
 async function openFile(id){
  if(!S){notify("Bestandsopslag ontbreekt");return}

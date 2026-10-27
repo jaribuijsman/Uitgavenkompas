@@ -14,9 +14,11 @@ function open(){
   req.onblocked=()=>reject(Error("Sluit andere Memento-tabbladen en probeer opnieuw"));
  });
 }
-async function transaction(mode,run){
- const db=await open();
- try{return await new Promise((resolve,reject)=>{
+async function transaction(mode,run,token){
+ const guard=globalThis.MementoStorageGuard;
+ const check=()=>{if(mode==='readwrite'){if(!guard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');guard.assertCurrent(token);}};
+ check();const db=await open();
+ try{check();return await new Promise((resolve,reject)=>{
   let result;
   const tx=db.transaction(STORE,mode),st=tx.objectStore(STORE);
   tx.oncomplete=()=>resolve(result);
@@ -27,11 +29,11 @@ async function transaction(mode,run){
 }
 function get(id){return transaction("readonly",(st,set)=>{const r=st.get(id);r.onsuccess=()=>set(r.result||null);});}
 function all(){return transaction("readonly",(st,set)=>{const r=st.getAll();r.onsuccess=()=>set(r.result||[]);});}
-function remove(id){return transaction("readwrite",st=>{st.delete(id);});}
-function putRecord(record){if(!record||typeof record.id!=="string"||!(record.blob instanceof Blob))throw Error("Ongeldige bijlage");return transaction("readwrite",st=>st.put(record));}
-function putMany(records){
+function remove(id,token){return transaction("readwrite",st=>{st.delete(id);},token);}
+function putRecord(record,token){if(!record||typeof record.id!=="string"||!(record.blob instanceof Blob))throw Error("Ongeldige bijlage");return transaction("readwrite",st=>st.put(record),token);}
+function putMany(records,token){
  if(!Array.isArray(records))throw Error("Ongeldige bijlagenlijst");
- return transaction("readwrite",st=>{for(const rec of records){if(!rec||typeof rec.id!=="string"||!(rec.blob instanceof Blob))throw Error("Ongeldige bestandsinhoud");st.put(rec);}});
+ return transaction("readwrite",st=>{for(const rec of records){if(!rec||typeof rec.id!=="string"||!(rec.blob instanceof Blob))throw Error("Ongeldige bestandsinhoud");st.put(rec);}},token);
 }
 async function sha256(blob){
  const bytes=await blob.arrayBuffer();
@@ -50,11 +52,11 @@ async function inspect(file){
  if(!validMime.has(mime))throw Error("Alleen echte PDF-, PNG-, JPG- of WebP-bestanden zijn toegestaan.");
  return mime;
 }
-async function save(noteId,file){
+async function save(noteId,file,token){
  if(typeof noteId!=="string"||!noteId)throw Error("Sla eerst een notitie op");
  const mime=await inspect(file);
  const metadata={id:uid(),noteId,name:String(file.name||"Bijlage").slice(0,200),type:mime,size:file.size,hash:await sha256(file),createdAt:new Date().toISOString()};
- await putRecord({...metadata,blob:file});
+ await putRecord({...metadata,blob:file},token);
  return metadata;
 }
 function preview(record){
