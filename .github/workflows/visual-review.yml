@@ -1,0 +1,55 @@
+name: Visual review
+on:
+  push:
+    branches: ["design/memento-mobile-refinement"]
+  pull_request:
+    paths: ["index.html", "assets/**", "tests/visual-browser.cjs", "tests/helpers/visual-fixture.cjs", ".github/workflows/visual-review.yml"]
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [360, 393, 412, 1280]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: app
+      - uses: actions/checkout@v4
+        with:
+          ref: f77a8d20b65def564dd86a1ab59592c34b4ab889
+          path: baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install pinned test browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Create fictional fixture
+        run: node app/tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/memento-fixture.json"
+      - name: Before screenshots
+        env:
+          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/baseline
+          MEMENTO_VISUAL_PHASE: before
+          MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
+          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/memento-visual
+          MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/memento-fixture.json
+        run: node app/tests/visual-browser.cjs
+      - name: After screenshots
+        env:
+          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/app
+          MEMENTO_VISUAL_PHASE: after
+          MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
+          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/memento-visual
+          MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/memento-fixture.json
+        run: node app/tests/visual-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: memento-visual-${{ matrix.width }}
+          path: ${{ runner.temp }}/memento-visual
