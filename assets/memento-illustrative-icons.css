@@ -2,9 +2,11 @@
    Decorative SVGs only; labels, controls and brand logo retain their own semantics. */
 .memento-illustrative-icon{
  display:inline-block;width:1.55em;height:1.55em;flex:0 0 auto;vertical-align:middle;
- overflow:visible;fill:none!important;stroke:none!important;
+ overflow:hidden;fill:none!important;stroke:none!important;
  filter:drop-shadow(0 1px 1px rgba(4,21,11,.28));
 }
+/* Controls inherit their labelled button's contrast colour, with a clean 1.7px line at 24px. */
+.memento-illustrative-icon--control{filter:none;}
 #lifeApp[data-life-view="notes"] svg.memento-illustrative-icon,
 #lifeApp .life-nav-icon svg.memento-illustrative-icon,
 .nav .ico svg.memento-illustrative-icon,

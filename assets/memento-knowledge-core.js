@@ -159,7 +159,7 @@ const hierarchyDefaults=[
  ['projecten-onderzoek','Projecten & onderzoek','folder-kanban',[['dossiers','Projectdossiers','folder'],['producten','Productonderzoek','search'],['bronnen','Uitzoekwerk & bronnen','document']]],
  ['ideeen-inspiratie','Ideeën & inspiratie','lightbulb',[['ideeen','Ideeënbank','lightbulb'],['visueel','Visuele inspiratie','camera'],['later','Later bekijken','book-open']]]
 ];
-const iconIds=new Set(['folder','route','journal','house','book-open','heart','person','lightbulb','folder-kanban','tools','devices','pet','recipe','drink','travel','document','search','music','camera','fitness','leaf','flask-conical','sparkles','file-text','panels-top-left']);
+const iconIds=new Set(['folder','route','journal','house','book-open','heart','person','lightbulb','folder-kanban','tools','devices','pet','recipe','drink','travel','document','search','music','camera','fitness','leaf','flask-conical','sparkles','file-text','panels-top-left','lantern','compass','archive','sofa','chef','herbs','project','scroll','reference','palette','notebook','books','sun','tasks','agenda','groceries','star','image']);
 function migrateHierarchy(life){
  const k=ensure(life);
  if(k.hierarchyVersion===1)return false;

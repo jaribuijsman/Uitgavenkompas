@@ -1,9 +1,9 @@
 name: Memento illustrated icons
 on:
   push:
-    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
+    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-knowledge-core.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
   pull_request:
-    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
+    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-knowledge-core.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
 permissions:
   contents: read
 jobs:
@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        width: [360, 393, 412]
+        width: [360, 393, 412, 1280]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

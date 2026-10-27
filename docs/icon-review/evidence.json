@@ -1,0 +1,111 @@
+{
+  "baseline": "bfaa0acd6c7a15a23de68e7f1bcb1ec593ca7621",
+  "viewports": [
+    360,
+    393,
+    412,
+    1280
+  ],
+  "sizes": [
+    24,
+    32,
+    48,
+    64
+  ],
+  "icons": 66,
+  "standardCategories": 23,
+  "distinctStandardIcons": 23,
+  "coreResults": [
+    {
+      "test": "tests/storage-safety.cjs",
+      "exit": 0,
+      "output": "PASS only one simultaneous tab obtains the native session writer role\nPASS A's saved transaction survives a stale B save without false success\nPASS stale Life tasks and note drafts cannot replace A's persisted records\nPASS raw source verification rejects an external write even in the owner tab\nPASS stale permanent purge retains newer active records, files and recovery copies\nPASS quota failure rolls back memory, keeps draft fields and never reports success\nPASS cross-domain write failure restores both originals and preserves recovery snapshots\nPASS failed rollback retains exact original data in a durable journal and blocks writes\nPASS unavailable locks, insecure origins and rejected requests fail closed\nPASS closing or page-hiding an owner releases the slot without a persisted lease\nPASS description matches survive repeated read-only loads with all financial links intact\nPASS a zero opening balance is never changed to compensate description-matching transactions\nPASS old JSON data, IDs, amounts, Fitness and the unchanged ZIP format remain compatible\nPASS stale ZIP/JSON restore and direct bridge writes fail before replacing data or blobs\nPASS financial import and both previous-version restore buttons cannot bypass read-only mode\nPASS actual asynchronous ZIP restore retains exclusion across an awaited file write\nPASS ordinary full export uses a stable guarded snapshot and retains ZIP version 2\nPASS asynchronous restore excludes same-tab mutations and standalone bridges\nPASS normal purge commits both domains and preserves active/shared/recovery data\nPASS all persistent primary writes and file transactions go through the guard\nPASS historical HTML contains no executable writer and SW routes before cache lookup\nPASS new worker redirects a legacy URL even when an executable old response is cached\n22 phase-1 storage safety tests passed.\n"
+    },
+    {
+      "test": "tests/knowledge-v2-safety.cjs",
+      "exit": 0,
+      "output": "PASS guarded migration retains the exact raw original in previous-version recovery\nPASS read-only bridges refuse collection create/edit/reorder/archive and journal writes\nPASS old JSON import remains valid and malformed v2 hierarchy is rejected before writes\nPASS old and new ZIP v2 retain attachment bytes, finance, hierarchy, journal and revisions\nPASS invalid diary dates, duplicate days and cycles fail validation on import\n5 knowledge v2 safety groups passed\n"
+    },
+    {
+      "test": "tests/knowledge-covers.cjs",
+      "exit": 0,
+      "output": "PASS 30 offline scenes and auto-selection\nPASS unchanged IDs and compatible legacy collection fields\nPASS validated secure cover metadata\nPASS ZIP round trip and missing-file fail closed\n"
+    },
+    {
+      "test": "tests/knowledge-v2-core.cjs",
+      "exit": 0,
+      "output": "PASS additive migration preserves every old collection and note\nPASS migration is idempotent and respects renamed defaults\nPASS unknown migration versions and reserved identity collisions fail closed\nPASS create, rename, icon and parent updates preserve note links\nPASS duplicate siblings rejected but equal names under different roots allowed\nPASS third level, self-parenting and HTML icon values rejected\nPASS reorder persists through JSON and cannot change parents\nPASS opening a diary date never creates a note; repeated save cannot duplicate\nPASS journal date collision, invalid dates and empty text rejected\nPASS Amsterdam local date handles midnight and daylight saving time\nPASS JSON round trip retains hierarchy, diary, revisions and legacy recipe\nPASS explicit collection IDs take precedence over legacy category names\nPASS moving a legacy recipe collection retains original ID and ingredients\n13 knowledge v2 core checks passed\n"
+    },
+    {
+      "test": "tests/knowledge-regression.cjs",
+      "exit": 0,
+      "output": "PASS legacy notes retain identities, categories and original content\nPASS reopening an existing collection does not add duplicate collections\nPASS legacy checklist checkboxes retain their state\nPASS checklist lines preserve IDs when reordered or edited\nPASS a collection rename preserves legacy note destination\nPASS create, edit, tags and filters work together\nPASS autosave snapshots are coalesced and restorable\nPASS recipe metadata survives revisions\nPASS soft delete and archiving are distinct states\nPASS collection IDs remain stable and independent of display name\nPASS real MIME signatures are required for PDFs and images\nPASS ZIP STORE archives roundtrip byte-identically\nPASS corrupted ZIP entries are rejected by CRC32\nPASS complete ZIP includes exact Life, Finance, preferences and attachment bytes\nPASS archive creation refuses missing attachments\nPASS archive creation refuses missing finance instead of exporting partial data\n16 knowledge regression checks passed.\n"
+    },
+    {
+      "test": "tests/illustrative-icons-core.cjs",
+      "exit": 0,
+      "output": "{\"result\":\"PASS\",\"uniqueIllustrations\":66,\"defaultCategories\":23,\"distinctDefaults\":23,\"individualShapeTests\":66,\"navigationMapped\":true,\"storageSchemaUnchanged\":true,\"serviceWorkerCache\":true}\n"
+    },
+    {
+      "test": "tests/pin-forest-regression.cjs",
+      "exit": 0,
+      "output": "PIN forest regression: six images, hourly Amsterdam rotation and weather/worker wiring OK\n"
+    },
+    {
+      "test": "tests/memento-regression.cjs",
+      "exit": 1,
+      "output": "PASS public starter data is empty\nPASS monthly budgets preserve legacy values without changing other months\nPASS budget groups stay independent and zero removes a monthly limit\nPASS refunds and internal transfers are handled correctly in scoped budget spending\nPASS weekly bills create every occurrence including the daylight-saving month\nPASS monthly payments retain month-end dates and respect start and quarterly intervals\nPASS bill payment history remains paid in both October and November\nPASS deleting a payment unpays its bill and safely restores receipt links\nPASS weekly reservation totals and cashflow agree\nPASS receipt matching requires compatible amount, date and merchant\nPASS legacy paid marker is retained without fabricating a transaction\nPASS financial renderers accept an empty state\nPASS PIN defaults to 15 minutes and expires at the actual inactivity deadline\nevalmachine.<anonymous>:644\n renderNav();const label=views.find(x=>x[0]===view)[2];$('lifeTitle').textContent=label;$('lifeCrumb').textContent='Leven / '+label;\n                                                   ^\n\nTypeError: Cannot read properties of undefined (reading '2')\n    at Object.render (evalmachine.<anonymous>:644:52)\n    at /workspace/Uitgavenkompas/tests/memento-regression.cjs:47:207\n    at test (/workspace/Uitgavenkompas/tests/memento-regression.cjs:24:59)\n    at Object.<anonymous> (/workspace/Uitgavenkompas/tests/memento-regression.cjs:47:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n\nNode.js v24.19.0\n"
+    },
+    {
+      "test": "tests/storage-lock-native.cjs",
+      "exit": 0,
+      "output": "PASS native Web Locks deny a concurrent writer and release on owner termination\n"
+    },
+    {
+      "test": "tests/fitness-regression.cjs",
+      "exit": 0,
+      "output": "PASS empty fitness state is valid and contains no user records\nPASS starter templates are independent and have no recorded results\nPASS short training retains core exercises without changing the routine\nPASS cannot overwrite an active workout or complete an empty one\nPASS completion advances rotation, closes only linked booking and is not duplicated\nPASS prescription edits never mutate recorded sessions\nPASS previous values use same movement, equipment and location only\nPASS progression requires two complete comparable exposures and exertion feedback\nPASS pain or inconsistent loads never produce a progression suggestion\nPASS full JSON round trip retains active drafts, rest deadline, notes and ids\nPASS invalid data, duplicate ids and impossible dates are rejected\nPASS night shifts and existing bookings are excluded from suggested dates\nPASS archived routines are skipped without deleting training history\nPASS deleted sessions do not affect performance suggestions\nPASS personal split has three plans, real short variants and no demo results\nPASS legacy backups without a routineCycle field remain valid\nPASS an older unrelated routine stays saved but out of the active split\nPASS cycle skips archived plans but keeps references for restoration\nPASS corrupt cycle identifiers or duplicates are rejected\nPASS history matches exercise across routines but never mixes equipment\nPASS library offers known movement-specific equipment alternatives\nPASS short workouts remain shorter with old nonoptional routines\nPASS finishing an unrelated manual workout preserves the next A/B/C position\nPASS hypertrophy plan preserves custom exercises, IDs and notes\nPASS expanded exercise library has unique IDs and offline technique instructions\n25 fitness regression checks passed.\n"
+    },
+    {
+      "test": "tests/trash-regression.cjs",
+      "exit": 0,
+      "output": "PASS permanent-trash tests: all trash kinds, live records, shared files, idempotence and invalid data.\n"
+    },
+    {
+      "test": "tests/journal-upgrade-core.cjs",
+      "exit": 0,
+      "output": "PASS Old diary with no check-in is preserved through validation\nPASS Sleep across calendar midnight and day-only check-in are stored without body text\nPASS Sleep after night shift can begin and end in daylight\nPASS Updating a saved check-in keeps IDs, existing tags and text history\nPASS Duplicate journal days and malformed metrics are rejected\nPASS Blank days without any diary content remain blocked\nPASS Legacy PDF & image signatures and recording MIME checks are retained\nPASS total 7\n"
+    }
+  ],
+  "unchangedFiles": [
+    "assets/memento-knowledge-art.js",
+    "assets/memento-knowledge-cover-ui.js",
+    "assets/memento-fitness.js",
+    "assets/memento-logo-gold.png",
+    "assets/memento-cozy-background.png"
+  ],
+  "runtimeHashes": {
+    "assets/memento-illustrative-icons.js": "c1572f49867dea0e6ce60fbf05914b023d0524e7bfccc49afbb69d521caeb975",
+    "assets/memento-illustrative-icons.css": "86773c370318a5bd03cfcb663f4c4165e956f8c43991cf660be75f0e3cdeb795",
+    "assets/memento-knowledge-core.js": "b48ae29c9d03f05a8ed60d2891f1e3ce4a9631bacb75e866c824001d044a2f0b",
+    "assets/memento-knowledge.js": "acd1836b28126b2cbced5803b5e74fc9ef5af1841014106cad6f23db10289261",
+    "index.html": "34ce7eb0b6fb62964f47c41121df62ce61ebfd8bf5bc57b8be6d1de71b808d15",
+    "sw.js": "43b4223a1a7598177a3b2ea2f6673696c3a73de171f3e42c713b5b0c8fabb00f"
+  },
+  "note": "All browser data is fictional and isolated; screenshots are viewport captures from the actual local app.",
+  "knownBaselineFailures": {
+    "memento-regression.cjs": "TypeError at obsolete Life view lookup, before and after",
+    "fitness-browser.cjs": "JSON.parse receives ZIP backup; confirmed on unchanged baseline",
+    "knowledge-v2-browser.cjs": "Timeout on #kc-journal-picker in read-only scenario; identical on baseline and final"
+  },
+  "browserPasses": [
+    "illustrative-icons:360",
+    "illustrative-icons:393",
+    "illustrative-icons:412",
+    "illustrative-icons:1280",
+    "storage-safety-browser",
+    "knowledge-covers-browser:393",
+    "quickfit-browser:393",
+    "visual-browser:393"
+  ]
+}

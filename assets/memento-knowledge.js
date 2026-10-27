@@ -16,9 +16,19 @@ const iconPaths={
  music:'M9 18V5l12-2v13 M3 18a3 3 0 1 0 6 0 3 3 0 0 0-6 0 M15 16a3 3 0 1 0 6 0 3 3 0 0 0-6 0',camera:'M3 7h5l2-3h4l2 3h5v14H3z M16 14a4 4 0 1 0-8 0 4 4 0 0 0 8 0',
  fitness:'M3 8v8 M6 5v14 M6 12h12 M18 5v14 M21 8v8',leaf:'M4 20C-2 5 10 3 21 3c0 12-3 19-15 15 M4 20 16 8'
 };
-const iconLabels={folder:'Map',route:'Route',journal:'Dagboek',house:'Huis','book-open':'Boek',heart:'Hart',person:'Persoon',lightbulb:'Lampje','folder-kanban':'Projecten',tools:'Gereedschap',devices:'Apparaten',pet:'Huisdier',recipe:'Recept',drink:'Dranken',travel:'Reizen',document:'Document',search:'Onderzoek',music:'Muziek',camera:'Camera',fitness:'Fitness',leaf:'Natuur'};
+const iconLabels={folder:'Map',route:'Route',journal:'Dagboek',house:'Huis','book-open':'Boek',heart:'Hart',person:'Persoon',lightbulb:'Lampje','folder-kanban':'Projecten',tools:'Gereedschap',devices:'Apparaten',pet:'Huisdier',recipe:'Recept',drink:'Dranken',travel:'Reizen',document:'Document',search:'Onderzoek',music:'Muziek',camera:'Camera',fitness:'Fitness',leaf:'Natuur',lantern:'Lantaarn',compass:'Kompas',archive:'Archiefkast',sofa:'Zitbank',chef:'Koksmuts',herbs:'Kruiden',project:'Ontwerpkaart',scroll:'Documentenrol',reference:'Naslagwerk',palette:'Palet',notebook:'Notitieboek',books:'Boekenstapel',sun:'Zon',tasks:'Checklist',agenda:'Kalender',groceries:'Mand',star:'Ster',image:'Landschap'};
 const iconAliases={'flask-conical':'recipe',sparkles:'lightbulb','file-text':'document','panels-top-left':'folder-kanban'};
 function symbol(id){const key=iconAliases[id]||id;return root.MementoIllustratedIcons?.svg(key)||'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(iconPaths[key]||iconPaths.folder)+'"/></svg>';}
+
+function collectionIconChoices(d){
+ const I=root.MementoIllustratedIcons,source=I?.sourceDefaults[d.id],preferred=I?.categoryDefaults[d.id];
+ const entries=Object.entries(iconLabels).filter(([id])=>id!==source||!preferred);
+ if(preferred&&source)entries.unshift([source,iconLabels[preferred]||iconLabels[source]]);
+ return entries.map(([id,label])=>{
+  const art=preferred&&id===source?I.svg(preferred):symbol(id);
+  return '<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+art+'<span>'+label+'</span></button>';
+ }).join('');
+}
 
 const kindNames={note:"Notitie",link:"Link",recipe:"Recept",checklist:"Checklist",pdf:"PDF",image:"Afbeelding"};
 const readable=d=>{try{return new Date(d).toLocaleDateString("nl-NL",{day:"numeric",month:"short"});}catch{return ""}};
@@ -175,7 +185,7 @@ function renderCollectionEditor(){
  '<form id="kc-collection-form" class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" data-kc-col="name" value="'+esc(d.name)+'" required></label>'+
  '<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+collections().filter(x=>!x.parentId&&x.id!==d.id).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>'+
  '<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+
- '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+Object.entries(iconLabels).map(([id,label])=>'<button type="button" data-kc="choose-icon" data-id="'+id+'" aria-label="'+label+'" aria-pressed="'+(d.icon===id)+'">'+symbol(id)+'<span>'+label+'</span></button>').join('')+'</div></fieldset>'+(ArtUI?.render(d,allCollections().find(x=>x.id===d.parentId)?.name||'')||'')+
+ '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+collectionIconChoices(d)+'</div></fieldset>'+(ArtUI?.render(d,allCollections().find(x=>x.id===d.parentId)?.name||'')||'')+
  '<div class="kc-editor-actions">'+btn('Annuleren','cancel-collection')+(c?btn('Archiveren','archive-collection',c.id):'')+'</div></form>';
 }
 
