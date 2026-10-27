@@ -77,7 +77,7 @@ const server=http.createServer((req,res)=>{
   assert.equal((await stored()).fitness.active.exercises[0].logs[0].done,true);
   checks.push("Fitness progressbar, next unfinished set, and original completed-set persistence");
   await page.locator('#mementoFitness [data-fit="finish"]').first().click();
-  await page.locator('#mementoFitness [data-fit="tab"][data-id="plan"]').click();
+  await page.locator('#mementoFitness .ft-tabs [data-fit="tab"][data-id="plan"]').click();
   await page.locator('#mementoFitness [data-fit="start"][data-id="'+rid+'"]').click();
   await page.locator("#fitnessDialog button[type=submit]").click();
   assert.match(await page.locator(".ft-set-reference").first().innerText(),/40 kg × 12/);
