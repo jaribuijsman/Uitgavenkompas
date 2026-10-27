@@ -2357,12 +2357,12 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <link rel="stylesheet" href="./assets/memento-fitness.css?v=20261027-design-v1">
 <script src="./assets/memento-fitness-core.js?v=20261026-muscle-v4"></script>
 <script src="./assets/memento-fitness.js?v=20261026-muscle-v4"></script>
-<link rel="stylesheet" href="./assets/memento-knowledge.css?v=20261027-design-v1">
-<script src="./assets/memento-knowledge-core.js?v=20261026-kc-v1"></script>
+<link rel="stylesheet" href="./assets/memento-knowledge.css?v=20261027-kc2-v1">
+<script src="./assets/memento-knowledge-core.js?v=20261027-kc2-v1"></script>
 <script src="./assets/memento-trash-core.js?v=20261026-purge-v2"></script>
 <script src="./assets/memento-knowledge-store.js?v=20261027-safety-v1"></script>
 <script src="./assets/memento-backup.js?v=20261026-kc-v1"></script>
-<script src="./assets/memento-knowledge.js?v=20261027-design-v1"></script>
+<script src="./assets/memento-knowledge.js?v=20261027-kc2-v1"></script>
 <script id="compassLifeScript">
 (()=>{
 'use strict';
@@ -3141,7 +3141,7 @@ async function importBackup(file,includeFinance){
  try{
   data=JSON.parse(await file.text());if(data.format!=='compass-life-backup'||data.version!==1)throw Error('Kies een back-up van deze Leven-versie.');
   if(data.lifeState&&data.lifeState.fitness===undefined&&state.fitness)data.lifeState.fitness=clone(state.fitness);
-  validate(data.lifeState);
+  validate(data.lifeState);window.MementoKnowledgeCore?.validate(clone(data.lifeState));
   if(includeFinance&&(!data.financeState||!Array.isArray(data.financeState.transactions)||!Array.isArray(data.financeState.categories)))throw Error('Deze back-up bevat geen geldige financiële gegevens.');
   if(!confirm('De huidige Leven-gegevens vervangen door '+data.lifeState.tasks.length+' taken uit deze back-up?'+(includeFinance?' Ook de financiële gegevens worden vervangen.':' Je financiële gegevens blijven behouden.')))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');token=storageGuard.beginOperation();
@@ -3155,7 +3155,7 @@ async function importBackup(file,includeFinance){
 function restorePreviousLife(){
  try{
   const old=localStorage.getItem(RECOVERY);if(!old)throw Error('Er is nog geen vorige versie beschikbaar.');
-  const parsed=validate(JSON.parse(old));if(!confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.'))return false;
+  const parsed=validate(JSON.parse(old));window.MementoKnowledgeCore?.validate(clone(parsed));if(!confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.'))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
   storageGuard.commit({life:JSON.stringify(parsed)});state=parsed;blocked=false;undo=null;savedStatus();render();status('Vorige Leven-versie teruggezet.');return true;
  }catch(e){status(e.message,false,true);return false}

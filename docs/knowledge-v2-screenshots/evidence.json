@@ -1,0 +1,87 @@
+{
+  "base": "f7d1d04fdca7fc26185cb3a7931859ca9c8c903e",
+  "validatedCode": "8a0d148cc4c1deb3181dc8e3e9038462ecd66abf",
+  "run": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40450442051",
+  "widths": {
+    "360": {
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Migration preserved legacy collections, notes, IDs and references",
+        "Create/edit/icon/view/move/cancel retain collection identity",
+        "Journal quota failure retains long input and succeeds on retry",
+        "Diary empty-open, single-day identity, long text, past date, mood, archive and conflict input preservation",
+        "Trusted Chromium touch drag saved sibling order",
+        "Outside drop and quota failure retain persisted AND displayed order",
+        "Long touch/mouse drag auto-scrolls and retains the original parent",
+        "Existing PDF opens from local IndexedDB and exports original PDF bytes",
+        "Real read-only tab refuses collection and diary saves while retaining input",
+        "Real ZIP v2 restore retains exact Life, Finance, collections, journal and attachment IDs",
+        "Offline v28 app loads hierarchy and guarded storage after reload"
+      ],
+      "errors": [],
+      "screens": 16,
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "393": {
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Migration preserved legacy collections, notes, IDs and references",
+        "Create/edit/icon/view/move/cancel retain collection identity",
+        "Journal quota failure retains long input and succeeds on retry",
+        "Diary empty-open, single-day identity, long text, past date, mood, archive and conflict input preservation",
+        "Trusted Chromium touch drag saved sibling order",
+        "Outside drop and quota failure retain persisted AND displayed order",
+        "Long touch/mouse drag auto-scrolls and retains the original parent",
+        "Existing PDF opens from local IndexedDB and exports original PDF bytes",
+        "Real read-only tab refuses collection and diary saves while retaining input",
+        "Real ZIP v2 restore retains exact Life, Finance, collections, journal and attachment IDs",
+        "Offline v28 app loads hierarchy and guarded storage after reload"
+      ],
+      "errors": [],
+      "screens": 16,
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "412": {
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Migration preserved legacy collections, notes, IDs and references",
+        "Create/edit/icon/view/move/cancel retain collection identity",
+        "Journal quota failure retains long input and succeeds on retry",
+        "Diary empty-open, single-day identity, long text, past date, mood, archive and conflict input preservation",
+        "Trusted Chromium touch drag saved sibling order",
+        "Outside drop and quota failure retain persisted AND displayed order",
+        "Long touch/mouse drag auto-scrolls and retains the original parent",
+        "Existing PDF opens from local IndexedDB and exports original PDF bytes",
+        "Real read-only tab refuses collection and diary saves while retaining input",
+        "Real ZIP v2 restore retains exact Life, Finance, collections, journal and attachment IDs",
+        "Offline v28 app loads hierarchy and guarded storage after reload"
+      ],
+      "errors": [],
+      "screens": 16,
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    },
+    "1280": {
+      "checks": [
+        "PIN unlocked; fixture writer owns Web Lock",
+        "Migration preserved legacy collections, notes, IDs and references",
+        "Create/edit/icon/view/move/cancel retain collection identity",
+        "Journal quota failure retains long input and succeeds on retry",
+        "Diary empty-open, single-day identity, long text, past date, mood, archive and conflict input preservation",
+        "Mouse hold-and-drag saved sibling order",
+        "Outside drop and quota failure retain persisted AND displayed order",
+        "Long touch/mouse drag auto-scrolls and retains the original parent",
+        "Existing PDF opens from local IndexedDB and exports original PDF bytes",
+        "Real read-only tab refuses collection and diary saves while retaining input",
+        "Real ZIP v2 restore retains exact Life, Finance, collections, journal and attachment IDs",
+        "Offline v28 app loads hierarchy and guarded storage after reload"
+      ],
+      "errors": [],
+      "screens": 16,
+      "horizontalOverflow": false,
+      "visiblePinJpegIdentical": true
+    }
+  }
+}
