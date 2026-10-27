@@ -226,23 +226,52 @@ function journalDate(date=new Date()){
  return get('year')+'-'+get('month')+'-'+get('day');
 }
 function validDate(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value;}
+function journalCheckinValid(c){
+ if(c===undefined)return true;
+ if(!c||typeof c!=="object"||Array.isArray(c))throw Error("Ongeldige dagelijkse check-in");
+ for(const key of ["energy","stress"]){
+  const v=c[key];if(v!==undefined&&v!==null&&(!Number.isInteger(v)||v<1||v>5))throw Error("Kies "+key+" op een schaal van 1 tot 5");
+ }
+ const pattern=/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d$/;
+ function checkDateTime(v){if(v===undefined||v===null||v==="")return; if(typeof v!=="string"||!pattern.test(v))throw Error("Ongeldige slaapdatum");
+  const d=new Date(v),parts=[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")+"T"+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  if(!Number.isFinite(d.getTime())||parts!==v)throw Error("Ongeldige slaapdatum");
+ }
+ for(const key of ["sleepStart","sleepEnd"])checkDateTime(c[key]);
+ for(const key of ["latency","awake","nap"]){
+  const v=c[key];if(v!==undefined&&v!==null&&(!Number.isInteger(v)||v<0||v>1440))throw Error("Ongeldige slaapminuten");
+ }
+ if(c.sleepStart&&c.sleepEnd){
+  const span=(new Date(c.sleepEnd).getTime()-new Date(c.sleepStart).getTime())/60000;
+  if(span<=0||span>36*60)throw Error("De slaap moet na de begintijd eindigen (maximaal 36 uur)");
+  if((c.latency||0)+(c.awake||0)>span)throw Error("Wakker gelegen minuten zijn meer dan je bedtijd");
+ }
+ return true;
+}
+function journalHasContent(body,j){
+ const c=j?.checkin||{};
+ return Boolean(String(body||"").trim()||j?.mood||j?.audioOnly||c.energy||c.stress||c.sleepStart||c.sleepEnd||c.nap||c.latency||c.awake);
+}
 function validateJournal(life,n,checkDuplicates=true){
  const j=n.journal;
  if(!j||j.version!==1||!validDate(j.date)||(j.mood!==undefined&&typeof j.mood!=='string')||!['','Goed','Prima','Neutraal','Minder','Moeilijk'].includes(j.mood||''))throw Error('Ongeldige dagboekmetadata');
+ if(j.audioOnly!==undefined&&typeof j.audioOnly!=='boolean')throw Error('Ongeldige opnamegegevens');
+ journalCheckinValid(j.checkin);
  // Archived days retain their reservation; deleted days are recoverable separately.
  if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');
 }
 function findJournal(life,date){return life.notes.find(n=>!n.deletedAt&&n.journal?.version===1&&n.journal.date===date)||null;}
-function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId}){
+function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId,checkin,audioOnly}){
  if(!validDate(date))throw Error('Kies een geldige datum');
  const existing=findJournal(life,date);
  if(existing&&existing.id!==id)throw Error('Open de bestaande dagboeknotitie voor deze datum');
- if(!String(body).trim())throw Error('Schrijf eerst iets; lege dagen worden niet opgeslagen');
+ if(!journalHasContent(body,{mood,checkin,audioOnly}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
  if(String(body).length>20000||String(title).length>180)throw Error('Dagboektekst is te lang');
- const journal={version:1,date,mood};
+ const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);
+ if(id){const old=life.notes.find(n=>n.id===id);if(old?.journal){if(checkin===undefined&&old.journal.checkin!==undefined)journal.checkin=clone(old.journal.checkin);if(audioOnly===undefined&&old.journal.audioOnly!==undefined)journal.audioOnly=old.journal.audioOnly;}}
  if(id){const old=life.notes.find(n=>n.id===id);if(!old?.journal)throw Error('Geen bestaande dagboeknotitie');return updateNote(life,id,{title:title.trim()||date,body,tags,journal});}
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
