@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage",
+    "title": "Window: sessionStorage property - Web APIs | MDN",
+    "snippets": [
+      "techniques that remove opener (see Window.opener ). A page session lasts as long as the tab or the browser is open, and survives over page reloads and restores. Opening a page in a new tab or window creates a new session with the value of the top-level browsing context, which differs from how session cookies work. Closing the tab/window ends the session and clears the data in sessionStorage . In this article Value Examples Specifications Browser compatibility See also Value A Storage object which can be used to access the current origin's session storage space. Ex"
+    ]
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/API/Visual_Viewport_API",
+    "title": "VisualViewport - Web APIs | MDN",
+    "snippets": [
+      "zooms into the page, the visual viewport shrinks but the layout viewport is unchanged. User-interface features like the on-screen keyboard (OSK) can shrink the visual viewport without affecting the layout viewport. What happens when a web page element needs to be visible on screen regardless of the visible portion of a web page? For example, what if you need a set of image controls to remain on screen regardless of the pinch-zoom level of the device? Current browsers vary in how they handle this. The visual viewport lets web developers solve this by positioning el"
+    ]
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers",
+    "title": "Using Service Workers - Web APIs | MDN",
+    "snippets": [
+      "used in previous versions of the service worker, such as the old cache in this example. The new service worker can call skipWaiting() to ask to be activated without waiting for open pages to be closed. It then takes over the pages controlled by the old version. After activation, newly opened pages within the registration's scope are controlled by the new version. Service worker events Here is a summary of the available service worker events: install activate message Functional events fetch sync push Demo To demonstrate just the very basics of registering and insta"
+    ]
+  }
+]

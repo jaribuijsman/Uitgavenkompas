@@ -1,0 +1,57 @@
+[
+  {
+    "path": "assets/memento-logo-gold.png",
+    "sha256": "40aa663ffbd2e4b9a21eeff542b943d1a4881c8e5c0962e55e03a791240091d2",
+    "unchanged": true
+  },
+  {
+    "path": "assets/memento-avatar.png",
+    "sha256": "d572b1f71d68427c278eb60e15e92366b700054dfeac010e8cbcf1076cb0f5d2",
+    "unchanged": true
+  },
+  {
+    "path": "assets/memento-cozy-background.png",
+    "sha256": "38d4b4e4e2ed4c175e0e53090c118f9165773fc86026615f3cee2cd0cd2fa93f",
+    "unchanged": true
+  },
+  {
+    "path": "assets/memento-illustrative-icons.js",
+    "sha256": "c1572f49867dea0e6ce60fbf05914b023d0524e7bfccc49afbb69d521caeb975",
+    "unchanged": true
+  },
+  {
+    "path": "assets/memento-illustrative-icons.css",
+    "sha256": "86773c370318a5bd03cfcb663f4c4165e956f8c43991cf660be75f0e3cdeb795",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/herfstbrug.webp",
+    "sha256": "d356ba845665139c1d63e9449ee11c73e803369bfb9866f8263af113fc36e96d",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/schemermeer.webp",
+    "sha256": "a16b2847c6f0eb2d8f80114e910a90dbd131d2207143afd37efec7f285795481",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/ochtendmist.webp",
+    "sha256": "0b5f2832743c0762fbb4fe40b162887a8373f5d4dc078e238d43fb24e10249cc",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/maanmeer.webp",
+    "sha256": "e02a3c637d227c837d45fdf576101b826a7f8e4fdd10147617637a011d9b7fa9",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/bosruines.webp",
+    "sha256": "6e4d6cb885930e5d159a4d19fa4f3ed29c7271607ce18f13916a923aaacd68c6",
+    "unchanged": true
+  },
+  {
+    "path": "assets/pin-forests/zonnestralen.webp",
+    "sha256": "2d09e71873f8499bdc70f0b58661619f1218d5cd528ee215d54ac85f53965bfd",
+    "unchanged": true
+  }
+]

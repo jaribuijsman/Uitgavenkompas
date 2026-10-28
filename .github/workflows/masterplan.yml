@@ -37,8 +37,18 @@ jobs:
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
       - name: Mobile masterplan scenarios at 360, 393 and 412 pixels
         run: node tests/masterplan-browser.cjs
+      - name: Immutable original main for comparison and real PWA upgrade
+        run: |
+          git fetch --depth=1 origin 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9
+          mkdir -p "$RUNNER_TEMP/memento-baseline"
+          git archive 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9 | tar -x -C "$RUNNER_TEMP/memento-baseline"
+          echo "MEMENTO_BASELINE_ROOT=$RUNNER_TEMP/memento-baseline" >> "$GITHUB_ENV"
+      - name: Compare five actual journeys and upgrade old PWA with existing data
+        run: node tests/masterplan-journeys.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: masterplan-mobile-evidence
-          path: /tmp/memento-master
+          path: |
+            /tmp/memento-master
+            /tmp/memento-journeys

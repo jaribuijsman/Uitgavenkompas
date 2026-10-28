@@ -424,7 +424,7 @@ function flush(){
  });
  if(!changed){setSaveIndicator("Opslaan mislukt · invoer bewaard");return false;}
  selectedId=draft.id;editing=C.clone(read().notes.find(n=>n.id===draft.id));dirty=false;notice="";rememberBase();forgetDraft();
- setSaveIndicator("Opgeslagen");return true;
+ setSaveIndicator("Opgeslagen");root.MementoFeedback?.success(host?.querySelector("#kc-save-state"));return true;
 }
 function setSaveIndicator(label){const el=host?.querySelector("#kc-save-state");if(el)el.textContent=label;}
 function schedule(){dirty=true;rememberDraft();setSaveIndicator("Concept");clearTimeout(timer);timer=setTimeout(()=>flush(),850);}
@@ -552,7 +552,7 @@ function copyDiaryAI(){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
- if(op==="central-clear"){centralQuery="";centralType="";centralCollection="";centralStatus="active";screen="search";render();return;}
+ if(op==="central-clear"){centralQuery="";centralType="";centralCollection="";centralStatus="active";screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
  if(op==="search-result"){if(!flush())return;if(el.dataset.kind==="task")bridge.openRelated?.("task",id);else{selectedId=id;editing=null;screen="detail";render();}return;}
  if(["selection-task","passage-task","convert-task"].includes(op)){
   const field=host.querySelector('#kc-body'),n=editing||read().notes.find(n=>n.id===selectedId);
@@ -769,7 +769,7 @@ function onInput(event){
 }
 function onChange(event){
  const el=event.target;
- if(el.dataset.kcCentral){if(el.dataset.kcCentral==="type"){centralType=el.value;if(centralType==="task")centralCollection="";}if(el.dataset.kcCentral==="status")centralStatus=el.value;if(el.dataset.kcCentral==="collection"){centralCollection=el.value;if(centralCollection)centralType="note";}screen="search";render();return;}
+ if(el.dataset.kcCentral){if(el.dataset.kcCentral==="type"){centralType=el.value;if(centralType==="task")centralCollection="";}if(el.dataset.kcCentral==="status")centralStatus=el.value;if(el.dataset.kcCentral==="collection"){centralCollection=el.value;if(centralCollection)centralType="note";}screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
  if(el.dataset.kcCol||el.dataset.kcJournal){onInput(event);return;}
  if(el.dataset.kcChange){filtersExpanded=true;const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
  if(el.dataset.kcCheck){

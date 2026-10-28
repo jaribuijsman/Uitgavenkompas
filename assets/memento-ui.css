@@ -140,8 +140,8 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
   body[data-compass-area="finance"] .app #dashboardStats .stat-icon {display:none}
   body[data-compass-area="finance"] .app #dashboardStats {grid-template-columns:repeat(2,minmax(0,1fr))!important}
   body[data-compass-area="finance"] .app #dashboardStats .stat-card {grid-column:auto!important}
-  body[data-compass-area="finance"] .app #dashboardStats .stat-card:last-child {grid-column:1/-1!important;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
-  body[data-compass-area="finance"] .app #dashboardStats .stat-card:last-child .stat-value {grid-column:2;grid-row:1/3}
+  body[data-compass-area="finance"] .app #dashboardStats .stat-card:nth-child(3):last-child {grid-column:1/-1!important;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
+  body[data-compass-area="finance"] .app #dashboardStats .stat-card:nth-child(3):last-child .stat-value {grid-column:2;grid-row:1/3}
   body[data-compass-area="finance"] .app .dashboard-accounts-modern {padding:14px}
   #lifeApp .memento-calendar-panel .memento-cal-grid {margin-inline:-10px}
   #modalBackdrop {padding:0;align-items:flex-end}
@@ -214,3 +214,12 @@ body .memento-other-budgets>summary {min-height:48px;display:flex;align-items:ce
 body #txForm:has(.memento-payment-details)>.form-grid>.form-field:has(#txAccount) {grid-column:1/-1}
 body #txForm:has(.memento-payment-details)>.form-grid :is(input,select) {min-height:48px;min-width:0;font-size:16px}
 #lifeApp .memento-day-summary>div {min-width:0;flex:1}
+
+/* A short acknowledgement follows real saves and explicit filter changes. */
+@keyframes memento-confirm {0%{box-shadow:0 0 0 2px #b9cebd}100%{box-shadow:0 0 0 0 transparent}}
+.memento-confirmed,.memento-filter-changed {animation:memento-confirm 180ms ease-out}
+#lifeApp .memento-backup-status {padding:12px;border:1px solid #729881;border-radius:12px;color:#e3f0e7;background:#203b2b;font-size:13px;line-height:1.7}
+#lifeApp #lifeImportFile {max-width:100%;min-height:48px;font-size:16px}
+@media(prefers-reduced-motion:reduce){.memento-confirmed,.memento-filter-changed{animation:none}}
+
+body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-context {border:0;padding:0;margin:0;background:transparent;font-size:12px;line-height:1.5}

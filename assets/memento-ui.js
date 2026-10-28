@@ -20,5 +20,8 @@
     document.documentElement.style.setProperty("--m-notice-gap",height+"px");
   }
   new MutationObserver(reserveNotice).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["hidden"]});
+  const effects=new WeakMap();
+  function signal(el,kind){if(!el)return;clearTimeout(effects.get(el));el.classList.remove('memento-confirmed','memento-filter-changed');void el.offsetWidth;el.classList.add(kind);effects.set(el,setTimeout(()=>el.classList.remove(kind),200));}
+  window.MementoFeedback={success:el=>signal(el,'memento-confirmed'),filter:el=>signal(el,'memento-filter-changed')};
   reserveNotice();update();
 })();

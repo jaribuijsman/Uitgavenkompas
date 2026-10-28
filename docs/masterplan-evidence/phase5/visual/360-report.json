@@ -1,0 +1,1142 @@
+{
+  "phase": "after",
+  "width": 360,
+  "diagnostics": [
+    {
+      "name": "direct-open",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeQuickDate",
+          "text": "Taakdatum (optioneel)",
+          "width": 110,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Fiets ophalen bij de werkplaats",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Fiets ophalen bij de werkplaats",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Wandelen en bijpraten met Noor",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Wandelen en bijpraten met Noor",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Nog zonder planning (0)",
+          "width": 336,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "Bron & vertaling",
+          "width": 302,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Lees de bron ↗",
+          "width": 83,
+          "height": 17
+        },
+        {
+          "id": "",
+          "text": "Weer opnieuw ophalen",
+          "width": 36,
+          "height": 44
+        },
+        {
+          "id": "",
+          "text": "Open-Meteo",
+          "width": 59,
+          "height": 14
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "day",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeQuickDate",
+          "text": "Taakdatum (optioneel)",
+          "width": 110,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Fiets ophalen bij de werkplaats",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Fiets ophalen bij de werkplaats",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Wandelen en bijpraten met Noor",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Wandelen en bijpraten met Noor",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Nog zonder planning (0)",
+          "width": 336,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "Bron & vertaling",
+          "width": 302,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Lees de bron ↗",
+          "width": 83,
+          "height": 17
+        },
+        {
+          "id": "",
+          "text": "Weer opnieuw ophalen",
+          "width": 36,
+          "height": 44
+        },
+        {
+          "id": "",
+          "text": "Open-Meteo",
+          "width": 59,
+          "height": 14
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "tasks",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 368,
+            "width": 120,
+            "height": 67,
+            "top": 368,
+            "right": 396.46875,
+            "bottom": 435,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 389,
+            "width": 120,
+            "height": 46,
+            "top": 389,
+            "right": 396.46875,
+            "bottom": 435,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 447,
+            "width": 120,
+            "height": 67,
+            "top": 447,
+            "right": 396.46875,
+            "bottom": 514,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 468,
+            "width": 120,
+            "height": 46,
+            "top": 468,
+            "right": 396.46875,
+            "bottom": 514,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 526,
+            "width": 120,
+            "height": 67,
+            "top": 526,
+            "right": 396.46875,
+            "bottom": 593,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 547,
+            "width": 120,
+            "height": 46,
+            "top": 547,
+            "right": 396.46875,
+            "bottom": 593,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 605,
+            "width": 120,
+            "height": 67,
+            "top": 605,
+            "right": 396.46875,
+            "bottom": 672,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 626,
+            "width": 120,
+            "height": 46,
+            "top": 626,
+            "right": 396.46875,
+            "bottom": 672,
+            "left": 276.46875
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "lifeQuickDate",
+          "text": "Taakdatum (optioneel)",
+          "width": 110,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "groceries",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "wishes",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 74,
+          "height": 17
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "agenda",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Afvinken: Fiets ophalen bij de werkplaats",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Fiets ophalen bij de werkplaats",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Wandelen en bijpraten met Noor",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Wandelen en bijpraten met Noor",
+          "width": 65,
+          "height": 36
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "finance",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "transactions",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "analysis",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "analysisPeriod",
+          "text": "Rapportperiode",
+          "width": 145,
+          "height": 42
+        },
+        {
+          "id": "analysisCompare",
+          "text": "Vergelijkingsperiode",
+          "width": 145,
+          "height": 42
+        },
+        {
+          "id": "analysisAccountFilter",
+          "text": "Analyse filter rekening",
+          "width": 145,
+          "height": 42
+        },
+        {
+          "id": "analysisPersonFilter",
+          "text": "Analyse filter persoon",
+          "width": 145,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "✨ Vaste lasten",
+          "width": 230,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🛒 Boodschappen",
+          "width": 240,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🎮 Vrije tijd & entertainment",
+          "width": 247,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🚗 Auto & vervoer",
+          "width": 247,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🍔 Horeca & uit eten",
+          "width": 254,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "accounts",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "opening-personal",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "actual-personal",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "opening-joint",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "actual-joint",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "opening-creditcard",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "actual-creditcard",
+          "text": "",
+          "width": 298,
+          "height": 43
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "receipts",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "receiptStore",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "receiptTotal",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "receiptNumber",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "receiptLinkTx",
+          "text": "Niet gekoppeld2026-10-27 · Boodschappen voor de hele week en",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "receiptLink-receipt-market",
+          "text": "Niet gekoppeld2026-10-27 · Boodschappen voor de hele week en",
+          "width": 298,
+          "height": 43
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "finance-settings",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "smartbuy",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "smartBuyProduct",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "smartBuyBudget",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "smartBuyGoal",
+          "text": "Goedkoopste geschikte optieBeste prijs-kwaliteitBeste kwalit",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "researchApproved",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "moneycoach",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "moneyCoachPeriod",
+          "text": "Geselecteerde maandVorige maandLaatste 3 maandenLaatste 6 ma",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "moneyCoachAccount",
+          "text": "Alle rekeningenPersoonlijk + creditcardAlleen persoonlijke r",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "moneyCoachPerson",
+          "text": "Alle toewijzingenJariDaisyJari & Daisy",
+          "width": 298,
+          "height": 43
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "budgets",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "budgetScope",
+          "text": "Alle rekeningenPersoonlijk + creditcardGezamenlijk",
+          "width": 210,
+          "height": 42
+        },
+        {
+          "id": "totalBudgetInput",
+          "text": "",
+          "width": 296,
+          "height": 43
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "planning",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Doel bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "scenarioAmount",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "scenarioMonthly",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "scenarioMonths",
+          "text": "",
+          "width": 298,
+          "height": 43
+        },
+        {
+          "id": "scenarioReturn",
+          "text": "",
+          "width": 298,
+          "height": 43
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 304,
+            "y": 603,
+            "width": 135.4375,
+            "height": 56,
+            "top": 603,
+            "right": 439.4375,
+            "bottom": 659,
+            "left": 304
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 304,
+            "y": 659,
+            "width": 73.296875,
+            "height": 56,
+            "top": 659,
+            "right": 377.296875,
+            "bottom": 715,
+            "left": 304
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 304,
+            "y": 715,
+            "width": 111.234375,
+            "height": 77,
+            "top": 715,
+            "right": 415.234375,
+            "bottom": 792,
+            "left": 304
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "settings",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeRestoreFinance",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-list",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "checklist",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "recipe",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "document",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "note",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "editor",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 310,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "editor-short",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 310,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "transaction-modal",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        },
+        {
+          "id": "",
+          "text": "Categorie deel 1",
+          "width": 164,
+          "height": 37
+        },
+        {
+          "id": "",
+          "text": "Bedrag deel 1",
+          "width": 120,
+          "height": 37
+        },
+        {
+          "id": "",
+          "text": "Deel verwijderen",
+          "width": 28,
+          "height": 37
+        },
+        {
+          "id": "addSplit",
+          "text": "＋ Categorie toevoegen",
+          "width": 128,
+          "height": 24
+        }
+      ],
+      "focus": "txDescription"
+    },
+    {
+      "name": "fitness-plan",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-progress",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "navigation",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "mementoMenuClose"
+    },
+    {
+      "name": "transactions-empty",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        }
+      ],
+      "focus": "txSearch"
+    },
+    {
+      "name": "transaction-filters",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "globalMonth",
+          "text": "Maand",
+          "width": 127,
+          "height": 35
+        }
+      ],
+      "focus": "toggleMoreTxFilters"
+    },
+    {
+      "name": "editor-long-short",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 310,
+          "height": 32
+        },
+        {
+          "id": "",
+          "text": "Ongedaan maken",
+          "width": 101,
+          "height": 36
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "task-menu",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 368,
+            "width": 120,
+            "height": 67,
+            "top": 368,
+            "right": 396.46875,
+            "bottom": 435,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 389,
+            "width": 120,
+            "height": 46,
+            "top": 389,
+            "right": 396.46875,
+            "bottom": 435,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 447,
+            "width": 120,
+            "height": 67,
+            "top": 447,
+            "right": 396.46875,
+            "bottom": 514,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 468,
+            "width": 120,
+            "height": 46,
+            "top": 468,
+            "right": 396.46875,
+            "bottom": 514,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 526,
+            "width": 120,
+            "height": 67,
+            "top": 526,
+            "right": 396.46875,
+            "bottom": 593,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 547,
+            "width": 120,
+            "height": 46,
+            "top": 547,
+            "right": 396.46875,
+            "bottom": 593,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 605,
+            "width": 120,
+            "height": 67,
+            "top": 605,
+            "right": 396.46875,
+            "bottom": 672,
+            "left": 276.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 276.46875,
+            "y": 626,
+            "width": 120,
+            "height": 46,
+            "top": 626,
+            "right": 396.46875,
+            "bottom": 672,
+            "left": 276.46875
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "lifeQuickDate",
+          "text": "Taakdatum (optioneel)",
+          "width": 110,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Ongedaan maken",
+          "width": 101,
+          "height": 36
+        }
+      ],
+      "focus": ""
+    }
+  ],
+  "checks": [
+    "Direct app opening; fixture writer owns Web Lock",
+    "Daily appointments precede inspiration; primary navigation targets >=44px",
+    "Shopping controls and seven-column calendar targets >=44px",
+    "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+    "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+    "Life task quick-add, detail, edit and completion work through existing handlers",
+    "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+    "Task disclosure stays within viewport",
+    "Updated UI assets load offline and native writer protection remains active"
+  ],
+  "errors": []
+}
