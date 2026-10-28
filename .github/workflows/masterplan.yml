@@ -18,6 +18,7 @@ jobs:
           node-version: '24'
       - name: Existing data, finance, notes, fitness and PIN contracts
         run: |
+          node tests/memento-category-integrity.cjs
           node tests/memento-regression.cjs
           node tests/masterplan-core.cjs
           node tests/storage-safety.cjs
