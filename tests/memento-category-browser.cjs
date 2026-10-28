@@ -84,6 +84,10 @@ async function nav(page){
    await page.locator('.split-amount').nth(0).fill('15');
    await page.locator('.split-amount').nth(1).fill('10');
    await page.locator('.split-category').nth(1).selectOption('Boodschappen');
+   const expectedDraft=[{category:'Vaste lasten',amount:'15'},{category:'Boodschappen',amount:'10'}];
+   const draft=()=>page.locator('.split-row').evaluateAll(rows=>rows.map(r=>({category:r.querySelector('.split-category').value,amount:r.querySelector('.split-amount').value})));
+   const observed=await draft();
+   assert.deepEqual(observed,expectedDraft,'Ingevoerde splitsingsregels moeten intact blijven vóór opslaan');
    await page.locator('[form=txForm][type=submit]').click();
    let revised=(await state()).transactions.find(t=>t.id===added.id);
    assert(Array.isArray(revised.splits),JSON.stringify(await page.evaluate(()=>({
@@ -91,6 +95,7 @@ async function nav(page){
     splitCount:document.querySelectorAll('.split-row').length,
     splitVisible:!!document.getElementById('splitSection')?.offsetParent,
     modalOpen:document.getElementById('modalBackdrop')?.classList.contains('open'),
+    draft:[...document.querySelectorAll('.split-row')].map(r=>({category:r.querySelector('.split-category').value,amount:r.querySelector('.split-amount').value})),
     messages:[...document.querySelectorAll('.toast')].map(x=>x.textContent)
    }))));
    assert.equal(revised.splits.length,2);
