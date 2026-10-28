@@ -14,7 +14,12 @@ const server = http.createServer((req, res) => {
 });
 async function until(page, predicate, arg) { await page.waitForFunction(predicate, arg, { timeout: 10000 }); }
 async function unlock(page, first = false) {
-  if (await page.locator("html").getAttribute("data-memento-pin-lock") === "disabled") {
+  const mode = await page.locator("html").getAttribute("data-memento-pin-lock");
+  if (mode === "manual") {
+    if (await page.locator("#ms-continue").isVisible()) await page.locator("#ms-continue").click();
+    await page.locator("#pinLock").waitFor({ state: "hidden" }); return;
+  }
+  if (mode === "disabled") {
     await page.locator("#pinLock").waitFor({ state: "hidden" }); return;
   }
   await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click();
@@ -50,7 +55,7 @@ async function addTransaction(page, description) {
     for (let i = 0; i < 2; i++) {
       const data = await a.evaluate(() => JSON.parse(localStorage.getItem("uitgavenkompas_v1")));
       assert.deepEqual(data.transactions, finance.transactions); assert.deepEqual(data.receipts, finance.receipts); assert.equal(data.settings.accountOpening.personal, 100);
-      if (!i) await a.reload({ waitUntil: "domcontentloaded" });
+      if (!i) await a.reload({ waitUntil: "domcontentloaded" }); await unlock(a);
     }
     await until(a, () => window.MementoStorageGuard?.writable); checks.push("Description migration removed; IDs, amounts and receipt links survive reload");
     const b = await context.newPage(); await b.goto(url, { waitUntil: "domcontentloaded" }); await unlock(b);
@@ -100,8 +105,8 @@ async function addTransaction(page, description) {
     await restoredNavigation; await until(c, () => window.MementoStorageGuard?.writable);
     const after = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     assert.deepEqual(after, before); checks.push("UI ZIP export/restore retains complete objects and existing attachment IDs");
-    await c.evaluate(async () => { await navigator.serviceWorker.ready; }); await c.reload({ waitUntil: "domcontentloaded" }); await until(c, () => navigator.serviceWorker.controller !== null);
-    await context.setOffline(true); await c.reload({ waitUntil: "domcontentloaded" }); await until(c, () => window.MementoStorageGuard?.writable);
+    await c.evaluate(async () => { await navigator.serviceWorker.ready; }); await c.reload({ waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true); await c.reload({ waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => window.MementoStorageGuard?.writable);
     const historical = await c.evaluate(async () => { const r = await fetch("./uitgavenkompas-v20-pincode-vergrendeling-1.html", { redirect: "manual" }); return { type: r.type, status: r.status }; });
     assert(historical.type === "opaqueredirect" || historical.status === 302); checks.push("Offline app obtains lock; historical URL is redirected by the current worker");
     assert.deepEqual(errors, []); console.log(JSON.stringify({ checks, errors }, null, 2)); await context.close();

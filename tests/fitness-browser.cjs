@@ -63,7 +63,10 @@ const server = http.createServer((req, res) => {
     );
   try {
     await page.goto(url, { waitUntil: "domcontentloaded" });
-  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
+  const pinMode = await page.locator("html").getAttribute("data-memento-pin-lock");
+  if (pinMode === "manual") {
+      await page.locator("#ms-continue").click();
+  } else if (pinMode !== "disabled") {
       await page.locator("#pinInput").fill("123456");
       await page.locator(".pin-submit").click();
       await page.locator("#pinInput").fill("123456");
@@ -143,6 +146,7 @@ const server = http.createServer((req, res) => {
     checks.push("Set autosave and rest deadline");
     await page.locator("[data-session-note]").fill("Eigen notitie behouden");
     await page.reload({ waitUntil: "domcontentloaded" });
+    if (await page.locator("#ms-continue").isVisible()) await page.locator("#ms-continue").click();
     await page.evaluate(() => window.MementoFitnessBridge.open());
     assert.equal(
       await page.locator("[data-session-note]").inputValue(),
@@ -294,9 +298,11 @@ const server = http.createServer((req, res) => {
       await navigator.serviceWorker.ready;
     });
     await page.reload({ waitUntil: "domcontentloaded" });
+    if (await page.locator("#ms-continue").isVisible()) await page.locator("#ms-continue").click();
     await page.evaluate(() => window.MementoFitnessBridge.open());
     await context.setOffline(true);
     await page.reload({ waitUntil: "domcontentloaded" });
+    if (await page.locator("#ms-continue").isVisible()) await page.locator("#ms-continue").click();
     await page.evaluate(() => window.MementoFitnessBridge.open());
     assert.equal(await page.locator("#mementoFitness").count(), 1);
     await click("start");

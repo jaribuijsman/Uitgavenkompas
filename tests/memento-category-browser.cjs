@@ -39,6 +39,7 @@ async function nav(page){
    await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
    const state=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('uitgavenkompas_v1')));
+   if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();
    await nav(page);
    await page.locator('#view-transactions .tx-card [data-edit-tx="legacy-tax"]').first().click();
    assert.equal(await page.locator('#txCategory').inputValue(),'Boodschappen');
