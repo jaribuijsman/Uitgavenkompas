@@ -79,6 +79,13 @@ async function nav(page){
    await page.locator('.split-category').nth(1).selectOption('Boodschappen');
    await page.locator('[form=txForm][type=submit]').click();
    let revised=(await state()).transactions.find(t=>t.id===added.id);
+   assert(Array.isArray(revised.splits),JSON.stringify(await page.evaluate(()=>({
+    txType:document.getElementById('txType')?.value,
+    splitCount:document.querySelectorAll('.split-row').length,
+    splitVisible:!!document.getElementById('splitSection')?.offsetParent,
+    modalOpen:document.getElementById('modalBackdrop')?.classList.contains('open'),
+    messages:[...document.querySelectorAll('.toast')].map(x=>x.textContent)
+   }))));
    assert.equal(revised.splits.length,2);
    assert.equal(revised.splits[0].category,'Vaste lasten');
    assert.equal(revised.splits[1].category,'Boodschappen');
