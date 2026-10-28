@@ -1,0 +1,121 @@
+{
+  "phase": 3,
+  "checks": [
+    {
+      "width": 360,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 3,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 3,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 3,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    }
+  ],
+  "errors": [],
+  "failure": null
+}

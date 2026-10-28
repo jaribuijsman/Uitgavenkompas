@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),C=require('../assets/memento-knowledge-core.js');
+const s={notes:[],tasks:[],transactions:[{id:'private-finance',description:'granaatvaren'}]};
+C.migrateHierarchy(s);
+const root='kc2-huis-wonen',child=root+'-woning',other=root+'-onderhoud';
+const note=C.makeNote({title:'Behoud mijn ID',body:'Begin. '+('lange achtergrond '.repeat(600))+' granaatvaren midden in de notitie '+('eind '.repeat(200)),collectionId:child},s);s.notes.push(note);
+s.tasks.push({id:'task-one',title:'Een kleine stap',notes:'granaatvaren in taaknotities',category:'Persoonlijk',date:'2026-10-28',steps:[],done:false,archived:false,sourceNoteId:note.id});
+note.conversions=[{kind:'task',id:'task-one'}];
+let hits=C.centralSearch(s,{query:'granaatvaren'});assert.equal(hits.length,2);assert(hits[0].snippet.includes('granaatvaren'));assert(hits[0].context.includes('Huis & wonen / Woning & inrichting'));assert(!hits.some(x=>x.id==='private-finance'));
+assert.equal(C.centralSearch(s,{query:'granaatvaren',type:'task'}).length,1);assert.equal(C.centralSearch(s,{query:'granaatvaren',collectionId:child}).length,1);
+assert.deepEqual(C.collectionCounts(s,root),{direct:0,total:1});assert.deepEqual(C.collectionCounts(s,child),{direct:1,total:1});
+C.updateNote(s,note.id,{collectionId:other});assert.equal(C.collectionCounts(s,child).total,0);assert.equal(C.collectionCounts(s,root).total,1);
+C.updateNote(s,note.id,{archived:true});assert.equal(C.collectionCounts(s,root).total,0);assert.equal(C.centralSearch(s,{query:'granaatvaren',type:'note'}).length,0);assert.equal(C.centralSearch(s,{query:'granaatvaren',status:'archive'}).length,1);
+C.updateNote(s,note.id,{archived:false});assert.equal(C.collectionCounts(s,root).total,1);
+s.knowledge.collections.find(c=>c.id===other).archived=true;assert.equal(C.collectionCounts(s,root).total,0);s.knowledge.collections.find(c=>c.id===other).archived=false;
+s.tasks[0].done=true;assert.equal(C.centralSearch(s,{query:'granaatvaren',type:'task'}).length,0);assert.equal(C.centralSearch(s,{query:'granaatvaren',status:'done'}).length,1);
+const restored=JSON.parse(JSON.stringify(s));C.validate(restored);assert.equal(restored.tasks[0].sourceNoteId,note.id);assert.equal(restored.notes[0].conversions[0].id,'task-one');assert.equal(restored.notes[0].id,note.id);assert(restored.notes[0].revisions.length);
+console.log('PASS central content search, filters, snippets, finance exclusion, recursive counts, move/archive/restore and stable links through JSON');

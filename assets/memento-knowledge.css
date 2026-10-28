@@ -323,3 +323,16 @@
 #lifeApp[data-life-view="notes"] .kc-focus-writing .kc-diary-write {border:0;background:transparent;padding:0}
 #lifeApp[data-life-view="notes"] .kc-editor-head .kc-header {flex-wrap:wrap;gap:8px}
 #lifeApp[data-life-view="notes"] .kc-editor-head .kc-head-label {flex:1;min-width:90px}
+
+/* Central local retrieval reuses the Notes surfaces and existing stable IDs. */
+#lifeApp[data-life-view="notes"] .kc-central-search {display:grid;gap:7px;font-size:13px;font-weight:700;color:#d7e8db;margin:12px 0}
+#lifeApp[data-life-view="notes"] .kc-central-filters {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#lifeApp[data-life-view="notes"] .kc-central-filters label {font-size:12px;min-width:0;color:#c5d9ca}
+#lifeApp[data-life-view="notes"] .kc-filter-status {display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 0;font-size:12px;color:#d4e8d8}
+#lifeApp[data-life-view="notes"] .kc-central-result {display:grid;text-align:left;gap:7px;width:100%;min-height:80px;padding:13px;margin:8px 0;border:1px solid #527159;border-radius:12px;color:#edf6ee;background:#1c3527;overflow-wrap:anywhere;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-central-result small {color:#c5d9ca}
+#lifeApp[data-life-view="notes"] .kc-central-result span {font-size:13px;line-height:1.5}
+#lifeApp[data-life-view="notes"] .kc-passage-actions {display:flex;align-items:start;flex-wrap:wrap;gap:10px;margin:14px 0}
+#lifeApp[data-life-view="notes"] .kc-passage-actions details {flex:1;min-width:160px}
+#lifeApp[data-life-view="notes"] .kc-passage-actions summary {min-height:48px;display:flex;align-items:center;cursor:pointer}
+@media(max-width:420px){#lifeApp[data-life-view="notes"] .kc-central-filters {grid-template-columns:repeat(2,minmax(0,1fr))}#lifeApp[data-life-view="notes"] .kc-central-filters label:last-child {grid-column:1/-1}}

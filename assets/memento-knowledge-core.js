@@ -150,6 +150,29 @@ function search(life,{collectionId="",query="",kind="",status="active",sort="rec
  }).sort((a,b)=>sort==="title"?a.title.localeCompare(b.title,"nl"):sort==="old"?String(a.updatedAt||a.createdAt||"").localeCompare(String(b.updatedAt||b.createdAt||"")):Number(!!b.pinned)-Number(!!a.pinned)||String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||"")));
 }
 
+function collectionCounts(life,id){
+ const k=ensure(life),scope=new Set([id]);let changed=true;
+ while(changed){changed=false;for(const c of k.collections)if(!c.archived&&scope.has(c.parentId)&&!scope.has(c.id)){scope.add(c.id);changed=true;}}
+ const active=life.notes.filter(n=>!n.deletedAt&&!n.archived);
+ return {direct:active.filter(n=>collectionOf(life,n)===id).length,total:active.filter(n=>scope.has(collectionOf(life,n))).length};
+}
+function collectionPath(life,id){const c=life.knowledge?.collections.find(c=>c.id===id);return c?(c.parentId?collectionName(life,c.parentId)+' / ':'')+c.name:'Inbox';}
+function centralSearch(life,{query='',type='',collectionId='',status='active'}={}){
+ const q=nameKey(query),excerpt=text=>{text=String(text||'');const at=nameKey(text).indexOf(q),start=Math.max(0,at-45);return (start?'…':'')+text.slice(start,start+170)+(text.length>start+170?'…':'');};
+ const rows=[];
+ if(type!=='task')for(const n of life.notes){
+  if(n.deletedAt||status==='done'||(status==='archive'&&!n.archived)||(status==='active'&&n.archived))continue;
+  const cid=collectionOf(life,n);if(collectionId&&cid!==collectionId)continue;
+  const text=[n.title,n.body,...(n.tags||[])].join(' ');if(q&&!nameKey(text).includes(q))continue;
+  rows.push({id:n.id,type:'note',title:n.title,context:collectionPath(life,cid)+(n.archived?' · Archief':''),snippet:excerpt(n.body),status:n.archived?'archived':'active'});
+ }
+ if(type!=='note'&&!collectionId)for(const t of life.tasks||[]){
+  if(t.deletedAt||status==='archive'&&!t.archived||status==='done'&&(!t.done||t.archived)||status==='active'&&(t.done||t.archived))continue;
+  const text=[t.title,t.notes,...(t.steps||[]).map(s=>s.text)].join(' ');if(q&&!nameKey(text).includes(q))continue;
+  rows.push({id:t.id,type:'task',title:t.title,context:[t.category,t.date,t.archived?'Archief':t.done?'Afgerond':'Open'].filter(Boolean).join(' · '),snippet:excerpt(t.notes||(t.steps||[]).map(s=>s.text).join(' · ')),status:t.archived?'archived':t.done?'done':'open'});
+ }
+ return rows;
+}
 // Versioned, additive migration. Caller must use the existing guarded Life write.
 // Legacy collections and notes are never renamed, moved, archived or deleted here.
 const hierarchyDefaults=[
@@ -280,5 +303,5 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });

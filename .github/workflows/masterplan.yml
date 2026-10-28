@@ -19,6 +19,7 @@ jobs:
       - name: Existing data, finance, notes, fitness and PIN contracts
         run: |
           node tests/memento-regression.cjs
+          node tests/masterplan-core.cjs
           node tests/storage-safety.cjs
           node tests/storage-lock-native.cjs
           node tests/knowledge-regression.cjs
