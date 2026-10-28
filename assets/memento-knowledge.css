@@ -183,7 +183,7 @@
 
 
 /* Dagboek 2026: forest calendar and compact check-in. Only Leven > Notities. */
-#lifeApp[data-life-view="notes"] .kc-diary-hero{height:162px;position:relative;overflow:hidden;border-radius:16px;background:#193426;margin:7px 0 12px;border:1px solid #43664f}
+#lifeApp[data-life-view="notes"] .kc-diary-hero{height:96px;position:relative;overflow:hidden;border-radius:16px;background:#193426;margin:7px 0 12px;border:1px solid #43664f}
 #lifeApp[data-life-view="notes"] .kc-diary-hero img{width:100%;height:100%;object-fit:cover;display:block}
 #lifeApp[data-life-view="notes"] .kc-diary-hero:after{content:"";pointer-events:none;position:absolute;inset:30% 0 0;background:linear-gradient(transparent,#06140ce8)}
 #lifeApp[data-life-view="notes"] .kc-diary-hero>div{position:absolute;z-index:1;bottom:14px;left:16px;display:grid;gap:4px;text-shadow:0 2px 8px #000;color:#fff}
@@ -259,7 +259,7 @@
 #lifeApp[data-life-view="notes"] .kc-diary-audio>a{color:#c7e7d0;font-size:12px;text-decoration:underline}
 #lifeApp[data-life-view="notes"] #kc-voice-status,#lifeApp[data-life-view="notes"] #kc-ai-status{font-size:11px;color:#c6dcc9;line-height:1.6;display:block;margin-top:8px}
 #lifeApp[data-life-view="notes"] .kc-diary-ai a.kc-btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;text-align:center}
-@media(max-width:390px){#lifeApp[data-life-view="notes"] .kc-diary-hero{height:143px}#lifeApp[data-life-view="notes"] .kc-diary-week{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-week>button{flex-basis:31px;height:44px}#lifeApp[data-life-view="notes"] .kc-diary-days{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-height:58px}#lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:13px}#lifeApp[data-life-view="notes"] .kc-diary-moods{gap:3px}}
+@media(max-width:390px){#lifeApp[data-life-view="notes"] .kc-diary-hero{height:88px}#lifeApp[data-life-view="notes"] .kc-diary-week{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-week>button{flex-basis:31px;height:44px}#lifeApp[data-life-view="notes"] .kc-diary-days{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-height:58px}#lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:13px}#lifeApp[data-life-view="notes"] .kc-diary-moods{gap:3px}}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-checkin summary b{transition:none}}
 
 
@@ -311,3 +311,15 @@
 #lifeApp[data-life-view="notes"] #kc-cover-status{font-size:11px;color:#cde1d0}
 @media(min-width:640px){#lifeApp[data-life-view="notes"] .kc-cover-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-filter-drawer>summary:after{transition:none}}
+
+/* Masterplan: writing and its real save state take precedence over optional metadata. */
+#lifeApp[data-life-view="notes"] .kc-direct-editor {margin-top:16px}
+#lifeApp[data-life-view="notes"] .kc-note-menu summary {display:flex;align-items:center;justify-content:center;min-width:48px;min-height:48px;cursor:pointer;border:1px solid #729881;border-radius:12px}
+#lifeApp[data-life-view="notes"] .kc-note-menu[open]>div {display:flex;flex-wrap:wrap;gap:8px;padding-top:8px}
+#lifeApp[data-life-view="notes"] .kc-diary-optional>summary {min-height:48px;display:flex;align-items:center;cursor:pointer;color:#d8e9dc}
+#lifeApp[data-life-view="notes"] .kc-app textarea[data-kc-edit="body"] {overflow:hidden;min-height:220px;scroll-margin-top:145px;scroll-margin-bottom:100px;font-size:16px}
+#lifeApp[data-life-view="notes"] .kc-save-state {color:#c4ddca;min-height:24px}
+#lifeApp[data-life-view="notes"] .kc-focus-writing :is(.kc-diary-week,.kc-diary-selected,.kc-diary-checkin,.kc-diary-optional,.kc-diary-voice,.kc-diary-ai,.kc-attachments) {display:none}
+#lifeApp[data-life-view="notes"] .kc-focus-writing .kc-diary-write {border:0;background:transparent;padding:0}
+#lifeApp[data-life-view="notes"] .kc-editor-head .kc-header {flex-wrap:wrap;gap:8px}
+#lifeApp[data-life-view="notes"] .kc-editor-head .kc-head-label {flex:1;min-width:90px}

@@ -1,0 +1,81 @@
+{
+  "phase": 2,
+  "checks": [
+    {
+      "width": 360,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 2,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 2,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 2,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    }
+  ],
+  "errors": []
+}

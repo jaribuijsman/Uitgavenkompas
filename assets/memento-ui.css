@@ -179,3 +179,15 @@ body[data-compass-area="finance"] .app #view-settings .setting-row:has(>#exportB
 body[data-compass-area="finance"] .app #view-settings .setting-row>.btn {max-width:100%;white-space:normal}
 body[data-compass-area="finance"] .app #view-settings :is(.settings-card,.memento-disclosure) {min-width:0}
 body[data-compass-area="finance"] .app #view-settings :is(input,select) {min-height:44px}
+
+/* Masterplan day summary: existing capture, appointments, thought and weather stay in place. */
+#lifeApp .memento-day-summary {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:12px;background:#1c3527;border:1px solid #527159;border-radius:14px}
+#lifeApp .memento-day-summary time {font-weight:700;color:#e8f3e9;font-size:14px}
+#lifeApp .memento-day-summary p {font-size:12px;color:#c4d8c8;margin:5px 0 0}
+#lifeApp .memento-day-summary button {min-height:48px;flex-shrink:0}
+#lifeApp .memento-future-day {min-width:0;border-top:1px solid #46624e}
+#lifeApp .memento-future-day>summary {min-height:48px;display:flex;align-items:center;gap:8px;font-weight:700;color:#d3e5d6;cursor:pointer}
+#lifeApp .memento-future-day>summary:before {content:'›'}
+#lifeApp .memento-future-day[open]>summary:before {content:'⌄'}
+#lifeApp #lifeTaskDetailForm {display:grid;gap:12px;margin:12px 0}
+#lifeApp #lifeTaskDetailForm input:not([type=checkbox]) {min-height:48px;width:100%;font-size:16px}

@@ -3,7 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..'),out=process.env.MEMENTO_MASTER_OUT||'/tmp/memento-master';
-const phase=Number(process.env.MEMENTO_MASTER_PHASE||1);
+const phase=Number(process.env.MEMENTO_MASTER_PHASE||2);
 fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
  const name=new URL(req.url,'http://localhost').pathname;
@@ -18,7 +18,7 @@ async function nav(page,area,view){
  await page.locator('#mementoMenuGrid [data-memento-dest="'+area+':'+view+'"]').click();
 }
 (async()=>{
- let browser;const checks=[],errors=[];
+ let browser,failure=null;const checks=[],errors=[];
  try{
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
   browser=await chromium.launch({executablePath:process.env.BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage']});
@@ -56,11 +56,38 @@ async function nav(page,area,view){
    for(const name of names)assert((await page.locator('.kc-breadcrumbs').innerText()).includes(name));await shot('note-path');
    await nav(page,'life','notes');await page.locator('[data-kc=home]').first().click();await page.locator('[data-kc=collection][data-id=kc2-levenspad]').first().click();await page.locator('[data-kc=collection][data-id=kc2-levenspad-dagboek]').click();
    assert.equal(await page.locator('.kc-diary-history [data-kc=journal-open]').count(),1);assert((await page.locator('.kc-diary-history').innerText()).includes('27'));await shot('journal-history');
+   if(phase>=2){
+    await nav(page,'life','today');await shot('day');
+    await page.locator('[data-life-quick-kind=note]').click();await page.locator('#lifeQuickTitle').fill('Een korte gedachte voor later.');await page.locator('#lifeQuickForm [type=submit]').click();
+    const quick=(await life()).notes.find(n=>n.body==='Een korte gedachte voor later.');assert(quick);assert.equal(quick.collectionId,'inbox');
+    await nav(page,'life','notes');await page.evaluate(id=>window.MementoKnowledge.showNote(id),quick.id);
+    assert.equal(await page.locator('#kc-title').inputValue(),'');assert.equal(await page.locator('#kc-body').inputValue(),quick.body);
+    await page.locator('#kc-body').fill('De gedachte direct aangepast.');await page.locator('#kc-collection').selectOption('kc2-huis-wonen-woning');await page.locator('[data-kc=save]').first().click();
+    let q=(await life()).notes.find(n=>n.id===quick.id);assert.equal(q.body,'De gedachte direct aangepast.');assert.equal(q.collectionId,'kc2-huis-wonen-woning');assert.equal(q.id,quick.id);assert(q.revisions.length);await shot('direct-note');
+    await nav(page,'life','today');await page.locator('[data-life-quick-kind=task]').click();await page.locator('#lifeQuickTitle').fill('Directe taakdetailproef');await page.locator('#lifeQuickForm [type=submit]').click();
+    const task=(await life()).tasks.find(t=>t.title==='Directe taakdetailproef');assert(task);await page.locator('[data-life-detail="'+task.id+'"]').click();
+    await page.locator('#lifeDetailDate').fill('2026-10-29');await page.locator('#lifeDetailStep').fill('Een eerste stap');await page.locator('#lifeTaskDetailForm [type=submit]').click();
+    let t=(await life()).tasks.find(t=>t.id===task.id);assert.equal(t.date,'2026-10-29');assert.equal(t.steps.length,1);await shot('task-details');
+    await page.locator('[data-life-detail-complete]').click();assert.equal((await life()).tasks.find(t=>t.id===task.id).done,true);await page.locator('[data-life-detail-complete]').click();assert.equal((await life()).tasks.find(t=>t.id===task.id).done,false);assert.equal((await life()).tasks.filter(t=>t.id===task.id).length,1);await page.locator('#lifeDialog [data-life-close]').first().click();
+    await page.locator('[data-life-journal]').click();assert.equal(await page.locator('#kc-body').inputValue(),'Vandaag geschreven.');
+    const long='Een lange dagboektekst met ruimte voor mijn eigen verhaal.\n\n'.repeat(45);await page.locator('#kc-body').fill(long);
+    await page.setViewportSize({width,height:430});await page.locator('[data-kc=writing-mode]').click();assert(await page.locator('#mementoKnowledge.kc-focus-writing').count()||await page.locator('.kc-focus-writing').count());await shot('diary-short-viewport');await page.locator('[data-kc=save]').first().click();await page.setViewportSize({width,height:852});
+    assert.equal((await life()).notes.filter(n=>n.journal?.date==='2026-10-28').length,1);assert.equal((await life()).notes.find(n=>n.journal?.date==='2026-10-28').body,long);
+    await nav(page,'life','today');await page.locator('[data-life-journal]').click();await page.evaluate(()=>{window.masterOriginalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='compass_life_preview_v1')throw Error('Fictieve quota');return window.masterOriginalSet.call(this,k,v);};});
+    const draft='Concept dat een opslagfout én herladen overleeft.';await page.locator('#kc-body').fill(draft);await page.locator('[data-kc=save]').first().click();assert.equal(await page.locator('#kc-body').inputValue(),draft);assert((await page.locator('#kc-save-state').innerText()).includes('mislukt'));assert.equal((await life()).notes.find(n=>n.journal?.date==='2026-10-28').body,long);
+    await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await nav(page,'life','notes');assert.equal(await page.locator('#kc-body').inputValue(),draft);await page.locator('[data-kc=save]').first().click();assert.equal((await life()).notes.find(n=>n.journal?.date==='2026-10-28').body,draft);assert.equal(await page.evaluate(()=>sessionStorage.getItem('memento_note_draft_v1')),null);
+    await nav(page,'life','today');await page.locator('[data-life-journal]').click();
+    await page.evaluate(()=>{window.masterOriginalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='compass_life_preview_v1')throw Error('Fictieve quota');return window.masterOriginalSet.call(this,k,v);};});
+    await page.locator('#kc-body').fill('Een ouder herstelconcept');await page.locator('[data-kc=save]').first().click();
+    await page.evaluate(()=>{Storage.prototype.setItem=window.masterOriginalSet;window.MementoKnowledgeBridge.write(s=>{const n=window.MementoKnowledgeCore.findJournal(s,'2026-10-28');window.MementoKnowledgeCore.updateNote(s,n.id,{body:'Nieuwere opgeslagen tekst'});});});
+    await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await nav(page,'life','notes');assert.equal(await page.locator('#kc-body').inputValue(),'Een ouder herstelconcept');await page.locator('[data-kc=save]').first().click();assert.equal((await life()).notes.find(n=>n.journal?.date==='2026-10-28').body,'Nieuwere opgeslagen tekst');assert((await page.locator('#kc-save-state').innerText()).includes('nieuwere versie'));await page.locator('[data-kc=discard-draft]').first().click();
+    checks.push({width,phase:2,passed:['visible capture destination','direct note edit and move preserving identity/revisions','direct task date/step and reopen','one-action correct diary','long text in short viewport and writing mode','quota draft survives reload and retry','recovered stale draft cannot overwrite newer text']});
+   }
    assert.equal(await page.evaluate(()=>localStorage.getItem('uitgavenkompas_pin_config_v1')),originalPin);
    assert.equal(await page.locator('#pinLock').isVisible(),false);checks.push({width,phase,passed:['signed preview and prompt','CSV cents','payment double click and correction','note path from actual collection','today excluded from history','PIN preserved']});
    await ctx.close();
   }
   assert.deepEqual(errors,[]);console.log(JSON.stringify({checks,errors},null,2));
- }catch(e){console.error(e);process.exitCode=1;}
- finally{fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({phase,checks,errors},null,2));if(browser)await browser.close();server.close();}
+ }catch(e){failure=String(e);console.error(e);process.exitCode=1;}
+ finally{fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({phase,checks,errors,failure},null,2));if(browser)await browser.close();server.close();}
 })();

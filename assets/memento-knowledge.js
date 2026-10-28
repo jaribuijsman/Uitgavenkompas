@@ -56,6 +56,7 @@ function markdown(value){
  return blocks.join("")||'<p class="kc-muted">Nog geen inhoud</p>';
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
+let focusWriting=false;
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
 let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
 let voiceRecorder=null,voiceStream=null,voiceFile=null,voiceURL="",voiceNotice="",voiceStarting=false,voiceToken=0;
@@ -89,7 +90,7 @@ function itemRows(items,mode="list"){
  return '<div class="kc-item-list kc-'+esc(mode)+'">'+items.map(n=>{
   const type=C.typeOf(n);
   return '<button type="button" class="kc-item" data-kc="open" data-id="'+esc(n.id)+'">'+
-   '<span class="kc-item-icon" aria-hidden="true">'+itemIcon(n)+'</span><span class="kc-item-main"><strong>'+esc(n.title)+'</strong><small>'+esc(String(n.body||n.sourceUrl||kindNames[type]||"").slice(0,95)||kindNames[type])+'</small>'+
+   '<span class="kc-item-icon" aria-hidden="true">'+itemIcon(n)+'</span><span class="kc-item-main"><strong>'+esc(n.title)+'</strong><small>'+esc(n.body?.trim()===n.title.trim()?kindNames[type]:String(n.body||n.sourceUrl||kindNames[type]||"").slice(0,95)||kindNames[type])+'</small>'+
     '<span class="kc-item-tags">'+chips(n.tags)+(n.pinned?'<span class="kc-tag">Vastgezet</span>':"")+'</span></span>'+
    '<span class="kc-item-side">'+(n.updatedAt?readable(n.updatedAt):"")+'<span aria-hidden="true">›</span></span></button>';
  }).join("")+"</div>";
@@ -251,12 +252,12 @@ function openJournal(day){
 }
 function renderJournalEditor(){
  const e=editing,j=e.journal;
- return '<div class="kc-editor-head">'+header("Mijn dagboek",true,btn("Opslaan","save","",true))+'</div>'+
+ return '<div class="kc-editor-head">'+header("Mijn dagboek",true,btn(focusWriting?"Normaal":"Schrijfstand","writing-mode")+btn("Sluiten","save","",true))+'</div>'+
  '<p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?"Niet opgeslagen":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
- diaryHero(j.date)+diaryWeek(j.date)+'<div class="kc-diary-selected"><div><small>DAGBOEK</small><h3>'+esc(journalLabel(j.date))+'</h3></div></div>'+
- diaryCheckin(j)+diaryPrompts(j.date)+
- '<section class="kc-diary-write"><div class="kc-diary-heading"><strong>✎ Mijn verhaal</strong><small>Vrij schrijven</small></div><label for="kc-body" class="kc-sr">Dagboektekst</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="9" placeholder="Wat heb je vandaag meegemaakt?">'+esc(e.body)+'</textarea><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?"":e.title)+'" placeholder="Titel van deze dag"></label><label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(", "))+'"></label><div class="kc-diary-actions">'+btn("Bewaar dag","save","",true)+btn("Versiegeschiedenis","versions")+'</div></section>'+
- diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+'</div>';
+ diaryWeek(j.date)+'<div class="kc-diary-selected"><div><small>DAGBOEK</small><h3>'+esc(journalLabel(j.date))+'</h3></div></div>'+
+
+ '<section class="kc-diary-write"><div class="kc-diary-heading"><strong>✎ Mijn verhaal</strong><small>Vrij schrijven</small></div><label for="kc-body" class="kc-sr">Dagboektekst</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="9" placeholder="Wat heb je vandaag meegemaakt?">'+esc(e.body)+'</textarea><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?"":e.title)+'" placeholder="Titel van deze dag"></label><label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(", "))+'"></label><div class="kc-diary-actions">'+btn("Versiegeschiedenis","versions")+'</div></section>'+
+ diaryCheckin(j)+'<details class="kc-diary-optional"><summary>Reflectievragen · optioneel</summary>'+diaryPrompts(j.date)+'</details>'+diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+btn("Concept verwerpen","discard-draft")+'</div>';
 }
 function renderSort(){
  const list=sortState?.ids||[];
@@ -286,26 +287,28 @@ function renderDetail(){
  const n=read().notes.find(x=>x.id===selectedId);
  if(!n)return header("Notitie niet gevonden",true)+"<p>Dit kennisitem is niet meer beschikbaar.</p>";
  const cid=C.collectionOf(read(),n);
- const actions=n.deletedAt?btn("Herstellen","restore",n.id,true):btn("Bewerken","edit",n.id,true);
+ const actions=n.deletedAt?btn("Herstellen","restore",n.id,true):btn("Meer opties","edit",n.id,true);
+ const direct=!n.deletedAt&&!n.journal&&C.typeOf(n)==="note";
+ if(direct&&(!editing||editing.id!==n.id||!dirty)){editing=C.clone(n);editing.collectionId=cid;dirty=false;rememberBase();}
  const original=safeURL(n.sourceUrl||"");
  const check=C.typeOf(n)==="checklist"?'<div class="kc-checklist">'+C.checklistItems(n).map(item=>'<label class="kc-check"><input data-kc-check="'+esc(item.id)+'" data-note="'+esc(n.id)+'" type="checkbox"'+(item.done?" checked":"")+(n.deletedAt?" disabled":"")+'><span>'+esc(item.text)+'</span></label>').join("")+"</div>":"";
- return header(n.journal?journalLabel(n.journal.date):n.title,true,actions)+
+ return header(n.journal?journalLabel(n.journal.date):n.body?.trim()===n.title.trim()?"Notitie":n.title,true,actions)+
  (n.journal?'<p class="kc-muted">'+esc(n.journal.mood||'Geen stemming')+'</p>':'')+
  '<div class="kc-detail-meta"><span>'+esc(collectionName(cid))+"</span><span>·</span><span>"+esc(kindNames[C.typeOf(n)]||"Notitie")+"</span><span>·</span><span>"+readable(n.updatedAt||n.createdAt)+"</span></div>"+
  '<div class="kc-tagline">'+chips(n.tags)+'</div>'+
  (C.typeOf(n)==="recipe"?recipeHTML(n.recipe):"")+
- (check||'<div class="kc-readable">'+markdown(n.body)+"</div>")+
+ (direct?'<div class="kc-editor-fields kc-direct-editor"><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(n.body?.trim()===n.title.trim()?"":editing.title)+'"></label><label>Verzameling<select id="kc-collection" data-kc-edit="collectionId"><option value="inbox"'+(editing.collectionId==="inbox"?' selected':'')+'>Inbox</option>'+collections().map(c=>'<option value="'+esc(c.id)+'"'+(editing.collectionId===c.id?' selected':'')+'>'+esc(pathName(c))+'</option>').join('')+'</select></label><label for="kc-body">Inhoud</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000">'+esc(editing.body)+'</textarea><p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?'Concept':'Opgeslagen')+'</p>'+btn('Opslaan','save','',true)+'</div>':check||'<div class="kc-readable">'+markdown(n.body)+"</div>")+
  (original?'<a class="kc-source" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':"")+
  attachmentsHTML(n)+linkedHTML(n)+
  (n.deletedAt?"":'<div class="kc-detail-actions">'+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Onderzoeken met AI","ai",n.id))+
- '<details><summary>Meer</summary><div>'+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
+ '<details class="kc-note-menu"><summary aria-label="Notitie beheren">⋯</summary><div>'+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
 }
 function renderEditor(){
  const e=editing;if(!e)return "";if(e.journal)return renderJournalEditor();
  const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link";
  const tags=(e.tags||[]).join(", ");
  const recipe=e.recipe||{ingredients:[],status:"concept",version:1,notes:""};
- return '<div class="kc-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,btn("Opslaan","save","",true))+'</div><p class="kc-save-state" id="kc-save-state" role="status">'+(dirty?"Niet opgeslagen":"Opgeslagen")+'</p>'+
+ return '<div class="kc-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,btn("Opslaan","save","",true))+'</div><p class="kc-save-state" id="kc-save-state" role="status">'+(dirty?"Concept":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
  '<div class="kc-editor-fields">'+
  '<label>Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
  '<label>Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
@@ -323,7 +326,7 @@ function renderEditor(){
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
  '<p class="kc-muted">Maximaal 25 MB per bestand. PDF’s en afbeeldingen blijven op dit apparaat en worden meegenomen in de volledige ZIP-back-up.</p>'+
  attachmentsHTML(e)+
- '<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+"</div></div>";
+ '<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+"</div></div>";
 }
 function renderVersions(){
  const n=read().notes.find(x=>x.id===selectedId);
@@ -369,35 +372,55 @@ function render(){
  else if(screen==="file")output=renderFile();
  host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+breadcrumbs()+output+"</div>";
  ArtUI?.hydrate(host,S);
+ host.classList.toggle("kc-focus-writing",focusWriting&&Boolean(editing?.journal));
+ growText();
+}
+const DRAFT_KEY="memento_note_draft_v1";
+let editingBase="",recoveryChecked=false;
+function rememberBase(){editingBase=selectedId?JSON.stringify(read().notes.find(n=>n.id===selectedId)||null):"";}
+function rememberDraft(){
+ if(!editing||!dirty)return;
+ try{sessionStorage.setItem(DRAFT_KEY,JSON.stringify({version:1,id:selectedId,base:editingBase,draft:editing,screen,collectionId}));}catch{}
+}
+function forgetDraft(){try{sessionStorage.removeItem(DRAFT_KEY);}catch{}}
+function recoverDraft(){
+ let rec;try{rec=JSON.parse(sessionStorage.getItem(DRAFT_KEY)||"null");}catch{return;}
+ if(!rec||rec.version!==1||!rec.draft||typeof rec.draft.body!=="string")return;
+ if(!confirm("Er is een niet opgeslagen notitieconcept in dit tabblad. Concept hervatten?"))return;
+ selectedId=rec.id||"";editing=C.clone(rec.draft);editingBase=rec.base||"";collectionId=rec.collectionId||editing.collectionId||"inbox";dirty=true;screen="edit";render();
+ if(selectedId&&JSON.stringify(read().notes.find(n=>n.id===selectedId)||null)!==editingBase){notify("Deze notitie heeft inmiddels een nieuwere versie. Je concept blijft zichtbaar om te kopiëren; het overschrijft die versie niet.");setSaveIndicator("Opslaan mislukt · nieuwere versie");}
 }
 function write(mutator,token){
  try{const ok=bridge.write(life=>{C.ensure(life);try{mutator(life);C.validate(life);}catch(e){notify(e.message);throw e;}},token);if(!ok&&!notice)notify("Opslaan mislukt. Je invoer is behouden; sluit de melding en probeer opnieuw.");return ok;}catch(e){notify(e.message);return false;}
 }
 function flush(){
  if(!editing||!dirty)return true;
+ rememberDraft();
+ if(selectedId&&editingBase&&JSON.stringify(read().notes.find(n=>n.id===selectedId)||null)!==editingBase){notify("Deze notitie is inmiddels gewijzigd. Kopieer je concept; de nieuwere versie blijft behouden.");setSaveIndicator("Opslaan mislukt · nieuwere versie");return false;}
  const draft=C.clone(editing),life=read();
+ setSaveIndicator("Opslaan…");
  if(!draft.title.trim())draft.title=draft.journal?draft.journal.date:String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
  if(!draft.body.trim()&&draft.title==="Naamloze notitie"&&!draft.attachments?.length&&!selectedId){dirty=false;return true;}
  if(draft.sourceUrl&&!safeURL(draft.sourceUrl)){notify("Gebruik een geldige http- of https-link.");setSaveIndicator("Controleer de bronlink");return false;}
- if(draft.journal&&!C.journalHasContent(draft.body,draft.journal)){setSaveIndicator("Leeg concept · niet opgeslagen");if(!selectedId){dirty=false;return true;}notify("Vul eerst iets in voordat je je dagboek leegmaakt.");return false;}
+ if(draft.journal&&!C.journalHasContent(draft.body,draft.journal)){setSaveIndicator("Leeg concept · niet opgeslagen");if(!selectedId){dirty=false;forgetDraft();return true;}notify("Vul eerst iets in voordat je je dagboek leegmaakt.");return false;}
  const changed=write(state=>{
   if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
   if(selectedId){C.updateNote(state,selectedId,{title:draft.title,body:draft.body,kind:draft.kind,collectionId:draft.collectionId,tags:draft.tags,sourceUrl:draft.sourceUrl,recipe:draft.recipe||null});}
   else {draft.revision=1;state.notes.unshift(draft);}
  });
  if(!changed){setSaveIndicator("Opslaan mislukt · invoer bewaard");return false;}
- selectedId=draft.id;editing=C.clone(read().notes.find(n=>n.id===draft.id));dirty=false;notice="";
+ selectedId=draft.id;editing=C.clone(read().notes.find(n=>n.id===draft.id));dirty=false;notice="";rememberBase();forgetDraft();
  setSaveIndicator("Opgeslagen");return true;
 }
 function setSaveIndicator(label){const el=host?.querySelector("#kc-save-state");if(el)el.textContent=label;}
-function schedule(){dirty=true;setSaveIndicator("Bezig met opslaan…");clearTimeout(timer);timer=setTimeout(()=>flush(),850);}
+function schedule(){dirty=true;rememberDraft();setSaveIndicator("Concept");clearTimeout(timer);timer=setTimeout(()=>flush(),850);}
 function leave(next,id=""){
  if(voiceRecorder||voiceStarting||voiceFile){notify("Bewaar of verwijder eerst de opname.");return false;}
  clearTimeout(timer);if(!flush())return false;
  editing=null;screen=next;if(id)collectionId=id;notice="";render();return true;
 }
 function beginNew(cid){
- selectedId="";const state=read();editing=C.makeNote({title:"",body:"",collectionId:cid||"inbox",kind:"note"},state);dirty=false;screen="edit";render();
+ selectedId="";const state=read();editing=C.makeNote({title:"",body:"",collectionId:cid||"inbox",kind:"note"},state);dirty=false;screen="edit";rememberBase();render();
 }
 function startEdit(id){
  const note=read().notes.find(x=>x.id===id);if(!note)return;
@@ -405,7 +428,7 @@ function startEdit(id){
  if(!editing.tags)editing.tags=[];
  if(!editing.attachments)editing.attachments=[];
  if(!editing.recipe&&editing.kind==="recipe")editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
- dirty=false;screen="edit";render();
+ dirty=false;screen="edit";rememberBase();render();
 }
 function back(){
  if(screen==='sort'){screen=sortState.parentId?'collection':'home';if(sortState.parentId)collectionId=sortState.parentId;sortState=null;render();return;}
@@ -515,6 +538,10 @@ function copyDiaryAI(){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ if(op==="recover-draft"){recoverDraft();return;}
+ if(op==="discard-draft"){if(!confirm("Niet opgeslagen concept verwerpen? Opgeslagen tekst blijft behouden."))return;clearTimeout(timer);forgetDraft();dirty=false;editing=null;screen=selectedId?"detail":"home";render();return;}
+ if(op==="writing-mode"){focusWriting=!focusWriting;host.classList.toggle("kc-focus-writing",focusWriting);el.textContent=focusWriting?"Normaal":"Schrijfstand";return;}
+ if(screen==="detail"&&dirty&&!flush())return;
  if(kc2Action(op,id,el))return;
  if(op==="quick-speech"){quickToggleSpeech();return;}
  if(op==="quick-save"){quickSave();return;}
@@ -627,6 +654,7 @@ function kc2Action(op,id,el){
  if(op==='journal-open'){const n=read().notes.find(n=>n.id===id);if(n){journalFilter=n.journal.date;collectionId=C.collectionOf(read(),n);startEdit(id);}return true;}
  if(op==='journal-filter'){journalFilter=journalFilter?'':host.querySelector('#kc-journal-picker')?.value||'';render();return true;}
  if(op==='cancel-journal'){
+  if(!flush())return true;
   if(voiceRecorder||voiceStarting||voiceFile){notify('Bewaar of verwijder eerst je opname.');return true;}
   if(dirty&&!confirm('Niet opgeslagen wijzigingen sluiten? Reeds automatisch opgeslagen tekst blijft bewaard.'))return true;
   clearTimeout(timer);editing=null;dirty=false;screen='collection';render();return true;
@@ -686,6 +714,9 @@ document.addEventListener('submit',e=>{
  if(e.target.id==='kc-collection-form'){e.preventDefault();kc2Action('save-collection','',e.target);}
 });
 
+function growText(){
+ for(const field of host?.querySelectorAll('textarea[data-kc-edit="body"]')||[]){field.style.height="auto";field.style.height=Math.max(220,field.scrollHeight+2)+"px";}
+}
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
  if(field.dataset.kcInput==="quick"){if(quickSpeech)quickStop();quickDraft=field.value;return;}
@@ -706,6 +737,7 @@ function onInput(event){
     return {name:name.slice(0,120),amount:amount.slice(0,40),unit:unit.slice(0,40)};
   });
  }else editing[change]=field.value;
+ if(change==="body"){if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
  if(change==="kind"){
   if(field.value==="recipe"&&!editing.recipe)editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
   schedule();render();return;
@@ -739,6 +771,7 @@ function mount(container,b){
  const guard=root.MementoStorageGuard;
  if(!read().knowledge?.hierarchyVersion&&guard?.ready)guard.ready.then(()=>{if(host&&document.body.contains(host)&&!editing&&!colDraft){tryMigration();render();}});
  render();
+ if(!recoveryChecked){recoveryChecked=true;recoverDraft();}
 }
 function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickSpeech||voiceRecorder||voiceStarting||voiceFile);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();if(hasPending())flush();}});
@@ -747,5 +780,5 @@ document.addEventListener("toggle",e=>{if(e.target.id==="kc-filter-drawer")filte
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
-root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>beginNew("inbox"),showNote:id=>{selectedId=id;screen="detail";render();}};
+root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;selectedId=id;editing=null;screen="detail";render();}};
 })(window);
