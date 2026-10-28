@@ -10,7 +10,7 @@ const server=http.createServer((req,res)=>{
 (async()=>{let browser;
  try{
   await new Promise((ok,fail)=>{server.once("error",fail);server.listen(0,"127.0.0.1",ok)});
-  browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+  browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||undefined,args:["--no-sandbox","--disable-dev-shm-usage"]});
   const context=await browser.newContext({viewport:{width,height:830},locale:"nl-NL",timezoneId:"Europe/Amsterdam",hasTouch:true,reducedMotion:"reduce"});
   await context.route("https://**/*",r=>r.abort());
   await context.addInitScript(()=>{
@@ -83,8 +83,11 @@ const server=http.createServer((req,res)=>{
   await page.locator('#mementoFitness [data-fit="start"][data-id="'+rid+'"]').click();
   await page.locator("#fitnessDialog button[type=submit]").click();
   assert.match(await page.locator(".ft-set-reference").first().innerText(),/40 kg × 12/);
-  assert.equal((await stored()).fitness.active.exercises[0].logs[0].weight,40);
+  assert.equal((await stored()).fitness.active.exercises[0].logs[0].weight,null);
+  assert.equal((await stored()).fitness.active.exercises[0].logs[0].reps,null);
+  assert.equal((await stored()).fitness.sessions[0].exercises[0].logs[0].weight,40);
   await page.locator('[data-ex="'+eid+'"][data-field="weight"]').first().fill("41");
+  await page.locator('[data-ex="'+eid+'"][data-field="reps"]').first().fill("12");
   await page.locator('[data-fit="toggle-set"][data-ex="'+eid+'"]').first().click();
   await page.locator('#mementoFitness [data-fit="finish"]').first().click();
   await page.locator('#mementoFitness .ft-tabs [data-fit="tab"][data-id="progress"]').click();

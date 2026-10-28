@@ -281,9 +281,10 @@
       button("Afronden", "finish", "", true) + '</div>' +
       '<div class="ft-session-progress"><span>'+done+' van '+total+' geplande werksets afgerond</span><div class="ft-session-track" role="progressbar" aria-label="Afgeronde werksets" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+done+'"><span style="width:'+(total?done*100/total:0).toFixed(1)+'%"></span></div></div>' +
       '<div class="ft-timer" role="timer" aria-label="Rusttimer"><span id="ft-clock">Rusttimer</span>' +
-      button("Rust beëindigen", "stop-rest")+button("−15 sec", "adjust-rest", "-15")+button("+15 sec", "adjust-rest", "15") + '<button type="button" class="life-btn" data-fit="next-open-set">Volgende set</button></div>' +
+      button("Rust beëindigen", "stop-rest")+button("−15 sec", "adjust-rest", "-15")+button("+15 sec", "adjust-rest", "15") + '</div>' +
       (s.checkin.pain ? '<p class="ft-warning">Je hebt pijn gemeld. Er worden geen verhogingen voorgesteld. Stop een pijnlijke oefening.</p>' : '') +
       '<div class="ft-session-controls">' +
+        '<button type="button" class="life-btn" data-fit="next-open-set">Volgende set</button>' +
         button(showRir ? "Over verbergen" : "Herhalingen over tonen", "toggle-rir") +
         '<span class="ft-hint">Gewichten en herhalingen worden direct bewaard.</span></div>' +
       s.exercises.map((e, i) => {
