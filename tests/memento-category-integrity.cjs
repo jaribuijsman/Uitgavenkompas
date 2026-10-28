@@ -24,4 +24,9 @@ check('split removal is explicit and cannot silently discard split records',()=>
  assert.match(html,/Splitsing opheffen\?/);
  assert.match(html,/splitData\.length<2/);
 });
+check('split rows are created only after user activates splitting',()=>{
+ assert.match(html,/const splits=Array\.isArray\(t\.splits\)&&t\.splits\.length\?t\.splits:\[\]/);
+ assert.match(html,/function addSplitRow\(data=\{category:'',amount:''/);
+ assert.match(html,/splitActive=true;addSplitRow\(\);addSplitRow\(\)/);
+});
 console.log('PASS',passed,'category integrity cases');

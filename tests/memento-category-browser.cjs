@@ -45,6 +45,7 @@ async function nav(page){
    assert.equal(await page.locator('#txSubcategory').inputValue(),'Wegenbelasting');
    assert.match(await page.locator('#txSubcategoryNotice').innerText(),/Vaste lasten/);
    assert.equal(await page.locator('#splitSection').isVisible(),false);
+   assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('#txAmount').fill('49.50');
    await page.locator('[form=txForm][type=submit]').click();
    let tx=(await state()).transactions.find(t=>t.id==='legacy-tax');
@@ -64,16 +65,22 @@ async function nav(page){
    await page.locator('#txCategory').selectOption('Vaste lasten');
    await page.locator('#txSubcategory').selectOption('Wegenbelasting');
    assert.equal(await page.locator('#splitSection').isVisible(),false);
+   assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('[form=txForm][type=submit]').click();
    const all=(await state()).transactions,added=all.find(t=>t.description==='Nieuwe wegenbelasting');
    assert(added,'New transaction persisted');
    assert.equal(added.category,'Vaste lasten');assert.equal(added.subcategory,'Wegenbelasting');
    assert.equal(all.length,2);
+   assert.equal(added.splits,null,'Niet splitsen betekent geen opgeslagen verdeling');
    // A deliberate split must preserve both categories when another field is edited.
    await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
    assert.equal(await page.locator('#splitSection').isVisible(),false);
+   assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('#toggleSplit').click();
    assert.equal(await page.locator('.split-row').count(),2);
+   assert.deepEqual(await page.locator('.split-category').evaluateAll(rows=>rows.map(r=>r.value)),['','']);
+   assert.deepEqual(await page.locator('.split-amount').evaluateAll(rows=>rows.map(r=>r.value)),['','']);
+   await page.locator('.split-category').nth(0).selectOption('Vaste lasten');
    await page.locator('.split-amount').nth(0).fill('15');
    await page.locator('.split-amount').nth(1).fill('10');
    await page.locator('.split-category').nth(1).selectOption('Boodschappen');
@@ -99,6 +106,7 @@ async function nav(page){
    await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
    await page.locator('#toggleSplit').click();
    assert.equal(await page.locator('#splitSection').isVisible(),false);
+   assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('[form=txForm][type=submit]').click();
    revised=(await state()).transactions.find(t=>t.id===added.id);
    assert.equal(revised.splits,null);
