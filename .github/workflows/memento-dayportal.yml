@@ -1,0 +1,27 @@
+name: Memento day portal acceptance
+on:
+  push:
+    branches: [main]
+    paths: ['index.html','sw.js','assets/memento-start.*','assets/memento-forest-lock.*','tests/memento-start-browser.cjs','tests/pin-disabled-regression.cjs','.github/workflows/memento-dayportal.yml']
+  pull_request:
+    paths: ['index.html','sw.js','assets/memento-start.*','tests/memento-start-browser.cjs','.github/workflows/memento-dayportal.yml']
+permissions:
+  contents: read
+jobs:
+  day-portal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Static security and portal contracts
+        run: node tests/pin-disabled-regression.cjs
+      - name: Browser tooling
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Mobile intro and manual PIN at 360, 393 and 412 pixels
+        run: node tests/memento-start-browser.cjs
