@@ -37,6 +37,8 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Transaction category browser regression at 360, 393 and 412 pixels
+        run: node tests/memento-category-browser.cjs
       - name: Mobile masterplan scenarios at 360, 393 and 412 pixels
         run: node tests/masterplan-browser.cjs
       - name: Immutable original main for comparison and real PWA upgrade
