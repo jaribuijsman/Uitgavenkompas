@@ -81,5 +81,60 @@
     "oldCacheRemoved": true,
     "legacyCacheIgnored": true
   },
-  "failure": null
+  "failure": null,
+  "upgradeTrace": [
+    {
+      "label": "online-new-worker",
+      "core": "object",
+      "duty": "function",
+      "scripts": [
+        "http://127.0.0.1:39899/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:39899/assets/memento-fitness.js?v=20261028-master-p4-set-navigation"
+      ],
+      "caches": [
+        {
+          "name": "memento-pwa-v35-20261028-account-transfers-v1",
+          "htmlFitness": "memento-fitness-core.js?v=20261026-muscle-v4",
+          "assets": [
+            "http://127.0.0.1:39899/assets/memento-fitness-core.js?v=20261026-muscle-v4"
+          ]
+        },
+        {
+          "name": "uitgavenkompas-legacy-document",
+          "htmlFitness": "memento-fitness-core.js?v=20261026-muscle-v4",
+          "assets": []
+        },
+        {
+          "name": "memento-pwa-v42-20261028-master-p5-offline",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": [
+            "http://127.0.0.1:39899/assets/memento-fitness-core.js?v=20261028-master-p4"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "offline",
+      "core": "object",
+      "duty": "function",
+      "scripts": [
+        "http://127.0.0.1:39899/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:39899/assets/memento-fitness.js?v=20261028-master-p4-set-navigation"
+      ],
+      "caches": [
+        {
+          "name": "uitgavenkompas-legacy-document",
+          "htmlFitness": "memento-fitness-core.js?v=20261026-muscle-v4",
+          "assets": []
+        },
+        {
+          "name": "memento-pwa-v42-20261028-master-p5-offline",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": [
+            "http://127.0.0.1:39899/assets/memento-fitness-core.js?v=20261028-master-p4"
+          ]
+        }
+      ]
+    }
+  ]
 }
