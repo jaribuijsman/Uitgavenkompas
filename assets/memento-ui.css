@@ -191,3 +191,26 @@ body[data-compass-area="finance"] .app #view-settings :is(input,select) {min-hei
 #lifeApp .memento-future-day[open]>summary:before {content:'⌄'}
 #lifeApp #lifeTaskDetailForm {display:grid;gap:12px;margin:12px 0}
 #lifeApp #lifeTaskDetailForm input:not([type=checkbox]) {min-height:48px;width:100%;font-size:16px}
+
+/* Financial context, known-payment confirmation and the current duty projection. */
+body[data-compass-area="finance"] .memento-finance-context {font-size:13px;line-height:1.6;color:#c5dbca;padding:10px 12px;border:1px solid #527159;border-radius:12px;background:#1b3225;margin:0 0 14px}
+body[data-compass-area="finance"] #dashboardStats {grid-template-columns:repeat(4,minmax(0,1fr))}
+body .memento-payment-details {margin-top:16px;min-width:0}
+body .memento-payment-details>summary {display:flex;align-items:center;min-height:48px;cursor:pointer;font-weight:700;color:#c5dbca}
+body #txTypeSegment[hidden] {display:none}
+body .memento-other-budgets {grid-column:1/-1;min-width:0}
+body .memento-other-budgets>summary {min-height:48px;display:flex;align-items:center;cursor:pointer;font-weight:700}
+#lifeApp .memento-duty-badge {display:inline-block;margin-top:6px;padding:4px 7px;border-radius:8px;background:#b6cfbd;color:#183321;font-size:12px;font-weight:700}
+#lifeApp .memento-cal-day[data-duty-code] {min-height:60px;height:auto;display:flex;flex-direction:column;justify-content:center;gap:4px;position:relative}
+#lifeApp .memento-duty-code {font-size:11px;font-weight:800;line-height:1.3;color:#cce3d2}
+#lifeApp [data-duty-code="N"] .memento-duty-code {color:#d2dff7}
+#lifeApp .memento-duty-detail {font-size:13px;line-height:1.5;color:#d8e8dd;padding:8px 0}
+#lifeApp .memento-roster-legend>summary {display:flex;align-items:center;min-height:48px;cursor:pointer;font-weight:700}
+#lifeApp .memento-roster-legend p {font-size:13px;line-height:1.7;color:#c5dbca}
+#lifeApp .memento-duty-cycle {display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px}
+#lifeApp .memento-duty-cycle>span {text-align:center;border:1px solid #729881;border-radius:6px;padding:7px 0;background:#294b38;color:#e8f3e9;font-weight:700}
+@media(max-width:800px){body[data-compass-area="finance"] #dashboardStats {grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+body #txForm:has(.memento-payment-details)>.form-grid>.form-field:has(#txAccount) {grid-column:1/-1}
+body #txForm:has(.memento-payment-details)>.form-grid :is(input,select) {min-height:48px;min-width:0;font-size:16px}
+#lifeApp .memento-day-summary>div {min-width:0;flex:1}

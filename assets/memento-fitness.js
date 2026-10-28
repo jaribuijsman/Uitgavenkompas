@@ -47,7 +47,7 @@
     progressKey = "",
     editingRoutine = "",
     lastFocus = null,
-    clock = null;
+    clock = null,lastExerciseId="";
   const data = () => pending || bridge.read();
   function error(text) {
     const el = host?.querySelector("#ft-notice");
@@ -130,10 +130,7 @@
       selectedMinutes = 45;
     return (
       splitOffer(f) +
-      (C.shift(f, C.date()) ? '<div class="ft-shift-hint">Vandaag: ' +
-        esc(shiftDescription[C.shift(f,C.date())]) + (C.shift(f,C.date()) === "R" ? "" : "dienst") +
-        (C.shift(f,C.date()) === "N" ? ' · Houd rekening met je slaap en herstel.' : '') +
-        '</div>' : '') +
+      ('<div class="ft-shift-hint">Vandaag: '+C.duty(C.date()).code+' · '+esc(C.duty(C.date()).label)+' · '+esc(C.duty(C.date()).time)+'</div>') +
       panel(
         r ? esc(r.name) : "Je eerste training",
         r
@@ -282,9 +279,9 @@
       '<div class="ft-session-head"><div><h2>' + esc(s.name) + '</h2><p>' +
       esc(s.location) + ' · ' + done + ' / ' + total + ' werksets afgerond</p></div>' +
       button("Afronden", "finish", "", true) + '</div>' +
-      '<div class="ft-session-progress"><span>Voortgang · '+done+' van '+total+' werksets</span><div class="ft-session-track" role="progressbar" aria-label="Afgeronde werksets" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+done+'"><span style="width:'+(total?done*100/total:0).toFixed(1)+'%"></span></div></div>' +
+      '<div class="ft-session-progress"><span>'+done+' van '+total+' geplande werksets afgerond</span><div class="ft-session-track" role="progressbar" aria-label="Afgeronde werksets" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+done+'"><span style="width:'+(total?done*100/total:0).toFixed(1)+'%"></span></div></div>' +
       '<div class="ft-timer" role="timer" aria-label="Rusttimer"><span id="ft-clock">Rusttimer</span>' +
-      button("Stop rust", "stop-rest") + '<button type="button" class="life-btn" data-fit="next-open-set">Volgende set</button></div>' +
+      button("Rust beëindigen", "stop-rest")+button("−15 sec", "adjust-rest", "-15")+button("+15 sec", "adjust-rest", "15") + '<button type="button" class="life-btn" data-fit="next-open-set">Volgende set</button></div>' +
       (s.checkin.pain ? '<p class="ft-warning">Je hebt pijn gemeld. Er worden geen verhogingen voorgesteld. Stop een pijnlijke oefening.</p>' : '') +
       '<div class="ft-session-controls">' +
         button(showRir ? "Over verbergen" : "Herhalingen over tonen", "toggle-rir") +
@@ -304,11 +301,12 @@
               s.exercises.length + '</span><h2>' + esc(e.name) + '</h2>' +
               '<p>' + esc(e.equipment) + ' · ' + esc(e.muscle) + '</p></div>' +
             button("Uitleg", "guide", e.id) + '</div>' +
-          (prev ? '<p class="ft-prev">Vorige resultaten staan bij je werksets.</p>' :
+          '<p class="ft-prescription">Doel: '+e.sets+' × '+(e.type==='strength'?e.min+'–'+e.max+' herhalingen':e.minutes+' minuten')+' · Rust '+e.rest+' sec.</p>'+
+          (prev ? '<p class="ft-prev">Vorige meting: '+esc(fmt(prior.s.date))+' · '+esc(e.equipment)+' · '+esc(prior.s.location)+'. Resultaten staan als referentie bij je sets.</p>' :
             '<p class="ft-prev">Eerste registratie met dit apparaat.</p>') +
           '<div class="ft-sets">' + e.logs.map((l, j) => logRow(e, l, j, l.warmup?null:pastSets[workIndex++])).join("") + '</div>' +
           (rec.increase ? '<p class="ft-hint ft-progress-hint">' + esc(rec.text) + '</p>' : '') +
-          '<div class="ft-actions ft-exercise-actions">' + button("Vervang oefening", "alternatives", e.id) +
+          '<div class="ft-actions ft-exercise-actions">' + button("Ander apparaat", "machine", e.id)+button("Andere uitvoering", "alternatives", e.id) +
             '<details class="ft-more-actions"><summary>Meer</summary><div class="ft-actions">' +
               button("＋ Werkset", "add-set", e.id) + button("＋ Opwarmset", "warmup", e.id) +
               button("Andere oefening kiezen", "replace", e.id) + '</div></details></div>' +
@@ -327,7 +325,7 @@
   }
   function logRow(e, l, j, previous=null) {
     const input = (k, label, value, step, max) =>
-      `<label class="${k === "rir" ? "ft-rir-field" : ""}">${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="decimal" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
+      `<label class="${k === "rir" ? "ft-rir-field" : ""}">${label}<input aria-label="${esc(e.name)} set ${j + 1} ${label}" type="number" inputmode="${k==='reps'||k==='rir'?'numeric':'decimal'}" min="0" max="${max}" step="${step}" data-ex="${esc(e.id)}" data-log="${esc(l.id)}" data-field="${k}" value="${value ?? ""}"${l.done ? " disabled" : ""}></label>`;
     return `<div class="ft-set${l.done ? " is-done" : ""}" data-set-row="${esc(l.id)}"><div class="ft-set-label">${l.warmup ? "W" : "Set " + (j + 1)}</div><div class="ft-set-fields">${e.type === "strength" ? input("weight", "kg", l.weight, 0.25, 100000) + input("reps", "reps", l.reps, 1, 1000) + input("rir", "over", l.rir, 1, 10) : input("minutes", "min", l.minutes, 0.1, 600) + (e.type === "cardio" ? input("distance", "km", l.distance, 0.01, 10000) : "")}</div><button type="button" class="ft-check" data-fit="toggle-set" data-ex="${esc(e.id)}" data-id="${esc(l.id)}" aria-label="${esc(e.name)} set ${j + 1} ${l.done ? "weer openen" : "afvinken"}" aria-pressed="${l.done}">${l.done ? "✓" : "○"}</button>${previous?`<span class="ft-set-reference">Vorige set: ${esc(e.type==="strength"?(previous.weight??"—")+" kg × "+(previous.reps??"—"):(previous.minutes??"—")+" min")}</span>`:""}</div>`;
   }
   function smallChart(points, unit, label) {
@@ -466,6 +464,7 @@
       )}</nav><div id="ft-notice" hidden role="status"></div><button id="ft-retry" class="life-btn" data-fit="retry" hidden>Opnieuw opslaan</button>${f.active && tab !== "today" ? '<div class="ft-strip"><span>Training bezig: ' + esc(f.active.name) + "</span>" + button("Hervatten", "tab", "today") + "</div>" : ""}${tab === "today" ? today() : tab === "plan" ? plan() : progress()}<div class="ft-footer">Alleen op dit apparaat · opgenomen in je volledige Memento-back-up</div></div>`;
     host.onclick = click;
     host.oninput = input;
+    host.onfocusin=event=>{if(event.target.dataset.ex)lastExerciseId=event.target.dataset.ex;};
     host.onchange = (event) => { if (event.target.id === "ft-progress-select") input(event); };
     host.onsubmit = submit;
     if (pending) {
@@ -505,7 +504,7 @@
       p = f.profile;
     dialog(
       "Jouw trainingsritme",
-      `<div class="ft-form-grid">${select("Doel", "goal", goals, p.goal)}${field("Locatie", "location", p.location, "text", 'maxlength="100" required')}${field("Trainingen per cyclus", "target", p.target, "number", 'min="1" max="30" step="1" required')}${field("Dagen per cyclus", "cycleDays", p.cycleDays, "number", 'min="1" max="60" step="1" required')}</div><details class="ft-details"><summary>Dienstenrooster (optioneel)</summary><p>V = vroeg, L = laat, N = nacht, R = vrij. Bijvoorbeeld VVLLNNRRRR. Dit patroon herhaalt zich vanaf de startdatum.</p>${field("Startdatum patroon", "shiftStart", p.shiftStart, "date")}${field("Patroon", "shifts", p.shifts, "text", 'maxlength="100" pattern="[VvLlNnRr ]*"')}<label class="ft-checkbox"><input type="checkbox" name="avoidNight"${p.avoidNight ? " checked" : ""}> Geen nachtdienstdagen voorstellen</label></details>${!f.setup ? '<label class="ft-checkbox"><input type="checkbox" name="starter"> Voeg jouw drie trainingen (borst/triceps, rug/biceps en benen/schouders/buik) toe</label>' : ""}<p class="ft-hint">Je doel is een voorkeur. Oefeningen en belasting kies je zelf; de app stelt geen persoonlijk medisch trainingsplan op.</p>`,
+      `<div class="ft-form-grid">${select("Doel", "goal", goals, p.goal)}${field("Locatie", "location", p.location, "text", 'maxlength="100" required')}${field("Trainingen per cyclus", "target", p.target, "number", 'min="1" max="30" step="1" required')}${field("Dagen per cyclus", "cycleDays", p.cycleDays, "number", 'min="1" max="60" step="1" required')}</div><details class="ft-details"><summary>Rooster en historische instellingen</summary><p>Actief: OOMMVNNVVV vanaf 28 oktober 2026. O = 06:00–14:00, M = 14:00–22:00, N = 22:00–06:00, V = vrij. De bewaarde oude instellingen hieronder blijven intact: daarin betekende V vroeg, L laat en R vrij. Ze wijzigen het actieve rooster niet.</p>${field("Bewaarde historische startdatum", "shiftStart", p.shiftStart, "date", "readonly")}${field("Patroon", "shifts", p.shifts, "text", 'maxlength="100" pattern="[VvLlNnRr ]*" readonly')}<label class="ft-checkbox"><input type="checkbox" name="avoidNight"${p.avoidNight ? " checked" : ""}> Geen nachtdienstdagen voorstellen</label></details>${!f.setup ? '<label class="ft-checkbox"><input type="checkbox" name="starter"> Voeg jouw drie trainingen (borst/triceps, rug/biceps en benen/schouders/buik) toe</label>' : ""}<p class="ft-hint">Je doel is een voorkeur. Oefeningen en belasting kies je zelf; de app stelt geen persoonlijk medisch trainingsplan op.</p>`,
       "Opslaan",
       "profile",
     );
@@ -627,8 +626,8 @@
         '<div class="ft-date-choices">' + days.map((date) => {
           const previous = new Date(date + "T12:00:00");
           previous.setDate(previous.getDate() - 1);
-          const afterNight = C.shift(f, C.date(previous)) === "N";
-          const label = (shiftDescription[C.shift(f,date)] || "Geen dienst bekend") +
+          const afterNight = C.duty(C.date(previous)).code === "N";
+          const label = (C.duty(date).label+" · "+C.duty(date).time) +
             (afterNight ? " · na nacht" : "");
           return '<button type="button" class="ft-date-choice" data-fit="pick-date" data-id="' +
             esc(date) + '">' + fmt(date) + '<small>' + esc(label) +
@@ -700,6 +699,7 @@
       return;
     }
     const f = data();
+    if(["later","tab","finish","machine","alternatives","replace","replace-with"].includes(a)&&host.querySelector('input[data-field]:invalid')){error("Controleer de ongeldige setinvoer voordat je verdergaat. Je invoer blijft staan.");host.querySelector('input[data-field]:invalid').reportValidity();return;}
     if (
       a === "toggle-set" &&
       [...host.querySelectorAll("input[data-field]")].some(
@@ -730,7 +730,7 @@
     }
     if (a === "tab") {
       tab = id;
-      render();
+      render();if(id==="today")restorePosition();
     } else if(a==="next-open-set") {
       const target=host?.querySelector('.ft-check[aria-pressed="false"]');
       if(target){target.closest(".ft-set")?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});target.focus({preventScroll:true});}else error("Alle werksets zijn afgevinkt. Je kunt de training afronden.");
@@ -744,6 +744,7 @@
       const field = document.querySelector("#fitnessDialog [name=date]");
       if (field) { field.value = id; field.focus(); }
     } else if (a === "guide") guideDialog(id);
+    else if(a==="machine"){const e=f.active.exercises.find(x=>x.id===id);dialog("Ander apparaat",`<input type="hidden" name="exerciseId" value="${esc(id)}">${field("Apparaat / herkenbare machine", "equipment", e.equipment,"text",'required maxlength="120"')}<p>Met invoer of afgeronde sets blijft de oorspronkelijke oefening volledig staan. Het nieuwe apparaat komt als een afzonderlijke oefening erbij; alleen zelf ingevulde sets tellen als prestatie. Zonder invoer verandert alleen het apparaatlabel.</p>`,"Apparaat kiezen","equipment");}
     else if (a === "alternatives") alternativesDialog(id);
     else if (a === "profile") profile();
     else if (a === "close") close();
@@ -805,17 +806,17 @@
         const index = draft.active.exercises.findIndex((e) => e.id === oldId);
         if (index < 0) throw Error("De oorspronkelijke oefening is niet gevonden.");
         const old = draft.active.exercises[index];
-        if (old.logs.some((l) => l.done)) throw Error("Maak afgeronde sets eerst ongedaan.");
+        const keepOriginal=C.hasSetInput(old);
         const replacement = C.exercise(selected);
         Object.assign(replacement, {
           sets: old.sets, min: old.min, max: old.max, rest: old.rest,
           optional: old.optional, group: old.group,
         });
         replacement.logs = Array.from({ length: replacement.sets }, () => ({
-          id: C.uid(), weight: null, reps: null, minutes: selected.type === "strength" ? null : replacement.minutes,
+          id: C.uid(), weight: null, reps: null, minutes: null,
           distance: null, rir: null, warmup: false, done: false,
         }));
-        draft.active.exercises[index] = replacement;
+        if(keepOriginal)draft.active.exercises.splice(index+1,0,replacement);else draft.active.exercises[index] = replacement;
       })) return;
       close();
     } else if (a === "exercise-up") {
@@ -916,13 +917,14 @@
           id: C.uid(),
           weight: null,
           reps: null,
-          minutes: e.type === "strength" ? null : e.minutes,
+          minutes: null,
           distance: null,
           rir: null,
           warmup: a === "warmup",
           done: false,
         });
       });
+    else if(a==="adjust-rest")change(f=>{if(f.active.restUntil>Date.now())f.active.restUntil=Math.max(Date.now(),f.active.restUntil+Number(id)*1000);});
     else if (a === "stop-rest") change((f) => (f.active.restUntil = 0));
     else if (a === "finish") {
       const n = f.active.exercises.reduce(
@@ -940,6 +942,7 @@
         return;
       change(C.finish);
     } else if (a === "later") {
+      if(!change(f=>{f.active.resumeExerciseId=lastExerciseId||f.active.resumeExerciseId||f.active.exercises[0]?.id||"";},false))return;
       tab = "plan";
       render();
     } else if (a === "cancel") {
@@ -1001,7 +1004,7 @@
       commit((f) => {
         const e = f.active.exercises.find((e) => e.id === el.dataset.ex),
           l = e.logs.find((l) => l.id === el.dataset.log);
-        l[el.dataset.field] = el.value === "" ? null : Number(el.value);
+        l[el.dataset.field] = el.value === "" ? null : Number(el.value);f.active.resumeExerciseId=e.id;
       });
     } else if (el.dataset.note !== undefined)
       commit(
@@ -1031,7 +1034,7 @@
     try {
       if (kind === "profile")
         ok = commit((f) => {
-          f.profile = {
+          f.profile = {...f.profile,
             goal: v.goal,
             location: v.location.trim(),
             target: +v.target,
@@ -1122,13 +1125,14 @@
               id: C.uid(),
               weight: null,
               reps: null,
-              minutes: e.type === "strength" ? null : e.minutes,
+              minutes: null,
               distance: null,
               rir: null,
               warmup: false,
               done: false,
             }));
-          if (old) list[list.indexOf(old)] = e;
+          if(old&&replacement&&C.hasSetInput(old))list.splice(list.indexOf(old)+1,0,e);
+          else if (old) list[list.indexOf(old)] = e;
           else list.push(e);
         });
         after =
@@ -1165,6 +1169,7 @@
               sessionId: "",
             });
         });
+      if(kind==="equipment"){ok=commit(f=>C.switchEquipment(f,v.exerciseId,v.equipment));if(ok){lastExerciseId=data().active.resumeExerciseId||v.exerciseId;after=restorePosition;}}
       if (kind === "measurement")
         ok = commit((f) => {
           if (v.weight === "" && v.waist === "")
@@ -1194,12 +1199,14 @@
     if (!el || !bridge) return;
     const t = data().active?.restUntil || 0,
       n = Math.max(0, Math.ceil((t - Date.now()) / 1000));
+    el.closest(".ft-timer").hidden=n===0;
     el.textContent = n
       ? `Rust · ${Math.floor(n / 60)}:${String(n % 60).padStart(2, "0")}`
       : t
         ? "Rust voorbij · klaar voor je volgende set"
         : "Rust begint na het afvinken";
   }
+  function restorePosition(){const id=data().active?.resumeExerciseId;if(id)requestAnimationFrame(()=>document.getElementById('ft-exercise-'+id)?.scrollIntoView({block:'start'}));}
   function dayHTML(f, date, carry = false) {
     if (!f) return "";
     const resume =
@@ -1235,9 +1242,9 @@
     },
     resume() {
       tab = "today";
-      render();
+      render();restorePosition();
     },
-    hasPending: () => Boolean(pending),
+    hasPending: () => Boolean(pending||host?.querySelector('input[data-field]:invalid')),
   };
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-fitness-resume]")) {
@@ -1252,7 +1259,7 @@
     }
   });
   window.addEventListener("beforeunload", (e) => {
-    if (pending) {
+    if (pending||host?.querySelector('input[data-field]:invalid')) {
       e.preventDefault();
       e.returnValue = "";
     }

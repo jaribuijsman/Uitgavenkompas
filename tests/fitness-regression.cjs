@@ -96,7 +96,9 @@ test("previous values use same movement, equipment and location only", () => {
   log(f, 55);
   C.finish(f);
   C.start(f, r.id);
-  assert.equal(f.active.exercises[0].logs[0].weight, 55);
+  assert.equal(f.active.exercises[0].logs[0].weight, null);
+  assert.equal(f.active.exercises[0].logs[0].reps, null);
+  assert.equal(C.history(f,f.active.exercises[0],r.location,f.active.exercises[0].equipment)[0].e.logs[0].weight,55);
   f.active = null;
   r.location = "Different gym";
   C.start(f, r.id);
@@ -159,25 +161,12 @@ test("invalid data, duplicate ids and impossible dates are rejected", () => {
     assert.throws(() => C.validate(f));
   }
 });
-test("night shifts and existing bookings are excluded from suggested dates", () => {
-  const f = fresh();
-  Object.assign(f.profile, { shifts: "NNRR", shiftStart: "2026-10-25" });
-  f.bookings = [
-    {
-      id: "b",
-      routineId: f.routines[0].id,
-      date: "2026-10-27",
-      time: "",
-      status: "planned",
-      sessionId: "",
-    },
-  ];
-  assert.deepEqual(C.suggestedDates(f, "2026-10-25"), [
-    "2026-10-28",
-    "2026-10-31",
-    "2026-11-01",
-  ]);
-  C.validate(f);
+test("canonical night shifts and existing bookings are excluded while legacy codes stay unchanged", () => {
+  const f=fresh();f.profile.shiftStart="2026-10-25";f.profile.shifts="NNRVLRR";f.profile.avoidNight=true;
+  const original=JSON.stringify(f.profile);f.bookings=[{id:"b",routineId:f.routines[0].id,date:"2026-11-04",time:"",status:"planned",sessionId:""}];
+  assert.equal(C.shift(f,"2026-10-25"),"N");
+  assert.deepEqual(C.suggestedDates(f,"2026-11-02"),["2026-11-05","2026-11-06","2026-11-07"]);
+  assert.equal(JSON.stringify(f.profile),original);
 });
 test("archived routines are skipped without deleting training history", () => {
   const f = fresh();

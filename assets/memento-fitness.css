@@ -792,3 +792,12 @@
 #mementoFitness .ft-change{padding:10px 12px;margin:12px 0 0;border-radius:9px;background:#294332;color:#d2e5d5;font-size:12px}
 #mementoFitness .ft-change strong{color:#f2f7f2;font-variant-numeric:tabular-nums}
 @media(prefers-reduced-motion:reduce){#mementoFitness .ft-session-track>span{transition:none}}
+
+/* Masterplan set entry: target, attributable reference, current input; rest only while active. */
+#mementoFitness .ft-prescription {color:#e4f0e7;font-size:14px;font-weight:700;margin:10px 0}
+#mementoFitness .ft-prev {line-height:1.6}
+#mementoFitness .ft-timer[hidden] {display:none}
+#mementoFitness .ft-timer button {min-height:48px}
+#mementoFitness .ft-exercise-panel {scroll-margin-top:160px}
+#mementoFitness .ft-set input {min-height:48px;font-size:16px}
+#mementoFitness .ft-check {min-width:48px;min-height:48px}

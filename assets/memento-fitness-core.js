@@ -435,6 +435,7 @@
         typeof s.checkin.pain !== "boolean"
       )
         fail();
+      if(s.resumeExerciseId!==undefined&&!str(s.resumeExerciseId,200))fail();
       unique(s.exercises);
       for (const e of s.exercises) {
         checkExercise(e);
@@ -550,6 +551,15 @@
       increase: matching,
     };
   }
+  const hasSetInput=e=>e.logs.some(l=>l.done||['weight','reps','minutes','distance','rir'].some(k=>l[k]!==null));
+  function switchEquipment(f,id,equipment){
+    const old=f.active?.exercises.find(e=>e.id===id),name=String(equipment||'').trim();
+    if(!old||!name||name.length>120)throw Error('Geef het apparaat een herkenbare naam.');
+    if(old.equipment===name)return old.id;
+    if(!hasSetInput(old)){old.equipment=name;return old.id;}
+    const next={...clone(old),id:uid(),equipment:name,logs:Array.from({length:old.sets},()=>({id:uid(),weight:null,reps:null,minutes:null,distance:null,rir:null,warmup:false,done:false}))};
+    f.active.exercises.splice(f.active.exercises.indexOf(old)+1,0,next);f.active.resumeExerciseId=next.id;return next.id;
+  }
   function start(
     f,
     rid,
@@ -583,17 +593,13 @@
       deletedAt: "",
       checkin: clone(checkin),
       exercises: selected.map((e) => {
-        const old =
-          history(f, e, r.location, e.equipment)[0]?.e.logs.filter(
-            (l) => l.done && !l.warmup,
-          ) || [];
         return {
           ...clone(e),
           logs: Array.from({ length: e.sets }, (_, i) => ({
             id: uid(),
-            weight: old[i]?.weight ?? null,
-            reps: old[i]?.reps ?? null,
-            minutes: e.type === "strength" ? null : e.minutes,
+            weight: null,
+            reps: null,
+            minutes: null,
             distance: null,
             rir: null,
             warmup: false,
@@ -625,6 +631,20 @@
     f.active = null;
     return s;
   }
+  // Current owner-approved roster. Legacy profile.shifts (V/L/N/R) remains unchanged.
+  const dutyStart="2026-10-28",dutyPattern="OOMMVNNVVV";
+  const dutyTypes={O:{label:"Ochtenddienst",time:"06:00–14:00",start:"06:00",end:"14:00"},M:{label:"Middagdienst",time:"14:00–22:00",start:"14:00",end:"22:00"},N:{label:"Nachtdienst",time:"22:00–06:00",start:"22:00",end:"06:00"},V:{label:"Vrije dag",time:"Vrij",start:"",end:""}};
+  function duty(iso){
+    if(!validDate(iso))throw Error("Ongeldige roosterdatum");
+    const offset=days(dutyStart,iso),index=((offset%10)+10)%10,code=dutyPattern[index],t=dutyTypes[code];
+    const next=new Date(iso+"T12:00:00Z");next.setUTCDate(next.getUTCDate()+1);
+    return {date:iso,code,index,label:t.label,time:t.time,start:t.start?iso+"T"+t.start:"",end:t.end?(code==="N"?next.toISOString().slice(0,10):iso)+"T"+t.end:"",carryUntil:dutyPattern[(index+9)%10]==="N"?"06:00":""};
+  }
+  function dutyAt(now=new Date()){
+    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(now),part=k=>parts.find(p=>p.type===k).value;
+    const iso=part('year')+'-'+part('month')+'-'+part('day'),today=duty(iso),prior=new Date(iso+'T12:00:00Z');prior.setUTCDate(prior.getUTCDate()-1);
+    return {...today,activeFromYesterday:!!today.carryUntil&&Number(part('hour'))<6,previous:duty(prior.toISOString().slice(0,10))};
+  }
   function shift(f, iso) {
     const p = f.profile,
       list = p.shifts.replace(/ /g, "").split("");
@@ -638,7 +658,7 @@
       const d = new Date(from + "T12:00:00");
       d.setDate(d.getDate() + i);
       const key = date(d);
-      if (f.profile.avoidNight && shift(f, key) === "N") continue;
+      if (f.profile.avoidNight && duty(key).code === "N") continue;
       if (f.bookings.some((b) => b.date === key && b.status === "planned"))
         continue;
       result.push(key);
@@ -670,6 +690,7 @@
     recommendation,
     start,
     finish,
+    hasSetInput,switchEquipment,duty,dutyAt,dutyStart,dutyPattern,dutyTypes,
     shift,
     suggestedDates,
   };
