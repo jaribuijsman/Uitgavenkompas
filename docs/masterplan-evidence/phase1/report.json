@@ -1,0 +1,42 @@
+{
+  "phase": 1,
+  "checks": [
+    {
+      "width": 360,
+      "phase": 1,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 1,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 1,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    }
+  ],
+  "errors": []
+}

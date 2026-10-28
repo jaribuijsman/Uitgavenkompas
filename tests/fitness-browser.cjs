@@ -249,7 +249,10 @@ const server = http.createServer((req, res) => {
     const dl = page.waitForEvent("download");
     await page.locator("#lifeExportBackup").click();
     const download = await dl;
-    const backup = JSON.parse(fs.readFileSync(await download.path(), "utf8"));
+    const archive = fs.readFileSync(await download.path());
+    assert.equal(archive.readUInt32LE(0), 0x04034b50);
+    const restored = await require('../assets/memento-backup.js').prepareArchive(new Blob([archive]), {sha256:async blob=>require('node:crypto').createHash('sha256').update(Buffer.from(await blob.arrayBuffer())).digest('hex')});
+    const backup = {format:'compass-life-backup',version:1,lifeState:restored.life,financeState:restored.finance};
     assert.equal(backup.lifeState.fitness.sessions.length, 1);
     assert.equal(
       backup.lifeState.fitness.routines[0].name,

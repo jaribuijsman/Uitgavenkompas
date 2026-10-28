@@ -72,6 +72,10 @@ async function check(savedPin, blockedStorage = false) {
     new vm.Script(script[2]); compiled++;
   }
   new vm.Script(fs.readFileSync(path.join(root, "sw.js"), "utf8"));
-  assert.match(fs.readFileSync(path.join(root, "sw.js"), "utf8"), /memento-pwa-v34-20261027-pin-disabled-v1/);
+  const worker = fs.readFileSync(path.join(root, "sw.js"), "utf8");
+  const core = JSON.parse(worker.match(/const CORE = (\[[^;]+\]);/)[1]);
+  assert.match(worker, /const CACHE = "memento-pwa-v\d+-[^"\n]+"/);
+  assert(core.includes("./assets/memento-forest-lock.js?v=20261027-pin-disabled-v1"));
+  for (const entry of core.filter(x => /\.(js|css)\?/.test(x))) assert(html.includes(entry), "Cached script/style must match HTML: " + entry);
   console.log(`PIN disabled: new and existing sessions, unavailable storage, idle/manual lock, no writes or timers, both settings panels, forest early exit and ${compiled} inline scripts OK`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

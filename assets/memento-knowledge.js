@@ -146,7 +146,9 @@ function renderHome(){
 }
 function breadcrumbs(){
  if(['home','edit','collection-editor','sort'].includes(screen))return '';
- const c=allCollections().find(c=>c.id===collectionId),parent=c?.parentId?allCollections().find(x=>x.id===c.parentId):null;
+ const note=['detail','file','versions'].includes(screen)?read().notes.find(n=>n.id===selectedId):null;
+ const cid=note?C.collectionOf(read(),note):collectionId;
+ const c=allCollections().find(c=>c.id===cid),parent=c?.parentId?allCollections().find(x=>x.id===c.parentId):null;
  return '<nav class="kc-breadcrumbs" aria-label="Kruimelpad">'+btn('Kenniscentrum','home')+(parent?'<span>›</span>'+btn(esc(parent.name),'collection',parent.id):'')+(c&&['collection','detail','file','versions'].includes(screen)?'<span>›</span>'+btn(esc(c.name),'collection',c.id):'')+'</nav>';
 }
 function currentItems(){
@@ -233,7 +235,7 @@ function diaryAI(){
  '<a class="kc-btn kc-primary" href="'+(android?"intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;end":"https://chatgpt.com/")+'" rel="noopener noreferrer">2. Open ChatGPT'+(android?"-app":"")+'</a></div><small id="kc-ai-status" role="status">Niets wordt automatisch verzonden of vervangen.</small></section>';
 }
 function renderJournal(c){
- const today=C.journalDate(),day=journalFilter||today,days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id).sort((a,b)=>b.journal.date.localeCompare(a.journal.date)),note=C.findJournal(read(),day);
+ const today=C.journalDate(),day=journalFilter||today,days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id&&n.journal.date<today).sort((a,b)=>b.journal.date.localeCompare(a.journal.date)),note=C.findJournal(read(),day);
  return header("Mijn dagboek",true,btn("Vandaag","journal-today",c.id))+
  diaryHero(day)+diaryWeek(day)+
  '<div class="kc-diary-selected"><div><small>'+(day===today?"VANDAAG":"GEKOZEN DAG")+'</small><h3>'+esc(journalLabel(day))+'</h3></div>'+btn(note?"Open dag":"Schrijf","journal-date-open",day,true)+'</div>'+

@@ -1,7 +1,7 @@
 name: Phase 1 storage safety
 on:
   push:
-    branches: ["fix/memento-data-safety-phase-1"]
+    branches: ["main", "fix/memento-data-safety-phase-1"]
   pull_request:
     paths:
       - "index.html"
