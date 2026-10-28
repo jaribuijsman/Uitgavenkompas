@@ -53,6 +53,9 @@ async function seed(page,data,url){
   source=baseline;const ctx=await context(),page=await ctx.newPage();page.on('dialog',d=>d.accept());await seed(page,data,url);
   await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>navigator.serviceWorker.controller&&window.MementoStorageGuard?.writable);
   const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));
+  // Keep a legacy same-origin cache ahead of the new release in CacheStorage order.
+  // An offline navigation must not use another cache's HTML or its old script URLs.
+  await page.evaluate(async html=>{const legacy=await caches.open('uitgavenkompas-legacy-document');for(const p of ['./','./index.html'])await legacy.put(new URL(p,location.href),new Response(html,{headers:{'Content-Type':'text/html'}}));},fs.readFileSync(path.join(baseline,'index.html'),'utf8'));
   source=current;await page.evaluate(async()=>{window.__previousMementoController=navigator.serviceWorker.controller;await(await navigator.serviceWorker.getRegistration()).update();});const cache=fs.readFileSync(path.join(current,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1];
   // Opening a new cache precedes addAll/activation. Wait for the actual worker takeover,
   // not just a cache directory, before assessing an offline upgrade.
@@ -62,7 +65,7 @@ async function seed(page,data,url){
   assert.equal(await page.evaluate(()=>window.MementoFitnessCore.duty('2026-10-28').code),'O');assert.equal(await page.locator('#pinLock').isVisible(),false);
   const binary=await page.evaluate(async id=>{const r=await window.MementoKnowledgeStore.get(id);return await window.MementoKnowledgeStore.sha256(r.blob);},data.files[0].id);assert.equal(binary,data.files[0].hash);
   const keys=await page.evaluate(()=>caches.keys());assert(keys.includes(cache));assert(!keys.includes('memento-pwa-v35-20261028-account-transfers-v1'));await page.screenshot({path:path.join(out,'upgraded-offline.jpg'),type:'jpeg',quality:72,animations:'disabled'});
-  report.upgrade={passed:true,currentCache:cache,exactMainData:true,pinUnchanged:true,attachmentHash:binary,oldCacheRemoved:true};await ctx.close();console.log(JSON.stringify(report,null,2));
+  report.upgrade={passed:true,currentCache:cache,exactMainData:true,pinUnchanged:true,attachmentHash:binary,oldCacheRemoved:true,legacyCacheIgnored:true};await ctx.close();console.log(JSON.stringify(report,null,2));
  }catch(e){report.failure=String(e);console.error(e);process.exitCode=1;}
  finally{fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2));if(browser)await browser.close();server.close();}
 })();

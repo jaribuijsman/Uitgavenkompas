@@ -22,6 +22,7 @@ jobs:
           node tests/masterplan-core.cjs
           node tests/storage-safety.cjs
           node tests/storage-lock-native.cjs
+          node tests/service-worker-cache.cjs
           node tests/knowledge-regression.cjs
           node tests/knowledge-v2-core.cjs
           node tests/knowledge-v2-safety.cjs
