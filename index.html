@@ -2095,6 +2095,7 @@ function pinSavedSession(){
  try{const data=JSON.parse(sessionStorage.getItem(PIN_SESSION_KEY)||'null');return data&&data.version===1?data:null}catch(_){return null}
 }
 function pinRememberSession(){
+ if(PIN_MANUAL_ONLY)return;
  try{const config=JSON.parse(localStorage.getItem(PIN_CONFIG_KEY)||'null');
   if(config?.salt&&pinLastActivity)sessionStorage.setItem(PIN_SESSION_KEY,JSON.stringify({version:1,salt:config.salt,lastActivity:pinLastActivity}));
  }catch(_){} // Browser may block sessionStorage for locally opened files.
@@ -2162,6 +2163,7 @@ function pinUnlock(){
  pinLastActivity=Date.now();pinRememberSession();resetPinIdleTimer(false)
 }
 function pinRestoreRecentSession(config){
+ if(PIN_MANUAL_ONLY)return false;
  if(!config)return false;
  try{
   const data=pinSavedSession();const expected=JSON.parse(config);
@@ -2202,7 +2204,7 @@ function setupPinSecurityControls(){
 async function pinDigest(pin,salt){const bytes=new TextEncoder().encode(salt+':'+pin);const hash=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('')}
 async function initPinLock(){
  if(!PIN_LOCK_ENABLED){pinUnlocked=true;pinHideLock();updatePinSecurityControls();return;}
-const config=localStorage.getItem(PIN_CONFIG_KEY);
+let config=null;try{config=localStorage.getItem(PIN_CONFIG_KEY)}catch{}
 const form=document.getElementById('pinForm'),input=document.getElementById('pinInput'),error=document.getElementById('pinError'),description=document.getElementById('pinDescription'),submit=document.getElementById('pinSubmit');
 form.addEventListener('submit',async e=>{
  e.preventDefault();const pin=input.value;
@@ -2563,6 +2565,7 @@ const c=cached.data.current,d=cached.data.daily,i=d.time.indexOf(day()),[icon,la
 return '<div class="flow-weather '+(compact?'flow-weather-compact':'')+(bad?' flow-weather-old':'')+'"><span class="flow-weather-icon" aria-hidden="true">'+icon+'</span><div class="flow-weather-main"><strong>'+number(c.temperature_2m)+'° <span>'+esc(label)+'</span></strong><span>Beverwijk'+(range?' · '+range:'')+'</span><small>'+(bad?'Verouderd · ':'Bijgewerkt · ')+esc(date)+'</small></div><button type="button" data-flow-weather-refresh '+(busy?'disabled':'')+' aria-label="Weer vernieuwen">'+(busy?'…':'↻')+'</button>'+(!compact?'<div class="flow-weather-detail">Wind '+number(c.wind_speed_10m)+' km/u'+(Number.isFinite(c.apparent_temperature)?' · Gevoel '+number(c.apparent_temperature)+'°':'')+(i>=0&&Number.isFinite(d.precipitation_probability_max?.[i])?' · Vandaag '+number(d.precipitation_probability_max[i])+'% neerslagkans':'')+'</div>':'')+(failed?'<div class="flow-weather-detail">Vernieuwen mislukt; laatst opgehaalde gegevens.</div>':'')+'</div>'+(!compact?'<div class="flow-weather-source">Modelgegevens: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></div>':'')}
 function paintWeather(){root.querySelectorAll('[data-flow-weather]').forEach(el=>el.innerHTML=weatherHTML(el.dataset.flowWeather==='compact'));window.dispatchEvent(new CustomEvent('memento-weather-update',{detail:{cached,busy,failed}}))}
 async function refresh(force=false){if(busy)return;if(!force&&Date.now()-lastAttempt<5*60000)return;if(!force&&!failed&&cached&&Date.now()-cached.fetchedAt>=0&&Date.now()-cached.fetchedAt<30*60000&&cached.data.current.time.slice(0,10)===day()&&Array.isArray(cached.data.hourly?.time)){paintWeather();return}busy=true;lastAttempt=Date.now();paintWeather();const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{const res=await fetch(URL,{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(!validData(data))throw Error('Ongeldige weersgegevens');cached={fetchedAt:Date.now(),data};failed=false;try{localStorage.setItem(KEY,JSON.stringify(cached))}catch{}}catch{failed=true}finally{clearTimeout(timer);busy=false;paintWeather()}}
+window.addEventListener('memento-start-weather-refresh',()=>refresh(true));
 function mount(){root.querySelectorAll('[data-flow-quote]').forEach(el=>el.innerHTML=quoteHTML());paintWeather();if(!document.hidden&&(document.getElementById('pinLock')?.classList.contains('visible')||(document.body.dataset.compassArea==='life'&&document.getElementById('lifeApp')?.dataset.lifeView==='today')))refresh()}
 window.CompassFlow={home:()=>'<section class="flow-home" aria-label="Start van je dag"><div data-flow-quote>'+quoteHTML()+'</div><div data-flow-weather="full">'+weatherHTML()+'</div></section>',mount};
 const mark=document.querySelector('#pinLock .pin-mark');mark.replaceChildren();const img=document.createElement('img');img.src=avatar;img.alt='Lachend portret van Jari';mark.append(img);mark.setAttribute('aria-hidden','false');
