@@ -58,7 +58,7 @@ async function nav(page){
    tx=(await state()).transactions.find(t=>t.id==='legacy-tax');
    assert.equal(tx.category,'Vaste lasten');assert.equal(tx.subcategory,'Wegenbelasting');
    // A new unsplit transaction must use its main category, never an orphan first split row.
-   await page.locator('#addTransactionTop').click();
+   await page.locator('#addTransaction').click();
    await page.locator('#txDescription').fill('Nieuwe wegenbelasting');
    await page.locator('#txAmount').fill('25');
    await page.locator('#txCategory').selectOption('Vaste lasten');
