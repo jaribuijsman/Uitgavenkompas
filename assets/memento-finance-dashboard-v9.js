@@ -1,0 +1,120 @@
+/* Memento V9 dashboard. Existing transactions and calculations are preserved. */
+(function(){
+const style=document.createElement('style');style.id='memento-v9-dashboard-style';style.textContent="\n#view-dashboard>:not(.page-head):not(#mementoFinanceV9){display:none!important}\n#view-dashboard .dashboard-welcome .eyebrow{display:none!important}\n#mementoFinanceV9{max-width:900px;margin:0 auto 26px;color:#edf5ee}\n#mementoFinanceV9 *{box-sizing:border-box}\n#mementoFinanceV9 button{font:inherit;cursor:pointer}\n.m9-filters{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:9px;margin-bottom:17px}\n.m9-filter{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0;min-height:54px;border:1px solid #50715c;border-radius:17px;background:linear-gradient(120deg,#1c3828,#152a1f);color:#edf5ed;padding:9px 12px;font-size:13px;font-weight:730}\n.m9-filter span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.m9-filter svg{width:18px;height:18px;flex:none;color:#bfd7c2}\n.m9-card{padding:21px 18px 15px;border:1px solid #56785b;border-radius:26px;background:radial-gradient(ellipse at 90% 5%,#30553c,transparent 58%),linear-gradient(145deg,#203b2a,#162c20);box-shadow:0 14px 36px #0002;overflow:hidden}\n.m9-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;padding-bottom:16px;border-bottom:1px solid #5a745e}\n.m9-pair small,.m9-net small{display:block;color:#c1d4c5;font-size:13px;font-weight:550;margin-bottom:6px}\n.m9-pair strong{display:block;color:#f0f8ef;font-size:clamp(19px,5.2vw,27px);letter-spacing:-.7px;font-variant-numeric:tabular-nums;white-space:nowrap}\n.m9-net{padding:16px 0 9px}.m9-net strong{display:block;margin-top:5px;color:#c0ebc8;font-size:clamp(34px,9.3vw,48px);letter-spacing:-1.7px;line-height:1.2;font-variant-numeric:tabular-nums}.m9-net strong.negative{color:#f0b1ba}\n.m9-chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 4px}.m9-chart-head b{font-size:15px}.m9-chart-head span{font-size:12px;color:#b3ceb9;white-space:nowrap}\n.m9-replay{min-width:40px;height:40px;border:1px solid #5d8065;border-radius:12px;background:#254330;color:#cbead0;font-size:23px!important}\n.m9-scroll{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto}\n.m9-scroll::-webkit-scrollbar{display:none}.m9-slide{flex:0 0 100%;min-width:0;height:256px;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center}.m9-slide svg{width:100%;height:100%}\n.m9-line{stroke-dasharray:1;stroke-dashoffset:1;animation:m9draw 1.22s cubic-bezier(.18,.72,.23,1) forwards}.m9-end{transform-origin:center;transform-box:fill-box;animation:m9pop .45s both 1s;filter:drop-shadow(0 0 7px #8af5b1)}\n.m9-ring{transform-origin:center;transform-box:fill-box;animation:m9pop .75s both}.m9-bar{transform-origin:center bottom;transform-box:fill-box;animation:m9grow .7s cubic-bezier(.2,.8,.2,1) both}\n.m9-foot{display:flex;align-items:center;justify-content:space-between;gap:9px}.m9-foot small{font-size:11px;color:#a9c4b0}.m9-dots{display:flex;align-items:center;gap:7px}.m9-dots button{width:14px;height:14px;padding:0;border:0;border-radius:10px;background:#6d9878;transition:width .2s,background .2s}.m9-dots button[aria-current=true]{width:45px;background:#b5e8bf}\n.m9-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 9px}.m9-head h2{margin:0;font-size:18px}.m9-head button{border:0;background:none;color:#c1e0c9;font-size:12px;font-weight:600;min-height:42px}\n.m9-list{border:1px solid #3c5744;border-radius:17px;background:#1b3123;overflow:hidden}\n.m9-row{display:flex;align-items:center;gap:11px;min-height:66px;width:100%;padding:12px;border:0;border-bottom:1px solid #395442;background:transparent;text-align:left;color:#edf5ed}.m9-row:last-child{border-bottom:0}.m9-row:active{background:#284633}\n.m9-icon{flex:0 0 39px;height:39px;border-radius:12px;background:#2b4934;display:grid;place-items:center;color:#c1e9c8;font-size:21px}\n.m9-info{min-width:0;flex:1}.m9-info b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.m9-info small{display:block;color:#b5c9b9;font-size:12px;margin-top:3px}\n.m9-value{font-size:14px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}.m9-value.negative{color:#eeb4bc}\n.m9-bartrack{height:4px;margin-top:8px;border-radius:8px;background:#405d48;overflow:hidden}.m9-bartrack i{display:block;height:100%;background:#b2dfba;border-radius:8px;animation:m9growWidth .7s both}\n.m9-empty{padding:20px;color:#b9cabb}\n.m9-sheet{position:fixed;inset:0;z-index:9992;display:flex;align-items:flex-end;justify-content:center;visibility:hidden;pointer-events:none}\n.m9-sheet[aria-hidden=false]{visibility:visible;pointer-events:auto}\n.m9-shade{position:absolute;inset:0;background:#0009;backdrop-filter:blur(5px);opacity:0;transition:opacity .2s}.m9-sheet[aria-hidden=false] .m9-shade{opacity:1}\n.m9-panel{position:relative;width:100%;max-width:720px;padding:26px 18px calc(20px + env(safe-area-inset-bottom));border-radius:27px 27px 0 0;background:#1c3728;border:1px solid #6e9276;transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1)}\n.m9-sheet[aria-hidden=false] .m9-panel{transform:translateY(0)}\n.m9-handle{width:66px;height:6px;border-radius:9px;background:#7a9580;margin:0 auto 20px}\n.m9-sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.m9-sheet-head h2{margin:0;font-size:23px}.m9-sheet-head button{width:44px;height:44px;border:1px solid #5a7862;border-radius:13px;background:#284734;color:#f0f9ee;font-size:24px}\n.m9-choice{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:77px;width:100%;margin-bottom:10px;padding:12px 15px;text-align:left;border:1px solid #53715b;border-radius:17px;background:#223d2d;color:#f0f8ef;font-size:16px;font-weight:700}\n.m9-choice[aria-selected=true]{background:#335b41;border-color:#c0e1c6}.m9-choice strong{font-size:18px;white-space:nowrap;font-variant-numeric:tabular-nums}.m9-choice strong.negative{color:#f0afb9}.m9-choice:disabled{opacity:.45}\n#mementoFinanceV9 button:focus-visible,.m9-panel button:focus-visible{outline:3px solid #d0efd4;outline-offset:3px}\n@keyframes m9draw{to{stroke-dashoffset:0}}@keyframes m9pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}@keyframes m9grow{from{opacity:.3;transform:scaleY(.03)}to{opacity:1;transform:scaleY(1)}}@keyframes m9growWidth{from{width:0}}\n@media(max-width:360px){.m9-card{padding:16px 12px}.m9-pair{gap:8px}.m9-filter{padding:9px}.m9-slide{height:225px}}\n@media(prefers-reduced-motion:reduce){#mementoFinanceV9 *,#mementoFinanceV9 *::before,#mementoFinanceV9 *::after,.m9-panel,.m9-shade{animation:none!important;transition:none!important}.m9-line{stroke-dashoffset:0!important}}\n";document.head.appendChild(style);
+function financeV9(){
+ 'use strict';
+ const format=v=>money(Number.isFinite(v)?v:0),signed=v=>(v<0?'− ':'')+format(Math.abs(v));
+ const icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 8h16l-4-4m4 12H4l4 4"/></svg>';
+ let active=0,sheetFocus=null,raf=0;
+ const root=()=>document.getElementById('mementoFinanceV9');
+ function range(){
+  const personal=dashboardScope!=='joint',salary=personal&&dashboardPeriodMode==='salary',from=salary?state.settings.salaryPeriodStart||dateNow():selectedMonth+'-01';
+  const endOfMonth=new Date(+selectedMonth.slice(0,4),+selectedMonth.slice(5,7),0).getDate();
+  return {from,to:salary?dateNow():selectedMonth+'-'+String(endOfMonth).padStart(2,'0'),salary,ids:personal?['personal','creditcard']:['joint']};
+ }
+ function calc(from,to,ids){
+  let income=0,expenses=0;const cats=new Map(),daily=new Map(),txs=[],selected=new Set(ids);
+  for(const t of state.transactions){
+   if(!t.date||t.date<from||t.date>to)continue;
+   const v=Math.round(Math.abs(Number(t.amount)||0)*100)/100,a=t.account||'personal',aIn=selected.has(a),toIn=selected.has(t.transferToAccount);
+   if(t.type==='transfer'){
+    if(aIn===toIn)continue;
+    txs.push(t);
+    if(aIn){expenses+=v;cats.set('Overboekingen',(cats.get('Overboekingen')||0)+v);daily.set(t.date,(daily.get(t.date)||0)+v)}
+    else income+=v;
+    continue;
+   }
+   if(!aIn)continue;txs.push(t);
+   if(t.type==='income'){income+=v;continue}
+   const amount=t.type==='refund'?-v:v;expenses+=amount;daily.set(t.date,(daily.get(t.date)||0)+amount);
+   const parts=txParts(t);
+   for(const part of parts){const label=part.category||t.category||'Overig',p=Math.abs(Number(part.amount)||0);cats.set(label,(cats.get(label)||0)+(t.type==='refund'?-p:p))}
+  }
+  txs.sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+  return {income:Math.round(income*100)/100,expenses:Math.round(expenses*100)/100,net:Math.round((income-expenses)*100)/100,cats:[...cats].filter(c=>c[1]>0).sort((a,b)=>b[1]-a[1]),daily,txs};
+ }
+ function dateList(from,to){
+  let s=new Date(from+'T12:00:00'),e=new Date(to+'T12:00:00'),n=Math.max(1,Math.min(370,Math.round((e-s)/86400000)+1));
+  if(!Number.isFinite(n))return [from];
+  return Array.from({length:n},(_,i)=>{const d=new Date(s);d.setDate(d.getDate()+i);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')});
+ }
+ function plot(d,r){
+  const days=dateList(r.from,r.to),values=[];let subtotal=0;
+  days.forEach(day=>{subtotal+=d.daily.get(day)||0;values.push(subtotal)});
+  if(values.length===1)values.push(values[0]);
+  const max=Math.max(1,...values),pts=values.map((v,i)=>[15+i*310/(values.length-1),181-Math.max(0,v)*140/max]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' ');
+  const last=pts.at(-1);const dateLabel=s=>`${+s.slice(8)} ${new Date(s+'T12:00:00').toLocaleDateString('nl-NL',{month:'short'})}`;
+  return `<svg viewBox="0 0 340 247" role="img" aria-label="Uitgaven per dag, cumulatief"><defs><linearGradient id="m9-line-gradient" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#f0c680"/><stop offset="1" stop-color="#8defb5"/></linearGradient><linearGradient id="m9-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#93d6a4" stop-opacity=".27"/><stop offset="1" stop-color="#93d6a4" stop-opacity="0"/></linearGradient></defs><path d="M15 40H325M15 110H325M15 181H325" stroke="#8aa78d" stroke-opacity=".22" stroke-dasharray="3 8"/><path d="${path} L325 199 H15 Z" fill="url(#m9-fill)"/><path class="m9-line" pathLength="1" d="${path}" fill="none" stroke="url(#m9-line-gradient)" stroke-width="4.3" stroke-linejoin="round" stroke-linecap="round"/><circle class="m9-end" cx="${last[0]}" cy="${last[1]}" r="5.5" fill="#b4ffc3" stroke="#234531" stroke-width="3"/><path d="M15 204H325" stroke="#8aa78d" stroke-opacity=".3"/><g font-size="11" fill="#b7cfbd"><text x="15" y="230">${esc(dateLabel(days[0]))}</text><text x="170" y="230" text-anchor="middle">${esc(dateLabel(days[Math.floor(days.length/2)]))}</text><text x="325" y="230" text-anchor="end">${esc(dateLabel(days.at(-1)))}</text></g></svg>`;
+ }
+ function donut(d){
+  const all=d.cats,total=all.reduce((s,x)=>s+x[1],0),four=all.slice(0,3),others=all.slice(3).reduce((s,x)=>s+x[1],0);
+  if(others)four.push(['Overig',others]);
+  const colors=['#8ed7a9','#e7ba76','#9bbad8','#d796a8'];let offset=0;
+  const circles=four.map(([name,value],i)=>{const fraction=total?value/total*100:0;const c=`<circle cx="107" cy="113" r="72" fill="none" stroke="${colors[i]}" stroke-width="23" pathLength="100" stroke-dasharray="${fraction} ${100-fraction}" stroke-dashoffset="${-offset}" transform="rotate(-90 107 113)"/>`;offset+=fraction;return c}).join('');
+  return `<svg viewBox="0 0 340 247" role="img" aria-label="Uitgaven verdeeld naar categorie"><circle cx="107" cy="113" r="72" stroke="#3d6349" stroke-width="23" fill="none"/><g class="m9-ring">${circles}</g><text x="107" y="112" text-anchor="middle" font-size="11" fill="#b5d0bc">Totaal</text><text x="107" y="135" text-anchor="middle" font-size="19" font-weight="750" fill="#f0f7ed">${esc(format(Math.round(d.expenses)))}</text>${four.map(([name,v],i)=>`<circle cx="209" cy="${68+i*40}" r="5.5" fill="${colors[i]}"/><text x="222" y="${72+i*40}" font-size="11.7" fill="#eef5ed">${esc(name.length>12?name.slice(0,11)+'…':name)}</text><text x="329" y="${72+i*40}" font-size="12" fill="#edf5ed" text-anchor="end" font-weight="700">${total?Math.round(100*v/total):0}%</text>`).join('')}</svg>`;
+ }
+ function bars(r){
+  const months=[];const y=+selectedMonth.slice(0,4),m=+selectedMonth.slice(5,7);
+  for(let i=3;i>=0;i--){const date=new Date(y,m-1-i,1),base=[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0')].join('-'),end=new Date(date.getFullYear(),date.getMonth()+1,0).getDate();months.push({name:date.toLocaleDateString('nl-NL',{month:'short'}),value:calc(base+'-01',base+'-'+end,r.ids).expenses});}
+  const ceiling=Math.max(1,...months.map(x=>x.value));
+  return `<svg viewBox="0 0 340 247" role="img" aria-label="Vier maanden uitgaven"><path d="M16 202H324M16 116H324M16 34H324" stroke="#809e86" stroke-opacity=".24" stroke-dasharray="3 8"/>${months.map((m,i)=>{const h=Math.max(0,m.value)/ceiling*153,x=36+i*76;return `<rect class="m9-bar" style="animation-delay:${i*100}ms" x="${x}" y="${202-h}" width="43" height="${h}" rx="8" fill="${i===3?'#9be5b2':'#7da584'}"/><text x="${x+21}" y="229" font-size="12" text-anchor="middle" fill="#d0e7d5">${esc(m.name)}</text>`}).join('')}</svg>`;
+ }
+ function ensure(){
+  let el=root();if(el)return el;
+  const head=document.querySelector('#view-dashboard .page-head');if(!head)return null;
+  el=document.createElement('div');el.id='mementoFinanceV9';head.insertAdjacentElement('afterend',el);
+  const sheet=document.createElement('div');sheet.className='m9-sheet';sheet.id='m9-sheet';sheet.setAttribute('aria-hidden','true');
+  sheet.innerHTML='<div class="m9-shade" data-m9-close></div><div class="m9-panel" role="dialog" aria-modal="true" aria-labelledby="m9-dialog-title"><div class="m9-handle"></div><div class="m9-sheet-head"><h2 id="m9-dialog-title">Rekening</h2><button type="button" data-m9-close aria-label="Sluiten">×</button></div><div id="m9-sheet-choices"></div></div>';
+  document.body.append(sheet);sheet.addEventListener('click',e=>{if(e.target.closest('[data-m9-close]'))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet.getAttribute('aria-hidden')==='false'){e.preventDefault();close()}});
+  el.addEventListener('click',e=>{
+   const b=e.target.closest('button');if(!b)return;
+   if(b.id==='m9-accounts')open('account',b);
+   else if(b.id==='m9-period')open('period',b);
+   else if(b.hasAttribute('data-m9-dot'))go(+b.dataset.m9Dot);
+   else if(b.id==='m9-replay'){el.querySelectorAll('.m9-line,.m9-end,.m9-ring,.m9-bar').forEach(item=>{item.style.animation='none';item.getBoundingClientRect();item.style.animation='';})}
+   else if(b.hasAttribute('data-m9-tx')){const t=state.transactions.find(x=>x.id===b.dataset.m9Tx);if(t)transactionModal(t.id)}
+   else if(b.hasAttribute('data-m9-cat')){const cat=b.dataset.m9Cat;changeView('transactions');if(cat==='Overboekingen'){const f=document.getElementById('txTypeFilter');if(f&&[...f.options].some(o=>o.value==='transfer'))f.value='transfer';}else{const f=document.getElementById('txCategoryFilter');if(f&&[...f.options].some(o=>o.value===cat))f.value=cat;}renderTransactions()}
+   else if(b.id==='m9-alltx')changeView('transactions');
+   else if(b.id==='m9-allcats'){changeView('analysis');document.querySelector('[data-analysis-tab="categories"]')?.click();}
+  });
+  return el;
+ }
+ function open(kind,button){
+  const sheet=document.getElementById('m9-sheet');sheetFocus=button;
+  sheet.querySelector('#m9-dialog-title').textContent=kind==='account'?'Rekening':'Periode';
+  const choices=sheet.querySelector('#m9-sheet-choices');
+  if(kind==='account'){
+   choices.innerHTML=['personal','joint'].map(id=>{const value=accountBalance(id);return `<button class="m9-choice" type="button" data-m9-account="${id}" aria-selected="${(dashboardScope==='joint')===(id==='joint')}"><span>${id==='personal'?'Persoonlijk':'Gezamenlijk'}</span><strong class="${value<0?'negative':''}">${esc(signed(value))}</strong></button>`}).join('');
+   choices.querySelectorAll('[data-m9-account]').forEach(b=>b.onclick=()=>{dashboardScope=b.dataset.m9Account==='joint'?'joint':'personal';if(dashboardScope==='joint'&&dashboardPeriodMode==='salary')dashboardPeriodMode='month';try{localStorage.setItem('UK_DASHBOARD_SCOPE',dashboardScope)}catch{}close();renderDashboard()});
+  }else{
+   choices.innerHTML=['month','salary'].map(id=>`<button class="m9-choice" type="button" data-m9-period="${id}" ${id==='salary'&&dashboardScope==='joint'?'disabled':''} aria-selected="${dashboardPeriodMode===id}">${id==='month'?'Kalendermaand':'Loonperiode'}${dashboardPeriodMode===id?' ✓':''}</button>`).join('');
+   choices.querySelectorAll('[data-m9-period]').forEach(b=>b.onclick=()=>{close();setDashboardPeriodMode(b.dataset.m9Period)});
+  }
+  sheet.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';sheet.querySelector('.m9-sheet-head button').focus();
+ }
+ function close(){const sheet=document.getElementById('m9-sheet');sheet.setAttribute('aria-hidden','true');document.body.style.overflow='';sheetFocus?.focus();sheetFocus=null}
+ function dots(){
+  const sc=root()?.querySelector('#m9-scroll');if(!sc)return;active=Math.max(0,Math.min(2,Math.round(sc.scrollLeft/Math.max(1,sc.clientWidth))));
+  root().querySelectorAll('[data-m9-dot]').forEach((b,i)=>b.setAttribute('aria-current',i===active?'true':'false'));
+  root().querySelector('#m9-title').textContent=['Uitgaven + overboekingen','Uitgaven per categorie','Maandvergelijking'][active];
+  root().querySelector('#m9-position').textContent=`${active+1} van 3`;
+ }
+ function go(i){active=Math.max(0,Math.min(2,i));const sc=root()?.querySelector('#m9-scroll');if(sc){sc.scrollTo({left:active*sc.clientWidth,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});dots()}}
+ function paint(){
+  const el=ensure();if(!el)return;
+  const header=document.querySelector('#view-dashboard .page-head p');if(header&&header.firstChild?.nodeType===3)header.firstChild.textContent='Je geldzaken in ';
+  const r=range(),d=calc(r.from,r.to,r.ids),sumCats=d.cats.reduce((s,c)=>s+c[1],0);
+  el.innerHTML=`<div class="m9-filters"><button type="button" id="m9-accounts" class="m9-filter" aria-label="Rekening kiezen">${icon}<span>${dashboardScope==='joint'?'Gezamenlijk':'Persoonlijk'}</span>⌄</button><button type="button" id="m9-period" class="m9-filter" aria-label="Periode kiezen"><span>${r.salary?'Loonperiode':'Kalendermaand'}</span>⌄</button></div><section class="m9-card" aria-label="Financiële stand"><div class="m9-pair"><div><small>Inkomsten</small><strong>${esc(format(d.income))}</strong></div><div><small>Uitgaven</small><strong>${esc(format(d.expenses))}</strong></div></div><div class="m9-net"><small>Actuele stand</small><strong class="${d.net<0?'negative':''}">${esc(signed(d.net))}</strong></div><div class="m9-chart-head"><b id="m9-title">Uitgaven + overboekingen</b><span id="m9-position">1 van 3</span><button type="button" class="m9-replay" id="m9-replay" aria-label="Grafiekanimatie opnieuw afspelen">⟳</button></div><div class="m9-scroll" id="m9-scroll" tabindex="0" aria-label="Veeg voor drie grafieken"><div class="m9-slide">${plot(d,r)}</div><div class="m9-slide">${donut(d)}</div><div class="m9-slide">${bars(r)}</div></div><div class="m9-foot"><div class="m9-dots">${[0,1,2].map(i=>`<button type="button" data-m9-dot="${i}" aria-label="Grafiek ${i+1}" aria-current="${active===i}"></button>`).join('')}</div><small>Veeg voor grafieken</small></div></section><div class="m9-head"><h2>Uitgaven per categorie</h2><button type="button" id="m9-allcats">Bekijk alles ›</button></div><div class="m9-list">${d.cats.length?d.cats.slice(0,5).map(([name,value])=>`<button class="m9-row" type="button" data-m9-cat="${esc(name)}"><span class="m9-icon">${name==='Overboekingen'?'⇄':'◈'}</span><span class="m9-info"><b>${esc(name)}</b><small>${sumCats?Math.round(value/sumCats*100):0}%</small><span class="m9-bartrack"><i style="width:${sumCats?Math.min(100,value/sumCats*100):0}%"></i></span></span><span class="m9-value">${esc(format(value))}</span></button>`).join(''):'<div class="m9-empty">Nog geen uitgaven in deze periode.</div>'}</div><div class="m9-head"><h2>Recente transacties</h2><button type="button" id="m9-alltx">Bekijk alles ›</button></div><div class="m9-list">${d.txs.length?d.txs.slice(0,5).map(t=>{const positive=t.type==='income'||t.type==='refund'||t.type==='transfer'&&r.ids.includes(t.transferToAccount)&&!r.ids.includes(t.account||'personal');return `<button type="button" class="m9-row" data-m9-tx="${esc(t.id)}"><span class="m9-icon">${t.type==='transfer'?'⇄':positive?'↙':'↗'}</span><span class="m9-info"><b>${esc(t.description||t.merchant||'Transactie')}</b><small>${esc(t.date)} · ${esc(t.type==='transfer'?'Overboeking':t.category||'Overig')}</small></span><span class="m9-value ${positive?'':'negative'}">${positive?'+ ':'− '}${esc(format(Math.abs(Number(t.amount)||0)))}</span></button>`}).join(''):'<div class="m9-empty">Nog geen transacties in deze periode.</div>'}</div>`;
+  const sc=el.querySelector('#m9-scroll');
+  sc.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;dots()})},{passive:true});
+  sc.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(active+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(active-1)}});
+  sc.scrollLeft=active*sc.clientWidth;dots();
+ }
+ const old=renderDashboard;
+ renderDashboard=function(...args){const output=old.apply(this,args);paint();return output};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',paint,{once:true});else paint();
+}
+financeV9();
+})();
