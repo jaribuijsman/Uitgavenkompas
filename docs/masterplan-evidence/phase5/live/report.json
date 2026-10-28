@@ -1,0 +1,38 @@
+{
+  "url": "https://jaribuijsman.github.io/Uitgavenkompas/",
+  "checkedAt": "2026-10-28T16:24:29.918Z",
+  "checks": [
+    {
+      "width": 360,
+      "http": 200,
+      "liveUI": true,
+      "offlineReload": true,
+      "cache": [
+        "memento-pwa-v42-20261028-master-p5-offline"
+      ],
+      "personalDataEntered": false
+    },
+    {
+      "width": 393,
+      "http": 200,
+      "liveUI": true,
+      "offlineReload": true,
+      "cache": [
+        "memento-pwa-v42-20261028-master-p5-offline"
+      ],
+      "personalDataEntered": false
+    },
+    {
+      "width": 412,
+      "http": 200,
+      "liveUI": true,
+      "offlineReload": true,
+      "cache": [
+        "memento-pwa-v42-20261028-master-p5-offline"
+      ],
+      "personalDataEntered": false
+    }
+  ],
+  "errors": [],
+  "failure": null
+}

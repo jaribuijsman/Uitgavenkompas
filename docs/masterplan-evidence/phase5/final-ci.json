@@ -1,0 +1,89 @@
+{
+  "runtimeCommit": "7f752e969a625cbf1801a63c2645a1222e462e51",
+  "testCommit": "d8e644f494ad2bc31cc8aff3f5d9705464307bbf",
+  "passed": true,
+  "runs": [
+    {
+      "id": 40725373709,
+      "name": "Memento illustrated icons",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373709"
+    },
+    {
+      "id": 40727504606,
+      "name": "Memento masterplan acceptance",
+      "sha": "d8e644f494ad2bc31cc8aff3f5d9705464307bbf",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727504606"
+    },
+    {
+      "id": 40725373759,
+      "name": "Knowledge 2 acceptance",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373759"
+    },
+    {
+      "id": 40725373678,
+      "name": "Memento journal sleep and recording acceptance",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373678"
+    },
+    {
+      "id": 40727502651,
+      "name": "pages build and deployment",
+      "sha": "d8e644f494ad2bc31cc8aff3f5d9705464307bbf",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727502651"
+    },
+    {
+      "id": 40725373695,
+      "name": "Memento collection art",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373695"
+    },
+    {
+      "id": 40725373670,
+      "name": "Knowledge, backup and PIN forest regression",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373670"
+    },
+    {
+      "id": 40727504646,
+      "name": "Phase 1 storage safety",
+      "sha": "d8e644f494ad2bc31cc8aff3f5d9705464307bbf",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727504646"
+    },
+    {
+      "id": 40725373671,
+      "name": "Memento quick notes and Fitness acceptance",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "success",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373671"
+    }
+  ],
+  "previousFailureRuns": [
+    {
+      "id": 40725373758,
+      "name": "Memento masterplan acceptance",
+      "sha": "7f752e969a625cbf1801a63c2645a1222e462e51",
+      "status": "completed",
+      "result": "failure",
+      "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373758"
+    }
+  ]
+}

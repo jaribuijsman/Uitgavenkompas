@@ -1,0 +1,232 @@
+{
+  "commit": "7f752e969a625cbf1801a63c2645a1222e462e51",
+  "url": "https://jaribuijsman.github.io/Uitgavenkompas/",
+  "checkedAt": "2026-10-28T16:24:32.428696+00:00",
+  "checks": [
+    {
+      "path": "assets/memento-avatar.png",
+      "status": 200,
+      "bytes": 1662848,
+      "sha256": "d572b1f71d68427c278eb60e15e92366b700054dfeac010e8cbcf1076cb0f5d2",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-backup.js",
+      "status": 200,
+      "bytes": 7198,
+      "sha256": "4da214ee64ec573ae401d5a783273a046d11d0ad59634f9906550e572aa109e7",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-cozy-background.png",
+      "status": 200,
+      "bytes": 2938071,
+      "sha256": "38d4b4e4e2ed4c175e0e53090c118f9165773fc86026615f3cee2cd0cd2fa93f",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-fitness-core.js",
+      "status": 200,
+      "bytes": 28215,
+      "sha256": "effc4c74bdb8b647decb0d4d47a72e1d8ab9827284696a9133bc37e1daf6d4e2",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-fitness.css",
+      "status": 200,
+      "bytes": 17877,
+      "sha256": "0bb989697bd55d8f27d0bc446e0e871f3504af56a416d8206751ad7d82621078",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-fitness.js",
+      "status": 200,
+      "bytes": 66239,
+      "sha256": "b2c72fcd4dbe6aee748d2b01eebd143a7804303618c63cedeefd1bad2544fd7e",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-forest-art.js",
+      "status": 200,
+      "bytes": 1684,
+      "sha256": "4b8380e78b42905f73871961d5f1cfc9828dc679918a7707da07337b4d8e0b0d",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-forest-lock.css",
+      "status": 200,
+      "bytes": 8490,
+      "sha256": "34ba107c902099bd203f0c1c4e3c49999f9f4b629f3911adeeee237768d9365f",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-forest-lock.js",
+      "status": 200,
+      "bytes": 10649,
+      "sha256": "e2b9d67e04f650995aa529a45151b10c8fe46815bbceb5d38bded4342b5d4853",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-icon.png",
+      "status": 200,
+      "bytes": 46966,
+      "sha256": "18368b7d997de1eaefb7800dc83d35b747f0fc1abf8e07d271e75e2592bed268",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-illustrative-icons.css",
+      "status": 200,
+      "bytes": 6056,
+      "sha256": "86773c370318a5bd03cfcb663f4c4165e956f8c43991cf660be75f0e3cdeb795",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-illustrative-icons.js",
+      "status": 200,
+      "bytes": 45527,
+      "sha256": "c1572f49867dea0e6ce60fbf05914b023d0524e7bfccc49afbb69d521caeb975",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge-art.js",
+      "status": 200,
+      "bytes": 10920,
+      "sha256": "be7d3d174e1b6b785b4d87eb7c112dfcc51b4161efe9870786440b9dab51e712",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge-core.js",
+      "status": 200,
+      "bytes": 24296,
+      "sha256": "ca46db1ec37f0147f78e2371162650d8c0d07f1b91ae48a35bcc6f67ba0febc4",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge-cover-ui.js",
+      "status": 200,
+      "bytes": 8327,
+      "sha256": "06664b11d723f410d189290598541b6da2010ccc5cc2b08fff85accae77d1ee9",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge-store.js",
+      "status": 200,
+      "bytes": 5141,
+      "sha256": "365f562b72fba868508d2c404e1abaea3673f09cab2b8ae9e265ba171ecf019b",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge.css",
+      "status": 200,
+      "bytes": 42993,
+      "sha256": "8b08ae4473c28bb997a4bb539159b75f60d85546605ff642343bd0848fbce910",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-knowledge.js",
+      "status": 200,
+      "bytes": 79015,
+      "sha256": "b55af7f16d0d4456c0b557b8bdc3a3810820bde9fa28a39636868e021247b7fc",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-logo-gold.png",
+      "status": 200,
+      "bytes": 725678,
+      "sha256": "40aa663ffbd2e4b9a21eeff542b943d1a4881c8e5c0962e55e03a791240091d2",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-storage-guard.js",
+      "status": 200,
+      "bytes": 9853,
+      "sha256": "16231789716518951cbd8b6ec2fa3b248bffd81434471ff9ac9d35223ca2a269",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-trash-core.js",
+      "status": 200,
+      "bytes": 3048,
+      "sha256": "8fa2713a48096a98ea8ca0264b04300d79529828c7493d3fd92e62a34339492a",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-ui.css",
+      "status": 200,
+      "bytes": 20891,
+      "sha256": "c7779b52a6eaba04f018b30cb9b9d56292ae454ea3e38d1a860211ad22fe7264",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/memento-ui.js",
+      "status": 200,
+      "bytes": 1963,
+      "sha256": "4442072ab063da801e08938b50fb5e0aba255668b22dced742a677c1b4ff4216",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/bosruines.webp",
+      "status": 200,
+      "bytes": 173578,
+      "sha256": "6e4d6cb885930e5d159a4d19fa4f3ed29c7271607ce18f13916a923aaacd68c6",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/herfstbrug.webp",
+      "status": 200,
+      "bytes": 128642,
+      "sha256": "d356ba845665139c1d63e9449ee11c73e803369bfb9866f8263af113fc36e96d",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/maanmeer.webp",
+      "status": 200,
+      "bytes": 101788,
+      "sha256": "e02a3c637d227c837d45fdf576101b826a7f8e4fdd10147617637a011d9b7fa9",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/ochtendmist.webp",
+      "status": 200,
+      "bytes": 140932,
+      "sha256": "0b5f2832743c0762fbb4fe40b162887a8373f5d4dc078e238d43fb24e10249cc",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/schemermeer.webp",
+      "status": 200,
+      "bytes": 151576,
+      "sha256": "a16b2847c6f0eb2d8f80114e910a90dbd131d2207143afd37efec7f285795481",
+      "matchesCommit": true
+    },
+    {
+      "path": "assets/pin-forests/zonnestralen.webp",
+      "status": 200,
+      "bytes": 169220,
+      "sha256": "2d09e71873f8499bdc70f0b58661619f1218d5cd528ee215d54ac85f53965bfd",
+      "matchesCommit": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 652589,
+      "sha256": "1cff7448d89b5f8aec68119ea2ec7dbe2c2928d4c1f21e489b969fd73beee785",
+      "matchesCommit": true
+    },
+    {
+      "path": "manifest.json",
+      "status": 200,
+      "bytes": 825,
+      "sha256": "d634932a263c07bba0300a98eb09fe6a144c326b8bdedde0ebed2b5c7022865b",
+      "matchesCommit": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "bytes": 3454,
+      "sha256": "80e24e85d135fdf9d37141536d38ce51cd175356716d9a188151a1df8622bcf3",
+      "matchesCommit": true
+    }
+  ],
+  "passed": true
+}

@@ -1,6 +1,6 @@
 # Memento — eindrapport masterplan 1.0
 
-Uitvoering van het geautoriseerde masterplan van 28 oktober 2026, rechtstreeks op `main`. Technisch vertrekpunt: `52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9`. De vijf implementatiefasen zijn uitgevoerd. De functionele wijzigingen zijn gebouwd en lokaal getest; de hieronder expliciet genoemde fysieke en gebruikerstests zijn niet uitgevoerd. Publicatiebewijzen staan onderaan en worden na de laatste deployment ingevuld.
+Uitvoering van het geautoriseerde masterplan van 28 oktober 2026, rechtstreeks op `main`. Technisch vertrekpunt: `52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9`. De vijf implementatiefasen zijn uitgevoerd. De functionele wijzigingen zijn gebouwd en getest; de hieronder expliciet genoemde fysieke en gebruikerstests zijn niet uitgevoerd. Publicatiebewijzen en de resterende acceptatiebeperkingen staan onderaan.
 
 Live-app: <https://jaribuijsman.github.io/Uitgavenkompas/>. Het [bewijsdossier per fase](masterplan-implementation.md) beschrijft oorspronkelijke fouten, code, gegevensimpact en uitgevoerde controles. [Browseracceptatie](masterplan-evidence/phase5/report.json), [voor/na-metingen en echte PWA-upgrade](masterplan-evidence/phase5/journeys/report.json) en screenshots zijn in de repository opgenomen. Alle testgegevens zijn fictief en gebruikt in afgescheiden browserprofielen; de persoonlijke browseropslag van de eigenaar is niet gebruikt.
 
@@ -64,7 +64,7 @@ Nieuwe velden zijn beperkt tot noodzakelijke optionele context in bestaande obje
 | A15 | Geslaagd: oude JSON, nieuwe volledige ZIP, IDs/links/versies en echte binaire bijlage; uitsluitend gescheiden testopslag. |
 | A16 | Browserdeel geslaagd op drie breedtes, landschap, korte viewport, focus en Escape, geselecteerd contrast/reduced motion. Fysiek Android, echt toetsenbord, systeemterugknop en TalkBack niet getest. |
 | A17 | Dossier en objectieve vergelijking uitgevoerd; tien voor/na-routes en screenshots. Subjectieve moeite en na-gewenningmeting niet uitgevoerd. |
-| A18 | Definitieve CI-/Pages-/live-uitkomst wordt hieronder na publicatie geregistreerd; eerdere fasen zijn gepubliceerd en gecontroleerd. |
+| A18 | Geslaagd: laatste toepasselijke workflows groen, Pages succesvol, alle 32 gepubliceerde kernbestanden bytegelijk aan de appcommit; rechtstreekse live-browsercontrole en offline herladen op drie breedtes. Zie publicatiebewijs hieronder. |
 
 ## Werkelijk uitgevoerde tests
 
@@ -73,10 +73,10 @@ Nieuwe velden zijn beperkt tot noodzakelijke optionele context in bestaande obje
 - Fitnesskern: 25 checks; kennis/ZIP 16; hiërarchie 13; kennisveiligheid vijf groepen; dagboekkern zeven. Aanvullend prullenbak, PIN uitgeschakeld, bosillustraties, covers en 66 iconen.
 - Cumulatieve masterplanbrowser: **15 resultaatgroepen op 360, 393 en 412 CSS-pixels**, zonder fouten. De eerdere fasen worden op elke breedte opnieuw bediend. Zie [volledig resultaat](masterplan-evidence/phase5/report.json).
 - Aanvullende visuele/bedieningsrun op dezelfde drie breedtes: validatie, modal-focus, Escape/focusterugkeer, financiële opslag/bewerking, taakdetail, lange tekst en offline. [360](masterplan-evidence/phase5/visual/360-report.json), [393](masterplan-evidence/phase5/visual/393-report.json), [412](masterplan-evidence/phase5/visual/412-report.json). Deze diagnostiek vermeldt ook kleinere secundaire controls en gesloten details; geen algemene claim dat elk element 48 pixels is.
-- Oorspronkelijke main en nieuwe app met dezelfde fixture: tien routes, nul JavaScript-fouten; echte serviceworkerupgrade met behoud van exacte hoofdsleutels, PIN en SHA-256 van binaire bijlage. Zie [uitkomst](masterplan-evidence/phase5/journeys/report.json).
+- Oorspronkelijke main en nieuwe app met dezelfde fixture: tien routes, nul JavaScript-fouten; echte serviceworkerupgrade met behoud van exacte hoofdsleutels, PIN en SHA-256 van binaire bijlage. Een bewust aanwezige oudere cache wordt genegeerd. De aanvullende fetchhandlerregressie faalt op de oude v41-worker en slaagt op de herstelde v42-worker voor document, fallback, asset en historische redirect. Zie [uitkomst](masterplan-evidence/phase5/journeys/report.json).
 - Bestaande fitness-, kennis-v2-, pictogram-/navigatie- en quickfit-browserworkflows blijven van toepassing. Een echte quickfit-regressie in fase 4 is als aparte reparatie vastgelegd; de hele quickfit-run slaagde daarna lokaal op de drie breedtes en in CI.
 
-Lokale browser: Chromium 154.0.8037.57 met Playwright 1.62.1; Node 24.19.0. GitHub Actions installeert de bij Playwright horende Chromium-versie en bewaart mobiele bewijsartefacten. De productieapp heeft hierdoor geen nieuwe runtimeafhankelijkheid.
+Lokale browsers: systeem-Chromium 154.0.8037.57 en exact dezelfde Chrome/Headless Shell 151.0.7922.34 als CI, met Playwright 1.62.1; Node 24.19.0. De aangescherpte upgradeproef is tweemaal lokaal in de gepinde CI-browser en vervolgens in GitHub Actions geslaagd. GitHub Actions installeert de bij Playwright horende Chromium-versie en bewaart mobiele bewijsartefacten. De productieapp heeft hierdoor geen nieuwe runtimeafhankelijkheid.
 
 ### Vijf vaste handelingen, dezelfde 393px-fixture
 
@@ -116,17 +116,41 @@ Aanvullende eindbeelden: [notitie](masterplan-evidence/phase5/393-direct-note-vi
 | 3 | `ce51249` | Centrale zoekfunctie, tellingen, benamingen en duurzame taak-/aankoopkoppelingen. |
 | 4 | `7a2c8d8` | Financiële context/betalingen/budgetten, fitnessinvoer/timer/hervatten en vast rooster. |
 | 4, reparatie | `88343a7` | Volgende-setbediening bereikbaar buiten actieve rust; volledige quickfit-verificatie. |
-| 5 | Zie definitieve publicatie hieronder | Visuele feedback, eerlijke back-upstatus, cumulatieve acceptatie en bewijsdossier. |
+| 5 | `57fa932` | Visuele feedback, eerlijke back-upstatus, cumulatieve acceptatie en bewijsdossier. |
+| 5, reparatie | `7f752e9` | Offline leest uitsluitend de eigen releasecache; regressie tegen oude caches en echte upgradeproef versterkt. |
+| 5, testcorrectie | `d8e644f` | Upgradeproef wacht op volledige activatie en ieder CORE-bestand; twee lokale CI-browserruns en groene CI. |
 
 Vóór iedere push is `origin/main` opgehaald en met de verwachte vorige commit vergeleken. Er is niet geforceerd gepusht en geen andere branch gebruikt. De fasen 1–4 en de reparatie zijn via GitHub Pages gepubliceerd; de reparatie had tien geslaagde Actions-runs inclusief Pages. De live-code van de vier fasen is met de betreffende commit vergeleken.
 
 ### Definitieve publicatie
 
-Wordt ingevuld met de fase-5-commit, definitieve Actions-uitkomsten en gecontroleerde live-bytes/browserresultaten na deployment. De bovenstaande lokale resultaten staan los van die nog te controleren publicatiestap.
+**Appcode:** `7f752e969a625cbf1801a63c2645a1222e462e51`. **Laatste testcommit:** `d8e644f494ad2bc31cc8aff3f5d9705464307bbf`. Cache: `memento-pwa-v42-20261028-master-p5-offline`. De testcommit verandert geen productiecode. De afsluitende rapportagepublicatie verandert eveneens uitsluitend documentatie/bewijs.
+
+De negen laatste toepasselijke workflowresultaten zijn geslaagd. De masterplan-, opslag- en Pages-runs zijn opnieuw uitgevoerd op de laatste testcommit; de andere runs horen bij exact dezelfde appcode. Fitnesskernchecks draaien ook in de masterplanworkflow. [Machineleesbare status en eerdere mislukte run](masterplan-evidence/phase5/final-ci.json).
+
+| Workflow | Commit | Uitkomst |
+|---|---|---|
+| Memento illustrated icons | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373709) |
+| Memento masterplan acceptance | `d8e644f` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727504606) |
+| Knowledge 2 acceptance | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373759) |
+| Memento journal sleep and recording acceptance | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373678) |
+| pages build and deployment | `d8e644f` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727502651) |
+| Memento collection art | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373695) |
+| Knowledge, backup and PIN forest regression | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373670) |
+| Phase 1 storage safety | `d8e644f` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727504646) |
+| Memento quick notes and Fitness acceptance | `7f752e9` | [Geslaagd](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373671) |
+
+**Live geverifieerd:** <https://jaribuijsman.github.io/Uitgavenkompas/>. Alle **32** kernbestanden uit het werkelijke serviceworkermanifest, inclusief HTML, scripts, CSS, manifest, illustraties en worker, leveren HTTP 200 en zijn bytegelijk aan de appcommit: [SHA-256-bewijs](masterplan-evidence/phase5/final-live-bytes.json). De echte live-browserrun op **360, 393 en 412** controleert directe opening, PIN uitgeschakeld, correcte huidige dienstbadge, Notities/zoekingang, cache v42 en online gevolgd door offline herladen, zonder JavaScript-fouten: [live-resultaat](masterplan-evidence/phase5/live/report.json). Deze run gebruikte lege, tijdelijke profielen en voerde geen persoonlijke of fictieve records op de gepubliceerde origin in. Externe diensten werden geblokkeerd; dit was geen Google-/AI-/weer-/microfoondiensttest. De runtime-proxy-CA is vertrouwd; TLS-validatie is niet uitgeschakeld.
+
+Livebeelden: [Mijn dag, 360](masterplan-evidence/phase5/live/360-live-day.jpg), [Mijn dag, 393](masterplan-evidence/phase5/live/393-live-day.jpg), [Notities, 412](masterplan-evidence/phase5/live/412-live-notes.jpg). Reproduceerbare scripts: [browser-smoke](masterplan-evidence/phase5/live/run-live-smoke.cjs) en [live-bytes vergelijken met commit](masterplan-evidence/phase5/live/verify-live-bytes.py).
+
+De eerder mislukte masterplanruns zijn bewaard en niet als geslaagd gepresenteerd: [eerste fase-5-run](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40722881552) en [cachefix met nog te vroege testomschakeling](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40725373758). De definitieve [masterplanrun](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40727504606) slaagt inclusief de sterkere volledige-cachecontrole, tien vergelijkingsroutes en echte oude→nieuwe→offline-upgrade.
+
 
 ## Resterende beperkingen en benodigde vervolgstappen
 
 - Een echte Android-gebruiksronde blijft nodig voor toetsenbord/cursor, systeemterugknop, TalkBack, vergrendeling, batterijgebruik en installatie als PWA. De uitgevoerde Chromium-tests vervangen die hardwarecontrole niet. Externe AI-, Google-agenda- en microfoondiensten zijn niet echt aangeroepen; geen externe wijzigingen zijn uitgevoerd.
+- Twee aanvullende upgradeproeven met systeem-Chromium 154 hadden een navigatie-/readiness-time-out; een daaropvolgende diagnostische herhaling slaagde met dezelfde bewaarde gegevens en cache v42. De precieze oorzaak van die extra harnastiming is niet vastgesteld. De referentierun gebruikt de gepinde CI-browser 151 en is herhaaldelijk geslaagd; dit blijft een aandachtspunt voor de fysieke Android-ronde. [Mislukte aanvullende run](masterplan-evidence/phase5/system-browser-timing-failure.json), [geslaagde diagnostische herhaling](masterplan-evidence/phase5/system-browser-upgrade-report.json).
 - Ervaren moeite en na-gewenningvergelijking zijn niet gemeten. Objectieve stappen, zichtbare velden en browserfouten zijn wel reproduceerbaar vastgelegd.
 - Maak zelf een volledige ZIP en controleer het bestand buiten de telefoon. Een klaargezette download bewijst niet dat de kopie duurzaam elders is opgeslagen. Een oudere JSON bevat geen binaire bijlagen.
 - Sluit oude Memento-tabbladen en PWA-vensters en open de app eenmaal online na de update. Reeds draaiende zeer oude code van vóór het bestaande slotprotocol kan niet via een nieuwe publicatie worden gedwongen dat protocol te respecteren. De onderzochte oorspronkelijke main en huidige code zijn met echte tabs/locks getest.

@@ -1,0 +1,107 @@
+{
+  "baseline": "52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9",
+  "journeys": [
+    {
+      "phase": "before",
+      "journey": "task",
+      "actions": 2,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "before",
+      "journey": "note",
+      "actions": 3,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "before",
+      "journey": "find-note",
+      "actions": 5,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "before",
+      "journey": "diary",
+      "actions": 6,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "before",
+      "journey": "payment",
+      "actions": 5,
+      "editablePaymentFields": 11,
+      "errors": []
+    },
+    {
+      "phase": "after",
+      "journey": "task",
+      "actions": 2,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "after",
+      "journey": "note",
+      "actions": 3,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "after",
+      "journey": "find-note",
+      "actions": 3,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "after",
+      "journey": "diary",
+      "actions": 3,
+      "editablePaymentFields": null,
+      "errors": []
+    },
+    {
+      "phase": "after",
+      "journey": "payment",
+      "actions": 5,
+      "editablePaymentFields": 3,
+      "errors": []
+    }
+  ],
+  "upgrade": null,
+  "failure": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.",
+  "upgradeTrace": [
+    {
+      "label": "online-new-worker",
+      "core": "object",
+      "duty": "function",
+      "scripts": [
+        "http://127.0.0.1:43193/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:43193/assets/memento-fitness.js?v=20261028-master-p4-set-navigation"
+      ],
+      "caches": [
+        {
+          "name": "memento-pwa-v35-20261028-account-transfers-v1",
+          "htmlFitness": "memento-fitness-core.js?v=20261026-muscle-v4",
+          "assets": [
+            "http://127.0.0.1:43193/assets/memento-fitness-core.js?v=20261026-muscle-v4"
+          ]
+        },
+        {
+          "name": "uitgavenkompas-legacy-document",
+          "htmlFitness": "memento-fitness-core.js?v=20261026-muscle-v4",
+          "assets": []
+        },
+        {
+          "name": "memento-pwa-v42-20261028-master-p5-offline",
+          "htmlFitness": null,
+          "assets": []
+        }
+      ]
+    }
+  ]
+}
