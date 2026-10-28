@@ -53,7 +53,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
    await page.locator('#ms-continue').click();
    await page.locator('#pinLock').waitFor({state:'hidden'});
-   await page.evaluate(()=>document.querySelector('#sideNav [data-view="settings"]').click());
+   await page.evaluate(()=>{document.querySelector('#compassAreaBar [data-compass-area="finance"]').click();document.querySelector('#sideNav [data-view="settings"]').click();});
    await page.locator('#view-settings [data-memento-pin-lock-now]').click();
    await page.locator('#pinForm').waitFor({state:'visible'});
    assert.equal(await page.evaluate(()=>localStorage.getItem('memento_manual_pin_lock_v1')),null);
