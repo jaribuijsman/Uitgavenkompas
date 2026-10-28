@@ -16,7 +16,7 @@ check('preserve historical unknown category',()=>{const o={type:'expense',catego
 check('prevent removal of in-use subcategory',()=>assert.equal(C.affectedByRemoval([{category:'Vaste lasten',subcategory:'Wegenbelasting'}],'Vaste lasten',['Wegenbelasting']),1));
 check('form retains old, validates on save and warns',()=>{assert.match(html,/setType\(t\.type,true\)/);assert.match(html,/id="txSubcategoryNotice"/);assert.match(html,/categoryIntegrity\.canSave\(state\.categories/);assert.match(html,/affectedByRemoval\(state\.transactions/);});
 check('one split row never overwrites the primary category',()=>{
- assert.match(html,/let splitActive=splits\.length>1/);
+ assert.match(html,/let splitActive=splits\.length>0/);
  assert.match(html,/if\(type==='expense'&&splitActive\)\{splitData=/);
  assert.doesNotMatch(html,/if\(type==='expense'&&!document\.getElementById\('splitSection'\)\.classList\.contains/);
 });
