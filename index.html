@@ -2132,6 +2132,17 @@ window.addEventListener('focus',()=>{if(pinCheckExpiry())resetPinIdleTimer(false
 window.addEventListener('pageshow',()=>{if(pinCheckExpiry())resetPinIdleTimer(false)});
 // Deliberately do not lock on pagehide: same-tab OAuth return may restore the page.
 }
+/* V9 dashboard bridge: reads existing in-memory state without persisting or migrating. */
+window.MementoFinanceBridgeV9={
+ state:()=>state,scope:()=>dashboardScope,period:()=>dashboardPeriodMode,month:()=>selectedMonth,
+ money:v=>money(v),esc:v=>esc(v),balance:id=>accountBalance(id),parts:t=>txParts(t),
+ dateNow:()=>dateNow(),changeView:view=>changeView(view),edit:id=>transactionModal(id),
+ renderTransactions:()=>renderTransactions(),render:()=>renderDashboard(),
+ setScope:scope=>{dashboardScope=scope==='joint'?'joint':'personal';if(dashboardScope==='joint'&&dashboardPeriodMode==='salary')dashboardPeriodMode='month';try{localStorage.setItem('UK_DASHBOARD_SCOPE',dashboardScope)}catch(e){}},
+ setPeriod:mode=>setDashboardPeriodMode(mode),
+ subscribe:callback=>{const original=renderDashboard;renderDashboard=function(...args){const result=original.apply(this,args);callback();return result;};}
+};
+
 function init(){(storageGuard?.ready||Promise.resolve(false)).then(()=>{bindEvents();renderAll();setSaveStatus(financeStorageBlocked?'Herstel eerst een back-up':'Lokale opslag actief',financeStorageBlocked);if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPinLock,{once:true});else initPinLock();});}
 init();
 })();
@@ -4067,7 +4078,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 
 <link rel="stylesheet" href="./assets/memento-ui.css?v=20261028-master-p5">
 <script src="./assets/memento-ui.js?v=20261028-master-p5"></script>
-<script src="./assets/memento-finance-dashboard-v9.js?v=20261028-v9"></script>
+<script src="./assets/memento-finance-dashboard-v9.js?v=20261028-v9b"></script>
 </body></html>
 
 
