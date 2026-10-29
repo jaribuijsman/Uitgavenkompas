@@ -1,11 +1,11 @@
-/* Real original-main -> recovery-worker -> offline upgrade, including binary attachments.
- * Requires MEMENTO_RECOVERY_BASELINE_ROOT: an immutable bf81413 snapshot, never a user profile. */
+/* Real baseline -> current worker -> offline upgrade, including binary attachments.
+ * Select an immutable snapshot with MEMENTO_RECOVERY_BASELINE_ROOT, never a user profile. */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const current=path.resolve(__dirname,'..'),baseline=process.env.MEMENTO_RECOVERY_BASELINE_ROOT,out=process.env.MEMENTO_RECOVERY_UPGRADE_OUT||'/tmp/memento-recovery-upgrade';
 if(!baseline)throw Error('MEMENTO_RECOVERY_BASELINE_ROOT must select the original main snapshot');
-let source=current;const report={baseline:'bf81413d6dc35fc097deeeb61c3eb09acf11834e',journeys:[],upgrade:null,failure:null};fs.mkdirSync(out,{recursive:true});
+let source=current;const report={baseline:process.env.MEMENTO_RECOVERY_BASELINE_SHA||'bf81413d6dc35fc097deeeb61c3eb09acf11834e',journeys:[],upgrade:null,failure:null};fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
  const name=new URL(req.url,'http://localhost').pathname;
  if(name==='/__seed__'){res.end('<!doctype html><title>Isolated journey fixture</title>');return;}
@@ -42,8 +42,8 @@ async function seed(page,data,url){
   await upgradeTrace('offline');const after=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));assert.deepEqual(after,before);
   assert.equal(await page.evaluate(()=>window.MementoFitnessCore.duty('2026-10-28').code),'O');assert.equal(await page.locator('#pinLock').isVisible(),false);
   const binary=await page.evaluate(async id=>{const r=await window.MementoKnowledgeStore.get(id);return await window.MementoKnowledgeStore.sha256(r.blob);},data.files[0].id);assert.equal(binary,data.files[0].hash);
-  const keys=await page.evaluate(()=>caches.keys());assert(keys.includes(cache));assert(!keys.includes('memento-pwa-v68-20261029-layout-v1'));await page.screenshot({path:path.join(out,'upgraded-offline.jpg'),type:'jpeg',quality:72,animations:'disabled'});
-  report.upgrade={passed:true,currentCache:cache,exactMainData:true,pinUnchanged:true,attachmentHash:binary,oldCacheRemoved:true,legacyCacheIgnored:true};  const assets=await page.evaluate(async()=>({disclosure:typeof window.MementoDisclosure?.fold,touch:getComputedStyle(document.documentElement).getPropertyValue('--m-touch').trim(),tokens:Boolean(await caches.match(new URL('./assets/memento-tokens.css?v=20261029-recovery-v2',location.href))),helper:Boolean(await caches.match(new URL('./assets/memento-disclosure.js?v=20261029-recovery-v2',location.href)))}));
+  const keys=await page.evaluate(()=>caches.keys());assert(keys.includes(cache));const oldCache=fs.readFileSync(path.join(baseline,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1];assert(!keys.includes(oldCache),'Previous release cache is retired');await page.screenshot({path:path.join(out,'upgraded-offline.jpg'),type:'jpeg',quality:72,animations:'disabled'});
+  report.upgrade={passed:true,currentCache:cache,exactMainData:true,pinUnchanged:true,attachmentHash:binary,oldCacheRemoved:true,legacyCacheIgnored:true};  const assets=await page.evaluate(async()=>({disclosure:typeof window.MementoDisclosure?.fold,touch:getComputedStyle(document.documentElement).getPropertyValue('--m-touch').trim(),tokens:Boolean(await caches.match(new URL('./assets/memento-tokens.css?v=20261029-scroll-v1',location.href))),helper:Boolean(await caches.match(new URL('./assets/memento-disclosure.js?v=20261029-recovery-v2',location.href)))}));
   assert.equal(assets.disclosure,'function');assert.equal(assets.touch,'48px');assert(assets.tokens&&assets.helper);report.upgrade.newAssetsAvailableOffline=true;
   await ctx.close();console.log(JSON.stringify(report,null,2));
  }catch(e){report.failure=String(e);console.error(e);process.exitCode=1;}
