@@ -1,6 +1,5 @@
 /* Approved app review: shared forest glass, compact rows, functional motion.
    Start portal, PIN/storage logic and all original artwork are independent. */
-:root{--mg-surface:linear-gradient(135deg,rgba(36,75,54,.52),rgba(10,48,37,.50));--mg-line:rgba(187,217,184,.25);--mg-ink:#edf4e9;--mg-muted:#c1d3c4;--mg-gold:#edcc81;--mg-sage:#c4dfbb}
 body #lifeApp,body[data-compass-area=finance]>.app{background:linear-gradient(180deg,#0a241a99,#062016b8 50%,#071b17ed),url('./pin-forests/bosruines.webp') center top/cover fixed!important;color:var(--mg-ink)}
 body #lifeApp .life-main,body[data-compass-area=finance] .app .main,body[data-compass-area=finance] .app .content{background:transparent!important}
 body #lifeApp .life-sidebar,body[data-compass-area=finance] .app .sidebar{background:#102c23e8!important;backdrop-filter:blur(18px);border-color:var(--mg-line)!important}

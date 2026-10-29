@@ -2,13 +2,7 @@
 (()=>{'use strict';
  const $=s=>document.querySelector(s);
  const openedExercises=new Set();let frame=0;
- function fold(nodes,title,open=false){
-  nodes=nodes.filter(Boolean);if(!nodes.length)return null;
-  const d=document.createElement('details');d.className='mg-fold';d.open=open;
-  const summary=document.createElement('summary');summary.textContent=title;d.append(summary);
-  const body=document.createElement('div');body.className='mg-fold-body';d.append(body);
-  nodes[0].before(d);nodes.forEach(n=>body.append(n));return d;
- }
+ const fold=(nodes,title,open=false)=>window.MementoDisclosure.fold(nodes,title,{open});
  function field(form,id){const el=form.querySelector('#'+id);return el?.closest('.form-field,.life-form-field')||el?.closest('label');}
  function markForm(form){
   if(form.dataset.mgReady)return;form.dataset.mgReady='1';
