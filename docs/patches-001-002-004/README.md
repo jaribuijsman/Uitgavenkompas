@@ -31,6 +31,8 @@ Datum: 29 oktober 2026. Basis: `8a3d9008f9698f4268d8b55ca45489f5a3de051c` op mai
 | Journal acceptance | Oude PIN-aanname |
 | Knowledge 2 | Opslagscenario hierboven en oude openingsroute bij tweede tab en ZIP-herstel |
 
+De nieuwe CI-test wacht na herladen expliciet op de schrijfrechten en de zichtbare datumkaart voordat de dagtelling wordt gelezen; dit herstelt een timingfout zonder de assertion te versoepelen.
+
 Geen tests uitgeschakeld en geen gegevensbehoud-, conflict-, herstel- of beveiligingsassertions verwijderd.
 
 ## Daadwerkelijke controles vóór publicatie
