@@ -2579,14 +2579,14 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <link rel="stylesheet" href="./assets/memento-fitness.css?v=20261028-master-p4">
 <script src="./assets/memento-fitness-core.js?v=20261028-master-p4"></script>
 <script src="./assets/memento-fitness.js?v=20261028-master-p4-set-navigation"></script>
-<link rel="stylesheet" href="./assets/memento-knowledge.css?v=20261028-master-p5">
-<script src="./assets/memento-knowledge-core.js?v=20261028-master-p3"></script>
+<link rel="stylesheet" href="./assets/memento-knowledge.css?v=20261029-diary-selfcare-v1">
+<script src="./assets/memento-knowledge-core.js?v=20261029-diary-selfcare-v1"></script>
 <script src="./assets/memento-trash-core.js?v=20261026-purge-v2"></script>
 <script src="./assets/memento-knowledge-store.js?v=20261027-journal-v1"></script>
 <script src="./assets/memento-backup.js?v=20261027-covers-v1"></script>
 <script src="./assets/memento-knowledge-art.js?v=20261027-covers-v1"></script>
 <script src="./assets/memento-knowledge-cover-ui.js?v=20261027-covers-v1"></script>
-<script src="./assets/memento-knowledge.js?v=20261028-master-p5"></script>
+<script src="./assets/memento-knowledge.js?v=20261029-diary-selfcare-v1"></script>
 <script id="compassLifeScript">
 (()=>{
 'use strict';
@@ -2914,7 +2914,7 @@ window.MementoLife={openWish:id=>{const w=state.wishes.find(x=>x.id===id);if(!w)
 function quickForm(){
  const task=quickKind==='task',date=quickDate===null?today():quickDate;
  return '<form class="life-quick-add memento-quick-note memento-capture-card" id="lifeQuickForm">'+
- '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?"><button type="button" data-life-quick-kind="note" aria-pressed="'+!task+'">Notitie</button><button type="button" data-life-quick-kind="task" aria-pressed="'+task+'">Taak</button></div>'+
+ '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?"><button type="button" data-life-quick-kind="note" aria-pressed="'+!task+'">Notitie</button><button type="button" data-life-quick-kind="task" aria-pressed="'+task+'">Taak</button><button type="button" class="memento-diary-shortcut" data-life-journal="" aria-label="Open dagboek van vandaag" title="Schrijf in je dagboek">Dagboek</button></div>'+
  '<input id="lifeQuickTitle" aria-label="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" placeholder="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" required maxlength="2500" autocomplete="off">'+
  '<div class="memento-capture-toolbar"><label class="memento-capture-date" id="lifeQuickDateField"'+(task?'':' hidden')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span><input id="lifeQuickDate" type="date" aria-label="Taakdatum (optioneel)" value="'+esc(date)+'"'+(task?'':' disabled')+'></label>'+
  '<span class="memento-capture-inbox" id="lifeQuickInbox"'+(task?' hidden':'')+'>Notities · Inbox</span>'+
@@ -3420,7 +3420,7 @@ root.addEventListener('click',e=>{
  if(d.shoppingNew){editGrocery();return}
  if(d.lifeQuickKind){quickKind=d.lifeQuickKind==='note'?'note':'task';syncQuickForm();return}
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
- if(d.lifeJournal!==undefined){setView('notes');window.MementoKnowledge?.showJournal?.(today());return}
+ if(d.lifeJournal!==undefined){setView('notes');window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
  if(d.mementoNewEvent!==undefined){editAppointment(null,d.mementoNewEvent||today());return}
  if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
@@ -4203,6 +4203,13 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 <link rel="stylesheet" href="./assets/memento-ui.css?v=20261029-compact-day-v1">
 <script src="./assets/memento-ui.js?v=20261028-master-p5"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261028-v9c"></script>
+<style id="memento-diary-shortcut-20261029">
+/* The diary link uses the existing quick-entry row, without changing task handling. */
+#lifeApp .memento-capture-card .memento-capture-kinds button{min-width:0;padding:6px 8px;font-size:13px;white-space:nowrap}
+#lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut{border:1px solid #53755c;background:#234434;color:#d5e9d9;margin-left:2px}
+#lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut:focus-visible{outline:2px solid #bdd3c2;outline-offset:2px}
+@media(max-width:380px){#lifeApp .memento-capture-card .memento-capture-kinds button{padding:6px 6px;font-size:12px}}
+</style>
 </body></html>
 
 

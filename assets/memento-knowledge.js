@@ -222,6 +222,7 @@ function sleepMinutes(c){
 function diarySummary(j){
  const c=j?.checkin||{},parts=[j?.mood||"",c.energy?"Energie "+c.energy+"/5":"",c.stress?"Stress "+c.stress+"/5":""],s=sleepMinutes(c);
  if(s!==null)parts.push("Slaap "+Math.floor(s/60)+"u "+String(s%60).padStart(2,"0")+"m");
+ if(j?.selfCare?.completed)parts.push("Zelfzorg gedaan");
  return parts.filter(Boolean).join(" · ")||"Stemming · Energie · Stress · Slaap";
 }
 function diaryCheckin(j){
@@ -232,6 +233,23 @@ function diaryCheckin(j){
  '<fieldset><legend>Stemming · optioneel</legend><div class="kc-diary-moods">'+[["Moeilijk","Slecht"],["Minder","Minder"],["Neutraal","Oké"],["Prima","Goed"],["Goed","Heel goed"]].map(([v,n])=>'<button type="button" data-kc="journal-mood" data-id="'+v+'" aria-pressed="'+(j.mood===v)+'">'+n+'</button>').join("")+'</div></fieldset>'+
  '<div class="kc-diary-fields">'+opt("energy","Energie")+opt("stress","Stress")+'</div>'+
  '<section class="kc-diary-sleep"><strong>◕ Slaap</strong><p>Ook overdag na een nachtdienst. Vul begin- en einddatum in; wakker gelegen tijd wordt afgetrokken.</p><div class="kc-diary-fields">'+dt("sleepStart","In bed vanaf")+dt("sleepEnd","Opgestaan op")+num("latency","Inslapen (min.)")+num("awake","Tussendoor wakker (min.)")+num("nap","Dutje (min.)")+'</div><small id="kc-diary-sleep-result">'+(sleepMinutes(c)===null?"Nog geen berekening":"Geschat: "+Math.floor(sleepMinutes(c)/60)+"u "+String(sleepMinutes(c)%60).padStart(2,"0")+"m")+'</small></section></div></details>';
+}
+function diarySelfCare(j){
+ const s=j.selfCare||{version:1,completed:false,checks:{},note:""},items=[["face","Gezicht en haar verzorgd"],["beard","Baard gecontroleerd"],["appearance","Aandacht aan kleding en uitstraling besteed"]];
+ return '<details class="kc-diary-selfcare"'+(!s.completed?' open':'')+'><summary><span aria-hidden="true">✧</span><span><strong>Persoonlijke verzorging</strong><small id="kc-diary-selfcare-status">'+(s.completed?"Afgerond voor deze dag":"Even tijd voor jezelf · optioneel")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-selfcare-body">'+
+ '<p>Een kort moment voor jezelf. Je hoeft niet alles aan te vinken.</p>'+
+ items.map(([key,title])=>'<label class="kc-diary-selfcare-item"><input type="checkbox" data-kc-self-care="'+key+'"'+(s.checks?.[key]?' checked':'')+'><span>'+title+'</span></label>').join("")+
+ '<label class="kc-diary-selfcare-note">Hoe voelde dit? · optioneel<textarea data-kc-self-care="note" maxlength="500" rows="2" placeholder="Een korte gedachte voor jezelf…">'+esc(s.note||"")+'</textarea></label>'+
+ '<button type="button" class="kc-btn kc-diary-selfcare-action'+(s.completed?' is-done':'')+'" data-kc="journal-selfcare-done" aria-pressed="'+Boolean(s.completed)+'">'+(s.completed?"✓ Afgerond · opnieuw openen":"✓ Verzorging afronden")+'</button>'+
+ '</div></details>';
+}
+function diaryHealth(j){
+ const h=j.health;
+ if(!h)return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheidsgegevens</strong><small>Nog geen import</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body"><p>Hier komen later geselecteerde gegevens uit Samsung Health, na jouw toestemming en controle van een exportbestand. Er wordt nu niets automatisch opgehaald.</p></div></details>';
+ const values=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaap",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" slagen/min"],["exerciseMinutes","Training",v=>v+" minuten"]];
+ return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheidsgegevens</strong><small>Geïmporteerd · '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
+ values.filter(([key])=>h[key]!==undefined).map(([key,label,format])=>'<div class="kc-diary-health-metric"><span>'+label+'</span><strong>'+esc(format(h[key]))+'</strong></div>').join("")+
+ '<p>Bron: '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+' · geïmporteerd '+esc(new Date(h.importedAt).toLocaleString("nl-NL"))+'. Handmatige dagboekwaarden blijven ongewijzigd.</p></div></details>';
 }
 function diaryPrompts(date){const seed=Math.floor(Date.parse(date+"T12:00:00Z")/86400000);return '<div class="kc-diary-prompts"><div class="kc-diary-heading"><strong>✧ Reflectievragen</strong><small>optioneel</small></div>'+[0,1,2].map(i=>{const q=diaryQuestions[((seed+i*3)%9+9)%9];return '<button type="button" data-kc="journal-prompt" data-id="'+esc(q)+'"><span>'+esc(q)+'</span><b>＋</b></button>';}).join("")+'</div>';}
 function diaryVoice(){
@@ -268,7 +286,7 @@ function renderJournalEditor(){
  diaryWeek(j.date)+'<div class="kc-diary-selected"><div><small>DAGBOEK</small><h3>'+esc(journalLabel(j.date))+'</h3></div></div>'+
 
  '<section class="kc-diary-write"><div class="kc-diary-heading"><strong>✎ Mijn verhaal</strong><small>Vrij schrijven</small></div><label for="kc-body" class="kc-sr">Dagboektekst</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="9" placeholder="Wat heb je vandaag meegemaakt?">'+esc(e.body)+'</textarea><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?"":e.title)+'" placeholder="Titel van deze dag"></label><label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(", "))+'"></label><div class="kc-diary-actions">'+btn("Versiegeschiedenis","versions")+'</div></section>'+
- diaryCheckin(j)+'<details class="kc-diary-optional"><summary>Reflectievragen · optioneel</summary>'+diaryPrompts(j.date)+'</details>'+diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+btn("Concept verwerpen","discard-draft")+'</div>';
+ diaryCheckin(j)+diarySelfCare(j)+diaryHealth(j)+'<details class="kc-diary-optional"><summary>Reflectievragen · optioneel</summary>'+diaryPrompts(j.date)+'</details>'+diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+btn("Concept verwerpen","discard-draft")+'</div>';
 }
 function renderSort(){
  const list=sortState?.ids||[];
@@ -418,7 +436,7 @@ function flush(){
  if(draft.sourceUrl&&!safeURL(draft.sourceUrl)){notify("Gebruik een geldige http- of https-link.");setSaveIndicator("Controleer de bronlink");return false;}
  if(draft.journal&&!C.journalHasContent(draft.body,draft.journal)){setSaveIndicator("Leeg concept · niet opgeslagen");if(!selectedId){dirty=false;forgetDraft();return true;}notify("Vul eerst iets in voordat je je dagboek leegmaakt.");return false;}
  const changed=write(state=>{
-  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
+  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,selfCare:draft.journal.selfCare,health:draft.journal.health,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
   if(selectedId){C.updateNote(state,selectedId,{title:draft.title,body:draft.body,kind:draft.kind,collectionId:draft.collectionId,tags:draft.tags,sourceUrl:draft.sourceUrl,recipe:draft.recipe||null});}
   else {draft.revision=1;state.notes.unshift(draft);}
  });
@@ -574,7 +592,13 @@ function click(event){
   if(screen==="edit"){clearTimeout(timer);if(!flush())return;}
   journalFilter=next;if(screen==="collection"&&op!=="journal-date-open")render();else openJournal(next);return;
  }
- if(op==="journal-mood"&&editing?.journal){
+ if(op==="journal-selfcare-done"&&editing?.journal){
+   const care=editing.journal.selfCare||(editing.journal.selfCare={version:1,completed:false,checks:{},note:""});
+   care.completed=!care.completed;
+   if(care.completed)care.completedAt=new Date().toISOString();else delete care.completedAt;
+   schedule();render();return;
+  }
+  if(op==="journal-mood"&&editing?.journal){
   editing.journal.mood=editing.journal.mood===id?"":id;
   host.querySelectorAll('[data-kc="journal-mood"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===editing.journal.mood)));
   diaryRefresh();schedule();return;
@@ -748,7 +772,14 @@ function onInput(event){
  if(colDraft&&ArtUI?.changed(field,host))return;
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
  if(field.dataset.kcCheckin&&editing?.journal){const key=field.dataset.kcCheckin,c=editing.journal.checkin||(editing.journal.checkin={});c[key]=["energy","stress","latency","awake","nap"].includes(key)?(field.value===""?null:Number(field.value)):field.value;diaryRefresh();schedule();return;}
- if(field.dataset.kcJournal&&editing?.journal){if(field.dataset.kcJournal==='date'&&editing.title===editing.journal.date)editing.title=field.value;editing.journal[field.dataset.kcJournal]=field.value;schedule();return;}
+ if(field.dataset.kcSelfCare&&editing?.journal){
+   if(field.type==="checkbox"&&event.type==="input")return;
+   const key=field.dataset.kcSelfCare,care=editing.journal.selfCare||(editing.journal.selfCare={version:1,completed:false,checks:{},note:""});
+   if(key==="note")care.note=field.value.slice(0,500);
+   else if(["face","beard","appearance"].includes(key))care.checks[key]=Boolean(field.checked);
+   schedule();return;
+  }
+  if(field.dataset.kcJournal&&editing?.journal){if(field.dataset.kcJournal==='date'&&editing.title===editing.journal.date)editing.title=field.value;editing.journal[field.dataset.kcJournal]=field.value;schedule();return;}
  if(!editing||!change)return;
  if(change==="tags")editing.tags=[...new Set(field.value.split(",").map(x=>x.trim().slice(0,60)).filter(Boolean))].slice(0,30);
  else if(change==="recipeStatus"||change==="ingredients"||change==="recipeNotes"){
@@ -770,7 +801,7 @@ function onInput(event){
 function onChange(event){
  const el=event.target;
  if(el.dataset.kcCentral){if(el.dataset.kcCentral==="type"){centralType=el.value;if(centralType==="task")centralCollection="";}if(el.dataset.kcCentral==="status")centralStatus=el.value;if(el.dataset.kcCentral==="collection"){centralCollection=el.value;if(centralCollection)centralType="note";}screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
- if(el.dataset.kcCol||el.dataset.kcJournal){onInput(event);return;}
+ if(el.dataset.kcCol||el.dataset.kcJournal||(el.dataset.kcSelfCare&&el.type==="checkbox")){onInput(event);return;}
  if(el.dataset.kcChange){filtersExpanded=true;const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
  if(el.dataset.kcCheck){
   if(write(s=>C.toggleItem(s,el.dataset.note,el.dataset.kcCheck)))render();else el.checked=!el.checked;

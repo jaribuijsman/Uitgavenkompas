@@ -278,30 +278,58 @@ function journalCheckinValid(c){
  }
  return true;
 }
+// Optional self-care and external health summaries belong to the existing dated journal.
+const selfCareKeys=["face","beard","appearance"];
+function journalSelfCareValid(c){
+ if(c===undefined)return true;
+ if(!c||typeof c!=="object"||Array.isArray(c)||c.version!==1||typeof c.completed!=="boolean"||typeof c.note!=="string"||c.note.length>500||!c.checks||typeof c.checks!=="object"||Array.isArray(c.checks))throw Error("Ongeldige zelfzorg-check-in");
+ if(Object.keys(c.checks).some(k=>!selfCareKeys.includes(k)||typeof c.checks[k]!=="boolean"))throw Error("Ongeldige zelfzorgpunten");
+ if(c.completedAt!==undefined&&(typeof c.completedAt!=="string"||!Number.isFinite(Date.parse(c.completedAt))||new Date(c.completedAt).toISOString()!==c.completedAt))throw Error("Ongeldige zelfzorgdatum");
+ if(c.completed&&!c.completedAt)throw Error("Afgeronde zelfzorg mist een tijdstip");
+ if(!c.completed&&c.completedAt!==undefined)throw Error("Niet-afgeronde zelfzorg heeft een afrondtijd");
+ return true;
+}
+// Future import data is read-only and never overwrites a manually entered check-in.
+function journalHealthValid(h,date){
+ if(h===undefined)return true;
+ if(!h||typeof h!=="object"||Array.isArray(h)||h.version!==1||!["samsung-health","health-connect"].includes(h.source)||!validDate(h.measuredDate)||h.measuredDate!==date||typeof h.importedAt!=="string"||!Number.isFinite(Date.parse(h.importedAt))||new Date(h.importedAt).toISOString()!==h.importedAt)throw Error("Ongeldige gezondheidsimport");
+ const limits={steps:[0,200000],sleepMinutes:[0,2160],restingHeartRateBpm:[20,250],exerciseMinutes:[0,1440]};
+ if(Object.keys(h).some(k=>!["version","source","measuredDate","importedAt",...Object.keys(limits)].includes(k)))throw Error("Onbekend gezondheidsveld");
+ if(!Object.keys(limits).some(k=>h[k]!==undefined))throw Error("Lege gezondheidsimport");
+ for(const [k,[min,max]] of Object.entries(limits))if(h[k]!==undefined&&(!Number.isInteger(h[k])||h[k]<min||h[k]>max))throw Error("Ongeldige gezondheidswaarde: "+k);
+ return true;
+}
 function journalHasContent(body,j){
- const c=j?.checkin||{};
- return Boolean(String(body||"").trim()||j?.mood||j?.audioOnly||c.energy||c.stress||c.sleepStart||c.sleepEnd||c.nap||c.latency||c.awake);
+ const c=j?.checkin||{},s=j?.selfCare,h=j?.health;
+ return Boolean(String(body||"").trim()||j?.mood||j?.audioOnly||c.energy||c.stress||c.sleepStart||c.sleepEnd||c.nap||c.latency||c.awake||
+  (s&&(s.completed||s.note?.trim()||Object.values(s.checks||{}).some(Boolean)))||
+  (h&&["steps","sleepMinutes","restingHeartRateBpm","exerciseMinutes"].some(k=>h[k]!==undefined)));
 }
 function validateJournal(life,n,checkDuplicates=true){
  const j=n.journal;
- if(!j||j.version!==1||!validDate(j.date)||(j.mood!==undefined&&typeof j.mood!=='string')||!['','Goed','Prima','Neutraal','Minder','Moeilijk'].includes(j.mood||''))throw Error('Ongeldige dagboekmetadata');
- if(j.audioOnly!==undefined&&typeof j.audioOnly!=='boolean')throw Error('Ongeldige opnamegegevens');
+ if(!j||j.version!==1||!validDate(j.date)||(j.mood!==undefined&&typeof j.mood!=="string")||!["","Goed","Prima","Neutraal","Minder","Moeilijk"].includes(j.mood||""))throw Error("Ongeldige dagboekmetadata");
+ if(j.audioOnly!==undefined&&typeof j.audioOnly!=="boolean")throw Error("Ongeldige opnamegegevens");
  journalCheckinValid(j.checkin);
+ journalSelfCareValid(j.selfCare);
+ journalHealthValid(j.health,j.date);
  // Archived days retain their reservation; deleted days are recoverable separately.
- if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');
+ if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error("Voor deze datum bestaat al een dagboeknotitie");
 }
 function findJournal(life,date){return life.notes.find(n=>!n.deletedAt&&n.journal?.version===1&&n.journal.date===date)||null;}
-function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId,checkin,audioOnly}){
+function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId,checkin,audioOnly,selfCare,health}){
  if(!validDate(date))throw Error('Kies een geldige datum');
  const existing=findJournal(life,date);
  if(existing&&existing.id!==id)throw Error('Open de bestaande dagboeknotitie voor deze datum');
- if(!journalHasContent(body,{mood,checkin,audioOnly}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
+ const previous=id?life.notes.find(n=>n.id===id)?.journal:null;
+ if(selfCare===undefined)selfCare=previous?.selfCare;
+ if(health===undefined)health=previous?.health;
+ if(!journalHasContent(body,{mood,checkin,audioOnly,selfCare,health}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
  if(String(body).length>20000||String(title).length>180)throw Error('Dagboektekst is te lang');
- const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);
+ const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);if(selfCare!==undefined)journal.selfCare=clone(selfCare);if(health!==undefined)journal.health=clone(health);
  if(id){const old=life.notes.find(n=>n.id===id);if(old?.journal){if(checkin===undefined&&old.journal.checkin!==undefined)journal.checkin=clone(old.journal.checkin);if(audioOnly===undefined&&old.journal.audioOnly!==undefined)journal.audioOnly=old.journal.audioOnly;}}
  if(id){const old=life.notes.find(n=>n.id===id);if(!old?.journal)throw Error('Geen bestaande dagboeknotitie');return updateNote(life,id,{title:title.trim()||date,body,tags,journal});}
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
