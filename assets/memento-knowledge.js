@@ -220,8 +220,9 @@ function sleepMinutes(c){
  return Number.isFinite(minutes)&&minutes>0&&minutes<=2160&&awake<=minutes?Math.round(minutes-awake):null;
 }
 function diarySummary(j){
- const c=j?.checkin||{},parts=[j?.mood||"",c.energy?"Energie "+c.energy+"/5":"",c.stress?"Stress "+c.stress+"/5":""],s=sleepMinutes(c);
+ const c=j?.checkin||{},m=j?.manualHealth||{},parts=[j?.mood||"",c.energy?"Energie "+c.energy+"/5":"",c.stress?"Stress "+c.stress+"/5":""],s=m.sleepMinutes!==undefined?m.sleepMinutes:sleepMinutes(c);
  if(s!==null)parts.push("Slaap "+Math.floor(s/60)+"u "+String(s%60).padStart(2,"0")+"m");
+ if(m.steps!==undefined)parts.push("Stappen "+m.steps.toLocaleString("nl-NL"));
  if(j?.selfCare?.completed)parts.push("Zelfzorg gedaan");
  return parts.filter(Boolean).join(" · ")||"Stemming · Energie · Stress · Slaap";
 }
@@ -232,7 +233,7 @@ function diaryCheckin(j){
  return '<details class="kc-diary-checkin"><summary><span class="kc-diary-heart">♡</span><span><strong>Hoe voel je je vandaag?</strong><small id="kc-diary-summary">'+esc(diarySummary(j))+'</small></span><b>⌄</b></summary><div class="kc-diary-checkin-body">'+
  '<fieldset><legend>Stemming · optioneel</legend><div class="kc-diary-moods">'+[["Moeilijk","Slecht"],["Minder","Minder"],["Neutraal","Oké"],["Prima","Goed"],["Goed","Heel goed"]].map(([v,n])=>'<button type="button" data-kc="journal-mood" data-id="'+v+'" aria-pressed="'+(j.mood===v)+'">'+n+'</button>').join("")+'</div></fieldset>'+
  '<div class="kc-diary-fields">'+opt("energy","Energie")+opt("stress","Stress")+'</div>'+
- '<section class="kc-diary-sleep"><strong>◕ Slaap</strong><p>Ook overdag na een nachtdienst. Vul begin- en einddatum in; wakker gelegen tijd wordt afgetrokken.</p><div class="kc-diary-fields">'+dt("sleepStart","In bed vanaf")+dt("sleepEnd","Opgestaan op")+num("latency","Inslapen (min.)")+num("awake","Tussendoor wakker (min.)")+num("nap","Dutje (min.)")+'</div><small id="kc-diary-sleep-result">'+(sleepMinutes(c)===null?"Nog geen berekening":"Geschat: "+Math.floor(sleepMinutes(c)/60)+"u "+String(sleepMinutes(c)%60).padStart(2,"0")+"m")+'</small></section></div></details>';
+ '<section class="kc-diary-sleep"><strong>◕ Slaap</strong><p>Slaap hoort bij de dag waarop je wakker wordt, ook na een nachtdienst. Vul begin- en einddatum in; wakker gelegen tijd wordt afgetrokken.</p><div class="kc-diary-fields">'+dt("sleepStart","In bed vanaf")+dt("sleepEnd","Opgestaan op")+num("latency","Inslapen (min.)")+num("awake","Tussendoor wakker (min.)")+num("nap","Dutje (min.)")+'</div><small id="kc-diary-sleep-result">'+(sleepMinutes(c)===null?"Nog geen berekening":"Geschat: "+Math.floor(sleepMinutes(c)/60)+"u "+String(sleepMinutes(c)%60).padStart(2,"0")+"m")+'</small></section></div></details>';
 }
 function diarySelfCare(j){
  const s=j.selfCare||{version:1,completed:false,checks:{},note:""},items=[["face","Gezicht en haar verzorgd"],["beard","Baard gecontroleerd"],["appearance","Aandacht aan kleding en uitstraling besteed"]];
@@ -244,12 +245,28 @@ function diarySelfCare(j){
  '</div></details>';
 }
 function diaryHealth(j){
- const h=j.health;
- if(!h)return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheidsgegevens</strong><small>Nog geen import</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body"><p>Hier komen later geselecteerde gegevens uit Samsung Health, na jouw toestemming en controle van een exportbestand. Er wordt nu niets automatisch opgehaald.</p></div></details>';
- const values=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaap",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" slagen/min"],["exerciseMinutes","Training",v=>v+" minuten"]];
- return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheidsgegevens</strong><small>Geïmporteerd · '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
- values.filter(([key])=>h[key]!==undefined).map(([key,label,format])=>'<div class="kc-diary-health-metric"><span>'+label+'</span><strong>'+esc(format(h[key]))+'</strong></div>').join("")+
- '<p>Bron: '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+' · geïmporteerd '+esc(new Date(h.importedAt).toLocaleString("nl-NL"))+'. Handmatige dagboekwaarden blijven ongewijzigd.</p></div></details>';
+ const m=j.manualHealth||{},h=j.health;
+ const android=/Android/i.test(navigator.userAgent);
+ const fallback="https://play.google.com/store/apps/details?id=com.sec.android.app.shealth";
+ // Een browser kan de Android-app alleen openen als Samsung Health een geschikte activiteit aanbiedt.
+ // Het openen van een bepaalde kalenderdag wordt niet door een openbare deep link ondersteund.
+ const openLink=android?"intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.shealth;S.browser_fallback_url="+encodeURIComponent(fallback)+";end":fallback;
+ const numeric=(key,title,max,min=0)=>'<label>'+title+'<input type="number" inputmode="numeric" min="'+min+'" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(m[key]??"")+'" placeholder="—"></label>';
+ const sleep=m.sleepMinutes===undefined?null:m.sleepMinutes;
+ const sleepField=(key,label,value,max)=>'<label>'+label+'<input type="number" inputmode="numeric" min="0" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(value??"")+'" placeholder="—"></label>';
+ const imported=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaapduur",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" slagen/min"],["exerciseMinutes","Training",v=>v+" minuten"]];
+ return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheid en activiteit</strong><small>'+(Object.keys(m).length>1?"Handmatige waarden ingevuld":"Slaap, stappen en meer · optioneel")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
+ '<a class="kc-diary-health-link" data-kc="journal-health-open" href="'+esc(openLink)+'" rel="noopener noreferrer">Samsung Health openen <span aria-hidden="true">↗</span></a>'+
+ '<p class="kc-diary-health-date">Bekijk daar zelf de juiste datum. Memento kan Samsung Health niet rechtstreeks op die dag openen.</p>'+
+ '<p>De slaap in dit dagboek hoort bij de <strong>dag waarop je wakker wordt</strong>. Ook als je de vorige avond naar bed ging of na een nachtdienst overdag sliep.</p>'+
+ '<div class="kc-diary-health-grid">'+
+ sleepField("sleepHours","Slaapduur · uren",sleep===null?null:Math.floor(sleep/60),35)+
+ sleepField("sleepRestMinutes","Minuten",sleep===null?null:sleep%60,59)+
+ numeric("steps","Stappen",200000)+numeric("sleepScore","Slaapscore (0–100)",100)+
+ numeric("restingHeartRateBpm","Rusthartslag (bpm)",250,20)+numeric("exerciseMinutes","Beweging / training (min.)",1440)+
+ '</div><p class="kc-diary-health-foot">Handmatig ingevuld voor '+esc(journalLabel(j.date))+'. Je bestaande slaaptijden hierboven en eventuele geïmporteerde waarden blijven apart bewaard.</p>'+
+ (h?'<details class="kc-diary-health-import"><summary>Geïmporteerde gegevens bekijken</summary><div>'+imported.filter(([key])=>h[key]!==undefined).map(([key,label,format])=>'<div class="kc-diary-health-metric"><span>'+label+'</span><strong>'+esc(format(h[key]))+'</strong></div>').join("")+'<p>Bron: '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+' · '+esc(new Date(h.importedAt).toLocaleString("nl-NL"))+'</p></div></details>':'')+
+ '</div></details>';
 }
 function diaryPrompts(date){const seed=Math.floor(Date.parse(date+"T12:00:00Z")/86400000);return '<div class="kc-diary-prompts"><div class="kc-diary-heading"><strong>✧ Reflectievragen</strong><small>optioneel</small></div>'+[0,1,2].map(i=>{const q=diaryQuestions[((seed+i*3)%9+9)%9];return '<button type="button" data-kc="journal-prompt" data-id="'+esc(q)+'"><span>'+esc(q)+'</span><b>＋</b></button>';}).join("")+'</div>';}
 function diaryVoice(){
@@ -429,6 +446,7 @@ function flush(){
  if(!editing||!dirty)return true;
  rememberDraft();
  if(selectedId&&editingBase&&JSON.stringify(read().notes.find(n=>n.id===selectedId)||null)!==editingBase){notify("Deze notitie is inmiddels gewijzigd. Kopieer je concept; de nieuwere versie blijft behouden.");setSaveIndicator("Opslaan mislukt · nieuwere versie");return false;}
+ if(editing.journal&&host?.querySelector("[data-kc-manual-health]:invalid")){setSaveIndicator("Controleer de gezondheidswaarden");notify("Controleer de ingevulde gezondheidswaarden.");return false;}
  const draft=C.clone(editing),life=read();
  setSaveIndicator("Opslaan…");
  if(!draft.title.trim())draft.title=draft.journal?draft.journal.date:String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
@@ -436,7 +454,7 @@ function flush(){
  if(draft.sourceUrl&&!safeURL(draft.sourceUrl)){notify("Gebruik een geldige http- of https-link.");setSaveIndicator("Controleer de bronlink");return false;}
  if(draft.journal&&!C.journalHasContent(draft.body,draft.journal)){setSaveIndicator("Leeg concept · niet opgeslagen");if(!selectedId){dirty=false;forgetDraft();return true;}notify("Vul eerst iets in voordat je je dagboek leegmaakt.");return false;}
  const changed=write(state=>{
-  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,selfCare:draft.journal.selfCare,health:draft.journal.health,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
+  if(draft.journal){const saved=C.saveJournal(state,{id:selectedId||undefined,date:draft.journal.date,mood:draft.journal.mood,checkin:draft.journal.checkin,audioOnly:draft.journal.audioOnly,selfCare:draft.journal.selfCare,health:draft.journal.health,manualHealth:draft.journal.manualHealth,title:draft.title,body:draft.body,tags:draft.tags,collectionId:draft.collectionId});draft.id=saved.id;return;}
   if(selectedId){C.updateNote(state,selectedId,{title:draft.title,body:draft.body,kind:draft.kind,collectionId:draft.collectionId,tags:draft.tags,sourceUrl:draft.sourceUrl,recipe:draft.recipe||null});}
   else {draft.revision=1;state.notes.unshift(draft);}
  });
@@ -592,6 +610,7 @@ function click(event){
   if(screen==="edit"){clearTimeout(timer);if(!flush())return;}
   journalFilter=next;if(screen==="collection"&&op!=="journal-date-open")render();else openJournal(next);return;
  }
+ if(op==="journal-health-open"){clearTimeout(timer);if(!flush()){event.preventDefault();notify("Bewaar of corrigeer eerst je invoer voordat je Samsung Health opent.");}return;}
  if(op==="journal-selfcare-done"&&editing?.journal){
    const care=editing.journal.selfCare||(editing.journal.selfCare={version:1,completed:false,checks:{},note:""});
    care.completed=!care.completed;
@@ -772,6 +791,20 @@ function onInput(event){
  if(colDraft&&ArtUI?.changed(field,host))return;
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
  if(field.dataset.kcCheckin&&editing?.journal){const key=field.dataset.kcCheckin,c=editing.journal.checkin||(editing.journal.checkin={});c[key]=["energy","stress","latency","awake","nap"].includes(key)?(field.value===""?null:Number(field.value)):field.value;diaryRefresh();schedule();return;}
+ if(field.dataset.kcManualHealth&&editing?.journal){
+  const controls=[...host.querySelectorAll("[data-kc-manual-health]")];
+  if(controls.some(el=>!el.validity.valid)){setSaveIndicator("Controleer de gezondheidswaarden");return;}
+  const get=key=>controls.find(el=>el.dataset.kcManualHealth===key)?.value??"";
+  const manual={version:1};
+  const hours=get("sleepHours"),minutes=get("sleepRestMinutes");
+  if(hours!==""||minutes!=="")manual.sleepMinutes=Number(hours||0)*60+Number(minutes||0);
+  for(const key of ["steps","sleepScore","restingHeartRateBpm","exerciseMinutes"]){
+   const value=get(key);if(value!=="")manual[key]=Number(value);
+  }
+  if(Object.keys(manual).length>1)editing.journal.manualHealth=manual;
+  else delete editing.journal.manualHealth;
+  diaryRefresh();schedule();return;
+ }
  if(field.dataset.kcSelfCare&&editing?.journal){
    if(field.type==="checkbox"&&event.type==="input")return;
    const key=field.dataset.kcSelfCare,care=editing.journal.selfCare||(editing.journal.selfCare={version:1,completed:false,checks:{},note:""});
@@ -801,7 +834,7 @@ function onInput(event){
 function onChange(event){
  const el=event.target;
  if(el.dataset.kcCentral){if(el.dataset.kcCentral==="type"){centralType=el.value;if(centralType==="task")centralCollection="";}if(el.dataset.kcCentral==="status")centralStatus=el.value;if(el.dataset.kcCentral==="collection"){centralCollection=el.value;if(centralCollection)centralType="note";}screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
- if(el.dataset.kcCol||el.dataset.kcJournal||(el.dataset.kcSelfCare&&el.type==="checkbox")){onInput(event);return;}
+ if(el.dataset.kcCol||el.dataset.kcJournal||el.dataset.kcManualHealth||(el.dataset.kcSelfCare&&el.type==="checkbox")){onInput(event);return;}
  if(el.dataset.kcChange){filtersExpanded=true;const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
  if(el.dataset.kcCheck){
   if(write(s=>C.toggleItem(s,el.dataset.note,el.dataset.kcCheck)))render();else el.checked=!el.checked;
