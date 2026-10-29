@@ -56,7 +56,7 @@ function markdown(value){
  return blocks.join("")||'<p class="kc-muted">Nog geen inhoud</p>';
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
-let centralQuery="",centralType="",centralCollection="",centralStatus="active";
+let centralQuery="",centralType="",centralCollection="",centralStatus="active",searchReturn=null;
 let focusWriting=false,journalSearch="",recipeFactor=1;
 const recipeChecks=new Map();
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
@@ -132,14 +132,14 @@ function quickExpand(){
 function renderHome(){
  const items=C.search(read(),{sort:'recent'}),pinned=items.filter(n=>n.pinned).slice(0,3);
  return header('Notities',false,btn('+ Notitie','new','',true))+
- centralSearchBox()+quickBox()+
+ centralSearchBox()+
  '<button type="button" class="kc-inbox" data-kc="inbox">'+symbol('folder')+'<strong>Inbox</strong><span>'+counts('inbox')+' items</span><span aria-hidden="true">›</span></button>'+
  (read().knowledge?.hierarchyVersion!==1?'<p class="kc-muted">Je bestaande verzamelingen zijn behouden.</p>'+btn('Nieuwe indeling toevoegen','migrate'):'')+
- '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections())+
+ '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections())+'<details class="mg-fold kc-quick-optional"'+(quickDraft?' open':'')+'><summary>Snelle notitie</summary><div class="mg-fold-body">'+quickBox()+'</div></details>'+
  (pinned.length?'<div class="kc-section-head"><h3>Vastgezet</h3></div>'+itemRows(pinned):'')+
- '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn('Alle items','all')+'</div>'+itemRows(items.slice(0,4))+
+ '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn('Alle items','all')+'</div>'+itemRows(items.filter(n=>!pinned.some(p=>p.id===n.id)).slice(0,4))+
  (legacyCollections().length?'<details class="kc-legacy"><summary>Bestaande verzamelingen · '+legacyCollections().length+'</summary><p class="kc-muted">Behouden zonder automatische herindeling. Via Bewerken kies je zelf een bovenliggende verzameling.</p>'+collectionRows(legacyCollections())+'</details>':'')+
- '<div class="kc-hub-shortcuts">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div>';
+ '<details class="mg-fold kc-hub-shortcuts"><summary>Beheer</summary><div class="mg-fold-body">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div></details>';
 }
 function centralSearchBox(){return '<label class="kc-central-search">Zoek in notities en taken<input type="search" data-kc-input="central-search" value="'+esc(centralQuery)+'" placeholder="Titel, inhoud of tags…" autocomplete="off"></label>';}
 function highlight(value,query){const text=String(value||""),word=String(query||"").trim();if(!word)return esc(text);const lower=text.toLocaleLowerCase('nl-NL'),q=word.toLocaleLowerCase('nl-NL');let start=0,out='',i;while((i=lower.indexOf(q,start))!==-1){out+=esc(text.slice(start,i))+'<mark>'+esc(text.slice(i,i+word.length))+'</mark>';start=i+word.length;}return out+esc(text.slice(start));}
@@ -480,6 +480,7 @@ function startEdit(id){
  dirty=false;screen="edit";rememberBase();render();
 }
 function back(){
+ if(screen==="detail"&&searchReturn){const y=searchReturn.y;searchReturn=null;screen="search";render();requestAnimationFrame(()=>window.scrollTo(0,y));return;}
  if(screen==='sort'){screen=sortState.parentId?'collection':'home';if(sortState.parentId)collectionId=sortState.parentId;sortState=null;render();return;}
  if(screen==='collection-editor'){cancelCollection();return;}
  if(screen==='collection'){const c=allCollections().find(c=>c.id===collectionId);if(c?.parentId){collectionId=c.parentId;render();return;}screen='home';render();return;}
@@ -544,7 +545,7 @@ function click(event){
  if(op==='recipe-shop-confirm'){const n=read().notes.find(n=>n.id===selectedId);if(!n)return;const rows=ingredientRows(n.recipe).filter((x,i)=>host.querySelector('[data-mg-shop="'+i+'"]')?.checked);if(!rows.length){notify('Kies ten minste één ingrediënt.');return;}if(!confirm(rows.length+' ingrediënten op je boodschappenlijst zetten?'))return;if(bridge.addRecipeIngredients?.(rows)){screen='detail';notice='Ingrediënten toegevoegd.';render();}else notify('Ingrediënten niet opgeslagen. Probeer opnieuw.');return;}
 
  if(op==="central-clear"){centralQuery="";centralType="";centralCollection="";centralStatus="active";screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
- if(op==="search-result"){if(!flush())return;if(el.dataset.kind==="task")bridge.openRelated?.("task",id);else{if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}return;}
+ if(op==="search-result"){if(!flush())return;searchReturn={y:window.scrollY};if(el.dataset.kind==="task")bridge.openRelated?.("task",id);else{if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}return;}
  if(["selection-task","passage-task","convert-task"].includes(op)){
   const field=host.querySelector('#kc-body'),n=editing||read().notes.find(n=>n.id===selectedId);
   const passage=(op==="passage-task"?host.querySelector('#kc-task-passage')?.value:field?field.value.slice(field.selectionStart,field.selectionEnd):window.getSelection()?.toString())?.trim()||"";
@@ -596,7 +597,7 @@ function click(event){
  }
  if(op==="file"){openFile(id).catch(e=>notify(e.message));return}
  if(op==="remove-file"){
-  if(!confirm("Bijlage loskoppelen van deze notitie? Het bestand wordt niet direct definitief gewist."))return;
+  const note=read().notes.find(n=>n.id===selectedId),attachment=note?.attachments?.find(a=>a.id===id);if(!confirm("Bijlage “"+(attachment?.name||"Onbekende bijlage")+"” loskoppelen van “"+(note?.title||"Deze notitie")+"”? Het bestand wordt niet direct definitief gewist."))return;
   if(!flush())return;
   if(write(s=>{const n=s.notes.find(x=>x.id===selectedId);C.updateNote(s,n.id,{attachments:(n.attachments||[]).filter(a=>a.id!==id)});})){startEdit(selectedId);}return;
  }

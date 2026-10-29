@@ -93,6 +93,7 @@
   for(const card of document.querySelectorAll('#lifeContent>.life-panel,#lifeContent .ft-panel,#mementoFinanceV9 .m9-card,.kc-inbox')){
    if(card.dataset.mgLight)continue;card.dataset.mgLight='1';card.classList.add('mg-light','mg-lightfall');
   }
+  window.MementoLayout?.refresh();
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(decorate);}
  document.addEventListener('click',e=>{
@@ -101,7 +102,7 @@
   if(b.dataset.mgNextStep!==undefined){const items=[...b.parentElement.querySelectorAll('p,li')];if(items.length){items.forEach(x=>x.classList.remove('mg-current-step'));const i=Number(b.dataset.mgNextStep)%items.length;items[i].classList.add('mg-current-step');items[i].scrollIntoView({block:'nearest'});b.dataset.mgNextStep=String(i+1);}return;}
   if(b.dataset.mgRoutineJump!==undefined){const card=$('#mementoFitness [data-mg-routine="'+b.dataset.mgRoutineJump+'"]');if(card){card.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});const first=card.querySelector('button');first?.focus({preventScroll:true});}return;}
   if(b.dataset.mgDuty){const C=window.MementoFitnessCore,duty=C.duty(b.dataset.mgDuty),host=b.closest('.memento-calendar-panel');host.querySelectorAll('[data-mg-duty]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));host.querySelector('.mg-roster-detail').textContent=new Date(duty.date+'T12:00:00Z').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'short'})+' · '+duty.label+' · '+duty.time+(duty.carryUntil?' · vorige nachtdienst tot '+duty.carryUntil:'');return;}
-  if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return;}
+  if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));window.MementoLayout?.refresh();return;}
   if(b.dataset.mgClearFinance){const input=$('#'+b.dataset.mgClearFinance);if(input){input.value=input.tagName==='SELECT'?'all':'';input.dispatchEvent(new Event('change',{bubbles:true}));schedule();}return;}
   if(b.dataset.mgConfirmBalance){const input=$('#'+b.dataset.mgConfirmBalance);if(input){input.dataset.mgConfirm='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.mgConfirm;}return;}
  });

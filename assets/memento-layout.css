@@ -1,0 +1,93 @@
+/* Compact reading order for the approved mobile proposal. */
+body .ml-panel[hidden]{display:none!important}
+body .ml-tabs{display:flex;gap:6px;margin:12px 0 14px;flex-wrap:wrap}
+body .ml-tabs button{flex:1;min-width:72px;min-height:46px;border:1px solid var(--mg-line);border-radius:12px;padding:9px 10px;background:#173d2de0;color:var(--mg-ink);font:inherit;font-size:13px}
+body .ml-tabs button[aria-pressed=true]{background:#c4dfbb;color:#173b25}
+body .ml-fold{grid-column:1/-1;min-width:0}
+body .ml-fold>.mg-fold-body{display:block}
+body .ml-fold .ml-fold{margin:10px 0}
+body .ml-fold>.mg-fold-body>.card,body .ml-fold>.mg-fold-body>.analysis-controls{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;margin:0!important}
+body[data-compass-area=finance] .app .page-head{margin-bottom:12px!important}
+body[data-compass-area=finance] .app .page-head p{display:none}
+body .app .memento-finance-context{font-size:12px;line-height:1.4;margin:6px 0 12px;padding:6px 0;background:transparent;border:0}
+body #view-analysis .analysis-tabs{margin:0 0 8px}
+body #view-analysis .analysis-controls .analysis-filter-summary{font-size:12px}
+body #view-analysis .analysis-stats-grid{grid-template-columns:1fr 1fr!important;gap:9px}
+body #view-analysis .analysis-stats-grid>.stat-card{padding:13px!important}
+body #view-analysis .analysis-overview-grid{grid-template-columns:1fr}
+body #view-analysis .analysis-stats-grid .stat-value{font-size:25px}
+body #view-transactions #txSummary .ml-fold .tx-summary-card{display:flex!important;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:10px;background:transparent;border:0;box-shadow:none}
+body #view-transactions #txSummary .ml-fold{flex:1 1 100%;margin:0}
+body #view-transactions .transaction-row{min-height:74px;border-radius:0!important;border:0!important;border-bottom:1px solid var(--mg-line)!important;box-shadow:none!important;backdrop-filter:none!important;background:#123a2bcc!important;padding:12px!important}
+body #view-transactions .tx-amount{white-space:nowrap}
+body #view-transactions .tx-advanced-field{min-width:0}
+body #view-budgets #budgetStats{display:flex;flex-direction:column;gap:8px}
+body #view-budgets #budgetStats>.stat-card .stat-value{font-size:38px}
+body #view-budgets #budgetStats>.stat-card .stat-top{font-size:14px}
+body #view-budgets #budgetStats .ml-fold{margin:0}
+body #view-budgets #budgetStats .ml-fold .stat-card{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;padding:10px!important}
+body #view-budgets .two-col{grid-template-columns:1fr}
+body #view-budgets .budget-item{padding:12px 0;border-bottom:1px solid var(--mg-line)}
+body #view-budgets .report-highlight{font-size:12px}
+body #view-accounts .account-cards{grid-template-columns:1fr!important;gap:0;border:1px solid var(--mg-line);border-radius:21px;overflow:hidden;background:var(--mg-surface)}
+body #view-accounts .ml-account-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 12px;border:0!important;border-radius:0!important;border-bottom:1px solid var(--mg-line)!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none!important}
+body #view-accounts .ml-account-row:last-child{border-bottom:0!important}
+body #view-accounts .ml-account-row>.card-head{margin:0}
+body #view-accounts .ml-account-row>.card-head>.pill{display:none}
+body #view-accounts .ml-account-row>.balance-number{font-size:22px;margin:0;white-space:nowrap}
+body #view-accounts .ml-account-row>.ml-fold{grid-column:1/-1;grid-row:4;margin:0}
+body #view-accounts .ml-account-row>[data-account-transactions]{min-height:44px;text-align:left}
+body #view-accounts .ml-account-check{font-size:12px}
+body #view-planning .planner-grid{grid-template-columns:1fr!important}
+body #view-planning .goal-grid{grid-template-columns:1fr!important;gap:10px}
+body #view-planning .goal-card{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+body #view-planning .goal-card h3{margin:0;font-size:17px}
+body #view-planning .goal-card>.goal-top{grid-column:2;grid-row:1;margin:0}
+body #view-planning .goal-icon{display:none}
+body #view-planning .goal-amount{font-size:24px;margin:0}
+body #view-planning .goal-progress,body #view-planning .goal-actions,body #view-planning .goal-contribution-history{grid-column:1/-1}
+body #view-planning .bill-row{grid-template-columns:42px minmax(0,1fr);gap:9px;padding:12px 0}
+body #view-planning .bill-amount{grid-column:2;display:flex;align-items:center;flex-wrap:wrap;gap:7px;text-align:left}
+body #view-planning .bill-amount .btn{margin:0}
+body #view-smartbuy .smartbuy-layout,body #view-moneycoach .moneycoach-layout{display:block!important}
+body .ml-coach-choice{display:grid;gap:6px;font-size:13px;margin:0 0 12px}
+body .ml-coach-choice select{width:100%}
+body #view-moneycoach .moneycoach-guide{margin-top:12px}
+body #view-moneycoach .moneycoach-fields{display:block}
+body #view-moneycoach .moneycoach-fields>.form-field{margin-bottom:12px}
+body #view-moneycoach .moneycoach-data-note{font-size:12px}
+body #view-receipts #receiptForm .form-grid{grid-template-columns:1fr!important}
+body .ml-check-head{font-size:14px;font-weight:650;margin-bottom:16px}
+body .ml-day-context{flex-basis:100%;font-size:12px;margin:0;color:var(--mg-muted)}
+body #lifeApp .mg-day-head{row-gap:7px}
+body #lifeApp .ml-wish-row{position:relative;padding:14px!important}
+body #lifeApp .ml-wish-row h2{font-size:16px}
+body #lifeApp .ml-wish-row .mg-fold>summary{min-height:44px;padding:9px 11px}
+body #lifeApp .ml-wish-row .life-card-actions{gap:6px}
+body #lifeApp .ml-wish-row .life-btn{min-height:44px!important;font-size:12px}
+body #lifeApp .memento-calendar-panel>.memento-cal-intro{display:none}
+body #lifeApp .memento-calendar-panel>.memento-gcal-day-section{margin:12px 0}
+body #lifeApp .ml-agenda-add{min-height:46px;padding:10px 14px;border:1px solid var(--mg-line);border-radius:12px;background:#c4dfbb;color:#173b25;font:inherit;font-weight:650}
+body #lifeApp[data-mg-agenda=month] .memento-cal-grid{display:grid!important}
+body #lifeApp[data-mg-agenda=month] [data-ml-fold=agenda-month]{display:block}
+body #lifeApp .kc-quick-optional>.mg-fold-body{padding:12px}
+body #lifeApp .kc-quick-optional .kc-quick{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none}
+body #lifeApp .kc-collection-row.kc-art-row{min-height:82px}
+body #lifeApp .kc-art-row .kc-art-wrap{width:76px;flex-basis:76px}
+body #lifeApp .kc-art-row .kc-collection-icon{display:none}
+body #lifeApp .kc-hub-shortcuts{display:block}
+body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font-size:12px;letter-spacing:.08em;margin:8px 4px 0}
+@media(max-width:700px){
+ body[data-compass-area=finance] .app .topbar{height:48px!important;min-height:48px;padding:5px 15px!important;position:static!important}
+ body[data-compass-area=finance] .app .topbar .month-select{padding:7px 9px;font-size:12px!important;min-height:38px!important}
+ body #view-analysis .analysis-stats-grid .stat-value{font-size:23px}
+ body #view-accounts .ml-account-row>.balance-number{font-size:20px}
+ body #lifeApp .kc-header .kc-head-label>span{display:none}
+ body #lifeApp .kc-header h2{font-size:27px}
+ body #lifeApp .kc-header{margin-bottom:12px}
+ body #view-moneycoach .moneycoach-layout>.card,body #view-smartbuy .smartbuy-layout>.card{margin-bottom:12px}
+}
+
+body #lifeApp[data-life-view=agenda] .life-page-head{display:flex!important}
+
+body #lifeApp .ml-future-count{margin-left:auto;font-size:12px;color:var(--mg-muted)}
