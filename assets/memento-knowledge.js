@@ -443,10 +443,11 @@ function write(mutator,token){
  try{const ok=bridge.write(life=>{C.ensure(life);try{mutator(life);C.validate(life);}catch(e){notify(e.message);throw e;}},token);if(!ok&&!notice)notify("Opslaan mislukt. Je invoer is behouden; sluit de melding en probeer opnieuw.");return ok;}catch(e){notify(e.message);return false;}
 }
 function flush(){
- if(!editing||!dirty)return true;
+ if(!editing)return true;
+ if(editing.journal&&host?.querySelector("[data-kc-manual-health]:invalid")){setSaveIndicator("Controleer de gezondheidswaarden");notify("Controleer de ingevulde gezondheidswaarden.");return false;}
+ if(!dirty)return true;
  rememberDraft();
  if(selectedId&&editingBase&&JSON.stringify(read().notes.find(n=>n.id===selectedId)||null)!==editingBase){notify("Deze notitie is inmiddels gewijzigd. Kopieer je concept; de nieuwere versie blijft behouden.");setSaveIndicator("Opslaan mislukt · nieuwere versie");return false;}
- if(editing.journal&&host?.querySelector("[data-kc-manual-health]:invalid")){setSaveIndicator("Controleer de gezondheidswaarden");notify("Controleer de ingevulde gezondheidswaarden.");return false;}
  const draft=C.clone(editing),life=read();
  setSaveIndicator("Opslaan…");
  if(!draft.title.trim())draft.title=draft.journal?draft.journal.date:String(draft.body||"").trim().split("\n")[0].slice(0,85)||"Naamloze notitie";
