@@ -74,7 +74,9 @@
   }
   // Finances/settings retain native controls and handlers, with contextual administration.
   for(const card of document.querySelectorAll('#view-settings .settings-card')){if(card.closest('.mg-fold'))continue;const h=card.querySelector('h3');if(h){const d=fold([card],h.textContent);d.dataset.mgSetting='1';}}
-  const budget=$('#budgetTotalForm');if(budget&&!budget.closest('.mg-fold'))fold([budget],'Totaalbudget instellen');
+  const budget=$('#totalBudgetForm');if(budget&&!budget.closest('.mg-fold'))fold([budget],'Totaalbudget instellen');
+  const backup=$('#lifeApp[data-life-view=backup] #lifeContent');if(backup){for(const card of backup.querySelectorAll('.life-panel')){const title=card.querySelector('h2')?.textContent;if(title&&title!=='Volledige Memento-back-up'&&!card.closest('.mg-fold'))fold([card],title);}}
+  const scenario=$('#scenarioAmount')?.closest('.card');if(scenario&&!scenario.closest('.mg-fold')){const heading=scenario.previousElementSibling;const nodes=heading?.classList.contains('section-row')?[heading,scenario]:[scenario];fold(nodes,'Scenario berekenen · verandert je gegevens niet');}
   const receipt=$('#receiptImportJson');if(receipt&&!receipt.closest('.mg-fold')){const nodes=[receipt.closest('.form-field')||receipt.parentElement,$('#receiptApplyJson')].filter(Boolean);fold(nodes,'JSON van ChatGPT invoeren');}
   for(const host of document.querySelectorAll('#view-smartbuy,#view-receipts')){if(host.querySelector('.mg-research-steps,.mg-receipt-steps'))continue;const steps=document.createElement('div');steps.className=host.id==='view-smartbuy'?'mg-research-steps':'mg-receipt-steps';for(const label of host.id==='view-smartbuy'?['Vraag','Eisen','Vergelijk','Keuze']:['Invoer','Controleren','Koppelen']){const s=document.createElement('span');s.textContent=label;steps.append(s);}host.querySelector('.page-head')?.after(steps);}
   for(const card of document.querySelectorAll('#lifeContent>.life-panel,#lifeContent .ft-panel,#mementoFinanceV9 .m9-card,.kc-inbox')){

@@ -579,7 +579,7 @@ function click(event){
  if(op==="collections"){screen="collections";render();return}
  if(["all","inbox","archive","trash","pinned"].includes(op)){filtersExpanded=false;screen=op;query="";kindFilter="";tagFilter="";viewOverride="";render();return}
  if(op==="mode"){filtersExpanded=true;viewOverride=id;render();return}
- if(op==="open"){selectedId=id;screen="detail";render();return}
+ if(op==="open"){if(selectedId!==id)recipeFactor=1;selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
  if(op==="save"){stopDiaryDictation();const journalDate=editing?.journal?.date||"";clearTimeout(timer);if(flush()){screen=journalDate?"collection":selectedId?"detail":"collection";if(journalDate)journalFilter=journalDate;editing=null;render();}return}
  if(op==="preview"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}

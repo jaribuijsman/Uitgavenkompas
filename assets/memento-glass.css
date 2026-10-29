@@ -149,3 +149,5 @@ body #view-transactions #txSummary{display:flex;gap:10px;flex-wrap:wrap;margin:9
 body #view-transactions #txSummary .tx-summary-card{display:none}
 body #view-transactions #txSummary .tx-summary-net{display:flex;flex-direction:row;align-items:center;gap:12px;flex:1;padding:11px 14px;min-height:48px;background:#153d2b99;border:1px solid var(--mg-line);border-radius:12px}
 body #view-transactions #txSummary .tx-summary-net small{display:none}
+
+body :is(.form-grid,.life-form-grid)>.mg-fold.wide{grid-column:1/-1}

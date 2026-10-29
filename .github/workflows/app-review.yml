@@ -46,7 +46,13 @@ jobs:
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
       - name: Actual mobile browser suite
-        run: node tests/${{ matrix.suite }}.cjs
+        run: |
+          if [ "${{ matrix.suite }}" = "knowledge-v2-browser" ]; then
+            node tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/glass-fixture.json"
+            MEMENTO_VISUAL_FIXTURE="$RUNNER_TEMP/glass-fixture.json" node tests/knowledge-v2-browser.cjs
+          else
+            node tests/${{ matrix.suite }}.cjs
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

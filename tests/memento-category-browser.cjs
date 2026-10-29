@@ -68,6 +68,7 @@ async function nav(page){
    assert.equal(await page.locator('#splitSection').isVisible(),false);
    assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('[form=txForm][type=submit]').click();
+   await page.waitForFunction(()=>JSON.parse(localStorage.getItem('uitgavenkompas_v1')).transactions.some(t=>t.description==='Nieuwe wegenbelasting'),{},{timeout:2000}).catch(async e=>{console.log('SAVE DIAGNOSTIC',await page.evaluate(()=>({invalid:[...document.querySelectorAll('#txForm input,#txForm select,#txForm textarea')].filter(x=>!x.validity.valid).map(x=>({id:x.id,value:x.value,message:x.validationMessage})),body:document.querySelector('#modalContent')?.innerText,notices:[...document.querySelectorAll('[role=alert]')].map(x=>x.textContent)})),errors);throw e;});
    const all=(await state()).transactions,added=all.find(t=>t.description==='Nieuwe wegenbelasting');
    assert(added,'New transaction persisted');
    assert.equal(added.category,'Vaste lasten');assert.equal(added.subcategory,'Wegenbelasting');
@@ -104,7 +105,7 @@ async function nav(page){
    assert.equal(revised.splits[1].category,'Boodschappen');
    await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
    assert.equal(await page.locator('#splitSection').isVisible(),true);
-   await page.locator('#txNote').fill('Geen splitsing verliezen');
+   await require('./helpers/reveal.cjs')(page,'#txNote');await page.locator('#txNote').fill('Geen splitsing verliezen');
    await page.locator('[form=txForm][type=submit]').click();
    revised=(await state()).transactions.find(t=>t.id===added.id);
    assert.equal(revised.splits.length,2);
