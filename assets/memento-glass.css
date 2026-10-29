@@ -160,3 +160,5 @@ body #lifeApp .mg-cycle-strip{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
 body #lifeApp .mg-cycle-strip button{flex:1;min-width:80px;min-height:48px;padding:8px;background:#173d2de0;color:var(--mg-ink);border:1px solid var(--mg-line);border-radius:12px;font:inherit;font-size:12px}
 body #view-analysis .donut-svg{max-width:210px!important}
 body #view-planning .goal-card{padding:14px!important}
+/* Fixed viewport menus must escape glass stacking/containing blocks while open. */
+body #lifeApp:has(.life-task-menu[open]),body #lifeApp :has(.life-task-menu[open]){backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;overflow:visible!important;will-change:auto!important}

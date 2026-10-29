@@ -78,3 +78,8 @@ De definitieve functionele versie is **7fe9f833d6633e2d926021bcafec422f608307b3*
 De nieuwe browseracceptatie bedient op 360/393/412 px de bewaarde taakselectie, taak met stappen, transactie met Subcategorie/Uitgever, contextdoorklik, niet-destructieve receptschaling, geselecteerde boodschappen en ingrediëntbewerking. De bestaande taken en fitness blijven objectgelijk. Alle 18 hoofdtabbladen worden op die drie breedtes op horizontale overloop gecontroleerd en vastgelegd. De overige bestaande suites toetsen de fout-/herstelroutes en binaire bijlagen. De beperkte toesteltestdekking hierboven blijft van toepassing.
 
 De publicatie voegt uitsluitend dit bewijsdocument toe bovenop de geteste functionele commit. Er worden tijdens vrijgave geen verdere functies of stijlen aangepast. De nieuwe serviceworker gebruikt releasecache `memento-pwa-v65-20261029-app-glass-v1`; alle nieuwe assets staan in de eigen offlinecache.
+
+
+### Aanvullende publicatiecontrole: taakmenu
+
+De afzonderlijke day-portal-workflow op `009e072` vond een werkelijke overlap: `backdrop-filter` en `isolation` op glaskaarten maakten een eigen containing/stacking context rond het bestaande vaste taakmenu. De bottom-navigatie kon daardoor de verwijderactie afdekken. Tijdens een geopend menu worden uitsluitend op zijn voorouders deze effecten opgeheven; de bestaande menugeometrie en herstelbare acties blijven behouden. De specifieke suite `patches-001-002-004-browser` is toegevoegd aan de vrijgavematrix. Cache v66 en het CSS-versietoken zijn samen bijgewerkt. Dit is herstel van een publicatiefout, geen uitbreiding van het ontwerp.
