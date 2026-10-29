@@ -28,6 +28,8 @@ assert(!portal.includes('localStorage.setItem('),'No portal writes to life/finan
 const core=JSON.parse(fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CORE = (\[[^;]+\]);/)[1]);
 assert(core.includes('./assets/memento-start.css?v=20261029-dayportal-grid-v2'));
 assert(core.includes('./assets/memento-start.js?v=20261029-dayportal-grid-v2'));
+assert(core.includes('./assets/memento-start-agenda.svg'));
+assert(core.includes('./assets/memento-start-tasks.svg'));
 let count=0;
 for(const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)){
  if(/\bsrc=|type="(?:application\/json|text\/plain|importmap)"/.test(m[1])||!m[2].trim())continue;
