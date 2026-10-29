@@ -94,6 +94,15 @@ const server=http.createServer((req,res)=>{
    const m=life.notes?.find(n=>n.journal?.date==="2026-10-28")?.journal?.manualHealth;
    return m?.sleepMinutes===320&&m.steps===undefined;
   });
+  // Invalid invoer mag het formulier niet sluiten of de getypte tekst weggooien.
+  await page.locator('[data-kc-manual-health="steps"]').fill("-1");
+  await page.locator('[data-kc="save"]').first().click();
+  assert.equal(await page.locator('[data-kc-manual-health="steps"]').inputValue(),"-1");
+  await page.locator('[data-kc-manual-health="steps"]').fill("13456");
+  await page.waitForFunction(()=>{
+   const life=JSON.parse(localStorage.getItem("compass_life_preview_v1")||"{}");
+   return life.notes?.find(n=>n.journal?.date==="2026-10-28")?.journal?.manualHealth?.steps===13456;
+  });
   assert.deepEqual(errors,[]);
 
   const dir=process.env.JOURNAL_SHOT_DIR;
