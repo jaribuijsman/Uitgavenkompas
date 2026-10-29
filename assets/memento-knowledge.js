@@ -59,8 +59,8 @@ const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-bt
 let centralQuery="",centralType="",centralCollection="",centralStatus="active";
 let focusWriting=false;
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
-let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
-let diaryRecognizer=null,diaryDictating=false,diaryEpoch=0,diaryRestart=0,diaryRecognitionBase="",diarySpeechDate="",diarySessionPreview="";
+let quickDraft="",quickListening=false;
+let diaryDictating=false;
 let diaryKeyboardBase=0;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 const read=()=>bridge.read();
@@ -108,22 +108,15 @@ function quickBox(){
 }
 function quickMsg(t){const el=host?.querySelector("#kc-quick-status");if(el)el.textContent=t;}
 function quickPaint(){const el=host?.querySelector("#kc-quick-mic");if(!el)return;el.classList.toggle("kc-listening",quickListening);el.setAttribute("aria-pressed",String(quickListening));el.setAttribute("aria-label",quickListening?"Stop inspreken":"Spraak transcriberen");}
-function quickStop(){quickToken++;const r=quickSpeech;quickSpeech=null;quickListening=false;if(r)try{r.stop()}catch(e){}quickPaint();}
+function quickStop(){
+ const field=host?.querySelector("#kc-quick-text");
+ if(root.MementoDictation?.isActive(field))root.MementoDictation.stop();
+ quickListening=false;quickPaint();
+}
 function quickToggleSpeech(){
- if(quickSpeech){quickStop();quickMsg("Opname gestopt. Controleer de tekst en bewaar.");return;}
- const field=host?.querySelector("#kc-quick-text");if(!field)return;
- const Speech=root.SpeechRecognition||root.webkitSpeechRecognition;
- if(!Speech){quickMsg("Spraakherkenning ontbreekt. Gebruik de microfoon van je Android-toetsenbord.");field.focus();return;}
- if(!root.isSecureContext){quickMsg("Inspreken vereist een beveiligde verbinding.");return;}
- root.MementoVoice?.stop?.();
- const token=++quickToken,initial=quickDraft.trim();let r;
- try{r=new Speech();}catch(e){quickMsg("Microfoon niet beschikbaar.");return;}
- quickSpeech=r;r.lang="nl-NL";r.continuous=false;r.interimResults=true;r.maxAlternatives=1;
- r.onstart=()=>{if(token!==quickToken)return;quickListening=true;quickPaint();quickMsg("Luisteren… Controleer de tekst na afloop.");};
- r.onresult=e=>{if(token!==quickToken)return;const words=[];for(let i=0;i<e.results.length;i++){const t=String(e.results[i][0]?.transcript||"").trim();if(t)words.push(t);}quickDraft=[initial,words.join(" ")].filter(Boolean).join(" ").slice(0,20000);const el=host?.querySelector("#kc-quick-text");if(el)el.value=quickDraft;};
- r.onerror=e=>{if(token!==quickToken)return;const msg={"not-allowed":"Microfoontoegang geweigerd.","no-speech":"Geen spraak herkend.","network":"Spraakherkenning niet bereikbaar.","audio-capture":"Microfoon niet beschikbaar."};quickStop();quickMsg(msg[e.error]||"Inspreken mislukt.");};
- r.onend=()=>{if(token!==quickToken)return;quickSpeech=null;quickListening=false;quickPaint();quickMsg(quickDraft.trim()?"Transcriptie klaar. Controleer en bewaar.":"Geen tekst herkend. Probeer opnieuw.");};
- try{r.start()}catch(e){quickStop();quickMsg("Opname kon niet starten.");}
+ const field=host?.querySelector("#kc-quick-text"),button=host?.querySelector("#kc-quick-mic");
+ if(!field)return;
+ root.MementoDictation.start(field,{button,onState:on=>{quickListening=on;quickPaint();},onStatus:quickMsg});
 }
 function quickSave(){
  quickStop();const body=quickDraft.trim();
@@ -263,91 +256,16 @@ function paintDiarySpeech(){
  el.textContent=diaryDictating?"■ Stop":"◉ Transcriberen";
 }
 function diarySpeechEditor(){
- return screen==="edit"&&Boolean(editing?.journal)&&editing.journal.date===diarySpeechDate&&Boolean(host?.querySelector("#kc-body"));
-}
-// Chrome Android can emit successive whole-sentence hypotheses; they are replacements, not separate sentences.
-function diarySpeechMerge(parts){
- let text="";
- for(const part of parts){
-  const words=String(part||"").trim();if(!words)continue;
-  if(!text){text=words;continue;}
-  const previous=text.toLocaleLowerCase("nl-NL"),current=words.toLocaleLowerCase("nl-NL");
-  if(current===previous)continue;
-  if(current.startsWith(previous+" ")){text=words;continue;}
-  text+=" "+words;
- }
- return text;
-}
-function diarySpeechValue(words){
- const prefix=diaryRecognitionBase,separator=prefix&&!/\s$/.test(prefix)?" ":"";
- return (prefix+separator+words).slice(0,20000);
-}
-function diaryCommitSpeech(words){
- if(!words||!diarySpeechEditor())return;
- const next=diarySpeechValue(words);
- if(next!==editing.body){editing.body=next;schedule();}
- const field=host.querySelector("#kc-body");
- if(field&&field.value!==next){field.value=next;growText();}
+ return screen==="edit"&&Boolean(editing?.journal)&&root.MementoDictation?.isActive(host?.querySelector("#kc-body"));
 }
 function stopDiaryDictation(message="",keepPreview=true){
- if(diaryDictating&&keepPreview&&diarySessionPreview)diaryCommitSpeech(diarySessionPreview);
- diaryDictating=false;diaryEpoch++;clearTimeout(diaryRestart);diaryRestart=0;
- const r=diaryRecognizer;diaryRecognizer=null;
- if(r){r.onresult=null;r.onerror=null;r.onend=null;try{r.stop();}catch(e){}}
- diarySessionPreview="";diarySpeechDate="";paintDiarySpeech();diarySpeechStatus(message);
-}
-function startDiarySession(epoch){
- if(!diaryDictating||epoch!==diaryEpoch||!diarySpeechEditor()||document.visibilityState==="hidden")return;
- const Speech=root.SpeechRecognition||root.webkitSpeechRecognition;
- let r;
- try{r=new Speech();}catch(e){stopDiaryDictation("Spraakherkenning kon niet starten.");return;}
- diaryRecognizer=r;diaryRecognitionBase=editing.body||"";diarySessionPreview="";
- r.lang="nl-NL";r.continuous=false;r.interimResults=true;r.maxAlternatives=1;
- r.onstart=()=>{if(epoch===diaryEpoch&&diaryDictating)diarySpeechStatus("Luisteren…");};
- r.onresult=event=>{
-  if(epoch!==diaryEpoch||!diarySpeechEditor())return;
-  const final=[],interim=[];
-  for(let i=0;i<event.results.length;i++){
-   const result=event.results[i],words=String(result[0]?.transcript||"").trim();
-   if(!words)continue;
-   (result.isFinal===false?interim:final).push(words);
-  }
-  const confirmed=diarySpeechMerge(final);
-  diarySessionPreview=diarySpeechMerge([confirmed,diarySpeechMerge(interim)]);
-  if(confirmed)diaryCommitSpeech(confirmed);
-  const field=host.querySelector("#kc-body");if(!field)return;
-  const value=diarySpeechValue(diarySessionPreview);
-  if(field.value!==value){field.value=value;growText();}
-  if(value.length>=20000)stopDiaryDictation("Maximum van 20.000 tekens bereikt.");
- };
- r.onerror=event=>{
-  if(epoch!==diaryEpoch)return;
-  if(event.error==="no-speech")return;
-  const messages={"not-allowed":"Microfoontoegang geweigerd.","service-not-allowed":"Spraakdienst niet toegestaan.","audio-capture":"Microfoon niet beschikbaar.","network":"Spraakherkenning tijdelijk niet bereikbaar.","language-not-supported":"Nederlands niet beschikbaar.","aborted":"Spraakherkenning onderbroken."};
-  stopDiaryDictation(messages[event.error]||"Spraakherkenning onderbroken. Probeer opnieuw.");
- };
- r.onend=()=>{
-  if(epoch!==diaryEpoch)return;
-  if(diarySessionPreview)diaryCommitSpeech(diarySessionPreview);
-  diaryRecognizer=null;
-  if(!diaryDictating)return;
-  if(!diarySpeechEditor()||document.visibilityState==="hidden"){stopDiaryDictation();return;}
-  diarySpeechStatus("Luisteren…");
-  diaryRestart=setTimeout(()=>{diaryRestart=0;startDiarySession(epoch);},350);
- };
- try{r.start();}catch(e){stopDiaryDictation("Herstarten van spraakherkenning mislukt. Probeer opnieuw.");}
+ if(diaryDictating)root.MementoDictation.stop({discardPreview:!keepPreview,message});
+ diaryDictating=false;paintDiarySpeech();
 }
 function toggleDiaryDictation(){
- if(diaryDictating){stopDiaryDictation("Transcriptie gestopt.");return;}
- const field=host?.querySelector("#kc-body");
+ const field=host?.querySelector("#kc-body"),button=host?.querySelector('[data-kc="journal-speech"]');
  if(!editing?.journal||!field)return;
- const Speech=root.SpeechRecognition||root.webkitSpeechRecognition;
- if(!Speech){diarySpeechStatus("Spraakherkenning niet beschikbaar in deze browser.");return;}
- if(!root.isSecureContext){diarySpeechStatus("Open Memento via HTTPS om te transcriberen.");return;}
- quickStop();root.MementoVoice?.stop?.();
- diaryDictating=true;diarySpeechDate=editing.journal.date;
- const epoch=++diaryEpoch;paintDiarySpeech();diarySpeechStatus("Luisteren…");
- startDiarySession(epoch);
+ root.MementoDictation.start(field,{button,onState:on=>{diaryDictating=on;paintDiarySpeech();},onStatus:diarySpeechStatus});
 }
 function diaryAI(){
  const android=/Android/i.test(navigator.userAgent);
@@ -437,7 +355,7 @@ function renderEditor(){
  '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
  (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
  '<label for="kc-body">Inhoud</label>'+
- '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+"</div>"+
+ '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+root.MementoDictation.button("kc-body")+"</div>"+
  '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>"+
  (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
  '<label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label>"+
@@ -814,7 +732,7 @@ function updateDiaryKeyboard(){
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
  if(field.dataset.kcInput==="central-search"){centralQuery=field.value;screen="search";const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="central-search"]');input?.focus();input?.setSelectionRange(cursor,cursor);return;}
- if(field.dataset.kcInput==="quick"){if(quickSpeech)quickStop();quickDraft=field.value;return;}
+ if(field.dataset.kcInput==="quick"){quickDraft=field.value;return;}
  if(field.dataset.kcInput==="search"){filtersExpanded=true;query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
  if(colDraft&&ArtUI?.changed(field,host))return;
@@ -845,7 +763,7 @@ function onInput(event){
     return {name:name.slice(0,120),amount:amount.slice(0,40),unit:unit.slice(0,40)};
   });
  }else editing[change]=field.value;
- if(change==="body"){if(diaryDictating)stopDiaryDictation("Transcriptie gestopt om te typen.",false);if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
+ if(change==="body"){if(diaryDictating&&!event.mementoDictation)stopDiaryDictation("Transcriptie gestopt om te typen.",false);if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
  if(change==="kind"){
   if(field.value==="recipe"&&!editing.recipe)editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
   schedule();render();return;
@@ -882,13 +800,13 @@ function mount(container,b){
  render();
  if(!recoveryChecked){recoveryChecked=true;recoverDraft();}
 }
-function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickSpeech||diaryDictating);}
+function hasPending(){return Boolean(editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickListening||diaryDictating);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();stopDiaryDictation();if(hasPending())flush();}});
 window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||quickDraft.trim()||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
 document.addEventListener("toggle",e=>{if(e.target.id==="kc-filter-drawer")filtersExpanded=e.target.open;},true);
 document.addEventListener("focusin",e=>{
  if(e.target?.id!=="kc-body"||!editing?.journal||!host?.contains(e.target))return;
- if(diaryDictating)stopDiaryDictation("Transcriptie gestopt om te typen.");
+ if(diaryDictating)stopDiaryDictation("Transcriptie gestopt om te typen.",false);
  diaryKeyboardBase=Math.max(root.visualViewport?.height||0,root.innerHeight);
  updateDiaryKeyboard();
 });

@@ -1,0 +1,12 @@
+/* Shared dictation action, Memento compact controls. */
+.memento-dictate-btn{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:44px;min-height:44px;margin:7px 0 3px;padding:8px;border:1px solid #668570;border-radius:12px;background:#294936;color:#e8f4e8;font:700 17px/1 system-ui;cursor:pointer;touch-action:manipulation}
+.memento-dictate-btn svg{width:20px;height:20px;flex:none}
+.memento-dictate-btn.memento-dictating{background:#c4ddc8;color:#123423;border-color:#c4ddc8}
+.memento-dictate-btn:focus-visible{outline:3px solid #b6f2cc;outline-offset:2px}
+.memento-dictate-status{font-size:12px;line-height:1.4;color:#bbd0c2;margin:0 0 0 9px;vertical-align:middle}
+.memento-dictate-status:empty{display:none}
+#lifeDialog .memento-dictate-btn,#fitnessDialog .memento-dictate-btn{min-width:44px;min-height:44px}
+#view-smartbuy .memento-dictate-btn,#view-moneycoach .memento-dictate-btn{color:#eef8f1}
+#lifeApp[data-life-view=notes] .kc-format-bar .memento-dictate-btn{margin:0;margin-left:auto}
+#lifeApp[data-life-view=notes] .kc-editor-fields>.memento-dictate-btn{justify-self:start}
+@media(max-width:800px){.memento-dictate-btn{min-width:44px;min-height:44px}}

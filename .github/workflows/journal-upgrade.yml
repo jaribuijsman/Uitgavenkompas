@@ -5,6 +5,10 @@ on:
     paths:
       - 'assets/memento-knowledge-core.js'
       - 'assets/memento-knowledge-store.js'
+      - 'assets/memento-dictation.js'
+      - 'assets/memento-dictation.css'
+      - 'assets/memento-fitness.js'
+      - 'tests/dictation-regression.cjs'
       - 'assets/memento-knowledge.js'
       - 'assets/memento-knowledge.css'
       - 'index.html'
@@ -23,6 +27,9 @@ jobs:
         with:
           node-version: '24'
       - run: |
+          node --check assets/memento-dictation.js
+          node --check assets/memento-fitness.js
+          node tests/dictation-regression.cjs
           node --check assets/memento-knowledge.js
           node --check assets/memento-knowledge-core.js
           node --check assets/memento-knowledge-store.js
