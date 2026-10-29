@@ -56,6 +56,8 @@ body #view-moneycoach .moneycoach-guide{margin-top:12px}
 body #view-moneycoach .moneycoach-fields{display:block}
 body #view-moneycoach .moneycoach-fields>.form-field{margin-bottom:12px}
 body #view-moneycoach .moneycoach-data-note{font-size:12px}
+/* Step panels replace the old side-by-side receipt cards. */
+body #view-receipts .ml-receipt-layout{display:block}
 body #view-receipts #receiptForm .form-grid{grid-template-columns:1fr!important}
 body .ml-check-head{font-size:14px;font-weight:650;margin-bottom:16px}
 body .ml-day-context{flex-basis:100%;font-size:12px;margin:0;color:var(--mg-muted)}

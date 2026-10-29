@@ -84,7 +84,7 @@
    const steps=$('.mg-receipt-steps',receipt);if(steps)steps.remove();
    const form=$('#receiptForm'),intro=form?.closest('.card'),bundle=$('#receiptMonthStats')?.closest('.card');
    const head=$('#receiptList')?.previousElementSibling,list=$('#receiptList');
-   if(intro&&form){const input=document.createElement('section');input.className='card ml-receipt-entry';input.setAttribute('aria-label','Bon invoeren');intro.before(input);for(const n of [...intro.children])if(n!==form)input.append(n);
+   if(intro&&form){intro.parentElement.classList.add('ml-receipt-layout');const input=document.createElement('section');input.className='card ml-receipt-entry';input.setAttribute('aria-label','Bon invoeren');intro.before(input);for(const n of [...intro.children])if(n!==form)input.append(n);
     const check=document.createElement('div');check.className='ml-check-head';check.textContent='Controleer winkel, datum, totaal en productregels';form.prepend(check);
     tabs(receipt,'receipts',[['input','Invoer',[input]],['check','Controleren',[intro]],['link','Koppelen',[bundle,head,list]]],input);
    }
