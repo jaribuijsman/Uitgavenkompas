@@ -341,7 +341,7 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  if(manualHealth===undefined)manualHealth=previous?.manualHealth;
  if(!journalHasContent(body,{mood,checkin,audioOnly,selfCare,health,manualHealth}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
  if(String(body).length>20000||String(title).length>180)throw Error('Dagboektekst is te lang');
- const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);if(selfCare!==undefined)journal.selfCare=clone(selfCare);if(health!==undefined)journal.health=clone(health);if(manualHealth!==undefined)journal.manualHealth=clone(manualHealth);
+ const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);if(selfCare!==undefined)journal.selfCare=clone(selfCare);if(health!==undefined)journal.health=clone(health);if(manualHealth!==undefined&&manualHealth!==null)journal.manualHealth=clone(manualHealth);
  if(id){const old=life.notes.find(n=>n.id===id);if(old?.journal){if(checkin===undefined&&old.journal.checkin!==undefined)journal.checkin=clone(old.journal.checkin);if(audioOnly===undefined&&old.journal.audioOnly!==undefined)journal.audioOnly=old.journal.audioOnly;}}
  if(id){const old=life.notes.find(n=>n.id===id);if(!old?.journal)throw Error('Geen bestaande dagboeknotitie');return updateNote(life,id,{title:title.trim()||date,body,tags,journal});}
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
