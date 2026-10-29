@@ -356,3 +356,18 @@
 .kc-diary-health-metric{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;border-bottom:1px solid #385340;font-size:13px}
 .kc-diary-health-metric strong{color:#dceadd;font-variant-numeric:tabular-nums}
 .kc-diary-health-body>p:last-child{margin-top:12px;margin-bottom:0}
+
+/* Compact manual health entry. Existing imported summaries stay read-only. */
+#lifeApp[data-life-view="notes"] .kc-diary-health-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 14px;margin:0 0 8px;border-radius:10px;border:1px solid #729879;background:#294635;color:#e8f3e8;font-size:13px;font-weight:650;text-decoration:none;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-diary-health-link:focus-visible{outline:2px solid #d8ebd7;outline-offset:3px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-link span{font-size:17px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-body .kc-diary-health-date{font-size:11px;margin-bottom:12px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 9px;margin:12px 0}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid label{display:grid;align-content:start;gap:6px;min-width:0;color:#c7dacb;font-size:12px;line-height:1.35}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid input{box-sizing:border-box;width:100%;min-width:0;min-height:46px;padding:8px 11px;border:1px solid #57725f;border-radius:10px;background:#13291d;color:#edf5eb;font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid input:focus-visible{outline:2px solid #c4e1c9;outline-offset:1px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid input:invalid{border-color:#e5ad87}
+#lifeApp[data-life-view="notes"] .kc-diary-health-body .kc-diary-health-foot{margin:6px 0 0;font-size:11px;line-height:1.55}
+#lifeApp[data-life-view="notes"] .kc-diary-health-import{margin-top:12px;padding-top:9px;border-top:1px solid #385340}
+#lifeApp[data-life-view="notes"] .kc-diary-health-import>summary{min-height:44px;display:flex;align-items:center;color:#d8ebd9;font-size:12px;font-weight:600;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-diary-health-import .kc-diary-health-metric{padding:4px 0}
