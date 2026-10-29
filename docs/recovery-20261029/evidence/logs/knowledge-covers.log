@@ -1,0 +1,4 @@
+PASS 30 offline scenes and auto-selection
+PASS unchanged IDs and compatible legacy collection fields
+PASS validated secure cover metadata
+PASS ZIP round trip and missing-file fail closed

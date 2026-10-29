@@ -1,0 +1,14 @@
+PASS detect wrong parent
+PASS edit unrelated field keeps old value
+PASS do not erase unmatched subcategory on save
+PASS allow explicit clear
+PASS correct to valid parent
+PASS reject new incorrect combination
+PASS reject newly unknown categories
+PASS preserve historical unknown category
+PASS prevent removal of in-use subcategory
+PASS form retains old, validates on save and warns
+PASS one split row never overwrites the primary category
+PASS split removal is explicit and cannot silently discard split records
+PASS split rows are created only after user activates splitting
+PASS 13 category integrity cases

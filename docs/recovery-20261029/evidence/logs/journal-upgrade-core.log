@@ -1,0 +1,8 @@
+PASS Old diary with no check-in is preserved through validation
+PASS Sleep across calendar midnight and day-only check-in are stored without body text
+PASS Sleep after night shift can begin and end in daylight
+PASS Updating a saved check-in keeps IDs, existing tags and text history
+PASS Duplicate journal days and malformed metrics are rejected
+PASS Blank days without any diary content remain blocked
+PASS Legacy PDF & image signatures and recording MIME checks are retained
+PASS total 7

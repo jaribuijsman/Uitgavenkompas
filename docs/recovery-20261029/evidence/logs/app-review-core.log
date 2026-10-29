@@ -1,0 +1,18 @@
+PASS real expenses and boundary transfers have separate amounts
+PASS joint received amount of 900 remains visible without calling transfer salary
+PASS creditcard purchase counts once and internal repayment counts zero
+PASS refunds and split categories reconcile to net expenses in cents
+PASS date scope, old metadata and the original array are untouched
+PASS zero is zero rather than fabricated data
+PASS quantity "2"
+PASS quantity "1,5"
+PASS quantity "1/2"
+PASS quantity "1 1/2"
+PASS quantity ""
+PASS quantity "naar smaak"
+PASS quantity "1/0"
+PASS quantity "2–3"
+PASS scale never changes an unknown amount or its unit
+PASS saved task selections accept optional metadata
+PASS invalid or duplicate saved selections are rejected before import
+17 app review core checks passed.

@@ -1,0 +1,200 @@
+{
+  "checks": [
+    {
+      "width": 360,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 4,
+      "passed": [
+        "earned income/expenses/result separated from transfer receipts and account movement",
+        "local account and salary/month filters remain independent with exact context",
+        "active budgets first and all categories reachable",
+        "known payment compact, undo and exact same-handler double submit",
+        "visible roster night/free/year boundary",
+        "empty set rejected and valid set starts timestamp-based rest across reload",
+        "apparatus switch preserves completed and draft values and history",
+        "pause/reload resumes identity/input/position without finishing; finish is explicit"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 5,
+      "passed": [
+        "truthful export status and download destination guidance",
+        "failed incomplete ZIP cannot update export status; complete ZIP includes binary files",
+        "selected status contrast >=4.5 and primary task targets >=48 CSS pixels",
+        "closed drawer shows active filters",
+        "25% text enlargement and landscape viewport",
+        "successful save respects reduced motion",
+        "online reload followed by offline reload preserves exact existing data and PIN"
+      ]
+    },
+    {
+      "width": 360,
+      "phase": 5,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 4,
+      "passed": [
+        "earned income/expenses/result separated from transfer receipts and account movement",
+        "local account and salary/month filters remain independent with exact context",
+        "active budgets first and all categories reachable",
+        "known payment compact, undo and exact same-handler double submit",
+        "visible roster night/free/year boundary",
+        "empty set rejected and valid set starts timestamp-based rest across reload",
+        "apparatus switch preserves completed and draft values and history",
+        "pause/reload resumes identity/input/position without finishing; finish is explicit"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 5,
+      "passed": [
+        "truthful export status and download destination guidance",
+        "failed incomplete ZIP cannot update export status; complete ZIP includes binary files",
+        "selected status contrast >=4.5 and primary task targets >=48 CSS pixels",
+        "closed drawer shows active filters",
+        "25% text enlargement and landscape viewport",
+        "successful save respects reduced motion",
+        "online reload followed by offline reload preserves exact existing data and PIN"
+      ]
+    },
+    {
+      "width": 393,
+      "phase": 5,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 2,
+      "passed": [
+        "visible capture destination",
+        "direct note edit and move preserving identity/revisions",
+        "direct task date/step and reopen",
+        "one-action correct diary",
+        "long text in short viewport and writing mode",
+        "quota draft survives reload and retry",
+        "recovered stale draft cannot overwrite newer text"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 3,
+      "passed": [
+        "middle-content search with type/path/snippet and one-action filter reset",
+        "task result opens exact item",
+        "selected passage to task and bidirectional status after move/archive",
+        "recursive root counts",
+        "wish dossier preserves identity/name/budget/result and restores from trash",
+        "bought status and financial draft create zero transactions",
+        "full ZIP restores links and binary attachment identifiers"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 4,
+      "passed": [
+        "earned income/expenses/result separated from transfer receipts and account movement",
+        "local account and salary/month filters remain independent with exact context",
+        "active budgets first and all categories reachable",
+        "known payment compact, undo and exact same-handler double submit",
+        "visible roster night/free/year boundary",
+        "empty set rejected and valid set starts timestamp-based rest across reload",
+        "apparatus switch preserves completed and draft values and history",
+        "pause/reload resumes identity/input/position without finishing; finish is explicit"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 5,
+      "passed": [
+        "truthful export status and download destination guidance",
+        "failed incomplete ZIP cannot update export status; complete ZIP includes binary files",
+        "selected status contrast >=4.5 and primary task targets >=48 CSS pixels",
+        "closed drawer shows active filters",
+        "25% text enlargement and landscape viewport",
+        "successful save respects reduced motion",
+        "online reload followed by offline reload preserves exact existing data and PIN"
+      ]
+    },
+    {
+      "width": 412,
+      "phase": 5,
+      "passed": [
+        "signed preview and prompt",
+        "CSV cents",
+        "payment double click and correction",
+        "note path from actual collection",
+        "today excluded from history",
+        "PIN preserved"
+      ]
+    }
+  ],
+  "errors": []
+}

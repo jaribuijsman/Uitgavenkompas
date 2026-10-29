@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="nl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memento herstel — echte browserbeelden</title>
+<style>body{font:16px/1.5 system-ui;margin:24px;background:#eef1eb;color:#15271c}h1{font-size:24px}label{display:inline-flex;gap:8px;align-items:center;margin:0 16px 16px 0}select,a{min-height:44px}select{font:inherit;padding:6px}main{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;min-width:0}figcaption{font-weight:700;padding:8px}img{display:block;width:auto;max-width:100%;height:auto;background:#ddd;border:1px solid #889c8c}a{color:#163e2b}.intro{max-width:1000px} @media(max-width:650px){main{grid-template-columns:1fr}}</style>
+<h1>Memento — herstelcontrole</h1>
+<p class="intro">Werkelijk gerenderde Chromium-beelden met dezelfde fictieve fixture. Links de oorspronkelijke main <code>bf81413</code>, rechts herstelcode <code>250318a</code>. Browseremulatie is geen fysieke Android-test. De navigatiecapture kan binnen het scrollbare menu een andere scrollpositie hebben. Zie het audit- en resultaatverslag voor tests en beperkingen.</p>
+<p><a href="audit.md">Onderzoeksrapport</a> · <a href="resultaat.md">Herstelverslag</a> · <a href="evidence/pixel-comparison.json">Ruwe pixelverschillen</a> · <a href="evidence/recovery/report.json">0/1/43-takenmetingen</a></p>
+<label>Breedte <select id="width"><option>360</option><option selected>393</option><option>412</option><option>1280</option></select></label>
+<label>Scherm <select id="screen"></select></label>
+<main><figure><figcaption>Vóór herstel</figcaption><a id="beforeLink"><img id="before" alt="Memento vóór herstel"></a></figure><figure><figcaption>Na herstel</figcaption><a id="afterLink"><img id="after" alt="Memento na herstel"></a></figure></main>
+<script>
+const screens={day:'Mijn dag',tasks:'Taken',groceries:'Boodschappen',wishes:'Aankoopwensen',agenda:'Agenda',knowledge:'Notities',fitness:'Fitness',settings:'Back-up & instellingen',finance:'Financieel overzicht',transactions:'Transacties',analysis:'Analyse',accounts:'Rekeningen',budgets:'Budgetten',planning:'Planning & doelen',smartbuy:'Slim Kopen',moneycoach:'Geldcoach',receipts:'Bonnetjesscanner','finance-settings':'Instellingen & data','knowledge-list':'Notitielijst',checklist:'Checklist',recipe:'Recept',document:'Document',note:'Notitie',editor:'Editor','editor-short':'Editor korte viewport','transaction-modal':'Transactieformulier','fitness-plan':'Trainingsschema','fitness-progress':'Voortgang',navigation:'Navigatiemenu'};
+const width=document.getElementById('width'),screen=document.getElementById('screen');for(const [value,label]of Object.entries(screens)){const o=new Option(label,value,value==='tasks',value==='tasks');screen.add(o);}
+function update(){for(const phase of ['before','after']){const src='evidence/'+phase+'/'+width.value+'/'+screen.value+'.jpg';document.getElementById(phase).src=src;document.getElementById(phase+'Link').href=src;}}width.onchange=screen.onchange=update;update();
+</script></html>

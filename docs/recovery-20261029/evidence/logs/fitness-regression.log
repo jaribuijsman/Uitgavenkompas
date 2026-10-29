@@ -1,0 +1,26 @@
+PASS empty fitness state is valid and contains no user records
+PASS starter templates are independent and have no recorded results
+PASS short training retains core exercises without changing the routine
+PASS cannot overwrite an active workout or complete an empty one
+PASS completion advances rotation, closes only linked booking and is not duplicated
+PASS prescription edits never mutate recorded sessions
+PASS previous values use same movement, equipment and location only
+PASS progression requires two complete comparable exposures and exertion feedback
+PASS pain or inconsistent loads never produce a progression suggestion
+PASS full JSON round trip retains active drafts, rest deadline, notes and ids
+PASS invalid data, duplicate ids and impossible dates are rejected
+PASS canonical night shifts and existing bookings are excluded while legacy codes stay unchanged
+PASS archived routines are skipped without deleting training history
+PASS deleted sessions do not affect performance suggestions
+PASS personal split has three plans, real short variants and no demo results
+PASS legacy backups without a routineCycle field remain valid
+PASS an older unrelated routine stays saved but out of the active split
+PASS cycle skips archived plans but keeps references for restoration
+PASS corrupt cycle identifiers or duplicates are rejected
+PASS history matches exercise across routines but never mixes equipment
+PASS library offers known movement-specific equipment alternatives
+PASS short workouts remain shorter with old nonoptional routines
+PASS finishing an unrelated manual workout preserves the next A/B/C position
+PASS hypertrophy plan preserves custom exercises, IDs and notes
+PASS expanded exercise library has unique IDs and offline technique instructions
+25 fitness regression checks passed.

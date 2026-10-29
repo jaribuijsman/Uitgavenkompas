@@ -1,0 +1,6 @@
+PASS guarded migration retains the exact raw original in previous-version recovery
+PASS read-only bridges refuse collection create/edit/reorder/archive and journal writes
+PASS old JSON import remains valid and malformed v2 hierarchy is rejected before writes
+PASS old and new ZIP v2 retain attachment bytes, finance, hierarchy, journal and revisions
+PASS invalid diary dates, duplicate days and cycles fail validation on import
+5 knowledge v2 safety groups passed

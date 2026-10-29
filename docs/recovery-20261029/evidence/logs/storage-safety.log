@@ -1,0 +1,23 @@
+PASS only one simultaneous tab obtains the native session writer role
+PASS A's saved transaction survives a stale B save without false success
+PASS stale Life tasks and note drafts cannot replace A's persisted records
+PASS raw source verification rejects an external write even in the owner tab
+PASS stale permanent purge retains newer active records, files and recovery copies
+PASS quota failure rolls back memory, keeps draft fields and never reports success
+PASS cross-domain write failure restores both originals and preserves recovery snapshots
+PASS failed rollback retains exact original data in a durable journal and blocks writes
+PASS unavailable locks, insecure origins and rejected requests fail closed
+PASS closing or page-hiding an owner releases the slot without a persisted lease
+PASS description matches survive repeated read-only loads with all financial links intact
+PASS a zero opening balance is never changed to compensate description-matching transactions
+PASS old JSON data, IDs, amounts, Fitness and the unchanged ZIP format remain compatible
+PASS stale ZIP/JSON restore and direct bridge writes fail before replacing data or blobs
+PASS financial import and both previous-version restore buttons cannot bypass read-only mode
+PASS actual asynchronous ZIP restore retains exclusion across an awaited file write
+PASS ordinary full export uses a stable guarded snapshot and retains ZIP version 2
+PASS asynchronous restore excludes same-tab mutations and standalone bridges
+PASS normal purge commits both domains and preserves active/shared/recovery data
+PASS all persistent primary writes and file transactions go through the guard
+PASS historical HTML contains no executable writer and SW routes before cache lookup
+PASS new worker redirects a legacy URL even when an executable old response is cached
+22 phase-1 storage safety tests passed.

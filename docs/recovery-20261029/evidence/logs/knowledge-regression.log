@@ -1,0 +1,17 @@
+PASS legacy notes retain identities, categories and original content
+PASS reopening an existing collection does not add duplicate collections
+PASS legacy checklist checkboxes retain their state
+PASS checklist lines preserve IDs when reordered or edited
+PASS a collection rename preserves legacy note destination
+PASS create, edit, tags and filters work together
+PASS autosave snapshots are coalesced and restorable
+PASS recipe metadata survives revisions
+PASS soft delete and archiving are distinct states
+PASS collection IDs remain stable and independent of display name
+PASS real MIME signatures are required for PDFs and images
+PASS ZIP STORE archives roundtrip byte-identically
+PASS corrupted ZIP entries are rejected by CRC32
+PASS complete ZIP includes exact Life, Finance, preferences and attachment bytes
+PASS archive creation refuses missing attachments
+PASS archive creation refuses missing finance instead of exporting partial data
+16 knowledge regression checks passed.

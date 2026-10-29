@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Description migration removed; IDs, amounts and receipt links survive reload",
+    "Native two-tab transaction conflict preserves A and B's unsaved form",
+    "Two-tab Life conflict preserves saved task and quick-capture input",
+    "Stale purge is rejected before touching active tasks",
+    "Read-only note editor retains failed autosave/manual-save draft",
+    "Writable-tab quota failure preserves input and retry saves it",
+    "Real IndexedDB attachment write uses the owning operation token",
+    "UI ZIP export/restore retains complete objects and existing attachment IDs",
+    "Offline app obtains lock; historical URL is redirected by the current worker"
+  ],
+  "errors": []
+}
