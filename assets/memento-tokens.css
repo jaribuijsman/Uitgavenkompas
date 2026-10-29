@@ -1,5 +1,5 @@
 /* Shared presentation tokens. Matte chrome and forest glass are distinct materials;
-   their established values stay unchanged. Runtime viewport/notice values are set by ui.js. */
+   glass uses a denser tint instead of a live blur. Runtime viewport/notice values are set by ui.js. */
 :root {
   --m-bg:#101d16;
   --m-surface:#1b3024;
@@ -19,7 +19,7 @@
   --m-checkbox:22px;
   --m-checkbox-inset:13px;
   --m-notice-gap:0px;
-  --mg-surface:linear-gradient(135deg,rgba(36,75,54,.52),rgba(10,48,37,.50));
+  --mg-surface:linear-gradient(135deg,rgba(36,75,54,.86),rgba(10,48,37,.88));
   --mg-line:rgba(187,217,184,.25);
   --mg-ink:#edf4e9;
   --mg-muted:#c1d3c4;

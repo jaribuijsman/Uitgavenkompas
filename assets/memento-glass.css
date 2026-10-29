@@ -1,11 +1,11 @@
-/* Approved app review: shared forest glass, compact rows, functional motion.
-   Start portal, PIN/storage logic and all original artwork are independent. */
+/* Forest glass is a painted translucent material: no live backdrop sampling while
+   scrolling. Start portal, PIN/storage logic and original artwork are independent. */
 body #lifeApp,body[data-compass-area=finance]>.app{background:linear-gradient(180deg,#0a241a99,#062016b8 50%,#071b17ed),url('./pin-forests/bosruines.webp') center top/cover fixed!important;color:var(--mg-ink)}
 body #lifeApp .life-main,body[data-compass-area=finance] .app .main,body[data-compass-area=finance] .app .content{background:transparent!important}
-body #lifeApp .life-sidebar,body[data-compass-area=finance] .app .sidebar{background:#102c23e8!important;backdrop-filter:blur(18px);border-color:var(--mg-line)!important}
+body #lifeApp .life-sidebar,body[data-compass-area=finance] .app .sidebar{background:#102c23e8!important;backdrop-filter:none;border-color:var(--mg-line)!important}
 body #lifeApp .life-sidebar>p,body #lifeApp .life-footer{display:none}
 body #lifeApp :is(.life-panel,.life-task,.life-list,.life-empty,.life-day,.life-quick-add,.life-shopping-panel,.flow-hero,.kc-collection-card,.kc-inbox,.kc-item,.kc-quick,.kc-diary-write,.kc-diary-health,.kc-central-result,.ft-panel,.ft-strip),
-body[data-compass-area=finance] .app :is(.card,.stat-card,.account-card,.budget-card,.goal-card,.settings-card,.m9-card,.m9-list,.memento-disclosure,.memento-filter-drawer){background:var(--mg-surface)!important;border:1px solid var(--mg-line)!important;border-radius:21px!important;box-shadow:inset 0 1px 0 #ecffc31c,0 10px 24px #00160d26!important;backdrop-filter:blur(18px);color:var(--mg-ink)!important;isolation:isolate}
+body[data-compass-area=finance] .app :is(.card,.stat-card,.account-card,.budget-card,.goal-card,.settings-card,.m9-card,.m9-list,.memento-disclosure,.memento-filter-drawer){background:var(--mg-surface)!important;border:1px solid var(--mg-line)!important;border-radius:21px!important;box-shadow:inset 0 1px 0 #ecffc31c,0 10px 24px #00160d26!important;backdrop-filter:none;color:var(--mg-ink)!important;isolation:isolate}
 body #lifeApp :is(.life-list,.life-task){box-shadow:none!important}
 body #lifeApp .life-list .life-task{background:transparent!important;border:0!important;border-bottom:1px solid #cce5c31b!important;border-radius:0!important;backdrop-filter:none}
 body #lifeApp .life-list .life-task:last-child{border-bottom:0!important}
@@ -68,7 +68,7 @@ body #lifeApp .ft-session-progress{margin-bottom:12px}
 body #lifeApp .ft-exercise-panel.mg-exercise-fold>summary{font-size:15px;font-weight:650;min-height:54px;cursor:pointer}
 body #lifeApp .ft-exercise-panel.mg-exercise-fold[open]>summary{border-bottom:1px solid var(--mg-line);margin-bottom:12px}
 body #lifeApp .ft-sets input{min-height:48px!important}
-body #lifeApp .ft-timer{background:#183f2df0!important;border-color:var(--mg-line)!important;backdrop-filter:blur(16px)}
+body #lifeApp .ft-timer{background:#183f2df0!important;border-color:var(--mg-line)!important;backdrop-filter:none}
 body #lifeApp .ft-prev{padding:9px 0;border-bottom:1px solid var(--mg-line)}
 body #lifeApp .ft-cycle-label{background:#c4dfbb;color:#173b25}
 body[data-compass-area=finance] .app .m9-chart-tabs{display:flex;gap:5px;margin-top:15px}
@@ -85,18 +85,22 @@ body[data-compass-area=finance] .app .tx-page-head p{display:none}
 body[data-compass-area=finance] .app .tx-row,body[data-compass-area=finance] .app .tx-list-item{background:transparent!important}
 body .mg-receipt-steps,body .mg-research-steps{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0;color:var(--mg-muted);font-size:12px}
 body .mg-receipt-steps span,body .mg-research-steps span{border-bottom:2px solid #c4dfbb;padding:7px 6px}
-body :is(#lifeDialogPanel,#modalContent,.ft-dialog,.kc-cover-dialog){background:#102d24f5!important;border-color:#7f9f805c!important;color:#edf4e9!important;backdrop-filter:blur(22px);border-radius:22px!important}
+body :is(#lifeDialogPanel,#modalContent,.ft-dialog,.kc-cover-dialog){background:#102d24f5!important;border-color:#7f9f805c!important;color:#edf4e9!important;backdrop-filter:none;border-radius:22px!important}
 body :is(#lifeDialogPanel,#modalContent) :is(.life-dialog-footer,.modal-footer){background:#102d24f5!important;border-color:var(--mg-line)!important}
 body :is(#lifeApp,.app) :is(input,select,textarea,button,summary):focus-visible{outline:3px solid #f0d895!important;outline-offset:3px}
 body .memento-gold-small{filter:none!important}
-body #mementoQuickNav{background:#0d281fed!important;border-color:var(--mg-line)!important;backdrop-filter:blur(18px)}
-body #compassAreaBar{background:#102c23e8!important;backdrop-filter:blur(18px);border-color:var(--mg-line)!important}
-body #mementoMenuPanel{background:#102d24f5!important;border-color:var(--mg-line)!important;backdrop-filter:blur(22px)}
+body #mementoQuickNav{background:#0d281fed!important;border-color:var(--mg-line)!important;backdrop-filter:none}
+body #compassAreaBar{background:#102c23e8!important;backdrop-filter:none;border-color:var(--mg-line)!important}
+body #mementoMenuPanel{background:#102d24f5!important;border-color:var(--mg-line)!important;backdrop-filter:none}
 body .mg-light{animation:mg-arrive .32s ease-out both}
 @keyframes mg-arrive{from{transform:translateY(6px);opacity:.7}to{transform:translateY(0);opacity:1}}
 @keyframes mg-lightfall{from{transform:translateX(-110%)}to{transform:translateX(110%)}}
 body #lifeApp .mg-lightfall,body[data-compass-area=finance] .app .mg-lightfall{position:relative;overflow:hidden}
 body .mg-lightfall::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 25%,#f1deac12 50%,transparent 75%);transform:translateX(-110%);animation:mg-lightfall 1.3s ease-out 1 both}
+@media(max-width:800px){
+ /* A fixed image behind moving glass forces additional mobile paint work. */
+ body #lifeApp,body[data-compass-area=finance]>.app{background-attachment:scroll!important}
+}
 @media(max-width:700px){
  body #lifeApp .life-main,body[data-compass-area=finance] .app .content{padding-left:15px!important;padding-right:15px!important}
  body #lifeApp :is(.life-panel,.ft-panel),body[data-compass-area=finance] .app .card{padding:14px!important}
@@ -121,7 +125,7 @@ body #lifeApp[data-life-view=today] .life-page-head{display:none!important}
 body #lifeApp .mg-day-head{padding-top:4px}
 
 /* Real collection/shopping markup, retaining original illustrations and controls. */
-body #lifeApp .kc-collection-row.kc-art-row{min-height:82px;padding:10px 12px;background:var(--mg-surface)!important;border:1px solid var(--mg-line);border-radius:18px;box-shadow:inset 0 1px 0 #ecffc31c;backdrop-filter:blur(18px);gap:10px}
+body #lifeApp .kc-collection-row.kc-art-row{min-height:82px;padding:10px 12px;background:var(--mg-surface)!important;border:1px solid var(--mg-line);border-radius:18px;box-shadow:inset 0 1px 0 #ecffc31c;backdrop-filter:none;gap:10px}
 body #lifeApp .kc-art-row .kc-art-wrap{position:relative;inset:auto;order:-1;width:64px;height:60px;flex:0 0 64px;overflow:hidden;border-radius:12px}
 body #lifeApp .kc-art-row .kc-art-wrap:after{background:linear-gradient(0deg,#08241633,transparent)}
 body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon{width:30px;height:30px;flex:0 0 30px;background:transparent;backdrop-filter:none}

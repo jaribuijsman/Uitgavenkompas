@@ -1,0 +1,3860 @@
+{
+  "report": [
+    {
+      "width": 360,
+      "screen": "day",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "FORM",
+          "id": "lifeQuickForm",
+          "classes": "life-quick-add memento-quick-note memento-capture-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list life-overdue",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "tasks",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "groceries",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "wishes",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "agenda",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel memento-calendar-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "knowledge",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-inbox mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "fitness",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel ft-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "finance",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "transactions",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "analysis",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-chart-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-quick-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "accounts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "budgets",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "planning",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "smartbuy",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "researchWorkspace",
+          "classes": "card memento-research-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "moneycoach",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card moneycoach-guide",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "receipts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-receipt-entry",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "finance-settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "navigation-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "mementoMenuBackdrop",
+          "classes": "",
+          "value": "blur(4px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "mementoMenuPanel",
+          "classes": "",
+          "value": "blur(22px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "account-sheet-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "analysis-second-tab",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-donut-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "transaction-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "modalContent",
+          "classes": "modal large",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "task-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialog",
+          "classes": "open",
+          "value": "blur(5px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialogPanel",
+          "classes": "life-dialog-panel",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 393,
+      "screen": "day",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "FORM",
+          "id": "lifeQuickForm",
+          "classes": "life-quick-add memento-quick-note memento-capture-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list life-overdue",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "tasks",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "groceries",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "wishes",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "agenda",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel memento-calendar-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "knowledge",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-inbox mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "fitness",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel ft-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "finance",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "transactions",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "analysis",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-chart-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-quick-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "accounts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "budgets",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "planning",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "smartbuy",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "researchWorkspace",
+          "classes": "card memento-research-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "moneycoach",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card moneycoach-guide",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "receipts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-receipt-entry",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "finance-settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "navigation-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "mementoMenuBackdrop",
+          "classes": "",
+          "value": "blur(4px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "mementoMenuPanel",
+          "classes": "",
+          "value": "blur(22px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "account-sheet-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "analysis-second-tab",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-donut-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "transaction-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "modalContent",
+          "classes": "modal large",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "task-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialog",
+          "classes": "open",
+          "value": "blur(5px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialogPanel",
+          "classes": "life-dialog-panel",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 412,
+      "screen": "day",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "FORM",
+          "id": "lifeQuickForm",
+          "classes": "life-quick-add memento-quick-note memento-capture-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list life-overdue",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "tasks",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "groceries",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "wishes",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "agenda",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel memento-calendar-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "knowledge",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-inbox mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "fitness",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel ft-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "finance",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "transactions",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "analysis",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-chart-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-quick-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "accounts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "budgets",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "planning",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "smartbuy",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "researchWorkspace",
+          "classes": "card memento-research-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "moneycoach",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card moneycoach-guide",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "receipts",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-receipt-entry",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "finance-settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "navigation-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "mementoMenuBackdrop",
+          "classes": "",
+          "value": "blur(4px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "mementoMenuPanel",
+          "classes": "",
+          "value": "blur(22px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "account-sheet-open",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "analysis-second-tab",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-donut-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "transaction-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "modalContent",
+          "classes": "modal large",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "task-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialog",
+          "classes": "open",
+          "value": "blur(5px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialogPanel",
+          "classes": "life-dialog-panel",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "mementoQuickNav",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 1280,
+      "screen": "day",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "FORM",
+          "id": "lifeQuickForm",
+          "classes": "life-quick-add memento-quick-note memento-capture-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list life-overdue",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "tasks",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "groceries",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "wishes",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "ARTICLE",
+          "id": "",
+          "classes": "life-panel mg-wish-card ml-wish-row",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "agenda",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel memento-calendar-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "knowledge",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-inbox mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-collection-row kc-art-row",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "classes": "kc-item",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "fitness",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "life-panel ft-panel mg-exercise-fold mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel ft-panel mg-light mg-lightfall",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "settings",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "life-panel",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "finance",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "transactions",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "analysis",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-chart-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-quick-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card insight",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "accounts",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "budgets",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card stat-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "planning",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "smartbuy",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "researchWorkspace",
+          "classes": "card memento-research-panel",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "moneycoach",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card moneycoach-guide",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "receipts",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-receipt-entry",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "finance-settings",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "card ml-backup-link",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "classes": "memento-disclosure",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DETAILS",
+          "id": "mementoFinanceTrash",
+          "classes": "card memento-finance-trash",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "account-sheet-open",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "classes": "m9-card mg-light mg-lightfall",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "m9-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "analysis-second-tab",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "NAV",
+          "id": "",
+          "classes": "analysis-tabs",
+          "value": "blur(14px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card analysis-donut-card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "card",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "transaction-dialog",
+      "blur": [
+        {
+          "tag": "ASIDE",
+          "id": "",
+          "classes": "sidebar",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "",
+          "classes": "topbar",
+          "value": "blur(10px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "modalContent",
+          "classes": "modal large",
+          "value": "blur(22px)"
+        },
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "task-dialog",
+      "blur": [
+        {
+          "tag": "HEADER",
+          "id": "compassAreaBar",
+          "classes": "",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "life-list",
+          "value": "blur(18px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialog",
+          "classes": "open",
+          "value": "blur(5px)"
+        },
+        {
+          "tag": "DIV",
+          "id": "lifeDialogPanel",
+          "classes": "life-dialog-panel",
+          "value": "blur(22px)"
+        }
+      ],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    }
+  ],
+  "errors": []
+}

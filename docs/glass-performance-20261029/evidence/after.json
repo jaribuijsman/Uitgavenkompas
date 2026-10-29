@@ -1,0 +1,733 @@
+{
+  "report": [
+    {
+      "width": 360,
+      "screen": "day",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "tasks",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "groceries",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "wishes",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "agenda",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "knowledge",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "fitness",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "finance",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "transactions",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "analysis",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "accounts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "budgets",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "planning",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "smartbuy",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "moneycoach",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "receipts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "finance-settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "navigation-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "account-sheet-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "analysis-second-tab",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "transaction-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 360,
+      "screen": "task-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "width": 393,
+      "screen": "day",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "tasks",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "groceries",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "wishes",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "agenda",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "knowledge",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "fitness",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "finance",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "transactions",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "analysis",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "accounts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "budgets",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "planning",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "smartbuy",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "moneycoach",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "receipts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "finance-settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "navigation-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "account-sheet-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "analysis-second-tab",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "transaction-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 393,
+      "screen": "task-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "width": 412,
+      "screen": "day",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "tasks",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "groceries",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "wishes",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "agenda",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "knowledge",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "fitness",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "finance",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "transactions",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "analysis",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "accounts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "budgets",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "planning",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "smartbuy",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "moneycoach",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "receipts",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "finance-settings",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "navigation-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "account-sheet-open",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "analysis-second-tab",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "transaction-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 412,
+      "screen": "task-dialog",
+      "blur": [],
+      "background": "scroll, scroll",
+      "clientWidth": 412,
+      "scrollWidth": 412
+    },
+    {
+      "width": 1280,
+      "screen": "day",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "tasks",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "groceries",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "wishes",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "agenda",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "knowledge",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "fitness",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "settings",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "finance",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "transactions",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "analysis",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "accounts",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "budgets",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "planning",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "smartbuy",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "moneycoach",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "receipts",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "finance-settings",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "account-sheet-open",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "analysis-second-tab",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "transaction-dialog",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "width": 1280,
+      "screen": "task-dialog",
+      "blur": [],
+      "background": "scroll, fixed",
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    }
+  ],
+  "errors": []
+}
