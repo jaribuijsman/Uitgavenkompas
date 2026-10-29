@@ -1,8 +1,8 @@
 name: Knowledge 2 acceptance
 on:
   push:
-    branches: [main, work/memento-kc2-validation]
-    paths: ['assets/memento-knowledge*', 'index.html', 'sw.js', 'tests/knowledge-v2*', 'tests/helpers/knowledge-v2*', '.github/workflows/knowledge-v2.yml']
+    branches: [main, work/memento-kc2-validation, 'fix/memento-*']
+    paths: ['assets/memento-knowledge*', 'assets/memento-layout.css', 'index.html', 'sw.js', 'tests/knowledge-v2*', 'tests/helpers/knowledge-v2*', '.github/workflows/knowledge-v2.yml']
 permissions:
   contents: read
 concurrency:
