@@ -1,7 +1,7 @@
 name: Memento complete glass review
 on:
   push:
-    branches: [main, codex/app-glass-review]
+    branches: [main, codex/app-glass-review, 'fix/memento-*']
     paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/app-review.yml']
 permissions:
   contents: read
