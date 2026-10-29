@@ -1,13 +1,13 @@
 
-/* Memento Day Portal — reuse original forests, logo, weather canvas & pixel seasons. */
+/* Memento Design System — existing brand, weather and artwork; scoped portal surfaces. */
 #pinLock.memento-welcome-mode{display:flex!important;align-items:stretch!important;justify-content:stretch!important;padding:0!important}
 #pinLock.memento-welcome-mode #pinForm{display:none!important}
 #pinLock:not(.memento-welcome-mode) #mementoStart{display:none!important}
 #mementoStart{position:relative;z-index:4;display:flex;flex-direction:column;width:100%;height:100%;height:100dvh;min-height:0;overflow:hidden;color:#f1f8ef;font-family:inherit}
 #mementoStart *{box-sizing:border-box}
-#mementoStart .ms-shell{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none;padding:clamp(22px,4.6dvh,40px) 20px 8px;display:flex;flex-direction:column;align-items:center}
+#mementoStart .ms-shell{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none;padding:calc(env(safe-area-inset-top,0px) + clamp(22px,4.6dvh,40px)) 20px 16px;display:flex;flex-direction:column;align-items:center}
 #mementoStart .ms-shell::-webkit-scrollbar{display:none}
-#mementoStart .ms-content{width:100%;max-width:440px;margin:auto 0;display:flex;flex-direction:column;gap:0}
+#mementoStart .ms-content{width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:0}
 #mementoStart .ms-logo{width:min(75%,270px);height:auto;max-height:96px;object-fit:contain;filter:drop-shadow(0 3px 17px #020c09a1);align-self:center;animation:ms-rise .8s both}
 #mementoStart .ms-date{margin:7px 0 18px;color:#ead4a4;text-align:center;text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:2px;animation:ms-rise .8s .06s both}
 #mementoStart .ms-weather{border-radius:23px;background:linear-gradient(155deg,#142e25ed,#19382dcf);border:1px solid #b9debe5f;box-shadow:0 14px 35px #020c08a1,inset 0 1px #ffffff18;padding:17px 17px 12px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:ms-rise .85s .22s both}
@@ -27,29 +27,30 @@
 #mementoStart .ms-source{display:flex;align-items:center;justify-content:space-between;margin-top:7px;color:#b8cbba;gap:8px;font-size:10px}
 #mementoStart .ms-source a{color:#c6e5c6;text-decoration:underline;text-underline-offset:2px}
 #mementoStart .ms-refresh{background:none;border:0;color:#cce9cd;border-radius:10px;min-height:32px;min-width:38px;font-weight:700;font-size:14px}
-#mementoStart .ms-todayhead{margin:18px 1px 9px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+#mementoStart .ms-todayhead{margin:14px 1px 8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 #mementoStart .ms-todayhead b{font-size:11px;letter-spacing:.55px;color:#f0f5e7;white-space:nowrap}
-#mementoStart .ms-overview{font:inherit;color:#d2e3d4;background:transparent;border:0;padding:7px 0 7px 7px;font-size:10px;text-align:right;cursor:pointer;min-height:38px}
+#mementoStart .ms-overview{font:inherit;color:#d2e3d4;background:transparent;border:0;padding:7px 0 7px 7px;font-size:11px;text-align:right;cursor:pointer;min-height:44px}
 #mementoStart .ms-overview span{font-size:17px;vertical-align:-1px;margin-left:3px}
-#mementoStart .ms-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
-#mementoStart .ms-card{min-width:0;display:flex;flex-direction:column;border-radius:19px;overflow:hidden;padding:0 10px 10px;background:linear-gradient(160deg,rgba(18,53,40,.77),rgba(10,44,33,.90));border:1px solid rgba(181,219,183,.40);box-shadow:0 12px 30px #020b0780,inset 0 1px #ffffff18;backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);animation:ms-rise .85s .3s both}
-#mementoStart .ms-art{height:clamp(75px,12dvh,107px);flex-shrink:0;margin:0 -10px 4px;background-repeat:no-repeat;background-size:cover;background-position:center 56%;mask-image:linear-gradient(#000 72%,transparent);-webkit-mask-image:linear-gradient(#000 72%,transparent)}
+#mementoStart .ms-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+#mementoStart .ms-card{min-width:0;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;padding:0 12px 10px;background:linear-gradient(145deg,rgba(53,86,61,.62),rgba(9,39,29,.88) 55%,rgba(7,34,26,.94));border:1px solid rgba(191,218,170,.48);box-shadow:0 10px 26px #020b0766,inset 0 1px #f4e3ab33;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:ms-rise .85s .3s both}
+#mementoStart .ms-art{height:clamp(66px,10dvh,88px);flex-shrink:0;margin:0 -12px 0;background-repeat:no-repeat;background-size:cover;background-position:center 56%;mask-image:linear-gradient(#000 72%,transparent);-webkit-mask-image:linear-gradient(#000 72%,transparent)}
 #mementoStart .ms-art-agenda{background-image:url('./memento-start-agenda.svg')}
 #mementoStart .ms-art-tasks{background-image:url('./memento-start-tasks.svg')}
-#mementoStart .ms-cardhead{display:flex;align-items:center;justify-content:space-between;text-align:left;gap:3px;padding:0 2px;min-width:0;min-height:30px;width:100%;border:0;background:none;font:inherit;color:#f5fbf2;font-size:16px;font-weight:750;cursor:pointer}
+#mementoStart .ms-cardhead{display:flex;align-items:center;justify-content:space-between;text-align:left;gap:3px;padding:0 2px;min-width:0;min-height:44px;width:100%;border:0;background:none;font:inherit;color:#f5fbf2;font-size:16px;font-weight:750;cursor:pointer}
 #mementoStart .ms-cardhead span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #mementoStart .ms-arrow{font-size:23px;font-weight:400;color:#d9e8d7;line-height:1}
-#mementoStart .ms-cardcount{font-size:10px;line-height:1.4;color:#e3ece0;margin:2px 2px 8px;min-height:28px;overflow-wrap:anywhere}
+#mementoStart .ms-cardcount{font-size:12px;line-height:1.45;color:#d6e5d2;margin:0 2px 10px;min-height:35px;overflow-wrap:anywhere}
 #mementoStart .ms-rows{display:flex;flex-direction:column;flex:1;border-top:1px solid #c0d5bd24}
-#mementoStart .ms-cardrow{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0;min-height:50px;flex:1;width:100%;padding:7px 2px;text-align:left;background:transparent;border:0;border-bottom:1px solid #c0d5bd22;font:inherit;color:#edf7ed;cursor:pointer}
+#mementoStart .ms-cardrow{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0;min-height:58px;flex:1;width:100%;padding:9px 2px;text-align:left;background:transparent;border:0;border-bottom:1px solid #c0d5bd22;font:inherit;color:#edf7ed;cursor:pointer}
 #mementoStart .ms-cardrow:last-child{border-bottom:0}
 #mementoStart .ms-rowtext{min-width:0;display:flex;flex-direction:column;gap:3px;flex:1}
-#mementoStart .ms-rowtext strong{font-size:11px;line-height:1.27;font-weight:550;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
-#mementoStart .ms-rowtext small{font-size:10px;color:#bdcfbf;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+#mementoStart .ms-rowtext strong{font-size:13px;line-height:1.35;font-weight:650;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+#mementoStart .ms-rowtext small{font-size:12px;color:#c6d9c4;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
 #mementoStart .ms-rowarrow{font-size:19px;flex-shrink:0;color:#dae8d8}
-#mementoStart .ms-row-overdue{margin:1px -5px 0;padding:7px;border:1px solid #df877b55;border-radius:11px;background:linear-gradient(120deg,#563b37bb,#3c3431a5)}
-#mementoStart .ms-row-overdue .ms-rowtext small,#mementoStart .ms-row-overdue .ms-rowarrow{color:#ffa69b}
-#mementoStart .ms-cardrow:active,#mementoStart .ms-cardhead:active{opacity:.78}
+#mementoStart .ms-row-overdue{margin:4px -5px;padding:9px 7px;border:1px solid #dfaa7870;border-radius:12px;background:linear-gradient(120deg,#67492e99,#3b352ba5)}
+#mementoStart .ms-row-overdue .ms-rowtext small,#mementoStart .ms-row-overdue .ms-rowarrow{color:#ffd2a4}
+#mementoStart .ms-cardrow,#mementoStart .ms-cardhead{border-radius:10px;transition:background .18s ease,transform .2s cubic-bezier(.2,1.3,.3,1)}
+#mementoStart .ms-cardrow:active,#mementoStart .ms-cardhead:active{background-color:#c7dfbc18;transform:scale(.98)}
 #mementoStart .ms-footer{flex:0 0 auto;padding:12px 20px calc(15px + env(safe-area-inset-bottom));width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;background:linear-gradient(180deg,transparent,#081c17d9 15%,#081911f5);z-index:3}
 #mementoStart .ms-continue{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,440px);min-height:56px;border:0;border-radius:17px;background:linear-gradient(115deg,#d3eacb,#a9d6b5);color:#163423;font-size:16px;font-weight:800;letter-spacing:.2px;box-shadow:0 9px 26px #010c0875;cursor:pointer;padding:0 20px;transition:transform .23s cubic-bezier(.18,1.4,.28,1)}
 #mementoStart .ms-continue:active{transform:scale(.965)}
@@ -60,6 +61,6 @@
 #pinLock[data-mf-christmas=true] #mementoStart .ms-date{color:#f0c99d}
 body.memento-start-open{overflow:hidden!important}
 @keyframes ms-rise{from{opacity:0;transform:translateY(15px) scale(.978)}to{opacity:1;transform:translateY(0) scale(1)}}
-@media (max-height:730px){#mementoStart .ms-shell{padding-top:13px}#mementoStart .ms-logo{max-height:63px;width:210px}#mementoStart .ms-date{margin-bottom:12px}#mementoStart .ms-weather{padding:12px 14px 9px}#mementoStart .ms-hour{min-height:63px}#mementoStart .ms-art{height:68px}#mementoStart .ms-todayhead{margin-top:10px}}
-@media (max-width:360px){#mementoStart .ms-shell{padding-inline:13px}#mementoStart .ms-footer{padding-inline:13px}#mementoStart .ms-cards{gap:8px}#mementoStart .ms-card{padding-inline:8px}#mementoStart .ms-art{margin-inline:-8px}#mementoStart .ms-cardhead{font-size:14px}#mementoStart .ms-rowtext strong{font-size:10px}}
+@media (max-height:730px){#mementoStart .ms-shell{padding-top:calc(env(safe-area-inset-top,0px) + 13px)}#mementoStart .ms-logo{max-height:63px;width:210px}#mementoStart .ms-date{margin-bottom:12px}#mementoStart .ms-weather{padding:12px 14px 9px}#mementoStart .ms-hour{min-height:63px}#mementoStart .ms-art{height:68px}#mementoStart .ms-todayhead{margin-top:10px}}
+@media (max-width:360px){#mementoStart .ms-shell{padding-inline:13px}#mementoStart .ms-footer{padding-inline:13px}#mementoStart .ms-cards{gap:8px}#mementoStart .ms-card{padding-inline:8px}#mementoStart .ms-art{margin-inline:-8px}#mementoStart .ms-cardhead{font-size:14px}#mementoStart .ms-rowtext strong{font-size:12px}}
 @media(prefers-reduced-motion:reduce){#mementoStart *,#mementoStart *::before,#mementoStart *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

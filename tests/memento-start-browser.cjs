@@ -9,7 +9,7 @@ const server=http.createServer((req,res)=>{
  if(pathname==='/__seed__'){res.end('<!doctype html><title>Isolated fixture</title>');return}
  const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return}
- res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.webp':'image/webp','.png':'image/png','.json':'application/json'})[path.extname(file)]||'application/octet-stream');
+ res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml','.json':'application/json'})[path.extname(file)]||'application/octet-stream');
  res.end(fs.readFileSync(file));
 });
 (async()=>{
@@ -58,6 +58,15 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+   for(const height of [640,800]){
+    await page.setViewportSize({width,height});
+    await page.locator('#ms-task-row-second').scrollIntoViewIfNeeded();
+    const reachable=await page.locator('#ms-task-row-second').evaluate(el=>{const r=el.getBoundingClientRect(),f=document.querySelector('.ms-footer').getBoundingClientRect();return r.top>=0&&r.bottom<=f.top+1});
+    assert(reachable,'Last row remains reachable above fixed footer');
+    for(const selector of ['.ms-cardhead','.ms-cardrow','.ms-overview','.ms-continue']){
+     assert((await page.locator('#mementoStart '+selector).first().boundingBox()).height>=44,'Touch height '+selector);
+    }
+   }
    await page.locator('#ms-continue').click();
    await page.locator('#pinLock').waitFor({state:'hidden'});
    await page.evaluate(()=>{document.querySelector('#compassAreaBar [data-compass-area="finance"]').click();document.querySelector('#sideNav [data-view="settings"]').click();});
