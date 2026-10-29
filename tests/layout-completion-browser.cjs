@@ -9,6 +9,8 @@ const routes=[['life','today'],['life','tasks'],['life','agenda'],['life','groce
  for(const width of [393,360,412]){
  const ctx=await browser.newContext({viewport:{width,height:852},locale:'nl-NL',timezoneId:'Europe/Amsterdam',hasTouch:true,reducedMotion:'reduce'});await ctx.route('https://**/*',r=>r.abort());const page=await ctx.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>{errors.push(e.message);console.error('APPERROR',e.stack)});
  await page.goto(origin+'/__seed__');await page.evaluate(d=>{localStorage.setItem('uitgavenkompas_v1',JSON.stringify(d.finance));localStorage.setItem('compass_life_preview_v1',JSON.stringify(d.life));},data);await page.goto(origin);console.log('LOADED',width);await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoLayout);console.log('READY',width);
+ // Initialize the note hierarchy before the read-only navigation baseline; opening Notes may create predefined collections by design.
+ await nav(page,'life','notes');await page.waitForFunction(()=>Array.isArray(JSON.parse(localStorage.getItem('compass_life_preview_v1'))?.collections));
  const before=await page.evaluate(()=>({life:JSON.parse(localStorage.getItem('compass_life_preview_v1')),finance:JSON.parse(localStorage.getItem('uitgavenkompas_v1'))}));
  for(const [area,view]of routes){console.log('OPENING',width,area,view);await nav(page,area,view);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),view+' horizontal overflow');
  const shot=await page.screenshot({path:path.join(out,width+'-'+view+'.jpg'),type:'jpeg',quality:60,animations:'disabled'});if(width===393)console.log('MEMENTO_IMAGE:'+view+':'+shot.toString('base64'));

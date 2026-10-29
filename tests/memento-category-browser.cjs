@@ -41,7 +41,7 @@ async function nav(page){
    const state=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('uitgavenkompas_v1')));
    if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();
    await nav(page);
-   await page.locator('#view-transactions .tx-card [data-edit-tx="legacy-tax"]').first().click();
+   await page.locator('#view-transactions .tx-card .ml-tx-open[data-edit-tx="legacy-tax"]').first().click();
    assert.equal(await page.locator('#txCategory').inputValue(),'Boodschappen');
    assert.equal(await page.locator('#txSubcategory').inputValue(),'Wegenbelasting');
    assert.match(await page.locator('#txSubcategoryNotice').innerText(),/Vaste lasten/);
@@ -53,7 +53,7 @@ async function nav(page){
    assert.equal(tx.subcategory,'Wegenbelasting');
    assert.equal(tx.category,'Boodschappen');
    assert.equal(tx.amount,49.50);
-   await page.locator('#view-transactions .tx-card [data-edit-tx="legacy-tax"]').first().click();
+   await page.locator('#view-transactions .tx-card .ml-tx-open[data-edit-tx="legacy-tax"]').first().click();
    await page.locator('#txCategory').selectOption('Vaste lasten');
    assert.equal(await page.locator('#txSubcategory').inputValue(),'Wegenbelasting');
    await page.locator('[form=txForm][type=submit]').click();
