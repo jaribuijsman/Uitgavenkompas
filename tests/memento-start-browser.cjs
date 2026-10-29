@@ -19,7 +19,7 @@ const server=http.createServer((req,res)=>{
   browser=await chromium.launch({args:['--no-sandbox','--disable-dev-shm-usage']});
   const fixture=await require('./helpers/visual-fixture.cjs').fixture();
   const date='2026-10-28';
-  fixture.life.tasks=[1,2,3,4].map(i=>({...task('portal-t'+i,'Voorbeeldtaak '+i),date}));
+  fixture.life.tasks=[...([1,2,3,4].map(i=>({...task('portal-t'+i,'Voorbeeldtaak '+i),date}))),{...task('portal-late','Leuke outfit scoren'),date:'2026-10-27'}];
   fixture.life.appointments=[
    {id:'portal-a',title:'Tandarts',date,time:'09:30',endTime:'10:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'},
    {id:'portal-b',title:'Afspraak',date,time:'15:30',endTime:'16:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'}
@@ -46,7 +46,14 @@ const server=http.createServer((req,res)=>{
    await page.locator('#mementoStart').waitFor({state:'visible'});
    await page.waitForFunction(()=>document.querySelectorAll('#ms-hourly .ms-hour').length===6);
    assert.match(await page.locator('#ms-events').innerText(),/2\s*afspraken/);
-   assert.match(await page.locator('#ms-tasks').innerText(),/4\s*taken/);
+   assert.match(await page.locator('#ms-tasks').innerText(),/4 vandaag · 1 achterstallig/);
+   assert.equal(await page.locator('#ms-task-first-title').innerText(),'Leuke outfit scoren');
+   assert.equal(await page.locator('#ms-task-first').innerText(),'1 dag te laat');
+   assert.equal(await page.locator('#mementoStart .ms-card').count(),2);
+   assert.equal(await page.locator('#mementoStart .ms-greeting').count(),0);
+   assert.equal(await page.locator('#mementoStart .ms-footer small').count(),0);
+   const rects=await page.locator('#mementoStart .ms-card').evaluateAll(xs=>xs.map(x=>({y:x.getBoundingClientRect().y,w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height})));
+   assert(Math.abs(rects[0].w-rects[1].w)<1 && Math.abs(rects[0].h-rects[1].h)<1 && Math.abs(rects[0].y-rects[1].y)<1,'Symmetric cards');
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
    assert.equal(await page.locator('#pinForm').isVisible(),false);
@@ -77,7 +84,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('#mementoStart').waitFor({state:'visible'});
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.deepEqual(errors,[],'No page errors');
-   console.log('PASS weather, life counts and manual PIN at '+width+'px');
+   console.log('PASS weather, symmetric cards, overdue task and manual PIN at '+width+'px');
    await context.close();
   }
  }finally{if(browser)await browser.close();await new Promise(done=>server.close(done))}

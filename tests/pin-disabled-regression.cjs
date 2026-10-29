@@ -26,8 +26,8 @@ assert.match(css,/#pinLock\.memento-welcome-mode #pinForm\{display:none!importan
 assert(!portal.includes('fetch('),'No second external weather API or personal data upload');
 assert(!portal.includes('localStorage.setItem('),'No portal writes to life/financial records');
 const core=JSON.parse(fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CORE = (\[[^;]+\]);/)[1]);
-assert(core.includes('./assets/memento-start.css?v=20261028-dayportal-v1'));
-assert(core.includes('./assets/memento-start.js?v=20261028-dayportal-v1'));
+assert(core.includes('./assets/memento-start.css?v=20261029-dayportal-grid-v2'));
+assert(core.includes('./assets/memento-start.js?v=20261029-dayportal-grid-v2'));
 let count=0;
 for(const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)){
  if(/\bsrc=|type="(?:application\/json|text\/plain|importmap)"/.test(m[1])||!m[2].trim())continue;

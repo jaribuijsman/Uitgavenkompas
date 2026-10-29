@@ -8,81 +8,105 @@
  const hour=()=>Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Amsterdam',hour:'2-digit',hourCycle:'h23'}).format(new Date()));
  const isLocked=()=>{try{return localStorage.getItem(PIN_KEY)==='1'}catch{return false}};
  const root=document.createElement('section');
- root.id='mementoStart';root.setAttribute('aria-labelledby','mementoStartHeading');
- root.innerHTML='<div class="ms-shell"><div class="ms-content"><img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90"><div class="ms-date" id="ms-date">Vandaag</div><h2 class="ms-greeting" id="mementoStartHeading">Welkom thuis.</h2><p class="ms-intro">Een blik op je dag, voordat je verdergaat.</p><section class="ms-weather" aria-label="Weersverwachting Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section><div class="ms-todayhead"><b>JOUW DAG</b><span>Veeg door je overzicht</span></div><div class="ms-track" id="ms-track" tabindex="0" aria-label="Afspraken en taken, veeg horizontaal"><button class="ms-card" type="button" data-ms-view="agenda"><span class="ms-cardtop">Agenda <span class="ms-arrow">↗</span></span><strong class="ms-number" id="ms-events">— <span>afspraken</span></strong><span class="ms-carddetail" id="ms-event-next">Je agenda wordt geladen</span></button><button class="ms-card" type="button" data-ms-view="today"><span class="ms-cardtop">Mijn dag <span class="ms-arrow">↗</span></span><strong class="ms-number" id="ms-tasks">— <span>taken</span></strong><span class="ms-carddetail" id="ms-task-next">Je taken worden geladen</span></button></div><div class="ms-dots"><button type="button" data-ms-slide="0" aria-current="true" aria-label="Afspraken bekijken"></button><button type="button" data-ms-slide="1" aria-current="false" aria-label="Taken bekijken"></button></div></div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button><small>Reflect · Refine · Conquer</small></div>';
+ root.id='mementoStart';root.setAttribute('aria-label','Memento dagoverzicht');
+ root.innerHTML=`<div class="ms-shell"><div class="ms-content">
+<img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90">
+<div class="ms-date" id="ms-date">Vandaag</div>
+<section class="ms-weather" aria-label="Weersverwachting Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
+<div class="ms-todayhead"><b>JOUW DAG</b><button class="ms-overview" type="button" data-ms-view="today">Bekijk volledig overzicht <span aria-hidden="true">›</span></button></div>
+<div class="ms-cards" aria-label="Agenda en taken">
+<section class="ms-card ms-card-agenda" aria-labelledby="ms-agenda-title">
+<div class="ms-art ms-art-agenda" aria-hidden="true"></div>
+<button class="ms-cardhead" type="button" data-ms-view="agenda"><span id="ms-agenda-title">Agenda</span><span class="ms-arrow" aria-hidden="true">›</span></button>
+<p class="ms-cardcount" id="ms-events" aria-live="polite">Agenda laden…</p>
+<div class="ms-rows">
+<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-rowtext"><strong id="ms-event-first-title">Vandaag</strong><small id="ms-event-first">Afspraken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
+<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-rowtext"><strong id="ms-event-second-title">Morgen</strong><small id="ms-event-second">Afspraken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
+</div></section>
+<section class="ms-card ms-card-tasks" aria-labelledby="ms-tasks-title">
+<div class="ms-art ms-art-tasks" aria-hidden="true"></div>
+<button class="ms-cardhead" type="button" data-ms-view="today"><span id="ms-tasks-title">Mijn taken</span><span class="ms-arrow" aria-hidden="true">›</span></button>
+<p class="ms-cardcount" id="ms-tasks" aria-live="polite">Taken laden…</p>
+<div class="ms-rows">
+<button class="ms-cardrow" id="ms-task-row-first" type="button" data-ms-view="tasks"><span class="ms-rowtext"><strong id="ms-task-first-title">Vandaag</strong><small id="ms-task-first">Taken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
+<button class="ms-cardrow" id="ms-task-row-second" type="button" data-ms-view="today"><span class="ms-rowtext"><strong id="ms-task-second-title">Overige taken</strong><small id="ms-task-second">Taken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
+</div></section></div></div></div>
+<div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
  const one=id=>document.getElementById(id);
- const track=one('ms-track');
- let active=0,warned=false;
  function setFocusBlocked(blocked){
   for(const el of [document.querySelector('.app'),document.getElementById('lifeApp'),document.getElementById('compassAreaBar')])if(el)el.inert=blocked;
  }
  function showWelcome(){
   if(isLocked())return showPin();
-  lock.classList.add('visible','memento-welcome-mode');
-  lock.setAttribute('aria-labelledby','mementoStartHeading');
+  lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
   setFocusBlocked(true);refreshDay();refreshWeather();
  }
  function showPin(){
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
-  lock.setAttribute('aria-labelledby','pinTitle');
+  lock.removeAttribute('aria-label');lock.setAttribute('aria-labelledby','pinTitle');
   document.body.classList.remove('memento-start-open');document.body.classList.add('pin-locked');
   setFocusBlocked(true);
  }
  function leave(){
-  lock.classList.remove('visible','memento-welcome-mode');
-  document.body.classList.remove('memento-start-open','pin-locked');
-  setFocusBlocked(false);
+  lock.classList.remove('visible','memento-welcome-mode');document.body.classList.remove('memento-start-open','pin-locked');setFocusBlocked(false);
  }
  function navigate(view){
   try{
-   const current=document.body.dataset.compassArea;
-   if(current!=='life')document.querySelector('#compassAreaBar [data-compass-area="life"]')?.click();
+   if(document.body.dataset.compassArea!=='life')document.querySelector('#compassAreaBar [data-compass-area="life"]')?.click();
    document.querySelector('#lifeNavigation [data-life-view="'+view+'"]')?.click();
   }catch{}
  }
  root.querySelector('#ms-continue').addEventListener('click',()=>{if(isLocked()){showPin();return}leave()});
  root.querySelectorAll('[data-ms-view]').forEach(btn=>btn.addEventListener('click',()=>{
-  if(isLocked()){showPin();return}
-  leave();navigate(btn.dataset.msView);
+  if(isLocked()){showPin();return}leave();navigate(btn.dataset.msView);
  }));
- root.querySelectorAll('[data-ms-slide]').forEach(btn=>btn.addEventListener('click',()=>{
-  const i=Number(btn.dataset.msSlide);active=i;
-  track.scrollTo({left:i*track.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
-  updateDots();
- }));
- function updateDots(){
-  active=Math.max(0,Math.min(1,Math.round(track.scrollLeft/Math.max(1,track.clientWidth*.9))));
-  root.querySelectorAll('[data-ms-slide]').forEach((btn,i)=>btn.setAttribute('aria-current',String(i===active)));
- }
- let ticking=false;
- track.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{ticking=false;updateDots()})}},{passive:true});
- track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const target=Math.min(1,Math.max(0,active+(e.key==='ArrowRight'?1:-1)));track.scrollTo({left:target*track.clientWidth,behavior:'smooth'})}});
+ function setRow(prefix,title,detail){one(prefix+'-title').textContent=title;one(prefix).textContent=detail;}
  function refreshDay(){
-  const iso=date(),fmt=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'});
+  const iso=date(),tomorrow=new Date(Date.parse(iso+'T12:00:00Z')+86400000).toISOString().slice(0,10);
+  const fmt=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'});
   one('ms-date').textContent=fmt.format(new Date());
-  const h=hour();one('mementoStartHeading').textContent=h<11?'Goedemorgen.':h<17?'Goedemiddag.':'Goedenavond.';
   let s;try{s=JSON.parse(localStorage.getItem(LIFE_KEY)||'null')}catch{}
   if(!s||!Array.isArray(s.tasks)||!Array.isArray(s.appointments)){
-   one('ms-events').innerHTML='— <span>afspraken</span>';one('ms-tasks').innerHTML='— <span>taken</span>';
-   one('ms-event-next').textContent='Agenda niet beschikbaar';one('ms-task-next').textContent='Taken niet beschikbaar';return;
+   one('ms-events').textContent='Agenda niet beschikbaar';one('ms-tasks').textContent='Taken niet beschikbaar';
+   setRow('ms-event-first','Vandaag','Geen gegevens');setRow('ms-event-second','Morgen','Geen gegevens');
+   setRow('ms-task-first','Vandaag','Geen gegevens');setRow('ms-task-second','Overige taken','Geen gegevens');
+   one('ms-task-row-first').classList.remove('ms-row-overdue');return;
   }
-  const tasks=s.tasks.filter(t=>t&&!t.deletedAt&&!t.archived&&!t.done&&(t.focusDate===iso||t.date===iso));
-  one('ms-tasks').innerHTML=tasks.length+' <span>'+(tasks.length===1?'taak':'taken')+'</span>';
-  one('ms-task-next').textContent=tasks.length?tasks[0].title||'Bekijk je taken':'Geen taken gepland vandaag';
-  const events=s.appointments.filter(e=>e&&!e.deletedAt&&!e.cancelled&&e.date===iso);
-  const google=Array.isArray(s.googleAppointments)?s.googleAppointments.filter(e=>{
-   if(!e||e.status==='cancelled'||s.appointmentChecks?.['google:'+e.id]?.done)return false;
-   const start=e.start?.date||e.start?.dateTime||'';
-   if(start.slice(0,10)===iso)return true;
-   if(e.start?.dateTime){const dt=new Date(e.start.dateTime);return !Number.isNaN(dt.valueOf())&&new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Amsterdam'}).format(dt)===iso}
-   return false;
-  }):[];
-  const merged=[...events.map(e=>({title:e.title||'Afspraak',time:e.time||''})),...google.map(e=>({title:e.summary||'Afspraak',time:e.start?.dateTime?.slice(11,16)||''}))];
-  one('ms-events').innerHTML=merged.length+' <span>'+(merged.length===1?'afspraak':'afspraken')+'</span>';
-  const first=merged.sort((a,b)=>String(a.time).localeCompare(String(b.time)))[0];
-  one('ms-event-next').textContent=first?(first.time?first.time+' · ':'')+first.title:'Geen afspraken vandaag';
+  const taskDate=t=>/^\d{4}-\d{2}-\d{2}$/.test(t.date||'')?t.date:/^\d{4}-\d{2}-\d{2}$/.test(t.focusDate||'')?t.focusDate:'';
+  const pending=s.tasks.filter(t=>t&&!t.deletedAt&&!t.archived&&!t.done);
+  const todayTasks=pending.filter(t=>taskDate(t)===iso);
+  const late=pending.filter(t=>{const d=taskDate(t);return d&&d<iso}).sort((a,b)=>taskDate(a).localeCompare(taskDate(b)));
+  const future=pending.filter(t=>taskDate(t)>iso).sort((a,b)=>taskDate(a).localeCompare(taskDate(b)));
+  one('ms-tasks').textContent=todayTasks.length+' vandaag · '+late.length+' achterstallig';
+  if(late.length){
+   const t=late[0],days=Math.round((Date.parse(iso+'T12:00:00Z')-Date.parse(taskDate(t)+'T12:00:00Z'))/86400000);
+   setRow('ms-task-first',t.title||'Taak zonder titel',days===1?'1 dag te laat':days+' dagen te laat');
+   one('ms-task-row-first').classList.add('ms-row-overdue');
+   one('ms-task-row-first').setAttribute('aria-label',(t.title||'Taak')+', '+days+' '+(days===1?'dag':'dagen')+' te laat. Open taken.');
+   setRow('ms-task-second','Overige taken',todayTasks.length?todayTasks.length+' gepland vandaag':'Geen taken vandaag');
+  }else{
+   one('ms-task-row-first').classList.remove('ms-row-overdue');one('ms-task-row-first').removeAttribute('aria-label');
+   setRow('ms-task-first','Vandaag',todayTasks.length?(todayTasks[0].title||'Taak zonder titel'):'Geen taken vandaag');
+   setRow('ms-task-second','Komende dagen',future.length?(future[0].title||'Taak zonder titel'):'Geen taken gepland');
+  }
+  const appointmentsFor=day=>{
+   const personal=s.appointments.filter(e=>e&&!e.deletedAt&&!e.cancelled&&e.date===day).map(e=>({title:e.title||'Afspraak',time:e.time||''}));
+   const remote=Array.isArray(s.googleAppointments)?s.googleAppointments.filter(e=>{
+    if(!e||e.status==='cancelled'||s.appointmentChecks?.['google:'+e.id]?.done)return false;
+    const start=e.start?.date||e.start?.dateTime||'';
+    if(start.slice(0,10)===day)return true;
+    if(e.start?.dateTime){const dt=new Date(e.start.dateTime);return !Number.isNaN(dt.valueOf())&&new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Amsterdam'}).format(dt)===day}
+    return false;
+   }).map(e=>({title:e.summary||'Afspraak',time:e.start?.dateTime?.slice(11,16)||''})):[];
+   return [...personal,...remote].sort((a,b)=>String(a.time).localeCompare(String(b.time)));
+  };
+  const events=appointmentsFor(iso),next=appointmentsFor(tomorrow);
+  one('ms-events').textContent=events.length+' '+(events.length===1?'afspraak':'afspraken')+' vandaag';
+  const label=e=>(e.time?e.time+' · ':'')+e.title;
+  setRow('ms-event-first','Vandaag',events.length?label(events[0]):'Geen afspraken');
+  setRow('ms-event-second','Morgen',next.length?label(next[0]):'Geen afspraken');
  }
  function weatherIcon(code,isDay){
   if(code===0||code===1)return isDay?'☀':'☾';
