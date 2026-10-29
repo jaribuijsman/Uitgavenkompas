@@ -337,22 +337,16 @@
 #lifeApp[data-life-view="notes"] .kc-passage-actions summary {min-height:48px;display:flex;align-items:center;cursor:pointer}
 @media(max-width:420px){#lifeApp[data-life-view="notes"] .kc-central-filters {grid-template-columns:repeat(2,minmax(0,1fr))}#lifeApp[data-life-view="notes"] .kc-central-filters label:last-child {grid-column:1/-1}}
 
-/* Diary self-care and future read-only health summaries, compact and accessible on Android. */
-.kc-diary-selfcare,.kc-diary-health{border:1px solid #47614d;background:#1b3024;border-radius:14px;margin:11px 0;overflow:hidden;color:#eaf2e9}
-.kc-diary-selfcare>summary,.kc-diary-health>summary{display:flex;align-items:center;gap:10px;min-height:56px;padding:12px 14px;cursor:pointer;list-style:none}
-.kc-diary-selfcare>summary::-webkit-details-marker,.kc-diary-health>summary::-webkit-details-marker{display:none}
-.kc-diary-selfcare>summary>span:nth-child(2),.kc-diary-health>summary>span:nth-child(2){display:grid;gap:3px;flex:1;min-width:0}
-.kc-diary-selfcare>summary strong,.kc-diary-health>summary strong{font-size:14px}
-.kc-diary-selfcare>summary small,.kc-diary-health>summary small{color:#b9cebd;font-size:12px;line-height:1.35}
-.kc-diary-selfcare>summary>b,.kc-diary-health>summary>b{font-weight:400}
-.kc-diary-selfcare-body,.kc-diary-health-body{border-top:1px solid #3d5846;padding:12px 14px 15px}
-.kc-diary-selfcare-body>p,.kc-diary-health-body>p{font-size:12px;color:#bdd0bf;line-height:1.5;margin:0 0 10px}
-.kc-diary-selfcare-item{display:flex;align-items:center;gap:11px;padding:7px 0;min-height:44px;font-size:14px;cursor:pointer}
-.kc-diary-selfcare-item input{width:20px;height:20px;min-width:20px;accent-color:#bdd3c2}
-.kc-diary-selfcare-note{display:block;font-size:12px;color:#bdd0bf;margin-top:9px}
-.kc-diary-selfcare-note textarea{box-sizing:border-box;width:100%;min-height:66px;margin-top:6px;padding:11px;border-radius:10px;border:1px solid #526f59;background:#13291d;color:#edf5eb;font:inherit;font-size:14px;resize:vertical}
-.kc-diary-selfcare-action{min-height:44px;width:100%;margin-top:11px!important;background:#bdd3c2!important;color:#152b1d!important;border-color:#bdd3c2!important;font-weight:700}
-.kc-diary-selfcare-action.is-done{background:#294834!important;color:#deede0!important;border-color:#64826a!important}
+/* Samsung Health card; legacy self-care records stay preserved in historical data. */
+.kc-diary-health{border:1px solid #47614d;background:#1b3024;border-radius:14px;margin:11px 0;overflow:hidden;color:#eaf2e9}
+.kc-diary-health>summary{display:flex;align-items:center;gap:10px;min-height:56px;padding:12px 14px;cursor:pointer;list-style:none}
+.kc-diary-health>summary::-webkit-details-marker{display:none}
+.kc-diary-health>summary>span:nth-child(2){display:grid;gap:3px;flex:1;min-width:0}
+.kc-diary-health>summary strong{font-size:14px}
+.kc-diary-health>summary small{color:#b9cebd;font-size:12px;line-height:1.35}
+.kc-diary-health>summary>b{font-weight:400}
+.kc-diary-health-body{border-top:1px solid #3d5846;padding:12px 14px 15px}
+.kc-diary-health-body>p{font-size:12px;color:#bdd0bf;line-height:1.5;margin:0 0 10px}
 .kc-diary-health-metric{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;border-bottom:1px solid #385340;font-size:13px}
 .kc-diary-health-metric strong{color:#dceadd;font-variant-numeric:tabular-nums}
 .kc-diary-health-body>p:last-child{margin-top:12px;margin-bottom:0}
