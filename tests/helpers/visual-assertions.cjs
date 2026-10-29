@@ -8,13 +8,13 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   await targets("#compassAreaBar button");if(width<=800)await targets("#mementoQuickNav button");
   checks.push("Daily appointments precede inspiration; primary navigation targets >=44px");
   await navigate(page,"life","groceries");await targets(".shopping-check,.shopping-icon-button,.shopping-row-title");
-  await navigate(page,"life","agenda");await targets("button.memento-cal-day");checks.push("Shopping controls and seven-column calendar targets >=44px");
+  await navigate(page,"life","agenda");await page.locator('[data-mg-agenda=month]').click();await targets("button.memento-cal-day");await shot(page,'agenda-month',false);checks.push("Shopping controls and seven-column calendar targets >=44px");
   await navigate(page,"finance","transactions");
   await onScreen('#txList .tx-card-title');
   const firstTitle=await page.locator('#txList .tx-card-title').first().boundingBox(),bottomNav=await page.locator('#mementoQuickNav').boundingBox();if(width<=800)assert(firstTitle.y+firstTitle.height<=bottomNav.y,"First transaction title stays above bottom navigation");
   const before=await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1"));
   await page.locator('#txSearch').fill('geen-uitslag-fictief');await page.locator('.tx-list-empty').waitFor();await shot(page,'transactions-empty',false);await page.locator('#txSearch').fill('');
-  await page.locator('#toggleMoreTxFilters').click();await page.locator('#txMoreFilters').waitFor({state:'visible'});await shot(page,'transaction-filters',false);await page.locator('#toggleMoreTxFilters').click();
+  await require('./reveal.cjs')(page,'#toggleMoreTxFilters');await page.locator('#toggleMoreTxFilters').click();await page.locator('#txMoreFilters').waitFor({state:'visible'});await shot(page,'transaction-filters',false);await page.locator('#toggleMoreTxFilters').click();
   await page.locator('#addTransaction').click();await page.waitForTimeout(70);await onScreen('#modalContent .modal-footer');
   await page.setViewportSize({width,height:width>800?560:430});await onScreen('#modalContent .modal-footer');
   await page.locator('#txDescription').fill('Fictieve invoer om te annuleren');await page.keyboard.press('Escape');assert.equal(await page.locator('#modalBackdrop.open').count(),0);assert(await page.locator('#addTransaction').evaluate(n=>n===document.activeElement));
@@ -25,10 +25,10 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   await submit.focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'closeModal');await page.keyboard.press('Shift+Tab');assert(await submit.evaluate(n=>n===document.activeElement));
   await submit.click();await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem("uitgavenkompas_v1")).transactions.find(t=>t.description==='Fictieve ergonomische regressietest'));assert.equal(saved.amount,12.34);
-  await page.locator('#txSearch').fill('Fictieve ergonomische');await page.locator(`#txList [data-edit-tx="${saved.id}"]`).click();await page.locator('#txAmount').fill('13.45');await submit.click();
+  await page.locator('#txSearch').fill('Fictieve ergonomische');await page.locator(`#txList .tx-card-title [data-edit-tx="${saved.id}"]`).click();await page.locator('#txAmount').fill('13.45');await submit.click();
   try{await page.waitForFunction(id=>JSON.parse(localStorage.getItem('uitgavenkompas_v1')).transactions.find(t=>t.id===id)?.amount===13.45,saved.id,{timeout:3000});}catch(e){console.error('TRANSACTION_EDIT_DIAGNOSTIC',await page.evaluate(()=>({open:document.getElementById('modalBackdrop').classList.contains('open'),fields:[...document.querySelectorAll('#txForm input,#txForm select,#txForm textarea')].map(n=>({id:n.id,value:n.value,valid:n.checkValidity(),message:n.validationMessage})),status:document.getElementById('saveStatus').textContent,toasts:document.getElementById('toastWrap').textContent})));throw e;}
   assert.equal(await page.evaluate(id=>JSON.parse(localStorage.getItem("uitgavenkompas_v1")).transactions.find(t=>t.id===id).amount,saved.id),13.45);checks.push("Finance required validation, trapped focus, save, search and edit retain guarded persistence");
-  await navigate(page,'life','tasks');await page.locator('#lifeQuickTitle').fill('Fictieve taak voor touchtest');await page.locator('#lifeQuickForm [type=submit]').click();
+  await navigate(page,'life','tasks');await require('./reveal.cjs')(page,'#lifeQuickTitle');await page.locator('#lifeQuickTitle').fill('Fictieve taak voor touchtest');await page.locator('#lifeQuickForm [type=submit]').click();
   const task=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.title==='Fictieve taak voor touchtest'));assert(task);
   await page.locator(`[data-life-detail="${task.id}"]`).click();await page.locator(`#lifeDialog [data-life-edit="${task.id}"]`).click();await page.locator('#lifeTaskTitle').fill('Gewijzigde fictieve taak');await page.locator('[type=submit][form=lifeTaskForm]').click();
   assert.equal(await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).tasks.find(t=>t.id===id).title,task.id),'Gewijzigde fictieve taak');
