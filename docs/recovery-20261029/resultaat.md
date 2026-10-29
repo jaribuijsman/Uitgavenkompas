@@ -1,5 +1,7 @@
 # Memento — herstelverslag, 29 oktober 2026
 
+Dit is het historische verslag van de eerste ronde. Het actuele vervolg en de gecorrigeerde vrijgavevoorwaarden staan in [release.md](release.md).
+
 ## Bereikt resultaat
 
 Onderzoek en de noodzakelijke herstelpakketten zijn uitgevoerd op een afzonderlijke branch. **Niet gemerged en niet gepubliceerd.** De herstelcode staat in [concept-PR #5](https://github.com/jaribuijsman/Uitgavenkompas/pull/5). De resterende vrijgaveblokkades staan hieronder; dit verslag verklaart niet dat alle mogelijke schermtoestanden, toegankelijkheid en fysieke Android-ervaring volledig zijn goedgekeurd.
