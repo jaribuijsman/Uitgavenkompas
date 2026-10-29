@@ -60,7 +60,7 @@ let centralQuery="",centralType="",centralCollection="",centralStatus="active";
 let focusWriting=false;
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
 let quickDraft="",quickSpeech=null,quickListening=false,quickToken=0;
-let diaryRecognizer=null,diaryDictating=false,diaryEpoch=0,diaryRestart=0,diaryRecognitionBase="",diarySpeechDate="";
+let diaryRecognizer=null,diaryDictating=false,diaryEpoch=0,diaryRestart=0,diaryRecognitionBase="",diarySpeechDate="",diarySessionPreview="";
 let diaryKeyboardBase=0;
 let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 const read=()=>bridge.read();
@@ -262,34 +262,63 @@ function paintDiarySpeech(){
  el.setAttribute("aria-label",diaryDictating?"Stop transcriberen":"Start transcriberen");
  el.textContent=diaryDictating?"■ Stop":"◉ Transcriberen";
 }
-function stopDiaryDictation(message=""){
+function diarySpeechEditor(){
+ return screen==="edit"&&Boolean(editing?.journal)&&editing.journal.date===diarySpeechDate&&Boolean(host?.querySelector("#kc-body"));
+}
+// Chrome Android can emit successive whole-sentence hypotheses; they are replacements, not separate sentences.
+function diarySpeechMerge(parts){
+ let text="";
+ for(const part of parts){
+  const words=String(part||"").trim();if(!words)continue;
+  if(!text){text=words;continue;}
+  const previous=text.toLocaleLowerCase("nl-NL"),current=words.toLocaleLowerCase("nl-NL");
+  if(current===previous)continue;
+  if(current.startsWith(previous+" ")){text=words;continue;}
+  text+=" "+words;
+ }
+ return text;
+}
+function diarySpeechValue(words){
+ const prefix=diaryRecognitionBase,separator=prefix&&!/\s$/.test(prefix)?" ":"";
+ return (prefix+separator+words).slice(0,20000);
+}
+function diaryCommitSpeech(words){
+ if(!words||!diarySpeechEditor())return;
+ const next=diarySpeechValue(words);
+ if(next!==editing.body){editing.body=next;schedule();}
+ const field=host.querySelector("#kc-body");
+ if(field&&field.value!==next){field.value=next;growText();}
+}
+function stopDiaryDictation(message="",keepPreview=true){
+ if(diaryDictating&&keepPreview&&diarySessionPreview)diaryCommitSpeech(diarySessionPreview);
  diaryDictating=false;diaryEpoch++;clearTimeout(diaryRestart);diaryRestart=0;
  const r=diaryRecognizer;diaryRecognizer=null;
  if(r){r.onresult=null;r.onerror=null;r.onend=null;try{r.stop();}catch(e){}}
- diarySpeechDate="";paintDiarySpeech();diarySpeechStatus(message);
-}
-function diarySpeechEditor(){
- return screen==="edit"&&Boolean(editing?.journal)&&editing.journal.date===diarySpeechDate&&Boolean(host?.querySelector("#kc-body"));
+ diarySessionPreview="";diarySpeechDate="";paintDiarySpeech();diarySpeechStatus(message);
 }
 function startDiarySession(epoch){
  if(!diaryDictating||epoch!==diaryEpoch||!diarySpeechEditor()||document.visibilityState==="hidden")return;
  const Speech=root.SpeechRecognition||root.webkitSpeechRecognition;
  let r;
  try{r=new Speech();}catch(e){stopDiaryDictation("Spraakherkenning kon niet starten.");return;}
- diaryRecognizer=r;diaryRecognitionBase=editing.body||"";
- r.lang="nl-NL";r.continuous=true;r.interimResults=true;r.maxAlternatives=1;
+ diaryRecognizer=r;diaryRecognitionBase=editing.body||"";diarySessionPreview="";
+ r.lang="nl-NL";r.continuous=false;r.interimResults=true;r.maxAlternatives=1;
  r.onstart=()=>{if(epoch===diaryEpoch&&diaryDictating)diarySpeechStatus("Luisteren…");};
  r.onresult=event=>{
   if(epoch!==diaryEpoch||!diarySpeechEditor())return;
-  const parts=[];
-  for(let i=0;i<event.results.length;i++){const words=String(event.results[i][0]?.transcript||"").trim();if(words)parts.push(words);}
-  if(!parts.length)return;
-  const prefix=diaryRecognitionBase,separator=prefix&&!/\s$/.test(prefix)?" ":"";
-  const result=(prefix+separator+parts.join(" ")).slice(0,20000);
-  if(result===editing.body)return;
+  const final=[],interim=[];
+  for(let i=0;i<event.results.length;i++){
+   const result=event.results[i],words=String(result[0]?.transcript||"").trim();
+   if(!words)continue;
+   (result.isFinal===false?interim:final).push(words);
+  }
+  const confirmed=diarySpeechMerge(final);
+  diarySessionPreview=diarySpeechMerge([confirmed,diarySpeechMerge(interim)]);
+  if(confirmed)diaryCommitSpeech(confirmed);
   const field=host.querySelector("#kc-body");if(!field)return;
-  editing.body=result;field.value=result;schedule();growText();
-  if(result.length===20000)stopDiaryDictation("Maximum van 20.000 tekens bereikt.");
+  const value=diarySpeechValue(diarySessionPreview);
+  if(field.value!==value){field.value=value;growText();}
+  if(value.length>=20000)stopDiaryDictation("Maximum van 20.000 tekens bereikt.");
  };
  r.onerror=event=>{
   if(epoch!==diaryEpoch)return;
@@ -299,6 +328,7 @@ function startDiarySession(epoch){
  };
  r.onend=()=>{
   if(epoch!==diaryEpoch)return;
+  if(diarySessionPreview)diaryCommitSpeech(diarySessionPreview);
   diaryRecognizer=null;
   if(!diaryDictating)return;
   if(!diarySpeechEditor()||document.visibilityState==="hidden"){stopDiaryDictation();return;}
@@ -815,7 +845,7 @@ function onInput(event){
     return {name:name.slice(0,120),amount:amount.slice(0,40),unit:unit.slice(0,40)};
   });
  }else editing[change]=field.value;
- if(change==="body"){if(diaryDictating)stopDiaryDictation("Transcriptie gestopt om te typen.");if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
+ if(change==="body"){if(diaryDictating)stopDiaryDictation("Transcriptie gestopt om te typen.",false);if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
  if(change==="kind"){
   if(field.value==="recipe"&&!editing.recipe)editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
   schedule();render();return;

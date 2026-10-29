@@ -18,7 +18,9 @@ const server=http.createServer((req,res)=>{
     constructor(){this.continuous=false;this.interimResults=false;}
     start(){window.__diarySpeech.push(this);this.onstart?.();}
     stop(){this.onend?.();}
-    emit(text){this.onresult?.({results:[{0:{transcript:text},isFinal:true}]});}
+    emit(text){this.progress(text);}
+    preview(...phrases){this.onresult?.({resultIndex:0,results:phrases.map(text=>({0:{transcript:text},isFinal:false}))});}
+    progress(...phrases){this.onresult?.({resultIndex:0,results:phrases.map(text=>({0:{transcript:text},isFinal:true}))});}
     end(){this.onend?.();}
    };
    window.webkitSpeechRecognition=window.SpeechRecognition;
@@ -66,8 +68,14 @@ const server=http.createServer((req,res)=>{
   assert.equal(await page.locator(".kc-diary-voice").count(),0);
   await page.locator('[data-kc="journal-speech"]').click();
   assert.equal(await page.locator('[data-kc="journal-speech"]').getAttribute("aria-pressed"),"true");
-  await page.evaluate(()=>window.__diarySpeech[0].emit("Ik was bij mijn werk"));
-  await page.waitForFunction(()=>document.querySelector("#kc-body")?.value.includes("Ik was bij mijn werk"));
+  assert.equal(await page.evaluate(()=>window.__diarySpeech[0].continuous),false);
+  // Regression: Chromium Android can expose a growing sentence as multiple results.
+  await page.evaluate(()=>window.__diarySpeech[0].preview("Ik","Ik was","Ik was bij","Ik was bij mijn werk"));
+  assert.match(await page.locator("#kc-body").inputValue(),/Ik was bij mijn werk$/);
+  assert.doesNotMatch(await page.locator("#kc-body").inputValue(),/Ik Ik was/);
+  await page.evaluate(()=>window.__diarySpeech[0].progress("Ik","Ik was","Ik was bij","Ik was bij mijn werk"));
+  assert.match(await page.locator("#kc-body").inputValue(),/Ik was bij mijn werk$/);
+  assert.doesNotMatch(await page.locator("#kc-body").inputValue(),/Ik Ik was/);
   await page.evaluate(()=>window.__diarySpeech[0].end());
   await page.waitForFunction(()=>window.__diarySpeech.length>=2);
   await page.evaluate(()=>window.__diarySpeech[1].emit("en daarna naar huis"));
@@ -76,13 +84,24 @@ const server=http.createServer((req,res)=>{
   assert.equal(await page.locator('[data-kc="journal-speech"]').getAttribute("aria-pressed"),"false");
   await page.waitForTimeout(440);
   assert.equal(await page.evaluate(()=>window.__diarySpeech.length),2);
+  // A final incomplete phrase is retained on explicit stop.
+  await page.locator('[data-kc="journal-speech"]').click();
+  await page.evaluate(()=>window.__diarySpeech[2].preview("Tot","Tot slot nog wat"));
+  await page.locator('[data-kc="journal-speech"]').click();
+  assert.match(await page.locator("#kc-body").inputValue(),/Tot slot nog wat$/);
+  // Typing is authoritative; an interim hypothesis must not overwrite manual edits.
+  await page.locator('[data-kc="journal-speech"]').click();
+  await page.evaluate(()=>window.__diarySpeech[3].preview("Niet","Niet bewaren"));
+  await page.locator("#kc-body").fill("Mijn eigen dagboektekst");
+  assert.equal(await page.locator("#kc-body").inputValue(),"Mijn eigen dagboektekst");
+  assert.equal(await page.locator('[data-kc="journal-speech"]').getAttribute("aria-pressed"),"false");
   await page.locator("#kc-body").fill((await page.locator("#kc-body").inputValue())+" Goed handmatig aangepast.");
   await page.waitForTimeout(930);
   saved=await stored();n=saved.notes.find(x=>x.id===journalId);
   assert.equal(n.journal.manualHealth.sleepMinutes,415);
   assert.match(n.body,/Goed handmatig aangepast/);
   assert.equal(n.attachments?.length||0,0);
-  checks.push("Journal-only dictation resumes after silence, keeps manual edits and health values without audio attachments");
+  checks.push("Diary dictation handles progressive interim/final results without repetition, resumes after silence, retains text on stop and manual entry");
   // Shortening the mobile viewport approximates the keyboard, not a physical Android IME.
   await page.locator("#kc-body").focus();
   await page.setViewportSize({width,height:460});
