@@ -364,3 +364,14 @@
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid .kc-diary-health-wide{grid-column:1/-1}
 #lifeApp[data-life-view="notes"] .kc-diary-health-import>div>small{display:block;margin-top:9px;font-size:11px;color:#bdd0bf}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-health>summary b{transition:none}}
+
+/* Dagboek: direct onder de vrije tekst, zonder losse opnamekaart. */
+#lifeApp[data-life-view="notes"] .kc-diary-dictation{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#lifeApp[data-life-view="notes"] .kc-diary-dictation .kc-btn{font-size:13px;min-height:44px;padding:10px 15px}
+#lifeApp[data-life-view="notes"] .kc-diary-dictation .kc-dictating{background:#416650;border-color:#a8d4b4;color:#edf7ed}
+#lifeApp[data-life-view="notes"] #kc-diary-speech-status{font-size:12px;color:#c6dec9;line-height:1.4}
+#lifeApp[data-life-view="notes"] #kc-diary-speech-status:empty{display:none}
+@media(max-width:800px){
+ body.memento-diary-keyboard #mementoQuickNav{display:none!important}
+ body.memento-diary-keyboard #lifeApp[data-life-view="notes"] .kc-diary-write textarea#kc-body{min-height:165px;overflow-y:auto}
+}

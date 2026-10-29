@@ -13,14 +13,15 @@ const server=http.createServer((req,res)=>{
   browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
   const context=await browser.newContext({viewport:{width,height:860},locale:"nl-NL",timezoneId:"Europe/Amsterdam",hasTouch:true,reducedMotion:"reduce",permissions:["clipboard-read","clipboard-write"],userAgent:"Mozilla/5.0 (Linux; Android 16; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"});
   await context.addInitScript(()=>{
-   const media={getUserMedia:async()=>({getTracks:()=>[{stop(){}}]})};
-   Object.defineProperty(navigator,"mediaDevices",{configurable:true,value:media});
-   window.MediaRecorder=class {
-    static isTypeSupported(t){return t==="audio/webm;codecs=opus"||t==="audio/webm";}
-    constructor(stream,{mimeType}={}){this.stream=stream;this.mimeType=mimeType;this.state="inactive";}
-    start(){this.state="recording";}
-    stop(){if(this.state!=="recording")return;this.state="inactive";const b=new Blob([new Uint8Array([26,69,223,163,128,0,0,0,10,20,30,40,50,60,70,80,90,100,120])],{type:"audio/webm"});this.ondataavailable?.({data:b});this.onstop?.();}
+   window.__diarySpeech=[];
+   window.SpeechRecognition=class {
+    constructor(){this.continuous=false;this.interimResults=false;}
+    start(){window.__diarySpeech.push(this);this.onstart?.();}
+    stop(){this.onend?.();}
+    emit(text){this.onresult?.({results:[{0:{transcript:text},isFinal:true}]});}
+    end(){this.onend?.();}
    };
+   window.webkitSpeechRecognition=window.SpeechRecognition;
   });
   const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
   await page.goto("http://127.0.0.1:"+server.address().port,{waitUntil:"domcontentloaded"});
@@ -62,18 +63,35 @@ const server=http.createServer((req,res)=>{
   const androidLink=await page.locator(".kc-diary-ai a").getAttribute("href");
   assert.match(androidLink,/package=com.openai.chatgpt/);
   checks.push("AI prompts only copy on explicit click and app button uses native Android intent");
-  await page.locator('[data-kc="voice-start"]').click();
-  assert.equal(await page.locator(".kc-diary-live").count(),1);
-  await page.locator('[data-kc="voice-stop"]').click();
-  assert.equal(await page.locator(".kc-diary-audio audio").count(),1);
-  await page.locator('[data-kc="voice-save"]').click();
-  await page.waitForFunction(()=>!document.querySelector('[data-kc="voice-save"]'),{timeout:10000});
+  assert.equal(await page.locator(".kc-diary-voice").count(),0);
+  await page.locator('[data-kc="journal-speech"]').click();
+  assert.equal(await page.locator('[data-kc="journal-speech"]').getAttribute("aria-pressed"),"true");
+  await page.evaluate(()=>window.__diarySpeech[0].emit("Ik was bij mijn werk"));
+  await page.waitForFunction(()=>document.querySelector("#kc-body")?.value.includes("Ik was bij mijn werk"));
+  await page.evaluate(()=>window.__diarySpeech[0].end());
+  await page.waitForFunction(()=>window.__diarySpeech.length>=2);
+  await page.evaluate(()=>window.__diarySpeech[1].emit("en daarna naar huis"));
+  assert.match(await page.locator("#kc-body").inputValue(),/Ik was bij mijn werk en daarna naar huis/);
+  await page.locator('[data-kc="journal-speech"]').click();
+  assert.equal(await page.locator('[data-kc="journal-speech"]').getAttribute("aria-pressed"),"false");
+  await page.waitForTimeout(440);
+  assert.equal(await page.evaluate(()=>window.__diarySpeech.length),2);
+  await page.locator("#kc-body").fill((await page.locator("#kc-body").inputValue())+" Goed handmatig aangepast.");
+  await page.waitForTimeout(930);
   saved=await stored();n=saved.notes.find(x=>x.id===journalId);
-  assert(n);assert.equal(n.attachments.length,1);assert.equal(n.attachments[0].type,"audio/webm");
-  assert.equal(n.journal.manualHealth.sleepMinutes,415);assert.equal(n.journal.manualHealth.steps,12345);
-  const binaryFound=await page.evaluate(async id=>(await window.MementoKnowledgeStore.all()).some(x=>x.id===id&&x.blob instanceof Blob&&x.blob.size>0),n.attachments[0].id);
-  assert.equal(binaryFound,true);
-  checks.push("Start/Stop recorded WebM attaches via guarded IndexedDB and keeps the original day identity");
+  assert.equal(n.journal.manualHealth.sleepMinutes,415);
+  assert.match(n.body,/Goed handmatig aangepast/);
+  assert.equal(n.attachments?.length||0,0);
+  checks.push("Journal-only dictation resumes after silence, keeps manual edits and health values without audio attachments");
+  // Shortening the mobile viewport approximates the keyboard, not a physical Android IME.
+  await page.locator("#kc-body").focus();
+  await page.setViewportSize({width,height:460});
+  await page.waitForFunction(()=>document.body.classList.contains("memento-diary-keyboard"));
+  assert.equal(await page.locator("#mementoQuickNav").evaluate(el=>getComputedStyle(el).display),"none");
+  assert(await page.locator("#kc-body").evaluate(el=>el.getBoundingClientRect().height<300));
+  await page.setViewportSize({width,height:860});
+  await page.locator("#kc-title").focus();
+  checks.push("Shortened mobile viewport keeps diary input scrollable and hides fixed navigation when typing");
   await page.locator('[data-kc="save"]').first().click();
   assert.equal((await stored()).notes.filter(x=>x.id===journalId).length,1);
   const shotDir=process.env.JOURNAL_SHOT_DIR;
