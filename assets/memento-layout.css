@@ -118,7 +118,7 @@ body #lifeApp .memento-gcal-tools .memento-cal-status,body #lifeApp .mg-fold>sum
 body #lifeApp .mg-fold>.mg-fold-body .account-card{backdrop-filter:none!important}
 
 body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon{display:flex!important;width:64px!important;height:64px!important;flex:0 0 64px;align-items:center;justify-content:center;border:0;background:transparent!important}
-body #lifeApp .kc-collection-icon svg{width:60px!important;height:60px!important}
+body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon svg{width:60px!important;height:60px!important}
 body #lifeApp .kc-collection-row.kc-art-row:has(.kc-art-wrap) .kc-collection-icon{display:none!important}
 body #lifeApp .shopping-category{padding:10px 12px;margin:10px 0;border:1px solid var(--mg-line);border-radius:21px;background:var(--mg-surface)}
 body #lifeApp .shopping-category h3{margin:3px 0 9px}
