@@ -75,7 +75,7 @@ async function nav(page){
    assert.equal(all.length,2);
    assert.equal(added.splits,null,'Niet splitsen betekent geen opgeslagen verdeling');
    // A deliberate split must preserve both categories when another field is edited.
-   await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
+   await page.locator('#view-transactions .tx-card .ml-tx-open[data-edit-tx="'+added.id+'"]').first().click();
    assert.equal(await page.locator('#splitSection').isVisible(),false);
    assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
    await page.locator('#toggleSplit').click();
@@ -103,14 +103,14 @@ async function nav(page){
    assert.equal(revised.splits.length,2);
    assert.equal(revised.splits[0].category,'Vaste lasten');
    assert.equal(revised.splits[1].category,'Boodschappen');
-   await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
+   await page.locator('#view-transactions .tx-card .ml-tx-open[data-edit-tx="'+added.id+'"]').first().click();
    assert.equal(await page.locator('#splitSection').isVisible(),true);
    await require('./helpers/reveal.cjs')(page,'#txNote');await page.locator('#txNote').fill('Geen splitsing verliezen');
    await page.locator('[form=txForm][type=submit]').click();
    revised=(await state()).transactions.find(t=>t.id===added.id);
    assert.equal(revised.splits.length,2);
    assert.equal(revised.note,'Geen splitsing verliezen');
-   await page.locator('#view-transactions .tx-card [data-edit-tx="'+added.id+'"]').first().click();
+   await page.locator('#view-transactions .tx-card .ml-tx-open[data-edit-tx="'+added.id+'"]').first().click();
    await page.locator('#toggleSplit').click();
    assert.equal(await page.locator('#splitSection').isVisible(),false);
    assert.equal(await page.locator('.split-row').count(),0,'Zonder actieve splitsing bestaan geen verdelingsregels');
