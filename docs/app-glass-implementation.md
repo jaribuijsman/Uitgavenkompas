@@ -70,3 +70,11 @@ De eerste validatiecommit `91b420e` staat uitsluitend op `codex/app-glass-review
 Op `a674e28488b0ead1362475cd83f1e5d695a0cbab` slaagde de cumulatieve masterplansuite, evenals de kern- en echte upgradeproef. Verdere validatie en definitieve publicatie worden pas hieronder vastgelegd nadat ze werkelijk zijn voltooid. Main blijft tot een groene acceptatie op de bestaande versie.
 
 De mobiele proeven gebruiken Chromium met kleine aanraakviewports. Geen fysieke Samsung Galaxy A54 5G, werkelijk Android-toetsenbord, TalkBack, systeemterugknop of batterij-/vergrendelingstest beschikbaar. CSS-pixels passen zich aan browser- en weergave-instellingen aan; de fysieke 1080px-schermbreedte wordt niet vastgezet. Reduced motion en bestaande safe-area-/dialogregels blijven aanwezig.
+
+## Vastgezette acceptatie
+
+De definitieve functionele versie is **7fe9f833d6633e2d926021bcafec422f608307b3**. De volledige [acceptatierun 40911654927](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40911654927) is geslaagd: core, echte PWA-upgrade en alle elf browsersuites (app-review, masterplan, storage-safety, categorieën, fitness, knowledge-v2, covers, pictogrammen, quickfit, dagboek en startscherm). Ook de drie overige op deze tak geactiveerde workflows zijn geslaagd. Alle 19 lokale gewijzigde bestanden zijn vóór vrijgave met de blobs van deze geteste commit vergeleken.
+
+De nieuwe browseracceptatie bedient op 360/393/412 px de bewaarde taakselectie, taak met stappen, transactie met Subcategorie/Uitgever, contextdoorklik, niet-destructieve receptschaling, geselecteerde boodschappen en ingrediëntbewerking. De bestaande taken en fitness blijven objectgelijk. Alle 18 hoofdtabbladen worden op die drie breedtes op horizontale overloop gecontroleerd en vastgelegd. De overige bestaande suites toetsen de fout-/herstelroutes en binaire bijlagen. De beperkte toesteltestdekking hierboven blijft van toepassing.
+
+De publicatie voegt uitsluitend dit bewijsdocument toe bovenop de geteste functionele commit. Er worden tijdens vrijgave geen verdere functies of stijlen aangepast. De nieuwe serviceworker gebruikt releasecache `memento-pwa-v65-20261029-app-glass-v1`; alle nieuwe assets staan in de eigen offlinecache.
