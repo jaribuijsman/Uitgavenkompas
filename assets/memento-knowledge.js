@@ -247,17 +247,19 @@ function diarySelfCare(j){
 function diaryHealth(j){
  const m=j.manualHealth||{},h=j.health;
  const android=/Android/i.test(navigator.userAgent);
- const fallback="https://play.google.com/store/apps/details?id=com.sec.android.app.shealth";
- // Best-effort: historische Samsung Health-versies ondersteunen een browsable shealth://-link; moderne ondersteuning is niet gegarandeerd.
- // Het openen van een bepaalde kalenderdag wordt niet door een openbare deep link ondersteund.
- const openLink=android?"intent://#Intent;scheme=shealth;action=android.intent.action.VIEW;package=com.sec.android.app.shealth;S.browser_fallback_url="+encodeURIComponent(fallback)+";end":fallback;
+ // Samsung Health publiceert app-koppelingen op dit domein, onder meer met sc_id=app.main.
+ // Op Android proberen we de HTTPS-link met een expliciet pakket te openen via een browsable Intent.
+ // Er is bewust GEEN Play Store-terugval: de app kan al geinstalleerd zijn.
+ // Of de huidige Samsung Health-versie deze link verwerkt, moet op het toestel worden getest.
+ const healthAppLink="https://shealth.samsung.com/deepLink?sc_id=app.main";
+ const openLink=android?"intent://shealth.samsung.com/deepLink?sc_id=app.main#Intent;scheme=https;action=android.intent.action.VIEW;package=com.sec.android.app.shealth;end":healthAppLink;
  const numeric=(key,title,max,min=0)=>'<label>'+title+'<input type="number" inputmode="numeric" min="'+min+'" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(m[key]??"")+'" placeholder="—"></label>';
  const sleep=m.sleepMinutes===undefined?null:m.sleepMinutes;
  const sleepField=(key,label,value,max)=>'<label>'+label+'<input type="number" inputmode="numeric" min="0" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(value??"")+'" placeholder="—"></label>';
  const imported=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaapduur",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" slagen/min"],["exerciseMinutes","Training",v=>v+" minuten"]];
  return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheid en activiteit</strong><small>'+(Object.keys(m).length>1?"Handmatige waarden ingevuld":"Slaap, stappen en meer · optioneel")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
  '<a class="kc-diary-health-link" data-kc="journal-health-open" href="'+esc(openLink)+'" rel="noopener noreferrer">Samsung Health openen <span aria-hidden="true">↗</span></a>'+
- '<p class="kc-diary-health-date">Bekijk daar zelf de juiste datum. Memento kan Samsung Health niet rechtstreeks op die dag openen.</p>'+
+ '<p class="kc-diary-health-date">Open de juiste dag zelf in Samsung Health. Werkt de knop niet? <a data-kc="journal-health-open" href="'+esc(healthAppLink)+'" rel="noopener noreferrer">Probeer de Samsung-link</a> of open de app op je telefoon. Je dagboek blijft bewaard.</p>'+
  '<p>De slaap in dit dagboek hoort bij de <strong>dag waarop je wakker wordt</strong>. Ook als je de vorige avond naar bed ging of na een nachtdienst overdag sliep.</p>'+
  '<div class="kc-diary-health-grid">'+
  sleepField("sleepHours","Slaapduur · uren",sleep===null?null:Math.floor(sleep/60),35)+
