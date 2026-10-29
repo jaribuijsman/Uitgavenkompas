@@ -225,3 +225,25 @@ body #txForm:has(.memento-payment-details)>.form-grid :is(input,select) {min-hei
 @media(prefers-reduced-motion:reduce){.memento-confirmed,.memento-filter-changed{animation:none}}
 
 body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-context {border:0;padding:0;margin:0;background:transparent;font-size:12px;line-height:1.5}
+
+/* Mijn dag: compact overdue disclosure and appointment-like task cards.
+   Scoped to today's section: no changes to stored tasks or other task lists. */
+#lifeApp[data-life-view="today"] .life-overdue-group{margin:3px 0 14px;border-top:1px solid var(--m-line)}
+#lifeApp[data-life-view="today"] .life-overdue-group>summary{display:flex;align-items:center;gap:9px;min-height:48px;padding:5px 0;margin:0;list-style:none;cursor:pointer;color:var(--m-ink);font-size:14px;font-weight:700;line-height:1.35}
+#lifeApp[data-life-view="today"] .life-overdue-group>summary::before{content:none}
+#lifeApp[data-life-view="today"] .life-overdue-group>summary::marker{content:""}
+#lifeApp[data-life-view="today"] .life-overdue-group>summary::-webkit-details-marker{display:none}
+#lifeApp[data-life-view="today"] .memento-overdue-chevron{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:13px;border:1px solid #5b7966;background:linear-gradient(135deg,#244735,#1c352a);color:#e5f3e8}
+#lifeApp[data-life-view="today"] .memento-overdue-chevron svg{width:17px;height:17px;transition:transform .18s ease}
+#lifeApp[data-life-view="today"] .life-overdue-group:not([open]) .memento-overdue-chevron svg{transform:rotate(-90deg)}
+#lifeApp[data-life-view="today"] .memento-overdue-title{min-width:0;flex:0 1 auto;overflow-wrap:break-word}
+#lifeApp[data-life-view="today"] .memento-overdue-count{display:inline-grid;place-items:center;min-width:28px;height:28px;flex:0 0 auto;padding:0 8px;border-radius:999px;background:#2a4435;color:#e8f4e9;font-size:13px;font-variant-numeric:tabular-nums}
+#lifeApp[data-life-view="today"] .life-overdue{margin:7px 0 12px}
+#lifeApp[data-life-view="today"] .life-overdue>.life-task{grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;padding:9px 7px;min-height:82px;background:linear-gradient(120deg,#1d3829,#193325);border:1px solid #435f4b;border-left:3px solid #e69aa6;border-radius:14px;box-shadow:none}
+#lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-title{min-height:0;display:block;padding:0;font-size:15px;line-height:1.32;font-weight:700;color:#edf5ef}
+#lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-meta{font-size:12px;line-height:1.4;margin-top:5px;gap:3px 9px;color:#bfd1c3}
+#lifeApp[data-life-view="today"] .life-overdue .life-late-text{display:inline-block;padding:2px 7px;border-radius:999px;background:#53343b;color:#ffc1c9;font-weight:600}
+#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete{width:44px;min-width:44px;height:44px;min-height:44px}
+#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete::before{inset:12px}
+#lifeApp[data-life-view="today"] .life-overdue .life-task-menu>summary{width:44px;min-width:44px;height:44px;min-height:44px}
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-overdue-chevron svg{transition:none}}
