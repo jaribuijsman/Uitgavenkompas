@@ -1,0 +1,42 @@
+{
+  "codeCommit": "250318afdb41354c4980a619bc9ad0212df06003",
+  "coreSuites": 19,
+  "corePassed": 19,
+  "existingBrowserSuites": 16,
+  "existingBrowserPassed": 16,
+  "newRecoveryBrowserPassed": true,
+  "upgradeBaselines": [
+    "52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9",
+    "bf81413d6dc35fc097deeeb61c3eb09acf11834e"
+  ],
+  "upgradePassed": 2,
+  "initialRepairRun": "first-repair-tests.json",
+  "reruns": [
+    {
+      "suite": "masterplan-browser",
+      "reason": "Retain original >=48px target assertion; restore 48px task controls and matching column.",
+      "passed": true
+    },
+    {
+      "suite": "patches-001-002-004-browser",
+      "reason": "Wait for visible overdue summary; retain all assertions.",
+      "passed": true
+    },
+    {
+      "suite": "app-review-browser and visual-browser at four widths",
+      "reason": "Preserve shopping 44px geometry after visual comparison found unintended 4px change.",
+      "passed": true
+    },
+    {
+      "suite": "recovery-browser",
+      "reason": "Add shopping column geometry; exercise final source at four widths with 0/1/43 tasks.",
+      "passed": true
+    }
+  ],
+  "notRun": [
+    "physical Android",
+    "Samsung keyboard/native select",
+    "TalkBack",
+    "independent human visual acceptance"
+  ]
+}

@@ -2,13 +2,7 @@
 (()=>{'use strict';
  const $=s=>document.querySelector(s);
  const openedExercises=new Set();let frame=0;
- function fold(nodes,title,open=false){
-  nodes=nodes.filter(Boolean);if(!nodes.length)return null;
-  const d=document.createElement('details');d.className='mg-fold';d.open=open;
-  const summary=document.createElement('summary');summary.textContent=title;d.append(summary);
-  const body=document.createElement('div');body.className='mg-fold-body';d.append(body);
-  nodes[0].before(d);nodes.forEach(n=>body.append(n));return d;
- }
+ const fold=(nodes,title,open=false)=>window.MementoDisclosure.fold(nodes,title,{open});
  function field(form,id){const el=form.querySelector('#'+id);return el?.closest('.form-field,.life-form-field')||el?.closest('label');}
  function markForm(form){
   if(form.dataset.mgReady)return;form.dataset.mgReady='1';
@@ -41,8 +35,6 @@
   if(tasks){
    const capture=tasks.querySelector('.memento-capture-card');
    if(capture&&!capture.closest('.mg-fold'))fold([capture],'Snelle invoer · taak, notitie of dagboek');
-   const sort=tasks.querySelector('.memento-task-sort'),filters=tasks.querySelector('.memento-filter-fields');
-   if(sort&&filters&&!filters.contains(sort))filters.append(sort);
   }
   if(tabs&&!tabs.dataset.mgReady){
    tabs.dataset.mgReady='1';const rest=[...tabs.children].filter(b=>!['open','done'].includes(b.dataset.lifeTaskTab));
@@ -66,7 +58,7 @@
   for(const card of document.querySelectorAll('#lifeWishResults .life-panel')){if(card.dataset.mgWish)continue;card.dataset.mgWish='1';card.classList.add('mg-wish-card');const actions=card.querySelector('.life-card-actions');if(actions){const manage=[...actions.querySelectorAll('[data-life-wish-edit],[data-life-wish-delete]')];const d=fold(manage,'Beheer');if(d)actions.append(d);}const ps=[...card.querySelectorAll(':scope>p')].filter(p=>!p.textContent.startsWith('Budget:'));if(ps.length)fold(ps,'Notitie');}
   // Context and chips expose the real native financial filters; clicking clears that control.
   const tx=$('#view-transactions');if(tx){
-   let chips=tx.querySelector('.mg-filter-chips');if(!chips){chips=document.createElement('div');chips.className='mg-filter-chips';chips.setAttribute('aria-label','Actieve transactiefilters');tx.querySelector('#txList')?.before(chips);if(!chips.isConnected)tx.querySelector('.tx-filter-bar,.tx-toolbar')?.after(chips);}
+   let chips=tx.querySelector('.mg-filter-chips');if(!chips){chips=document.createElement('div');chips.className='mg-filter-chips';chips.setAttribute('role','group');chips.setAttribute('aria-label','Actieve transactiefilters');tx.querySelector('#txList')?.before(chips);if(!chips.isConnected)tx.querySelector('.tx-filter-bar,.tx-toolbar')?.after(chips);}
    if(chips.isConnected){const controls=['txTypeFilter','txAccountFilter','txCategoryFilter','txSubcategoryFilter','txPersonFilter','txFrom','txTo'];
     const key=controls.map(id=>$("#"+id)?.value||'').join('|');if(chips.dataset.mgValue!==key){chips.dataset.mgValue=key;chips.replaceChildren();for(const id of controls){const input=$("#"+id);if(!input||!input.value||input.value==='all')continue;const b=document.createElement('button');b.type='button';b.dataset.mgClearFinance=id;b.textContent=input.selectedOptions?.[0]?.textContent||input.value;b.setAttribute('aria-label',b.textContent+' wissen');chips.append(b);}}
    }

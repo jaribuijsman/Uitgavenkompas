@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "Real PIN setup and menu navigation",
+    "Explicit setup creates three split routines without demo results",
+    "Today and Agenda open the same booking",
+    "Inline exercise help and one-workout alternative preserve the template",
+    "Set autosave and rest deadline",
+    "Reload restores active sets and notes",
+    "No horizontal overflow at 320, 390 and 768 px",
+    "Quota error retains draft and retry saves it",
+    "Partial completion and rotation advance",
+    "Exercise editor preserves edited routine fields",
+    "Charts show real logged records without placeholder data",
+    "Measurement removal is reversible",
+    "Retrying failed dialog save does not duplicate records",
+    "Full backup includes fitness",
+    "Older backup preserves existing fitness",
+    "Invalid fitness import rejected",
+    "Backup restores exact fitness data",
+    "Offline reload and workout start"
+  ],
+  "errors": []
+}

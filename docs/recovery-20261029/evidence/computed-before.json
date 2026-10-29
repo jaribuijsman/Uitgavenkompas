@@ -1,0 +1,2802 @@
+[
+  {
+    "width": 360,
+    "checkbox": {
+      "selector": "life-complete",
+      "rect": {
+        "x": 18,
+        "y": 481.5,
+        "width": 48,
+        "height": 48,
+        "top": 481.5,
+        "right": 66,
+        "bottom": 529.5,
+        "left": 18
+      },
+      "computed": {
+        "display": "grid",
+        "width": "48px",
+        "height": "48px",
+        "minWidth": "48px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(24, 76, 53, 0.4)",
+        "borderWidth": "1px",
+        "borderRadius": "13px",
+        "fontSize": "15px"
+      },
+      "before": {
+        "width": "20px",
+        "height": "20px",
+        "inset": "14px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "flex: 0 0 25px; width: 25px; height: 25px; background: transparent; color: var(--life-accent); border: 1px solid rgb(104, 154, 121); border-radius: 8px; margin-top: 1px; font-size: 16px; padding: 0px; display: grid; place-items: center;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "width: 27px; height: 27px; flex-basis: 27px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete, #lifeApp .life-day-column .life-complete",
+          "css": "width: 48px; height: 48px; min-width: 48px; border: 0px; border-radius: 0px; position: relative; background: transparent; flex-basis: auto; align-self: center; margin: 0px; isolation: isolate;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-task .life-complete, #lifeApp .life-day-column .life-task .life-complete",
+          "css": "display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0px; border: 0px; background: transparent; border-radius: 10px; font-size: 15px; line-height: 1; isolation: isolate; color: rgb(20, 38, 26);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-complete",
+          "css": "flex: 0 0 48px; width: 48px !important; height: 48px !important; border: 1px solid rgba(167, 198, 164, 0.36) !important; background: rgba(24, 76, 53, 0.4) !important; border-radius: 13px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "toolbar": {
+      "selector": "life-toolbar memento-task-toolbar",
+      "rect": {
+        "x": 11,
+        "y": 211,
+        "width": 338,
+        "height": 70,
+        "top": 211,
+        "right": 349,
+        "bottom": 281,
+        "left": 11
+      },
+      "computed": {
+        "display": "grid",
+        "width": "338px",
+        "height": "70px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "241.469px 86.5312px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "display: flex; align-items: end; gap: 10px; flex-wrap: wrap; margin: 0px 0px 18px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "gap: 8px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "margin: 12px 0px;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-task-toolbar",
+          "css": "display: grid; grid-template-columns: minmax(0px, 1fr) auto; align-items: end; gap: 10px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(.life-toolbar, .memento-task-toolbar, .analysis-filters)",
+          "css": "gap: 10px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "filters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "flex",
+        "width": "84.5312px",
+        "height": "423px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "save": {
+      "selector": "",
+      "rect": {
+        "x": 11,
+        "y": 359,
+        "width": 109.640625,
+        "height": 44,
+        "top": 359,
+        "right": 120.640625,
+        "bottom": 403,
+        "left": 11
+      },
+      "computed": {
+        "display": "block",
+        "width": "109.641px",
+        "height": "44px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(27, 57, 41, 0.855)",
+        "borderWidth": "1px",
+        "borderRadius": "10px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body .mg-filter-chips button, body .mg-chip",
+          "css": "min-height: 44px; border: 1px solid var(--mg-line); border-radius: 10px; background: rgba(27, 57, 41, 0.855); color: rgb(215, 228, 203); padding: 7px 10px; font-size: 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "task": {
+      "selector": "life-task life-task-late",
+      "rect": {
+        "x": 12,
+        "y": 452,
+        "width": 336,
+        "height": 108,
+        "top": 452,
+        "right": 348,
+        "bottom": 560,
+        "left": 12
+      },
+      "computed": {
+        "display": "grid",
+        "width": "336px",
+        "height": "108px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "44px 228px 44px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px 0px 1px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border-bottom: 1px solid var(--life-border); min-width: 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "padding: 14px 11px; gap: 9px; flex-wrap: wrap;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-list > .life-task:first-child",
+          "css": "border-radius: 14px 14px 0px 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "display: grid; grid-template-columns: 40px minmax(0px, 1fr) 32px; align-items: center; gap: 6px; padding: 8px 9px; min-height: 76px; flex-wrap: nowrap; border-bottom-color: rgb(53, 69, 58); position: relative;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task.life-task-late",
+          "css": "background: rgb(48, 35, 38); box-shadow: rgb(236, 141, 155) 3px 0px 0px inset;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "padding: 7px 6px; grid-template-columns: 38px minmax(0px, 1fr) 32px; gap: 4px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "box-sizing: border-box; display: grid; grid-template-columns: 44px minmax(0px, 1fr) 40px; gap: 8px; padding: 14px 8px; min-height: 86px; background: rgb(28, 48, 36); border: 1px solid rgb(59, 81, 66); border-radius: 17px; box-shadow: none; overflow: visible;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task:is(:first-child, :last-child, :only-child)",
+          "css": "border-radius: 17px;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task.life-task-late",
+          "css": "border-left: 3px solid rgb(223, 154, 164);"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "gap: 4px; padding: 12px 5px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "grid-template-columns: 44px minmax(0px, 1fr) 44px; gap: 4px; padding: 10px 6px; min-height: 76px; border-radius: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-panel, .life-task, .life-list, .life-empty, .life-day, .life-quick-add, .life-shopping-panel, .flow-hero, .kc-collection-card, .kc-inbox, .kc-item, .kc-quick, .kc-diary-write, .kc-diary-health, .kc-central-result, .ft-panel, .ft-strip), body[data-compass-area=\"finance\"] .app :is(.card, .stat-card, .account-card, .budget-card, .goal-card, .settings-card, .m9-card, .m9-list, .memento-disclosure, .memento-filter-drawer)",
+          "css": "backdrop-filter: blur(18px); isolation: isolate; background: var(--mg-surface) !important; border: 1px solid var(--mg-line) !important; border-radius: 21px !important; box-shadow: rgba(236, 255, 195, 0.11) 0px 1px 0px inset, rgba(0, 22, 13, 0.15) 0px 10px 24px !important; color: var(--mg-ink) !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-list, .life-task)",
+          "css": "box-shadow: none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-list .life-task",
+          "css": "backdrop-filter: none; background: transparent !important; border-width: 0px 0px 1px !important; border-style: none none solid !important; border-color: currentcolor currentcolor rgba(204, 229, 195, 0.106) !important; border-image: none !important; border-radius: 0px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-task, .life-shopping-row)",
+          "css": "min-height: 64px; gap: 10px; padding: 11px 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "openFilters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 12,
+        "y": 338.5,
+        "width": 336,
+        "height": 265,
+        "top": 338.5,
+        "right": 348,
+        "bottom": 603.5,
+        "left": 12
+      },
+      "computed": {
+        "display": "flex",
+        "width": "336px",
+        "height": "265px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "calendar": {
+      "selector": "memento-cal-day",
+      "rect": {
+        "x": 157.421875,
+        "y": 1084.859375,
+        "width": 45.140625,
+        "height": 57.296875,
+        "top": 1084.859375,
+        "right": 202.5625,
+        "bottom": 1142.15625,
+        "left": 157.421875
+      },
+      "computed": {
+        "display": "flex",
+        "width": "45.1406px",
+        "height": "57.2969px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgb(32, 48, 41)",
+        "borderWidth": "1px",
+        "borderRadius": "9px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoUnifiedPatchStyles",
+          "selector": "#lifeApp .memento-cal-day",
+          "css": "min-height: clamp(42px, 9vw, 77px); padding: 8px; border: 1px solid rgb(51, 77, 59); background: rgb(32, 48, 41); border-radius: 9px; color: rgb(213, 230, 217); text-align: left; font-size: 12px;"
+        },
+        {
+          "source": "memento-google-calendar-style",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; min-height: clamp(37px, 9vw, 62px); padding: 6px 2px; cursor: pointer; transition: none;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "min-height: 44px; font-size: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .memento-cal-day[data-duty-code]",
+          "css": "min-height: 60px; height: auto; display: flex; flex-direction: column; justify-content: center; gap: 4px; position: relative;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "hiddenCalendar": false,
+    "context": {
+      "selector": "memento-finance-context",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "none",
+        "width": "auto",
+        "height": "auto",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "12px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "memento-v9-dashboard-style",
+          "selector": "#view-dashboard > :not(.page-head):not(#mementoFinanceV9)",
+          "css": "display: none !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "body[data-compass-area=\"finance\"] .memento-finance-context",
+          "css": "font-size: 13px; line-height: 1.6; color: rgb(197, 219, 202); padding: 10px 12px; border: 1px solid rgb(82, 113, 89); border-radius: 12px; background: rgb(27, 50, 37); margin: 0px 0px 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(p, span, small, strong, h1, h2, h3, label, summary)",
+          "css": "overflow-wrap: anywhere;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-layout.css?v=20261029-layout-v1",
+          "selector": "body .app .memento-finance-context",
+          "css": "font-size: 12px; line-height: 1.4; margin: 6px 0px 12px; padding: 6px 0px; background: transparent; border: 0px;"
+        }
+      ]
+    }
+  },
+  {
+    "width": 393,
+    "checkbox": {
+      "selector": "life-complete",
+      "rect": {
+        "x": 22,
+        "y": 479.5,
+        "width": 48,
+        "height": 48,
+        "top": 479.5,
+        "right": 70,
+        "bottom": 527.5,
+        "left": 22
+      },
+      "computed": {
+        "display": "grid",
+        "width": "48px",
+        "height": "48px",
+        "minWidth": "48px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(24, 76, 53, 0.4)",
+        "borderWidth": "1px",
+        "borderRadius": "13px",
+        "fontSize": "15px"
+      },
+      "before": {
+        "width": "20px",
+        "height": "20px",
+        "inset": "14px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "flex: 0 0 25px; width: 25px; height: 25px; background: transparent; color: var(--life-accent); border: 1px solid rgb(104, 154, 121); border-radius: 8px; margin-top: 1px; font-size: 16px; padding: 0px; display: grid; place-items: center;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "width: 27px; height: 27px; flex-basis: 27px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete, #lifeApp .life-day-column .life-complete",
+          "css": "width: 48px; height: 48px; min-width: 48px; border: 0px; border-radius: 0px; position: relative; background: transparent; flex-basis: auto; align-self: center; margin: 0px; isolation: isolate;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-task .life-complete, #lifeApp .life-day-column .life-task .life-complete",
+          "css": "display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0px; border: 0px; background: transparent; border-radius: 10px; font-size: 15px; line-height: 1; isolation: isolate; color: rgb(20, 38, 26);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-complete",
+          "css": "flex: 0 0 48px; width: 48px !important; height: 48px !important; border: 1px solid rgba(167, 198, 164, 0.36) !important; background: rgba(24, 76, 53, 0.4) !important; border-radius: 13px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "toolbar": {
+      "selector": "life-toolbar memento-task-toolbar",
+      "rect": {
+        "x": 15,
+        "y": 211,
+        "width": 363,
+        "height": 70,
+        "top": 211,
+        "right": 378,
+        "bottom": 281,
+        "left": 15
+      },
+      "computed": {
+        "display": "grid",
+        "width": "363px",
+        "height": "70px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "266.469px 86.5312px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "display: flex; align-items: end; gap: 10px; flex-wrap: wrap; margin: 0px 0px 18px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "gap: 8px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "margin: 12px 0px;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-task-toolbar",
+          "css": "display: grid; grid-template-columns: minmax(0px, 1fr) auto; align-items: end; gap: 10px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(.life-toolbar, .memento-task-toolbar, .analysis-filters)",
+          "css": "gap: 10px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "filters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "flex",
+        "width": "84.5312px",
+        "height": "423px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "save": {
+      "selector": "",
+      "rect": {
+        "x": 15,
+        "y": 359,
+        "width": 109.640625,
+        "height": 44,
+        "top": 359,
+        "right": 124.640625,
+        "bottom": 403,
+        "left": 15
+      },
+      "computed": {
+        "display": "block",
+        "width": "109.641px",
+        "height": "44px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(27, 57, 41, 0.855)",
+        "borderWidth": "1px",
+        "borderRadius": "10px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body .mg-filter-chips button, body .mg-chip",
+          "css": "min-height: 44px; border: 1px solid var(--mg-line); border-radius: 10px; background: rgba(27, 57, 41, 0.855); color: rgb(215, 228, 203); padding: 7px 10px; font-size: 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "task": {
+      "selector": "life-task life-task-late",
+      "rect": {
+        "x": 16,
+        "y": 452,
+        "width": 361,
+        "height": 104,
+        "top": 452,
+        "right": 377,
+        "bottom": 556,
+        "left": 16
+      },
+      "computed": {
+        "display": "grid",
+        "width": "361px",
+        "height": "104px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "44px 253px 44px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px 0px 1px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border-bottom: 1px solid var(--life-border); min-width: 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "padding: 14px 11px; gap: 9px; flex-wrap: wrap;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-list > .life-task:first-child",
+          "css": "border-radius: 14px 14px 0px 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "display: grid; grid-template-columns: 40px minmax(0px, 1fr) 32px; align-items: center; gap: 6px; padding: 8px 9px; min-height: 76px; flex-wrap: nowrap; border-bottom-color: rgb(53, 69, 58); position: relative;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task.life-task-late",
+          "css": "background: rgb(48, 35, 38); box-shadow: rgb(236, 141, 155) 3px 0px 0px inset;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "padding: 7px 6px; grid-template-columns: 38px minmax(0px, 1fr) 32px; gap: 4px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "box-sizing: border-box; display: grid; grid-template-columns: 44px minmax(0px, 1fr) 40px; gap: 8px; padding: 14px 8px; min-height: 86px; background: rgb(28, 48, 36); border: 1px solid rgb(59, 81, 66); border-radius: 17px; box-shadow: none; overflow: visible;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task:is(:first-child, :last-child, :only-child)",
+          "css": "border-radius: 17px;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task.life-task-late",
+          "css": "border-left: 3px solid rgb(223, 154, 164);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "grid-template-columns: 44px minmax(0px, 1fr) 44px; gap: 4px; padding: 10px 6px; min-height: 76px; border-radius: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-panel, .life-task, .life-list, .life-empty, .life-day, .life-quick-add, .life-shopping-panel, .flow-hero, .kc-collection-card, .kc-inbox, .kc-item, .kc-quick, .kc-diary-write, .kc-diary-health, .kc-central-result, .ft-panel, .ft-strip), body[data-compass-area=\"finance\"] .app :is(.card, .stat-card, .account-card, .budget-card, .goal-card, .settings-card, .m9-card, .m9-list, .memento-disclosure, .memento-filter-drawer)",
+          "css": "backdrop-filter: blur(18px); isolation: isolate; background: var(--mg-surface) !important; border: 1px solid var(--mg-line) !important; border-radius: 21px !important; box-shadow: rgba(236, 255, 195, 0.11) 0px 1px 0px inset, rgba(0, 22, 13, 0.15) 0px 10px 24px !important; color: var(--mg-ink) !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-list, .life-task)",
+          "css": "box-shadow: none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-list .life-task",
+          "css": "backdrop-filter: none; background: transparent !important; border-width: 0px 0px 1px !important; border-style: none none solid !important; border-color: currentcolor currentcolor rgba(204, 229, 195, 0.106) !important; border-image: none !important; border-radius: 0px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-task, .life-shopping-row)",
+          "css": "min-height: 64px; gap: 10px; padding: 11px 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "openFilters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 16,
+        "y": 338.5,
+        "width": 361,
+        "height": 265,
+        "top": 338.5,
+        "right": 377,
+        "bottom": 603.5,
+        "left": 16
+      },
+      "computed": {
+        "display": "flex",
+        "width": "361px",
+        "height": "265px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "calendar": {
+      "selector": "memento-cal-day",
+      "rect": {
+        "x": 172.140625,
+        "y": 1084.859375,
+        "width": 48.703125,
+        "height": 57.296875,
+        "top": 1084.859375,
+        "right": 220.84375,
+        "bottom": 1142.15625,
+        "left": 172.140625
+      },
+      "computed": {
+        "display": "flex",
+        "width": "48.7031px",
+        "height": "57.2969px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgb(32, 48, 41)",
+        "borderWidth": "1px",
+        "borderRadius": "9px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoUnifiedPatchStyles",
+          "selector": "#lifeApp .memento-cal-day",
+          "css": "min-height: clamp(42px, 9vw, 77px); padding: 8px; border: 1px solid rgb(51, 77, 59); background: rgb(32, 48, 41); border-radius: 9px; color: rgb(213, 230, 217); text-align: left; font-size: 12px;"
+        },
+        {
+          "source": "memento-google-calendar-style",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; min-height: clamp(37px, 9vw, 62px); padding: 6px 2px; cursor: pointer; transition: none;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "min-height: 44px; font-size: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .memento-cal-day[data-duty-code]",
+          "css": "min-height: 60px; height: auto; display: flex; flex-direction: column; justify-content: center; gap: 4px; position: relative;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "hiddenCalendar": false,
+    "context": {
+      "selector": "memento-finance-context",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "none",
+        "width": "auto",
+        "height": "auto",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "12px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "memento-v9-dashboard-style",
+          "selector": "#view-dashboard > :not(.page-head):not(#mementoFinanceV9)",
+          "css": "display: none !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "body[data-compass-area=\"finance\"] .memento-finance-context",
+          "css": "font-size: 13px; line-height: 1.6; color: rgb(197, 219, 202); padding: 10px 12px; border: 1px solid rgb(82, 113, 89); border-radius: 12px; background: rgb(27, 50, 37); margin: 0px 0px 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(p, span, small, strong, h1, h2, h3, label, summary)",
+          "css": "overflow-wrap: anywhere;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-layout.css?v=20261029-layout-v1",
+          "selector": "body .app .memento-finance-context",
+          "css": "font-size: 12px; line-height: 1.4; margin: 6px 0px 12px; padding: 6px 0px; background: transparent; border: 0px;"
+        }
+      ]
+    }
+  },
+  {
+    "width": 412,
+    "checkbox": {
+      "selector": "life-complete",
+      "rect": {
+        "x": 22,
+        "y": 479.5,
+        "width": 48,
+        "height": 48,
+        "top": 479.5,
+        "right": 70,
+        "bottom": 527.5,
+        "left": 22
+      },
+      "computed": {
+        "display": "grid",
+        "width": "48px",
+        "height": "48px",
+        "minWidth": "48px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(24, 76, 53, 0.4)",
+        "borderWidth": "1px",
+        "borderRadius": "13px",
+        "fontSize": "15px"
+      },
+      "before": {
+        "width": "20px",
+        "height": "20px",
+        "inset": "14px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "flex: 0 0 25px; width: 25px; height: 25px; background: transparent; color: var(--life-accent); border: 1px solid rgb(104, 154, 121); border-radius: 8px; margin-top: 1px; font-size: 16px; padding: 0px; display: grid; place-items: center;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "width: 27px; height: 27px; flex-basis: 27px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete, #lifeApp .life-day-column .life-complete",
+          "css": "width: 48px; height: 48px; min-width: 48px; border: 0px; border-radius: 0px; position: relative; background: transparent; flex-basis: auto; align-self: center; margin: 0px; isolation: isolate;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-task .life-complete, #lifeApp .life-day-column .life-task .life-complete",
+          "css": "display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0px; border: 0px; background: transparent; border-radius: 10px; font-size: 15px; line-height: 1; isolation: isolate; color: rgb(20, 38, 26);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-complete",
+          "css": "flex: 0 0 48px; width: 48px !important; height: 48px !important; border: 1px solid rgba(167, 198, 164, 0.36) !important; background: rgba(24, 76, 53, 0.4) !important; border-radius: 13px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "toolbar": {
+      "selector": "life-toolbar memento-task-toolbar",
+      "rect": {
+        "x": 15,
+        "y": 211,
+        "width": 382,
+        "height": 70,
+        "top": 211,
+        "right": 397,
+        "bottom": 281,
+        "left": 15
+      },
+      "computed": {
+        "display": "grid",
+        "width": "382px",
+        "height": "70px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "285.469px 86.5312px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "display: flex; align-items: end; gap: 10px; flex-wrap: wrap; margin: 0px 0px 18px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "gap: 8px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "margin: 12px 0px;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-task-toolbar",
+          "css": "display: grid; grid-template-columns: minmax(0px, 1fr) auto; align-items: end; gap: 10px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(.life-toolbar, .memento-task-toolbar, .analysis-filters)",
+          "css": "gap: 10px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "filters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "flex",
+        "width": "84.5312px",
+        "height": "423px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "save": {
+      "selector": "",
+      "rect": {
+        "x": 15,
+        "y": 359,
+        "width": 109.640625,
+        "height": 44,
+        "top": 359,
+        "right": 124.640625,
+        "bottom": 403,
+        "left": 15
+      },
+      "computed": {
+        "display": "block",
+        "width": "109.641px",
+        "height": "44px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(27, 57, 41, 0.855)",
+        "borderWidth": "1px",
+        "borderRadius": "10px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body .mg-filter-chips button, body .mg-chip",
+          "css": "min-height: 44px; border: 1px solid var(--mg-line); border-radius: 10px; background: rgba(27, 57, 41, 0.855); color: rgb(215, 228, 203); padding: 7px 10px; font-size: 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "task": {
+      "selector": "life-task life-task-late",
+      "rect": {
+        "x": 16,
+        "y": 452,
+        "width": 380,
+        "height": 104,
+        "top": 452,
+        "right": 396,
+        "bottom": 556,
+        "left": 16
+      },
+      "computed": {
+        "display": "grid",
+        "width": "380px",
+        "height": "104px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "44px 272px 44px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px 0px 1px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border-bottom: 1px solid var(--life-border); min-width: 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "padding: 14px 11px; gap: 9px; flex-wrap: wrap;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-list > .life-task:first-child",
+          "css": "border-radius: 14px 14px 0px 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "display: grid; grid-template-columns: 40px minmax(0px, 1fr) 32px; align-items: center; gap: 6px; padding: 8px 9px; min-height: 76px; flex-wrap: nowrap; border-bottom-color: rgb(53, 69, 58); position: relative;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task.life-task-late",
+          "css": "background: rgb(48, 35, 38); box-shadow: rgb(236, 141, 155) 3px 0px 0px inset;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "padding: 7px 6px; grid-template-columns: 38px minmax(0px, 1fr) 32px; gap: 4px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "box-sizing: border-box; display: grid; grid-template-columns: 44px minmax(0px, 1fr) 40px; gap: 8px; padding: 14px 8px; min-height: 86px; background: rgb(28, 48, 36); border: 1px solid rgb(59, 81, 66); border-radius: 17px; box-shadow: none; overflow: visible;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task:is(:first-child, :last-child, :only-child)",
+          "css": "border-radius: 17px;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task.life-task-late",
+          "css": "border-left: 3px solid rgb(223, 154, 164);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "grid-template-columns: 44px minmax(0px, 1fr) 44px; gap: 4px; padding: 10px 6px; min-height: 76px; border-radius: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-panel, .life-task, .life-list, .life-empty, .life-day, .life-quick-add, .life-shopping-panel, .flow-hero, .kc-collection-card, .kc-inbox, .kc-item, .kc-quick, .kc-diary-write, .kc-diary-health, .kc-central-result, .ft-panel, .ft-strip), body[data-compass-area=\"finance\"] .app :is(.card, .stat-card, .account-card, .budget-card, .goal-card, .settings-card, .m9-card, .m9-list, .memento-disclosure, .memento-filter-drawer)",
+          "css": "backdrop-filter: blur(18px); isolation: isolate; background: var(--mg-surface) !important; border: 1px solid var(--mg-line) !important; border-radius: 21px !important; box-shadow: rgba(236, 255, 195, 0.11) 0px 1px 0px inset, rgba(0, 22, 13, 0.15) 0px 10px 24px !important; color: var(--mg-ink) !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-list, .life-task)",
+          "css": "box-shadow: none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-list .life-task",
+          "css": "backdrop-filter: none; background: transparent !important; border-width: 0px 0px 1px !important; border-style: none none solid !important; border-color: currentcolor currentcolor rgba(204, 229, 195, 0.106) !important; border-image: none !important; border-radius: 0px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-task, .life-shopping-row)",
+          "css": "min-height: 64px; gap: 10px; padding: 11px 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "openFilters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 16,
+        "y": 338.5,
+        "width": 380,
+        "height": 265,
+        "top": 338.5,
+        "right": 396,
+        "bottom": 603.5,
+        "left": 16
+      },
+      "computed": {
+        "display": "flex",
+        "width": "380px",
+        "height": "265px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "calendar": {
+      "selector": "memento-cal-day",
+      "rect": {
+        "x": 180.28125,
+        "y": 1014.46875,
+        "width": 51.421875,
+        "height": 57.296875,
+        "top": 1014.46875,
+        "right": 231.703125,
+        "bottom": 1071.765625,
+        "left": 180.28125
+      },
+      "computed": {
+        "display": "flex",
+        "width": "51.4219px",
+        "height": "57.2969px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgb(32, 48, 41)",
+        "borderWidth": "1px",
+        "borderRadius": "9px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoUnifiedPatchStyles",
+          "selector": "#lifeApp .memento-cal-day",
+          "css": "min-height: clamp(42px, 9vw, 77px); padding: 8px; border: 1px solid rgb(51, 77, 59); background: rgb(32, 48, 41); border-radius: 9px; color: rgb(213, 230, 217); text-align: left; font-size: 12px;"
+        },
+        {
+          "source": "memento-google-calendar-style",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; min-height: clamp(37px, 9vw, 62px); padding: 6px 2px; cursor: pointer; transition: none;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "min-height: 44px; font-size: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .memento-cal-day[data-duty-code]",
+          "css": "min-height: 60px; height: auto; display: flex; flex-direction: column; justify-content: center; gap: 4px; position: relative;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "hiddenCalendar": false,
+    "context": {
+      "selector": "memento-finance-context",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "none",
+        "width": "auto",
+        "height": "auto",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "12px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "memento-v9-dashboard-style",
+          "selector": "#view-dashboard > :not(.page-head):not(#mementoFinanceV9)",
+          "css": "display: none !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "body[data-compass-area=\"finance\"] .memento-finance-context",
+          "css": "font-size: 13px; line-height: 1.6; color: rgb(197, 219, 202); padding: 10px 12px; border: 1px solid rgb(82, 113, 89); border-radius: 12px; background: rgb(27, 50, 37); margin: 0px 0px 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(p, span, small, strong, h1, h2, h3, label, summary)",
+          "css": "overflow-wrap: anywhere;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-layout.css?v=20261029-layout-v1",
+          "selector": "body .app .memento-finance-context",
+          "css": "font-size: 12px; line-height: 1.4; margin: 6px 0px 12px; padding: 6px 0px; background: transparent; border: 0px;"
+        }
+      ]
+    }
+  },
+  {
+    "width": 1280,
+    "checkbox": {
+      "selector": "life-complete",
+      "rect": {
+        "x": 279,
+        "y": 466,
+        "width": 48,
+        "height": 48,
+        "top": 466,
+        "right": 327,
+        "bottom": 514,
+        "left": 279
+      },
+      "computed": {
+        "display": "grid",
+        "width": "48px",
+        "height": "48px",
+        "minWidth": "48px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(24, 76, 53, 0.4)",
+        "borderWidth": "1px",
+        "borderRadius": "13px",
+        "fontSize": "15px"
+      },
+      "before": {
+        "width": "20px",
+        "height": "20px",
+        "inset": "14px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete",
+          "css": "flex: 0 0 25px; width: 25px; height: 25px; background: transparent; color: var(--life-accent); border: 1px solid rgb(104, 154, 121); border-radius: 8px; margin-top: 1px; font-size: 16px; padding: 0px; display: grid; place-items: center;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-complete, #lifeApp .life-day-column .life-complete",
+          "css": "width: 48px; height: 48px; min-width: 48px; border: 0px; border-radius: 0px; position: relative; background: transparent; flex-basis: auto; align-self: center; margin: 0px; isolation: isolate;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-task .life-complete, #lifeApp .life-day-column .life-task .life-complete",
+          "css": "display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; min-height: 48px; padding: 0px; border: 0px; background: transparent; border-radius: 10px; font-size: 15px; line-height: 1; isolation: isolate; color: rgb(20, 38, 26);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-complete",
+          "css": "flex: 0 0 48px; width: 48px !important; height: 48px !important; border: 1px solid rgba(167, 198, 164, 0.36) !important; background: rgba(24, 76, 53, 0.4) !important; border-radius: 13px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "toolbar": {
+      "selector": "life-toolbar memento-task-toolbar",
+      "rect": {
+        "x": 272,
+        "y": 208,
+        "width": 974,
+        "height": 70,
+        "top": 208,
+        "right": 1246,
+        "bottom": 278,
+        "left": 272
+      },
+      "computed": {
+        "display": "grid",
+        "width": "974px",
+        "height": "70px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "877.469px 86.5312px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "display: flex; align-items: end; gap: 10px; flex-wrap: wrap; margin: 0px 0px 18px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .life-toolbar",
+          "css": "margin: 12px 0px;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-task-toolbar",
+          "css": "display: grid; grid-template-columns: minmax(0px, 1fr) auto; align-items: end; gap: 10px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) :is(.life-toolbar, .memento-task-toolbar, .analysis-filters)",
+          "css": "gap: 10px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "filters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "flex",
+        "width": "84.5312px",
+        "height": "423px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "save": {
+      "selector": "",
+      "rect": {
+        "x": 272,
+        "y": 356,
+        "width": 109.640625,
+        "height": 44,
+        "top": 356,
+        "right": 381.640625,
+        "bottom": 400,
+        "left": 272
+      },
+      "computed": {
+        "display": "block",
+        "width": "109.641px",
+        "height": "44px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(27, 57, 41, 0.855)",
+        "borderWidth": "1px",
+        "borderRadius": "10px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body .mg-filter-chips button, body .mg-chip",
+          "css": "min-height: 44px; border: 1px solid var(--mg-line); border-radius: 10px; background: rgba(27, 57, 41, 0.855); color: rgb(215, 228, 203); padding: 7px 10px; font-size: 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "task": {
+      "selector": "life-task life-task-late",
+      "rect": {
+        "x": 273,
+        "y": 449,
+        "width": 972,
+        "height": 83,
+        "top": 449,
+        "right": 1245,
+        "bottom": 532,
+        "left": 273
+      },
+      "computed": {
+        "display": "grid",
+        "width": "972px",
+        "height": "83px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "44px 864px 44px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px 0px 1px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task",
+          "css": "display: flex; align-items: flex-start; gap: 12px; padding: 15px 16px; border-bottom: 1px solid var(--life-border); min-width: 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-list > .life-task:first-child",
+          "css": "border-radius: 14px 14px 0px 0px;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task, #lifeApp .life-day-column .life-task",
+          "css": "display: grid; grid-template-columns: 40px minmax(0px, 1fr) 32px; align-items: center; gap: 6px; padding: 8px 9px; min-height: 76px; flex-wrap: nowrap; border-bottom-color: rgb(53, 69, 58); position: relative;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp .life-task.life-task-late",
+          "css": "background: rgb(48, 35, 38); box-shadow: rgb(236, 141, 155) 3px 0px 0px inset;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "box-sizing: border-box; display: grid; grid-template-columns: 44px minmax(0px, 1fr) 40px; gap: 8px; padding: 14px 8px; min-height: 86px; background: rgb(28, 48, 36); border: 1px solid rgb(59, 81, 66); border-radius: 17px; box-shadow: none; overflow: visible;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task:is(:first-child, :last-child, :only-child)",
+          "css": "border-radius: 17px;"
+        },
+        {
+          "source": "memento-design2-cards-20261025",
+          "selector": "#lifeApp .life-list > .life-task.life-task-late",
+          "css": "border-left: 3px solid rgb(223, 154, 164);"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .life-list > .life-task, #lifeApp .life-day-column .life-list > .life-task",
+          "css": "grid-template-columns: 44px minmax(0px, 1fr) 44px; gap: 4px; padding: 10px 6px; min-height: 76px; border-radius: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-panel, .life-task, .life-list, .life-empty, .life-day, .life-quick-add, .life-shopping-panel, .flow-hero, .kc-collection-card, .kc-inbox, .kc-item, .kc-quick, .kc-diary-write, .kc-diary-health, .kc-central-result, .ft-panel, .ft-strip), body[data-compass-area=\"finance\"] .app :is(.card, .stat-card, .account-card, .budget-card, .goal-card, .settings-card, .m9-card, .m9-list, .memento-disclosure, .memento-filter-drawer)",
+          "css": "backdrop-filter: blur(18px); isolation: isolate; background: var(--mg-surface) !important; border: 1px solid var(--mg-line) !important; border-radius: 21px !important; box-shadow: rgba(236, 255, 195, 0.11) 0px 1px 0px inset, rgba(0, 22, 13, 0.15) 0px 10px 24px !important; color: var(--mg-ink) !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-list, .life-task)",
+          "css": "box-shadow: none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp .life-list .life-task",
+          "css": "backdrop-filter: none; background: transparent !important; border-width: 0px 0px 1px !important; border-style: none none solid !important; border-color: currentcolor currentcolor rgba(204, 229, 195, 0.106) !important; border-image: none !important; border-radius: 0px !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body #lifeApp :is(.life-task, .life-shopping-row)",
+          "css": "min-height: 64px; gap: 10px; padding: 11px 12px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "openFilters": {
+      "selector": "memento-filter-fields",
+      "rect": {
+        "x": 273,
+        "y": 335.5,
+        "width": 972,
+        "height": 107,
+        "top": 335.5,
+        "right": 1245,
+        "bottom": 442.5,
+        "left": 273
+      },
+      "computed": {
+        "display": "flex",
+        "width": "972px",
+        "height": "107px",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "0px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoTabReview",
+          "selector": "#lifeApp .memento-filter-fields",
+          "css": "display: flex; flex-wrap: wrap; gap: 12px; padding: 14px;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "calendar": {
+      "selector": "memento-cal-day",
+      "rect": {
+        "x": 669.28125,
+        "y": 934.875,
+        "width": 125.421875,
+        "height": 77,
+        "top": 934.875,
+        "right": 794.703125,
+        "bottom": 1011.875,
+        "left": 669.28125
+      },
+      "computed": {
+        "display": "flex",
+        "width": "125.422px",
+        "height": "77px",
+        "minWidth": "auto",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgb(32, 48, 41)",
+        "borderWidth": "1px",
+        "borderRadius": "9px",
+        "fontSize": "14px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, input, select, textarea",
+          "css": "font: inherit;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button",
+          "css": "cursor: pointer;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "button, .btn, .icon-btn",
+          "css": "transition: background 0.18s, border-color 0.18s, transform 0.18s;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "#lifeApp *, #lifeDialog *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "mementoUnifiedPatchStyles",
+          "selector": "#lifeApp .memento-cal-day",
+          "css": "min-height: clamp(42px, 9vw, 77px); padding: 8px; border: 1px solid rgb(51, 77, 59); background: rgb(32, 48, 41); border-radius: 9px; color: rgb(213, 230, 217); text-align: left; font-size: 12px;"
+        },
+        {
+          "source": "memento-google-calendar-style",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; min-height: clamp(37px, 9vw, 62px); padding: 6px 2px; cursor: pointer; transition: none;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp[data-life-view=\"agenda\"] button.memento-cal-day",
+          "css": "min-height: 44px; font-size: 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp *, #modalContent *, #mementoQuickNav *",
+          "css": "scroll-behavior: auto; transition: none !important; animation: auto ease 0s 1 normal none running none !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "#lifeApp .memento-cal-day[data-duty-code]",
+          "css": "min-height: 60px; height: auto; display: flex; flex-direction: column; justify-content: center; gap: 4px; position: relative;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        }
+      ]
+    },
+    "hiddenCalendar": false,
+    "context": {
+      "selector": "memento-finance-context",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "computed": {
+        "display": "none",
+        "width": "auto",
+        "height": "auto",
+        "minWidth": "0px",
+        "gridTemplateColumns": "none",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderWidth": "0px",
+        "borderRadius": "12px",
+        "fontSize": "12px"
+      },
+      "before": {
+        "width": "auto",
+        "height": "auto",
+        "inset": "auto",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "rules": [
+        {
+          "source": "compassGreenFlowV12",
+          "selector": "*",
+          "css": "box-sizing: border-box;"
+        },
+        {
+          "source": "memento-v9-dashboard-style",
+          "selector": "#view-dashboard > :not(.page-head):not(#mementoFinanceV9)",
+          "css": "display: none !important;"
+        },
+        {
+          "source": "memento-usability-20261025",
+          "selector": "*, ::before, ::after",
+          "css": "animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-ui.css?v=20261029-compact-day-v1",
+          "selector": "body[data-compass-area=\"finance\"] .memento-finance-context",
+          "css": "font-size: 13px; line-height: 1.6; color: rgb(197, 219, 202); padding: 10px 12px; border: 1px solid rgb(82, 113, 89); border-radius: 12px; background: rgb(27, 50, 37); margin: 0px 0px 14px;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-glass.css?v=20261029-layout-v1",
+          "selector": "body :is(#lifeApp, .app) *",
+          "css": "scroll-behavior: auto !important;"
+        },
+        {
+          "source": "http://127.0.0.1:40489/assets/memento-layout.css?v=20261029-layout-v1",
+          "selector": "body .app .memento-finance-context",
+          "css": "font-size: 12px; line-height: 1.4; margin: 6px 0px 12px; padding: 6px 0px; background: transparent; border: 0px;"
+        }
+      ]
+    }
+  }
+]

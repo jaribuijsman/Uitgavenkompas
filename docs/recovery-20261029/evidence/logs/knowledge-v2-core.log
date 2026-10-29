@@ -1,0 +1,14 @@
+PASS additive migration preserves every old collection and note
+PASS migration is idempotent and respects renamed defaults
+PASS unknown migration versions and reserved identity collisions fail closed
+PASS create, rename, icon and parent updates preserve note links
+PASS duplicate siblings rejected but equal names under different roots allowed
+PASS third level, self-parenting and HTML icon values rejected
+PASS reorder persists through JSON and cannot change parents
+PASS opening a diary date never creates a note; repeated save cannot duplicate
+PASS journal date collision, invalid dates and empty text rejected
+PASS Amsterdam local date handles midnight and daylight saving time
+PASS JSON round trip retains hierarchy, diary, revisions and legacy recipe
+PASS explicit collection IDs take precedence over legacy category names
+PASS moving a legacy recipe collection retains original ID and ingredients
+13 knowledge v2 core checks passed

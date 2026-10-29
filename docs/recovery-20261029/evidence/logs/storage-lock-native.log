@@ -1,0 +1,1 @@
+PASS native Web Locks deny a concurrent writer and release on owner termination

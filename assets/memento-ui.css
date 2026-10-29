@@ -1,10 +1,4 @@
 /* Memento's shared presentation layer. No PIN, storage or financial behavior. */
-:root {
-  --m-bg:#101d16; --m-surface:#1b3024; --m-surface-raised:#223c2c;
-  --m-ink:#edf4ed; --m-muted:#b6c8ba; --m-line:#3c5745;
-  --m-sage:#b9cebd; --m-on-sage:#15271c; --m-danger:#f0b2ac;
-  --m-notice-gap:0px; --m-radius:16px; --m-radius-small:11px; --m-space:12px;
-}
 #compassAreaBar,#mementoQuickNav {background:var(--m-bg)!important;box-shadow:none!important;backdrop-filter:none}
 #compassAreaBar {top:var(--m-notice-gap);border-bottom:1px solid var(--m-line)!important}
 #compassAreaBar .life-area-switch button {min-height:44px;font-weight:650}
@@ -14,7 +8,7 @@
 #mementoMenuPanel #mementoMenuClose {width:44px;height:44px;flex:none}
 #mementoMenuPanel .memento-menu-switch button {min-height:44px}
 #mementoMenuGrid button {min-height:84px;gap:8px;border-radius:var(--m-radius-small)}
-#lifeApp,body[data-compass-area="finance"] .app {font-family:Inter,system-ui,sans-serif;line-height:1.5}
+#lifeApp,body[data-compass-area="finance"] .app {font-family:var(--m-font);line-height:var(--m-line-height)}
 #lifeApp .life-page-head {align-items:center;flex-wrap:nowrap;gap:12px;margin-bottom:12px}
 #lifeApp .life-page-head>div {flex:1;min-width:0}
 #lifeApp .life-page-head h1 {font-size:28px;font-weight:650;letter-spacing:-.8px;line-height:1.2}
@@ -24,8 +18,14 @@
 #lifeApp .life-segments {gap:2px;margin:10px 0;border-radius:12px!important}
 #lifeApp .life-segments button {min-height:44px;padding:8px 10px;font-weight:600!important}
 #lifeApp .life-task-title {font-weight:600}
-#lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task {grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;padding:10px 6px;min-height:76px;border-radius:14px}
+#lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task {grid-template-columns:48px minmax(0,1fr) 44px;gap:4px;padding:10px 6px;min-height:76px;border-radius:14px}
 #lifeApp .life-task .life-task-title {font-size:15px;font-weight:600;min-height:44px;display:flex;align-items:center}
+/* One owner for a compact visual checkbox inside a non-overlapping touch target. */
+#lifeApp .life-task .life-complete {display:grid;place-items:center;position:relative;isolation:isolate;align-self:center;flex:0 0 var(--m-touch);width:var(--m-touch);min-width:var(--m-touch);height:var(--m-touch);min-height:var(--m-touch);margin:0;padding:0;border:0;border-radius:0;background:transparent;color:var(--m-on-sage);font-size:15px;line-height:1}
+#lifeApp .life-task .life-complete::before {box-sizing:border-box;content:"";position:absolute;inset:var(--m-checkbox-inset);width:var(--m-checkbox);height:var(--m-checkbox);border:1.5px solid #bfd1c3;border-radius:5px;background:transparent;z-index:-1}
+#lifeApp .life-task .life-complete[aria-pressed=true]::before {background:#bdd3c2;border-color:#bdd3c2}
+#lifeApp .mg-filter-chips:empty {display:none}
+#lifeApp #mgTaskFilterPresets {flex-basis:100%;margin:0}
 #lifeApp .life-task .life-task-meta {font-size:12px;margin-top:0;line-height:1.5}
 #lifeApp .life-task-menu>summary {width:44px;min-width:44px;min-height:44px}
 #lifeApp .memento-capture-card {gap:6px;padding:10px;margin:10px 0 16px;border-radius:var(--m-radius)}
@@ -239,11 +239,9 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-overdue-title{min-width:0;flex:0 1 auto;overflow-wrap:break-word}
 #lifeApp[data-life-view="today"] .memento-overdue-count{display:inline-grid;place-items:center;min-width:28px;height:28px;flex:0 0 auto;padding:0 8px;border-radius:999px;background:#2a4435;color:#e8f4e9;font-size:13px;font-variant-numeric:tabular-nums}
 #lifeApp[data-life-view="today"] .life-overdue{margin:7px 0 12px}
-#lifeApp[data-life-view="today"] .life-overdue>.life-task{grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;padding:9px 7px;min-height:82px;background:linear-gradient(120deg,#1d3829,#193325);border:1px solid #435f4b;border-left:3px solid #e69aa6;border-radius:14px;box-shadow:none}
+#lifeApp[data-life-view="today"] .life-overdue>.life-task{grid-template-columns:48px minmax(0,1fr) 44px;gap:6px;padding:9px 7px;min-height:82px;background:linear-gradient(120deg,#1d3829,#193325);border:1px solid #435f4b;border-left:3px solid #e69aa6;border-radius:14px;box-shadow:none}
 #lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-title{min-height:0;display:block;padding:0;font-size:15px;line-height:1.32;font-weight:700;color:#edf5ef}
 #lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-meta{font-size:12px;line-height:1.4;margin-top:5px;gap:3px 9px;color:#bfd1c3}
 #lifeApp[data-life-view="today"] .life-overdue .life-late-text{display:inline-block;padding:2px 7px;border-radius:999px;background:#53343b;color:#ffc1c9;font-weight:600}
-#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete{width:44px;min-width:44px;height:44px;min-height:44px}
-#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete::before{inset:12px}
 #lifeApp[data-life-view="today"] .life-overdue .life-task-menu>summary{width:44px;min-width:44px;height:44px;min-height:44px}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-overdue-chevron svg{transition:none}}

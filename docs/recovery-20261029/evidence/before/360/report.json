@@ -1,0 +1,1594 @@
+{
+  "phase": "before",
+  "width": 360,
+  "diagnostics": [
+    {
+      "name": "day",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Taak",
+          "width": 40,
+          "height": 44
+        },
+        {
+          "id": "",
+          "text": "Afspraak voor de fiets bevestigen",
+          "width": 222,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Fiets ophalen bij de werkplaats",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Fiets ophalen bij de werkplaats",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Wandelen en bijpraten met Noor",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Wandelen en bijpraten met Noor",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Nog zonder planning (0)",
+          "width": 338,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "Bron & vertaling",
+          "width": 278,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Lees de bron ↗",
+          "width": 91,
+          "height": 17
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "tasks",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 294,
+            "width": 120,
+            "height": 67,
+            "top": 294,
+            "right": 397.46875,
+            "bottom": 361,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 315,
+            "width": 120,
+            "height": 46,
+            "top": 315,
+            "right": 397.46875,
+            "bottom": 361,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 373,
+            "width": 120,
+            "height": 67,
+            "top": 373,
+            "right": 397.46875,
+            "bottom": 440,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 394,
+            "width": 120,
+            "height": 46,
+            "top": 394,
+            "right": 397.46875,
+            "bottom": 440,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 452,
+            "width": 120,
+            "height": 67,
+            "top": 452,
+            "right": 397.46875,
+            "bottom": 519,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 473,
+            "width": 120,
+            "height": 46,
+            "top": 473,
+            "right": 397.46875,
+            "bottom": 519,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 531,
+            "width": 120,
+            "height": 67,
+            "top": 531,
+            "right": 397.46875,
+            "bottom": 598,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 552,
+            "width": 120,
+            "height": 46,
+            "top": 552,
+            "right": 397.46875,
+            "bottom": 598,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 277.46875,
+            "y": 616,
+            "width": 120,
+            "height": 67,
+            "top": 616,
+            "right": 397.46875,
+            "bottom": 683,
+            "left": 277.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 277.46875,
+            "y": 637,
+            "width": 120,
+            "height": 46,
+            "top": 637,
+            "right": 397.46875,
+            "bottom": 683,
+            "left": 277.46875
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Taak",
+          "width": 40,
+          "height": 44
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "groceries",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "wishes",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 93,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "agenda",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Afvinken: Fiets ophalen bij de werkplaats",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Fiets ophalen bij de werkplaats",
+          "width": 65,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afvinken: Wandelen en bijpraten met Noor",
+          "width": 28,
+          "height": 36
+        },
+        {
+          "id": "",
+          "text": "Afspraak bewerken: Wandelen en bijpraten met Noor",
+          "width": 65,
+          "height": 36
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "finance",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 336,
+            "y": 630.09375,
+            "width": 312,
+            "height": 180,
+            "top": 630.09375,
+            "right": 648,
+            "bottom": 810.09375,
+            "left": 336
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 336,
+            "y": 630.09375,
+            "width": 312,
+            "height": 180,
+            "top": 630.09375,
+            "right": 648,
+            "bottom": 810.09375,
+            "left": 336
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "g",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 393.61944580078125,
+            "y": 659.9722900390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 659.9722900390625,
+            "right": 498.5587158203125,
+            "bottom": 764.9115600585938,
+            "left": 393.61944580078125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 434.7609558105469,
+            "y": 702.7131958007812,
+            "width": 22.65625,
+            "height": 11,
+            "top": 702.7131958007812,
+            "right": 457.4172058105469,
+            "bottom": 713.7131958007812,
+            "left": 434.7609558105469
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 412.6593933105469,
+            "y": 713.4743041992188,
+            "width": 66.93508911132812,
+            "height": 19,
+            "top": 713.4743041992188,
+            "right": 479.594482421875,
+            "bottom": 732.4743041992188,
+            "left": 412.6593933105469
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 516.4129638671875,
+            "y": 675.6403198242188,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 675.6403198242188,
+            "right": 524.4291381835938,
+            "bottom": 683.656494140625,
+            "left": 516.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 529.8947143554688,
+            "y": 673.5633544921875,
+            "width": 48.09375,
+            "height": 11,
+            "top": 673.5633544921875,
+            "right": 577.9884643554688,
+            "bottom": 684.5633544921875,
+            "left": 529.8947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 589.9954223632812,
+            "y": 673.5633544921875,
+            "width": 17.99224853515625,
+            "height": 12.00006103515625,
+            "top": 673.5633544921875,
+            "right": 607.9876708984375,
+            "bottom": 685.5634155273438,
+            "left": 589.9954223632812
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 516.4129638671875,
+            "y": 704.7901000976562,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 704.7901000976562,
+            "right": 524.4291381835938,
+            "bottom": 712.8062744140625,
+            "left": 516.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 529.8947143554688,
+            "y": 702.7131958007812,
+            "width": 59.828125,
+            "height": 11,
+            "top": 702.7131958007812,
+            "right": 589.7228393554688,
+            "bottom": 713.7131958007812,
+            "left": 529.8947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 594.9954833984375,
+            "y": 702.7131958007812,
+            "width": 12.99609375,
+            "height": 12,
+            "top": 702.7131958007812,
+            "right": 607.9915771484375,
+            "bottom": 714.7131958007812,
+            "left": 594.9954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 516.4129638671875,
+            "y": 733.9398803710938,
+            "width": 8.01617431640625,
+            "height": 8.0162353515625,
+            "top": 733.9398803710938,
+            "right": 524.4291381835938,
+            "bottom": 741.9561157226562,
+            "left": 516.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 529.8947143554688,
+            "y": 731.8629760742188,
+            "width": 41.871337890625,
+            "height": 11,
+            "top": 731.8629760742188,
+            "right": 571.7660522460938,
+            "bottom": 742.8629760742188,
+            "left": 529.8947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 594.9954833984375,
+            "y": 731.8629760742188,
+            "width": 12.99609375,
+            "height": 12,
+            "top": 731.8629760742188,
+            "right": 607.9915771484375,
+            "bottom": 743.8629760742188,
+            "left": 594.9954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 516.4129638671875,
+            "y": 763.0897216796875,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 763.0897216796875,
+            "right": 524.4291381835938,
+            "bottom": 771.1058959960938,
+            "left": 516.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 529.8947143554688,
+            "y": 761.0127563476562,
+            "width": 26.73443603515625,
+            "height": 11.00006103515625,
+            "top": 761.0127563476562,
+            "right": 556.629150390625,
+            "bottom": 772.0128173828125,
+            "left": 529.8947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 594.9954833984375,
+            "y": 761.0127563476562,
+            "width": 12.99609375,
+            "height": 12.00006103515625,
+            "top": 761.0127563476562,
+            "right": 607.9915771484375,
+            "bottom": 773.0128173828125,
+            "left": 594.9954833984375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 648,
+            "y": 630.09375,
+            "width": 312,
+            "height": 180,
+            "top": 630.09375,
+            "right": 960,
+            "bottom": 810.09375,
+            "left": 648
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 648,
+            "y": 630.09375,
+            "width": 312,
+            "height": 180,
+            "top": 630.09375,
+            "right": 960,
+            "bottom": 810.09375,
+            "left": 648
+          }
+        },
+        {
+          "tag": "path",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 691.7732543945312,
+            "y": 654.87109375,
+            "width": 224.45343017578125,
+            "height": 122.42913818359375,
+            "top": 654.87109375,
+            "right": 916.2266845703125,
+            "bottom": 777.3002319335938,
+            "left": 691.7732543945312
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 715.69873046875,
+            "y": 787.976318359375,
+            "width": 10.90625,
+            "height": 12,
+            "top": 787.976318359375,
+            "right": 726.60498046875,
+            "bottom": 799.976318359375,
+            "left": 715.69873046875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 769.2005004882812,
+            "y": 787.976318359375,
+            "width": 15.671875,
+            "height": 12,
+            "top": 787.976318359375,
+            "right": 784.8723754882812,
+            "bottom": 799.976318359375,
+            "left": 769.2005004882812
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 825.1788940429688,
+            "y": 787.976318359375,
+            "width": 14.48431396484375,
+            "height": 12,
+            "top": 787.976318359375,
+            "right": 839.6632080078125,
+            "bottom": 799.976318359375,
+            "left": 825.1788940429688
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 872.5020141601562,
+            "y": 665.80224609375,
+            "width": 31.3360595703125,
+            "height": 111.49798583984375,
+            "top": 665.80224609375,
+            "right": 903.8380737304688,
+            "bottom": 777.3002319335938,
+            "left": 872.5020141601562
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 881.2509765625,
+            "y": 787.976318359375,
+            "width": 13.109375,
+            "height": 12,
+            "top": 787.976318359375,
+            "right": 894.3603515625,
+            "bottom": 799.976318359375,
+            "left": 881.2509765625
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "m9-replay",
+          "text": "Grafiekanimatie opnieuw afspelen",
+          "width": 40,
+          "height": 40
+        },
+        {
+          "id": "m9-allcats",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        },
+        {
+          "id": "m9-alltx",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "transactions",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 850.46875,
+            "width": 78.703125,
+            "height": 44,
+            "top": 850.46875,
+            "right": 365.375,
+            "bottom": 894.46875,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 902.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 902.46875,
+            "right": 380.140625,
+            "bottom": 946.46875,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1006.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1006.0625,
+            "right": 365.375,
+            "bottom": 1050.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1058.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1058.0625,
+            "right": 380.140625,
+            "bottom": 1102.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1178.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1178.5625,
+            "right": 365.375,
+            "bottom": 1222.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1230.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1230.5625,
+            "right": 380.140625,
+            "bottom": 1274.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1351.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1351.0625,
+            "right": 365.375,
+            "bottom": 1395.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1403.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1403.0625,
+            "right": 380.140625,
+            "bottom": 1447.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1541.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1541.5625,
+            "right": 365.375,
+            "bottom": 1585.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1593.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1593.5625,
+            "right": 380.140625,
+            "bottom": 1637.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1750.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1750.0625,
+            "right": 365.375,
+            "bottom": 1794.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1802.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1802.0625,
+            "right": 380.140625,
+            "bottom": 1846.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1868.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1868.5625,
+            "right": 365.375,
+            "bottom": 1912.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1920.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1920.5625,
+            "right": 380.140625,
+            "bottom": 1964.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 2041.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 2041.0625,
+            "right": 365.375,
+            "bottom": 2085.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 2093.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 2093.0625,
+            "right": 380.140625,
+            "bottom": 2137.0625,
+            "left": 286.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "analysis",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "✨ Vaste lasten",
+          "width": 240,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🛒 Boodschappen",
+          "width": 250,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🎮 Vrije tijd & entertainment",
+          "width": 257,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🚗 Auto & vervoer",
+          "width": 257,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🍔 Horeca & uit eten",
+          "width": 264,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "accounts",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "receipts",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance-settings",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "smartbuy",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "moneycoach",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "budgets",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "planning",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 305,
+            "y": 370.5,
+            "width": 135.4375,
+            "height": 56,
+            "top": 370.5,
+            "right": 440.4375,
+            "bottom": 426.5,
+            "left": 305
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 305,
+            "y": 426.5,
+            "width": 73.296875,
+            "height": 56,
+            "top": 426.5,
+            "right": 378.296875,
+            "bottom": 482.5,
+            "left": 305
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 305,
+            "y": 482.5,
+            "width": 111.234375,
+            "height": 77,
+            "top": 482.5,
+            "right": 416.234375,
+            "bottom": 559.5,
+            "left": 305
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "settings",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeRestoreFinance",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-list",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "checklist",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "recipe",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "document",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "note",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "editor",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 312,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "editor-short",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 312,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "transaction-modal",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 850.46875,
+            "width": 78.703125,
+            "height": 44,
+            "top": 850.46875,
+            "right": 365.375,
+            "bottom": 894.46875,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 902.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 902.46875,
+            "right": 380.140625,
+            "bottom": 946.46875,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1006.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1006.0625,
+            "right": 365.375,
+            "bottom": 1050.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1058.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1058.0625,
+            "right": 380.140625,
+            "bottom": 1102.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1178.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1178.5625,
+            "right": 365.375,
+            "bottom": 1222.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1230.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1230.5625,
+            "right": 380.140625,
+            "bottom": 1274.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1351.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1351.0625,
+            "right": 365.375,
+            "bottom": 1395.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1403.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1403.0625,
+            "right": 380.140625,
+            "bottom": 1447.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1541.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1541.5625,
+            "right": 365.375,
+            "bottom": 1585.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1593.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1593.5625,
+            "right": 380.140625,
+            "bottom": 1637.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1750.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1750.0625,
+            "right": 365.375,
+            "bottom": 1794.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1802.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1802.0625,
+            "right": 380.140625,
+            "bottom": 1846.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 1868.5625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 1868.5625,
+            "right": 365.375,
+            "bottom": 1912.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 1920.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1920.5625,
+            "right": 380.140625,
+            "bottom": 1964.5625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm",
+          "rect": {
+            "x": 286.671875,
+            "y": 2041.0625,
+            "width": 78.703125,
+            "height": 44,
+            "top": 2041.0625,
+            "right": 365.375,
+            "bottom": 2085.0625,
+            "left": 286.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 286.671875,
+            "y": 2093.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 2093.0625,
+            "right": 380.140625,
+            "bottom": 2137.0625,
+            "left": 286.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-plan",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-progress",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "navigation",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "mementoMenuClose"
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock"
+  ],
+  "errors": []
+}

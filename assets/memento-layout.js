@@ -3,13 +3,7 @@
  const $=(s,r=document)=>r.querySelector(s),all=(s,r=document)=>[...r.querySelectorAll(s)];
  const states=new Map();
  function text(el,value){if(el&&el.textContent!==value)el.textContent=value;}
- function fold(nodes,title,id){
-  nodes=nodes.filter(Boolean);if(!nodes.length)return null;
-  const old=nodes[0].closest('details[data-ml-fold]');if(old)return old;
-  const d=document.createElement('details');d.className='mg-fold ml-fold';d.dataset.mlFold=id||title;
-  const s=document.createElement('summary');s.textContent=title;d.append(s);
-  const b=document.createElement('div');b.className='mg-fold-body';d.append(b);nodes[0].before(d);nodes.forEach(n=>b.append(n));return d;
- }
+ const fold=(nodes,title,id)=>window.MementoDisclosure.fold(nodes,title,{key:id||title});
  function once(host,key,fn){if(!host||host.dataset[key])return;host.dataset[key]='1';fn();}
  function tabs(host,key,entries,before){
   if(!host||$('#ml-'+key,host))return;
@@ -90,7 +84,7 @@
    const steps=$('.mg-receipt-steps',receipt);if(steps)steps.remove();
    const form=$('#receiptForm'),intro=form?.closest('.card'),bundle=$('#receiptMonthStats')?.closest('.card');
    const head=$('#receiptList')?.previousElementSibling,list=$('#receiptList');
-   if(intro&&form){const input=document.createElement('section');input.className='card ml-receipt-entry';input.setAttribute('aria-label','Bon invoeren');intro.before(input);for(const n of [...intro.children])if(n!==form)input.append(n);
+   if(intro&&form){intro.parentElement.classList.add('ml-receipt-layout');const input=document.createElement('section');input.className='card ml-receipt-entry';input.setAttribute('aria-label','Bon invoeren');intro.before(input);for(const n of [...intro.children])if(n!==form)input.append(n);
     const check=document.createElement('div');check.className='ml-check-head';check.textContent='Controleer winkel, datum, totaal en productregels';form.prepend(check);
     tabs(receipt,'receipts',[['input','Invoer',[input]],['check','Controleren',[intro]],['link','Koppelen',[bundle,head,list]]],input);
    }

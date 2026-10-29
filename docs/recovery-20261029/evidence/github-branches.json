@@ -1,0 +1,122 @@
+[
+  {
+    "name": "backup/pre-memento-salie-2026-10-25",
+    "commit": {
+      "sha": "6d80308120c040a20485d7e672061efeab26bd07",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/6d80308120c040a20485d7e672061efeab26bd07"
+    },
+    "protected": false
+  },
+  {
+    "name": "codex/app-glass-review",
+    "commit": {
+      "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/49a22d1c998027c1cc588a8a1610b1a1ff6a890d"
+    },
+    "protected": false
+  },
+  {
+    "name": "design/memento-mobile-refinement",
+    "commit": {
+      "sha": "ce5d521c1a837026a92454d7e7a282767a8d2ceb",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/ce5d521c1a837026a92454d7e7a282767a8d2ceb"
+    },
+    "protected": false
+  },
+  {
+    "name": "design-preview-dark-cockpit-20261024",
+    "commit": {
+      "sha": "99fe77b6c812a4fa63995fa768f5a4b3cf998dbf",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/99fe77b6c812a4fa63995fa768f5a4b3cf998dbf"
+    },
+    "protected": false
+  },
+  {
+    "name": "feature/notes-compact-mobile",
+    "commit": {
+      "sha": "d85f1d57f480d421e806b61440972608d2f6eb4f",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/d85f1d57f480d421e806b61440972608d2f6eb4f"
+    },
+    "protected": false
+  },
+  {
+    "name": "fix/memento-data-safety-phase-1",
+    "commit": {
+      "sha": "4d2f9c8cbb7603190124fb3ca6068d2df74f12b8",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/4d2f9c8cbb7603190124fb3ca6068d2df74f12b8"
+    },
+    "protected": false
+  },
+  {
+    "name": "fix/memento-finance-screen1-20261029",
+    "commit": {
+      "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/bf81413d6dc35fc097deeeb61c3eb09acf11834e"
+    },
+    "protected": false
+  },
+  {
+    "name": "fix/memento-sort-icons-1280-20261029",
+    "commit": {
+      "sha": "0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5"
+    },
+    "protected": false
+  },
+  {
+    "name": "main",
+    "commit": {
+      "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/bf81413d6dc35fc097deeeb61c3eb09acf11834e"
+    },
+    "protected": false
+  },
+  {
+    "name": "test-write-access-2026-10-24",
+    "commit": {
+      "sha": "879add5c0d3655ef12f74c8756a900faf4180bd8",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/879add5c0d3655ef12f74c8756a900faf4180bd8"
+    },
+    "protected": false
+  },
+  {
+    "name": "work/memento-cover-art-validation",
+    "commit": {
+      "sha": "399d2de2162a75d793fad0ae6869129a01c03e3c",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/399d2de2162a75d793fad0ae6869129a01c03e3c"
+    },
+    "protected": false
+  },
+  {
+    "name": "work/memento-illustrative-icons-validation",
+    "commit": {
+      "sha": "bfaa0acd6c7a15a23de68e7f1bcb1ec593ca7621",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/bfaa0acd6c7a15a23de68e7f1bcb1ec593ca7621"
+    },
+    "protected": false
+  },
+  {
+    "name": "work/memento-journal-sleep-voice-ai-20261027",
+    "commit": {
+      "sha": "3f05ff9e79ebdffc028a8133cf8a8c08a3486716",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/3f05ff9e79ebdffc028a8133cf8a8c08a3486716"
+    },
+    "protected": false
+  },
+  {
+    "name": "work/memento-kc2-validation",
+    "commit": {
+      "sha": "8a0d148cc4c1deb3181dc8e3e9038462ecd66abf",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/8a0d148cc4c1deb3181dc8e3e9038462ecd66abf"
+    },
+    "protected": false
+  },
+  {
+    "name": "work/memento-quickfit-validation",
+    "commit": {
+      "sha": "86be2d9c3f6458e7e004bd09781cd52e2d0d93ca",
+      "url": "https://api.github.com/repos/jaribuijsman/Uitgavenkompas/commits/86be2d9c3f6458e7e004bd09781cd52e2d0d93ca"
+    },
+    "protected": false
+  }
+]

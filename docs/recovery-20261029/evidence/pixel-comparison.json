@@ -1,0 +1,1055 @@
+[
+  {
+    "width": 360,
+    "screen": "document",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "transactions",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "receipts",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "knowledge",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "navigation",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 4104,
+    "differenceBounds": [
+      8,
+      24,
+      344,
+      852
+    ]
+  },
+  {
+    "width": 360,
+    "screen": "checklist",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "editor",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "budgets",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "moneycoach",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "analysis",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "recipe",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "fitness",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "transaction-modal",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "accounts",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "fitness-progress",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "editor-short",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "groceries",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "planning",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "tasks",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 52593,
+    "differenceBounds": [
+      0,
+      63,
+      360,
+      852
+    ]
+  },
+  {
+    "width": 360,
+    "screen": "settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "day",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 16731,
+    "differenceBounds": [
+      15,
+      383,
+      344,
+      801
+    ]
+  },
+  {
+    "width": 360,
+    "screen": "finance",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "finance-settings",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      24,
+      112,
+      32,
+      120
+    ]
+  },
+  {
+    "width": 360,
+    "screen": "agenda",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 10337,
+    "differenceBounds": [
+      32,
+      255,
+      337,
+      456
+    ]
+  },
+  {
+    "width": 360,
+    "screen": "smartbuy",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "wishes",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "knowledge-list",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "fitness-plan",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "screen": "note",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "document",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "transactions",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "receipts",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "knowledge",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "navigation",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "checklist",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "editor",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "budgets",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "moneycoach",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "analysis",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      16,
+      112,
+      384,
+      512
+    ]
+  },
+  {
+    "width": 393,
+    "screen": "recipe",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "fitness",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "transaction-modal",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "accounts",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "fitness-progress",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "editor-short",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "groceries",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "planning",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "tasks",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 53427,
+    "differenceBounds": [
+      0,
+      16,
+      393,
+      852
+    ]
+  },
+  {
+    "width": 393,
+    "screen": "settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "day",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 21902,
+    "differenceBounds": [
+      0,
+      0,
+      393,
+      852
+    ]
+  },
+  {
+    "width": 393,
+    "screen": "finance",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "finance-settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "agenda",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 10386,
+    "differenceBounds": [
+      16,
+      144,
+      360,
+      456
+    ]
+  },
+  {
+    "width": 393,
+    "screen": "smartbuy",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      360,
+      112,
+      376,
+      120
+    ]
+  },
+  {
+    "width": 393,
+    "screen": "wishes",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "knowledge-list",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "fitness-plan",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "screen": "note",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "document",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "transactions",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "receipts",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "knowledge",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "navigation",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "checklist",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "editor",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "budgets",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "moneycoach",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "analysis",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "recipe",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "fitness",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "transaction-modal",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "accounts",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 861,
+    "differenceBounds": [
+      0,
+      64,
+      412,
+      852
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "fitness-progress",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      16,
+      16,
+      400,
+      392
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "editor-short",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "groceries",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "planning",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "tasks",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 55075,
+    "differenceBounds": [
+      0,
+      47,
+      412,
+      852
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "day",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 17434,
+    "differenceBounds": [
+      16,
+      383,
+      392,
+      728
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "finance",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "finance-settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "agenda",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 10929,
+    "differenceBounds": [
+      31,
+      255,
+      385,
+      408
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "smartbuy",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      24,
+      568,
+      384,
+      640
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "wishes",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "knowledge-list",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "screen": "fitness-plan",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      16,
+      16,
+      401,
+      593
+    ]
+  },
+  {
+    "width": 412,
+    "screen": "note",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "document",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "transactions",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "receipts",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      1056,
+      8,
+      1256,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "knowledge",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "navigation",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "checklist",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "editor",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "budgets",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      1056,
+      8,
+      1256,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "moneycoach",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      288,
+      448,
+      296,
+      456
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "analysis",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "recipe",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      1055,
+      8,
+      1256,
+      65
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "fitness",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "transaction-modal",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "accounts",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 0,
+    "differenceBounds": [
+      1056,
+      8,
+      1256,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "fitness-progress",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "editor-short",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "groceries",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "planning",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "tasks",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 104705,
+    "differenceBounds": [
+      271,
+      351,
+      1249,
+      817
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "day",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 57860,
+    "differenceBounds": [
+      80,
+      24,
+      1280,
+      900
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "finance",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "finance-settings",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "agenda",
+    "sameSize": true,
+    "identical": false,
+    "pixelsOver10": 74111,
+    "differenceBounds": [
+      248,
+      127,
+      1216,
+      865
+    ]
+  },
+  {
+    "width": 1280,
+    "screen": "smartbuy",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "wishes",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "knowledge-list",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "fitness-plan",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "screen": "note",
+    "sameSize": true,
+    "identical": true,
+    "pixelsOver10": 0,
+    "differenceBounds": null
+  }
+]

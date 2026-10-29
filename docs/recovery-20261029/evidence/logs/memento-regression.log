@@ -1,0 +1,85 @@
+PASS public starter data is empty
+PASS monthly budgets preserve legacy values without changing other months
+PASS budget groups stay independent and zero removes a monthly limit
+PASS refunds and internal transfers are handled correctly in scoped budget spending
+PASS weekly bills create every occurrence including the daylight-saving month
+PASS monthly payments retain month-end dates and respect start and quarterly intervals
+PASS bill payment history remains paid in both October and November
+PASS deleting a payment unpays its bill and safely restores receipt links
+PASS restoring an earlier payment cannot duplicate a replacement for the same bill occurrence
+PASS personal, joint and creditcard debt stay separate across repayment and salary totals
+PASS weekly reservation totals and cashflow agree
+PASS receipt matching requires compatible amount, date and merchant
+PASS legacy paid marker is retained without fabricating a transaction
+PASS Geldcoach keeps signed numeric totals through preview and prompt for zero, negative, positive and cents
+PASS financial renderers accept an empty state
+PASS PIN defaults to 15 minutes and expires at the actual inactivity deadline
+PASS all eight current Life views render from a genuinely empty start
+PASS old Life backups preserve existing tasks and receive empty missing collections
+PASS task deletion and restore retain steps and history
+PASS wish and grocery deletion are reversible and keep original product data
+PASS checklist text is escaped and item state is rendered
+PASS note conversion tracks destination without deleting its source
+PASS a failed financial save rolls back the in-memory mutation
+PASS corrupted financial storage is preserved until explicit recovery
+PASS demo edits do not persist or mix with the real financial data
+PASS research dossiers persist answers and link results back to the original wish
+PASS phase 2 cannot be approved with an empty profile
+PASS Life notifications expire after three seconds and replacing one cancels its timer
+PASS financial notifications also expire after three seconds
+PASS notice position reserves the real navigation height and safe-area space
+PASS transaction palette meets normal-text contrast for labels, fields and amounts
+PASS open local appointments follow Today for multiple days without changing the original date
+PASS checking and reopening a local appointment keeps a recoverable completed state
+PASS the checkbox click route marks the correct appointment
+PASS older appointment backups migrate to open without losing fields
+PASS future appointments do not appear early and completed future items do not become overdue
+PASS Google completion is local and separate for each recurring instance
+PASS tracked Google appointments survive a restart and remain open until checked
+PASS Google history is not automatically imported as a large backlog
+PASS successful refresh reconciles cancelled Google events without clearing unrelated dates
+PASS live and cached copies of the same Google event appear only once
+PASS all-day and multi-day Google appointments carry only after their last scheduled day
+PASS shared appointment cards expose checkbox state, safe text and the outlined edit button
+PASS Agenda uses the same appointment markup and does not jump away from Today
+PASS day counters count only open appointments and completed items stay reopenable
+PASS editing a completed appointment preserves its completion timestamp
+PASS a failed completion save leaves the appointment open
+PASS Google refresh covers tracked overdue items while retaining the three-day future window
+PASS a past Google appointment can be checked directly in Agenda without importing all history
+PASS quick capture creates a dated task in Today and completion preserves its title
+PASS quick notes go to Inbox even with a task date selected
+PASS quick tasks support future dates and no planning date
+PASS switching capture type preserves text and disables the hidden date input
+PASS blank input and invalid task dates cannot create records
+PASS failed quick capture preserves both existing records and the draft
+PASS routine finance save status stays quiet but errors and demo mode remain visible
+PASS Life save failures remain visible until a successful save
+PASS appointment cards omit redundant local origin but preserve Google origin and completion
+PASS legacy grocery backups keep all products, quantities and completion during migration
+PASS shopping lists, favorites and purchase research survive a backup round trip
+PASS shopping quick entry creates products only in the selected list and never in wishes
+PASS quick entry prevents repeated products with casing and whitespace differences
+PASS the same product name can be used independently in the two lists
+PASS adding a saved product keeps quantity and notes and resets its bought state
+PASS blank input and identifiers from another list cannot add products
+PASS failed quick shopping save restores the draft, view and original product collection
+PASS moving a product preserves completion, favorite, notes, quantity and research without making a wish
+PASS bought toggles are reversible and do not create financial transactions
+PASS clearing bought products affects only the active list and keeps saved favorites and trash
+PASS active and bought sections are separate, with escaped titles and accurate remaining counts
+PASS favorites do not replace the complete product collection and are scoped by list
+PASS purchase rows show a Slim Kopen shortcut while grocery rows do not
+PASS editing a purchase preserves legacy fields and saves notes, favorites and its selected list
+PASS a deleted product cannot be edited or favorited through an obsolete action
+PASS purchase research has its own dossier and never links its result into Aankoopwensen
+PASS switching research between purchases and wishes does not leak the previous dossier or approval
+PASS undoing a move restores the original list and keeps its product details
+PASS purchase deletion and restoration keep the list, favorite and research association
+PASS cleanup during a search leaves purchased products outside the search untouched
+PASS the Slim Kopen route prefills purchase details and only navigates to the research screen
+PASS moving a purchase back to groceries keeps its budget and ignores a hidden budget draft
+PASS bottom-row menu opens upward above mobile navigation
+PASS top-row menu opens downward without crossing the header
+PASS menus clamp horizontally and become scrollable in a short viewport
+84 regression tests passed; 9 executable scripts parsed.

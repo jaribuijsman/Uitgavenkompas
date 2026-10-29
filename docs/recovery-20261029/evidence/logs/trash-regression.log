@@ -1,0 +1,1 @@
+PASS permanent-trash tests: all trash kinds, live records, shared files, idempotence and invalid data.

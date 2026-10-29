@@ -1,0 +1,1299 @@
+{
+  "phase": "after",
+  "width": 1280,
+  "diagnostics": [
+    {
+      "name": "day",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Afspraak voor de fiets bevestigen",
+          "width": 250,
+          "height": 21
+        },
+        {
+          "id": "",
+          "text": "Nog zonder planning (0)",
+          "width": 920,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "Bron & vertaling",
+          "width": 800,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Lees de bron ↗",
+          "width": 91,
+          "height": 17
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "tasks",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 291,
+            "width": 120,
+            "height": 67,
+            "top": 291,
+            "right": 1294.46875,
+            "bottom": 358,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 312,
+            "width": 120,
+            "height": 46,
+            "top": 312,
+            "right": 1294.46875,
+            "bottom": 358,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 370,
+            "width": 120,
+            "height": 67,
+            "top": 370,
+            "right": 1294.46875,
+            "bottom": 437,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 391,
+            "width": 120,
+            "height": 46,
+            "top": 391,
+            "right": 1294.46875,
+            "bottom": 437,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 449,
+            "width": 120,
+            "height": 67,
+            "top": 449,
+            "right": 1294.46875,
+            "bottom": 516,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 470,
+            "width": 120,
+            "height": 46,
+            "top": 470,
+            "right": 1294.46875,
+            "bottom": 516,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 528,
+            "width": 120,
+            "height": 67,
+            "top": 528,
+            "right": 1294.46875,
+            "bottom": 595,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 549,
+            "width": 120,
+            "height": 46,
+            "top": 549,
+            "right": 1294.46875,
+            "bottom": 595,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 1174.46875,
+            "y": 613,
+            "width": 120,
+            "height": 67,
+            "top": 613,
+            "right": 1294.46875,
+            "bottom": 680,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 634,
+            "width": 120,
+            "height": 46,
+            "top": 634,
+            "right": 1294.46875,
+            "bottom": 680,
+            "left": 1174.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "groceries",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "wishes",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 93,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "agenda",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 1190,
+            "y": 685.09375,
+            "width": 862,
+            "height": 180,
+            "top": 685.09375,
+            "right": 2052,
+            "bottom": 865.09375,
+            "left": 1190
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1190,
+            "y": 685.09375,
+            "width": 862,
+            "height": 180,
+            "top": 685.09375,
+            "right": 2052,
+            "bottom": 865.09375,
+            "left": 1190
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "g",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1522.619384765625,
+            "y": 714.9722900390625,
+            "width": 104.9393310546875,
+            "height": 104.93927001953125,
+            "top": 714.9722900390625,
+            "right": 1627.5587158203125,
+            "bottom": 819.9115600585938,
+            "left": 1522.619384765625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1563.760986328125,
+            "y": 757.7131958007812,
+            "width": 22.65625,
+            "height": 11,
+            "top": 757.7131958007812,
+            "right": 1586.417236328125,
+            "bottom": 768.7131958007812,
+            "left": 1563.760986328125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1541.659423828125,
+            "y": 768.4743041992188,
+            "width": 66.93505859375,
+            "height": 19,
+            "top": 768.4743041992188,
+            "right": 1608.594482421875,
+            "bottom": 787.4743041992188,
+            "left": 1541.659423828125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1645.4129638671875,
+            "y": 730.6403198242188,
+            "width": 8.0162353515625,
+            "height": 8.01617431640625,
+            "top": 730.6403198242188,
+            "right": 1653.42919921875,
+            "bottom": 738.656494140625,
+            "left": 1645.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1658.894775390625,
+            "y": 728.5633544921875,
+            "width": 48.09375,
+            "height": 11,
+            "top": 728.5633544921875,
+            "right": 1706.988525390625,
+            "bottom": 739.5633544921875,
+            "left": 1658.894775390625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1718.995361328125,
+            "y": 728.5633544921875,
+            "width": 17.9923095703125,
+            "height": 12.00006103515625,
+            "top": 728.5633544921875,
+            "right": 1736.9876708984375,
+            "bottom": 740.5634155273438,
+            "left": 1718.995361328125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1645.4129638671875,
+            "y": 759.7901000976562,
+            "width": 8.0162353515625,
+            "height": 8.01617431640625,
+            "top": 759.7901000976562,
+            "right": 1653.42919921875,
+            "bottom": 767.8062744140625,
+            "left": 1645.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1658.894775390625,
+            "y": 757.7131958007812,
+            "width": 59.828125,
+            "height": 11,
+            "top": 757.7131958007812,
+            "right": 1718.722900390625,
+            "bottom": 768.7131958007812,
+            "left": 1658.894775390625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1723.995361328125,
+            "y": 757.7131958007812,
+            "width": 12.9962158203125,
+            "height": 12,
+            "top": 757.7131958007812,
+            "right": 1736.9915771484375,
+            "bottom": 769.7131958007812,
+            "left": 1723.995361328125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1645.4129638671875,
+            "y": 788.9398803710938,
+            "width": 8.0162353515625,
+            "height": 8.0162353515625,
+            "top": 788.9398803710938,
+            "right": 1653.42919921875,
+            "bottom": 796.9561157226562,
+            "left": 1645.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1658.894775390625,
+            "y": 786.8629760742188,
+            "width": 41.8712158203125,
+            "height": 11,
+            "top": 786.8629760742188,
+            "right": 1700.7659912109375,
+            "bottom": 797.8629760742188,
+            "left": 1658.894775390625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1723.995361328125,
+            "y": 786.8629760742188,
+            "width": 12.9962158203125,
+            "height": 12,
+            "top": 786.8629760742188,
+            "right": 1736.9915771484375,
+            "bottom": 798.8629760742188,
+            "left": 1723.995361328125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1645.4129638671875,
+            "y": 818.0897216796875,
+            "width": 8.0162353515625,
+            "height": 8.01617431640625,
+            "top": 818.0897216796875,
+            "right": 1653.42919921875,
+            "bottom": 826.1058959960938,
+            "left": 1645.4129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1658.894775390625,
+            "y": 816.0127563476562,
+            "width": 26.734375,
+            "height": 11.00006103515625,
+            "top": 816.0127563476562,
+            "right": 1685.629150390625,
+            "bottom": 827.0128173828125,
+            "left": 1658.894775390625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 1723.995361328125,
+            "y": 816.0127563476562,
+            "width": 12.9962158203125,
+            "height": 12.00006103515625,
+            "top": 816.0127563476562,
+            "right": 1736.9915771484375,
+            "bottom": 828.0128173828125,
+            "left": 1723.995361328125
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 2052,
+            "y": 685.09375,
+            "width": 862,
+            "height": 180,
+            "top": 685.09375,
+            "right": 2914,
+            "bottom": 865.09375,
+            "left": 2052
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2052,
+            "y": 685.09375,
+            "width": 862,
+            "height": 180,
+            "top": 685.09375,
+            "right": 2914,
+            "bottom": 865.09375,
+            "left": 2052
+          }
+        },
+        {
+          "tag": "path",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2370.773193359375,
+            "y": 709.87109375,
+            "width": 224.45361328125,
+            "height": 122.42913818359375,
+            "top": 709.87109375,
+            "right": 2595.226806640625,
+            "bottom": 832.3002319335938,
+            "left": 2370.773193359375
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2394.69873046875,
+            "y": 842.976318359375,
+            "width": 10.90625,
+            "height": 12,
+            "top": 842.976318359375,
+            "right": 2405.60498046875,
+            "bottom": 854.976318359375,
+            "left": 2394.69873046875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2448.200439453125,
+            "y": 842.976318359375,
+            "width": 15.671875,
+            "height": 12,
+            "top": 842.976318359375,
+            "right": 2463.872314453125,
+            "bottom": 854.976318359375,
+            "left": 2448.200439453125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2504.178955078125,
+            "y": 842.976318359375,
+            "width": 14.484375,
+            "height": 12,
+            "top": 842.976318359375,
+            "right": 2518.663330078125,
+            "bottom": 854.976318359375,
+            "left": 2504.178955078125
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2551.501953125,
+            "y": 720.80224609375,
+            "width": 31.336181640625,
+            "height": 111.49798583984375,
+            "top": 720.80224609375,
+            "right": 2582.838134765625,
+            "bottom": 832.3002319335938,
+            "left": 2551.501953125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 2560.2509765625,
+            "y": 842.976318359375,
+            "width": 13.109375,
+            "height": 12,
+            "top": 842.976318359375,
+            "right": 2573.3603515625,
+            "bottom": 854.976318359375,
+            "left": 2560.2509765625
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "m9-replay",
+          "text": "Grafiekanimatie opnieuw afspelen",
+          "width": 40,
+          "height": 40
+        },
+        {
+          "id": "m9-allcats",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        },
+        {
+          "id": "m9-alltx",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "transactions",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "pill orange",
+          "rect": {
+            "x": 1183.671875,
+            "y": 1596.890625,
+            "width": 104.078125,
+            "height": 30,
+            "top": 1596.890625,
+            "right": 1287.75,
+            "bottom": 1626.890625,
+            "left": 1183.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "analysis",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Overzicht",
+          "width": 317,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Categorieën",
+          "width": 317,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Trends & inzichten",
+          "width": 317,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "✨ Vaste lasten",
+          "width": 872,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🛒 Boodschappen",
+          "width": 882,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🎮 Vrije tijd & entertainment",
+          "width": 889,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🚗 Auto & vervoer",
+          "width": 889,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🍔 Horeca & uit eten",
+          "width": 896,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "accounts",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "receipts",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance-settings",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "smartbuy",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "moneycoach",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "budgets",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "planning",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-btn",
+          "rect": {
+            "x": 1165,
+            "y": 367.5,
+            "width": 135.4375,
+            "height": 56,
+            "top": 367.5,
+            "right": 1300.4375,
+            "bottom": 423.5,
+            "left": 1165
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "settings",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeRestoreFinance",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-list",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "checklist",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 20,
+          "height": 20
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "recipe",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "document",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "note",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "editor",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 874,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "editor-short",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 874,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "transaction-modal",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "pill orange",
+          "rect": {
+            "x": 1183.671875,
+            "y": 1596.890625,
+            "width": 104.078125,
+            "height": 30,
+            "top": 1596.890625,
+            "right": 1287.75,
+            "bottom": 1626.890625,
+            "left": 1183.671875
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "toggleSplit",
+          "text": "＋ Splitsen",
+          "width": 80,
+          "height": 32
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "fitness-plan",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-progress",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "navigation",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "agenda-month",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "transactions-empty",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "txSearch"
+    },
+    {
+      "name": "transaction-filters",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "pill orange",
+          "rect": {
+            "x": 1183.671875,
+            "y": 1862.390625,
+            "width": 104.078125,
+            "height": 30,
+            "top": 1862.390625,
+            "right": 1287.75,
+            "bottom": 1892.390625,
+            "left": 1183.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "toggleMoreTxFilters"
+    },
+    {
+      "name": "editor-long-short",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "kc-file-input",
+          "text": "",
+          "width": 874,
+          "height": 32
+        }
+      ],
+      "focus": "kc-body"
+    },
+    {
+      "name": "task-menu",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 291,
+            "width": 120,
+            "height": 67,
+            "top": 291,
+            "right": 1294.46875,
+            "bottom": 358,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 312,
+            "width": 120,
+            "height": 46,
+            "top": 312,
+            "right": 1294.46875,
+            "bottom": 358,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 370,
+            "width": 120,
+            "height": 67,
+            "top": 370,
+            "right": 1294.46875,
+            "bottom": 437,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 391,
+            "width": 120,
+            "height": 46,
+            "top": 391,
+            "right": 1294.46875,
+            "bottom": 437,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 449,
+            "width": 120,
+            "height": 67,
+            "top": 449,
+            "right": 1294.46875,
+            "bottom": 516,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 470,
+            "width": 120,
+            "height": 46,
+            "top": 470,
+            "right": 1294.46875,
+            "bottom": 516,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 528,
+            "width": 120,
+            "height": 67,
+            "top": 528,
+            "right": 1294.46875,
+            "bottom": 595,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 549,
+            "width": 120,
+            "height": 46,
+            "top": 549,
+            "right": 1294.46875,
+            "bottom": 595,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 1174.46875,
+            "y": 613,
+            "width": 120,
+            "height": 67,
+            "top": 613,
+            "right": 1294.46875,
+            "bottom": 680,
+            "left": 1174.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 1174.46875,
+            "y": 634,
+            "width": 120,
+            "height": 46,
+            "top": 634,
+            "right": 1294.46875,
+            "bottom": 680,
+            "left": 1174.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "Daily appointments precede inspiration; primary navigation targets >=44px",
+    "Shopping controls and seven-column calendar targets >=44px",
+    "Finance modal actions fit short viewport; Escape cancels and returns focus without saving",
+    "Finance required validation, trapped focus, save, search and edit retain guarded persistence",
+    "Life task quick-add, detail, edit and completion work through existing handlers",
+    "Long note persists; editor Save remains visible in short viewport (keyboard size emulation)",
+    "Task disclosure stays within viewport",
+    "Updated UI assets load offline and native writer protection remains active"
+  ],
+  "errors": []
+}
