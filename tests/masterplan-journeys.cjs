@@ -39,7 +39,7 @@ async function seed(page,data,url){
    }
    if(journey==='diary'){
     if(phase==='before'){await click('#mementoQuickNav [data-memento-dest="life:notes"]');await click('[data-kc=collection][data-id=kc2-levenspad]');await click('[data-kc=collection][data-id=kc2-levenspad-dagboek]');await click('[data-kc=journal-today]');}
-    else await click('[data-life-journal]');
+    else{await click('#mementoQuickNav [data-memento-dest="life:notes"]');await click('[data-kc=collection][data-id=kc2-levenspad]');await click('[data-kc=collection][data-id=kc2-levenspad-dagboek]');await click('[data-kc=journal-today]');}
     await fill('#kc-body','Journey dagboektekst.');await click('[data-kc=save]');assert.equal((await stored()).notes.filter(n=>n.journal?.date==='2026-10-28'&&n.body==='Journey dagboektekst.').length,1);
    }
    if(journey==='payment'){

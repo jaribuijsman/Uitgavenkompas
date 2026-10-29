@@ -52,11 +52,7 @@ async function shot(page, name, log = true) {
     }, data);
     await page.goto(url, { waitUntil: "domcontentloaded" });
     const pinDisabled = await page.locator("html").getAttribute("data-memento-pin-lock") === "disabled";
-    if (!pinDisabled) {
-      await page.locator("#pinLock.visible").waitFor(); await shot(page, "pin", width === 393);
-      await page.locator("#pinInput").fill("123456"); await page.locator(".pin-submit").click();
-    }
-    await page.locator("#pinLock").waitFor({ state: "hidden" });
+    await require('./helpers/enter-app.cjs')(page);
     await page.waitForFunction(() => window.MementoStorageGuard?.writable);
     if (pinDisabled) await shot(page, "direct-open", width === 393);
     checks.push((pinDisabled ? "Direct app opening" : "PIN unlocked") + "; fixture writer owns Web Lock");

@@ -119,12 +119,15 @@
  }
  function weatherName(code){
   if(code===0)return 'Helder';if(code<=2)return 'Wisselend bewolkt';if(code===3)return 'Bewolkt';
-  if(code===45||code===48)return 'Mistig';if(code>=71&&code<=86)return 'Sneeuw of buien';
+  if(code===45||code===48)return 'Mistig';if([71,73,75,77,85,86].includes(code))return 'Sneeuw of buien';
   if(code>=95)return 'Kans op onweer';if(code>=51&&code<=67||code>=80&&code<=82)return 'Regen of buien';
   return 'Wisselvallig';
  }
  function refreshWeather(event){
-  let entry=event?.detail?.cached;
+  const detail=event?.detail||window.CompassFlow?.weatherState?.()||{};
+  const busy=detail.busy===true,failed=detail.failed===true;
+  one('ms-refresh').disabled=busy;
+  let entry=detail.cached;
   if(!entry)try{entry=JSON.parse(localStorage.getItem(WEATHER_KEY)||'null')}catch{}
   const c=entry?.data?.current,d=entry?.data?.daily,h=entry?.data?.hourly;
   const fresh=Number.isFinite(entry?.fetchedAt)&&Date.now()-entry.fetchedAt<90*60000&&Date.now()>=entry.fetchedAt-5*60000&&c?.time?.slice(0,10)===date();
@@ -133,7 +136,7 @@
   one('ms-condition').textContent=valid?weatherIcon(c.weather_code,c.is_day!==0)+' '+weatherName(c.weather_code):'Geen actuele weersgegevens';
   const idx=d?.time?.indexOf(date())??-1,low=d?.temperature_2m_min?.[idx],high=d?.temperature_2m_max?.[idx],rain=d?.precipitation_probability_max?.[idx];
   one('ms-summary').textContent=idx>=0&&Number.isFinite(low)&&Number.isFinite(high)?Math.round(low)+'°–'+Math.round(high)+'° vandaag'+(Number.isFinite(rain)?' · '+Math.round(rain)+'% kans op neerslag':''):'Weerverwachting voor vandaag';
-  one('ms-weather-status').textContent=fresh?'Actueel · '+c.time.slice(11,16):valid?'Opgeslagen voorspelling · mogelijk verouderd':'Geen verbinding? Probeer opnieuw';
+  one('ms-weather-status').textContent=busy?'Weer wordt bijgewerkt…':failed?(valid?'Vernieuwen mislukt · opgeslagen weer van '+c.time.replace('T',' · '):'Weer ophalen mislukt · controleer je verbinding'):fresh?'Actueel · '+c.time.slice(11,16):valid?'Opgeslagen voorspelling · mogelijk verouderd':'Geen verbinding? Probeer opnieuw';
   const today=date(),hours=[];
   if(Array.isArray(h?.time)&&Array.isArray(h?.temperature_2m)&&Array.isArray(h?.weather_code)){
    for(let i=0;i<h.time.length;i++){
@@ -152,7 +155,7 @@
  }
  root.querySelector('#ms-refresh').addEventListener('click',()=>{
   const old=root.querySelector('#ms-weather-status');old.textContent='Weer wordt bijgewerkt…';
-  document.querySelector('[data-flow-weather-refresh]')?.click();
+
   window.dispatchEvent(new CustomEvent('memento-start-weather-refresh'));
  });
  window.addEventListener('memento-weather-update',refreshWeather);

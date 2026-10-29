@@ -70,8 +70,9 @@ jobs:
         run: node app/tests/knowledge-v2-browser.cjs
       - name: Verify disabled PIN or preserve enabled forest
         run: |
-          if head -n 3 app/index.html | grep -q 'data-memento-pin-lock="disabled"'; then
+          if head -n 3 app/index.html | grep -Eq 'data-memento-pin-lock="(disabled|manual)"'; then
             node app/tests/pin-disabled-regression.cjs
+            node app/tests/memento-start-browser.cjs
           else
             cmp "$RUNNER_TEMP/kc2-review/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/kc2-review/after/${{ matrix.width }}/pin.jpg"
           fi

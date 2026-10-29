@@ -181,7 +181,7 @@ body[data-compass-area="finance"] .app #view-settings :is(.settings-card,.mement
 body[data-compass-area="finance"] .app #view-settings :is(input,select) {min-height:44px}
 
 /* Masterplan day summary: existing capture, appointments, thought and weather stay in place. */
-#lifeApp .memento-day-summary {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:12px;background:#1c3527;border:1px solid #527159;border-radius:14px}
+#lifeApp .memento-day-summary {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:10px 12px;background:#1c3527;border:1px solid #527159;border-radius:14px}
 #lifeApp .memento-day-summary time {font-weight:700;color:#e8f3e9;font-size:14px}
 #lifeApp .memento-day-summary p {font-size:12px;color:#c4d8c8;margin:5px 0 0}
 #lifeApp .memento-day-summary button {min-height:48px;flex-shrink:0}
@@ -200,7 +200,9 @@ body .memento-payment-details>summary {display:flex;align-items:center;min-heigh
 body #txTypeSegment[hidden] {display:none}
 body .memento-other-budgets {grid-column:1/-1;min-width:0}
 body .memento-other-budgets>summary {min-height:48px;display:flex;align-items:center;cursor:pointer;font-weight:700}
-#lifeApp .memento-duty-badge {display:inline-block;margin-top:6px;padding:4px 7px;border-radius:8px;background:#b6cfbd;color:#183321;font-size:12px;font-weight:700}
+#lifeApp .memento-duty-badge {display:inline-flex;align-items:center;margin:0;padding:4px 9px;border-radius:999px;background:rgba(12,43,30,.65);border:1px solid #88ac9466;color:#c5dfce;font-size:12px;font-weight:650;white-space:nowrap}
+#lifeApp .memento-day-caption:has(.memento-duty-badge){flex-wrap:wrap;gap:6px 8px}
+#lifeApp .memento-day-caption .memento-inline-add{margin-left:auto}
 #lifeApp .memento-cal-day[data-duty-code] {min-height:60px;height:auto;display:flex;flex-direction:column;justify-content:center;gap:4px;position:relative}
 #lifeApp .memento-duty-code {font-size:11px;font-weight:800;line-height:1.3;color:#cce3d2}
 #lifeApp [data-duty-code="N"] .memento-duty-code {color:#d2dff7}

@@ -27,7 +27,7 @@ assert(!portal.includes('fetch('),'No second external weather API or personal da
 assert(!portal.includes('localStorage.setItem('),'No portal writes to life/financial records');
 const core=JSON.parse(fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CORE = (\[[^;]+\]);/)[1]);
 assert(core.includes(html.match(/href="([^"]*memento-start\.css[^"]*)"/)[1]),'Current portal stylesheet is precached');
-assert(core.includes('./assets/memento-start.js?v=20261029-dayportal-grid-v2'));
+assert(core.includes(html.match(/src="([^"]*memento-start\.js[^"]*)"/)[1]));
 assert(core.includes('./assets/memento-start-agenda.svg'));
 assert(core.includes('./assets/memento-start-tasks.svg'));
 let count=0;

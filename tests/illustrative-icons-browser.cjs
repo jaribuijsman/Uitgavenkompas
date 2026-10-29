@@ -92,10 +92,7 @@ try{
   localStorage.setItem('uitgavenkompas_pin_config_v1',JSON.stringify(data.pin));
  },fixture);
  await page.goto(base,{waitUntil:"domcontentloaded"});
-  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
-   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
-  }
- await page.locator("#pinLock").waitFor({state:"hidden"});
+ await require('./helpers/enter-app.cjs')(page,false);
  await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
  assert.equal(await page.locator('#mementoQuickNav button .memento-illustrative-icon').count(),5);
  checks.push("Quick navigation uses new illustrations and original buttons are retained");
@@ -162,10 +159,10 @@ try{
  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes),fixture.life.notes);
  checks.push('All Life/Finance destinations open; original notes and transactions remain exact; labelled controls and no missing local assets');
  // A real service worker must cache every core URL and survive a network-disabled reload.
- await page.evaluate(async()=>{await navigator.serviceWorker.ready});await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>navigator.serviceWorker.controller);
+ await page.evaluate(async()=>{await navigator.serviceWorker.ready});await page.reload({waitUntil:'domcontentloaded'});await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>navigator.serviceWorker.controller);
  const cache=await page.evaluate(async()=>{const key=(await caches.keys()).find(k=>k.startsWith('memento-pwa-'));const c=await caches.open(key);return {key,urls:(await c.keys()).map(r=>r.url)};});
  assert.equal(cache.key,fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1]);assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261027-iconset-v2')));
- await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
+ await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
  await knowledgeHome();assert(await page.locator('.kc-art-row .memento-illustrative-icon').count()>=5);await capture(page,'offline-knowledge');
  await navigate('finance','transactions');await noOverflow();await context.setOffline(false);
  checks.push('Current service worker loads app, SVG library, forest scenes and transactions offline');

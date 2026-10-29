@@ -22,11 +22,7 @@ const server=http.createServer((req,res)=>{
   const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
   const url="http://127.0.0.1:"+server.address().port;
   await page.goto(url,{waitUntil:"domcontentloaded"});
-  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
-    await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
-    await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
-  }
-  await page.locator("#pinLock").waitFor({state:"hidden"});
+ await require('./helpers/enter-app.cjs')(page,true);
   await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
   const stored=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
   const nav=async(dest)=>{await page.locator('[data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:'+dest+'"]').click()};

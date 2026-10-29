@@ -10,11 +10,7 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
  const url="http://127.0.0.1:"+srv.address().port,load=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
  await page.goto(url,{waitUntil:"domcontentloaded"});
-  if (await page.locator("html").getAttribute("data-memento-pin-lock") !== "disabled") {
-   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
-   await page.locator("#pinInput").fill("123456");await page.locator(".pin-submit").click();
-  }
- await page.locator("#pinLock").waitFor({state:"hidden"});
+ await require('./helpers/enter-app.cjs')(page,true);
  await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
  await page.locator('[data-memento-menu="open"]').click();
  await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();
@@ -60,7 +56,7 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  const coverSize=await page.evaluate(async id=>(await window.MementoKnowledgeStore.get(id))?.blob?.size,changed.coverFile.id);
  assert.equal(coverSize,png.length);
  checks.push("Custom uploaded cover saved in IndexedDB, referenced by stable collection ID");
- await page.reload({waitUntil:"domcontentloaded"});
+ await page.reload({waitUntil:"domcontentloaded"});await require('./helpers/enter-app.cjs')(page);
  await page.locator("#pinLock").waitFor({state:"hidden"});
  await page.evaluate(()=>window.MementoKnowledgeBridge?.open?.());
  await page.locator('[data-memento-menu="open"]').click();
