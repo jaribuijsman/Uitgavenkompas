@@ -1,0 +1,78 @@
+name: Memento complete glass review
+on:
+  push:
+    branches: [main, codex/app-glass-review]
+    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/app-review.yml']
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Existing storage, finance, knowledge, fitness and new review contracts
+        run: |
+          node tests/app-review-core.cjs
+          node tests/memento-regression.cjs
+          node tests/masterplan-core.cjs
+          node tests/storage-safety.cjs
+          node tests/storage-lock-native.cjs
+          node tests/service-worker-cache.cjs
+          node tests/knowledge-regression.cjs
+          node tests/knowledge-v2-core.cjs
+          node tests/knowledge-v2-safety.cjs
+          node tests/journal-upgrade-core.cjs
+          node tests/fitness-regression.cjs
+          node tests/trash-regression.cjs
+          node tests/pin-disabled-regression.cjs
+          node tests/illustrative-icons-core.cjs
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        suite: [app-review-browser, masterplan-browser, storage-safety-browser, memento-category-browser, fitness-browser, knowledge-v2-browser, knowledge-covers-browser, illustrative-icons-browser, quickfit-browser, journal-upgrade-browser, memento-start-browser]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Pinned browser tooling outside app source
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+      - name: Actual mobile browser suite
+        run: node tests/${{ matrix.suite }}.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: glass-${{ matrix.suite }}
+          path: /tmp/memento-*
+
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Browser tooling and immutable original version
+        run: |
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
+          git fetch --depth=1 origin 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9
+          mkdir -p "$RUNNER_TEMP/memento-baseline"
+          git archive 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9 | tar -x -C "$RUNNER_TEMP/memento-baseline"
+          echo "MEMENTO_BASELINE_ROOT=$RUNNER_TEMP/memento-baseline" >> "$GITHUB_ENV"
+      - name: Existing data and binary attachments survive actual PWA upgrade
+        run: node tests/masterplan-journeys.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: glass-upgrade
+          path: /tmp/memento-journeys

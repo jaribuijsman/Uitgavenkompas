@@ -57,7 +57,8 @@ function markdown(value){
 }
 const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-btn'+(primary?" kc-primary":"")+'" data-kc="'+action+'" data-id="'+esc(id)+'">'+text+"</button>";
 let centralQuery="",centralType="",centralCollection="",centralStatus="active";
-let focusWriting=false;
+let focusWriting=false,journalSearch="",recipeFactor=1;
+const recipeChecks=new Map();
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
 let quickDraft="",quickListening=false;
 let diaryDictating=false;
@@ -141,6 +142,7 @@ function renderHome(){
  '<div class="kc-hub-shortcuts">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div>';
 }
 function centralSearchBox(){return '<label class="kc-central-search">Zoek in notities en taken<input type="search" data-kc-input="central-search" value="'+esc(centralQuery)+'" placeholder="Titel, inhoud of tags…" autocomplete="off"></label>';}
+function highlight(value,query){const text=String(value||""),word=String(query||"").trim();if(!word)return esc(text);const lower=text.toLocaleLowerCase('nl-NL'),q=word.toLocaleLowerCase('nl-NL');let start=0,out='',i;while((i=lower.indexOf(q,start))!==-1){out+=esc(text.slice(start,i))+'<mark>'+esc(text.slice(i,i+word.length))+'</mark>';start=i+word.length;}return out+esc(text.slice(start));}
 function renderCentralSearch(){
  const rows=C.centralSearch(read(),{query:centralQuery,type:centralType,collectionId:centralCollection,status:centralStatus});
  return header('Zoeken',true)+centralSearchBox()+'<div class="kc-central-filters">'+
@@ -148,7 +150,7 @@ function renderCentralSearch(){
  '<label>Status<select data-kc-central="status">'+[['active','Actief / open'],['all','Alle bewaarde items'],['done','Afgeronde taken'],['archive','Archief']].map(([v,l])=>'<option value="'+v+'"'+(centralStatus===v?' selected':'')+'>'+l+'</option>').join('')+'</select></label>'+
  '<label>Verzameling<select data-kc-central="collection"><option value="">Alle bestemmingen</option><option value="inbox"'+(centralCollection==='inbox'?' selected':'')+'>Inbox</option>'+allCollections().map(c=>'<option value="'+esc(c.id)+'"'+(centralCollection===c.id?' selected':'')+'>'+esc(pathName(c))+'</option>').join('')+'</select></label></div>'+
  '<div class="kc-filter-status" role="status">'+rows.length+' resultaten · '+esc(centralQuery?'“'+centralQuery+'” · ':'')+esc(centralType==='task'?'Taken':centralType==='note'?'Notities':'Notities en taken')+' · '+esc({active:'Actief / open',all:'Alle bewaarde items',done:'Afgeronde taken',archive:'Archief'}[centralStatus])+(centralCollection?' · '+esc(C.collectionPath(read(),centralCollection)):'')+btn('Filters wissen','central-clear')+'</div>'+
- '<div class="kc-central-results">'+(rows.length?rows.map(x=>'<button class="kc-central-result" type="button" data-kc="search-result" data-kind="'+x.type+'" data-id="'+esc(x.id)+'"><small>'+esc(x.type==='task'?'Taak':'Notitie')+' · '+esc(x.context)+'</small><strong>'+esc(x.title)+'</strong><span>'+esc(x.snippet===x.title?'':x.snippet)+'</span></button>').join(''):'<p>Geen passende notities of taken.</p>')+'</div><p class="kc-muted">Zoekt lokaal in notities en taken. PDF-inhoud en financiële transacties hebben geen centrale zoekindex.</p>';
+ '<div class="kc-central-results">'+(rows.length?rows.map(x=>'<button class="kc-central-result" type="button" data-kc="search-result" data-kind="'+x.type+'" data-id="'+esc(x.id)+'"><small>'+esc(x.type==='task'?'Taak':'Notitie')+' · '+esc(x.context)+'</small><strong>'+esc(x.title)+'</strong><span>'+highlight(x.snippet===x.title?'':x.snippet,centralQuery)+'</span></button>').join(''):'<p>Geen passende notities of taken.</p>')+'</div><p class="kc-muted">Zoekt lokaal in notities en taken. PDF-inhoud en financiële transacties hebben geen centrale zoekindex.</p>';
 }
 function breadcrumbs(){
  if(['home','edit','collection-editor','sort'].includes(screen))return '';
@@ -273,13 +275,13 @@ function diaryAI(){
  '<a class="kc-btn kc-primary" href="'+(android?"intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;end":"https://chatgpt.com/")+'" rel="noopener noreferrer">2. Open ChatGPT'+(android?"-app":"")+'</a></div><small id="kc-ai-status" role="status">Niets wordt automatisch verzonden of vervangen.</small></section>';
 }
 function renderJournal(c){
- const today=C.journalDate(),day=journalFilter||today,days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id&&n.journal.date<today).sort((a,b)=>b.journal.date.localeCompare(a.journal.date)),note=C.findJournal(read(),day);
+ const today=C.journalDate(),day=journalFilter||today,days=read().notes.filter(n=>!n.deletedAt&&!n.archived&&n.journal?.version===1&&C.collectionOf(read(),n)===c.id&&n.journal.date<today&&(!journalSearch||[n.title,n.body,(n.tags||[]).join(' '),n.journal.date].join(' ').toLocaleLowerCase('nl-NL').includes(journalSearch.toLocaleLowerCase('nl-NL')))).sort((a,b)=>b.journal.date.localeCompare(a.journal.date)),note=C.findJournal(read(),day);
  return header("Mijn dagboek",true,btn("Vandaag","journal-today",c.id))+
  diaryHero(day)+diaryWeek(day)+
  '<div class="kc-diary-selected"><div><small>'+(day===today?"VANDAAG":"GEKOZEN DAG")+'</small><h3>'+esc(journalLabel(day))+'</h3></div>'+btn(note?"Open dag":"Schrijf","journal-date-open",day,true)+'</div>'+
  (note?'<button class="kc-diary-daypreview" type="button" data-kc="journal-date-open" data-id="'+day+'"><strong>'+esc(note.title===day?"Dagboek":note.title)+'</strong><small>'+esc(diarySummary(note.journal))+'</small><span>'+esc(note.body.slice(0,160)||"Check-in of opname bekijken")+'</span></button>':'<p class="kc-diary-empty">Nog niets vastgelegd voor deze dag. Een gemiste dag is geen probleem.</p>')+
- '<div class="kc-diary-heading kc-diary-history-title"><strong>Eerdere dagen</strong>'+btn("Beheer","edit-collection",c.id)+'</div>'+
- (days.length?'<div class="kc-diary-history">'+days.slice(0,20).map(n=>'<button type="button" data-kc="journal-open" data-id="'+esc(n.id)+'"><span style="background-image:url(./assets/pin-forests/'+diaryScene(n.journal.date)+')"></span><span><strong>'+esc(journalLabel(n.journal.date))+'</strong><small>'+esc(diarySummary(n.journal))+'</small></span><b>›</b></button>').join("")+'</div>':'<p class="kc-diary-empty">Je eerdere dagboekdagen verschijnen hier.</p>');
+ '<label class="kc-journal-search">Zoek in eerdere dagen<input type="search" data-kc-input="journal-search" value="'+esc(journalSearch)+'" placeholder="Tekst, tag of datum…"></label><div class="kc-diary-heading kc-diary-history-title"><strong>Eerdere dagen</strong>'+btn("Beheer","edit-collection",c.id)+'</div>'+
+ (days.length?'<div class="kc-diary-history">'+days.slice(0,20).map(n=>'<button type="button" data-kc="journal-open" data-id="'+esc(n.id)+'"><span style="background-image:url(./assets/pin-forests/'+diaryScene(n.journal.date)+')"></span><span><strong>'+esc(journalLabel(n.journal.date))+'</strong><small>'+esc(diarySummary(n.journal))+'</small><small>'+esc((n.body||'').slice(0,90))+'</small></span><b>›</b></button>').join("")+'</div>':'<p class="kc-diary-empty">Je eerdere dagboekdagen verschijnen hier.</p>');
 }
 function openJournal(day){
  stopDiaryDictation();const existing=C.findJournal(read(),day);if(existing){collectionId=C.collectionOf(read(),existing);startEdit(existing.id);return;}
@@ -315,12 +317,15 @@ function linkedHTML(n){
   return '<button type="button" data-kc="related" data-kind="'+esc(l.kind)+'" data-id="'+esc(l.id)+'">'+esc((state?"Taak · "+state+" · ":"")+(other?.title||{task:"Taak",appointment:"Afspraak",wish:"Aankoopwens"}[l.kind]||"Gekoppeld item"))+' <span aria-hidden="true">↗</span></button>';
  }).join("")+"</div>";
 }
+function ingredientRows(recipe){return (Array.isArray(recipe?.ingredients)?recipe.ingredients:[]).map(x=>({...x,amount:root.MementoReviewCore.scale(x.amount,recipeFactor)}));}
 function recipeHTML(r){
- const ingredients=Array.isArray(r?.ingredients)?r.ingredients:[];
- return '<section class="kc-recipe"><div class="kc-recipe-hero"><span>RECEPTKAART</span><strong>'+esc(r?.status||"concept")+' · versie '+esc(r?.version||1)+'</strong></div>'+
- '<h3>Ingrediënten</h3>'+(ingredients.length?'<div class="kc-recipe-table">'+ingredients.map(x=>'<div><span>'+esc(x.name)+'</span><strong>'+esc(x.amount)+' '+esc(x.unit)+'</strong></div>').join("")+"</div>":'<p class="kc-muted">Nog geen ingrediënten vastgelegd.</p>')+
- (r?.notes?'<h3>Testnotities</h3><p>'+esc(r.notes)+'</p>':"")+"</section>";
+ const ingredients=ingredientRows(r),checked=recipeChecks.get(selectedId)||new Set();
+ return '<section class="kc-recipe"><div class="kc-recipe-hero"><span>RECEPTKAART</span><strong>'+esc(r?.status||"concept")+' · versie '+esc(r?.version||1)+'</strong></div><div class="mg-recipe-tools"><label>Hoeveelheid<select data-mg-recipe-scale>'+[[1,'Origineel · ×1'],[.5,'Halve hoeveelheid'],[2,'Dubbele hoeveelheid'],[3,'Drievoudige hoeveelheid']].map(([v,label])=>'<option value="'+v+'"'+(recipeFactor===v?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+btn('Kies voor boodschappen','recipe-shop')+'</div><h3>Ingrediënten</h3>'+
+ (ingredients.length?ingredients.map((x,i)=>'<label class="mg-recipe-check"><input type="checkbox" data-mg-cook="'+i+'"'+(checked.has(i)?' checked':'')+'><span>'+esc(x.name)+' · '+esc(x.amount)+' '+esc(x.unit)+'</span></label>').join(''):'<p class="kc-muted">Nog geen ingrediënten vastgelegd.</p>')+
+ (r?.notes?'<details class="mg-fold"><summary>Testnotities</summary><p class="mg-fold-body">'+esc(r.notes)+'</p></details>':'')+'</section>';
 }
+function renderRecipeShop(){const note=read().notes.find(n=>n.id===selectedId);if(!note)return header('Recept niet gevonden',true);const rows=ingredientRows(note.recipe);return header('Ingrediënten kiezen',true,btn('Op boodschappenlijst','recipe-shop-confirm','',true))+'<div class="life-panel">'+rows.map((x,i)=>'<label class="mg-recipe-check"><input data-mg-shop="'+i+'" type="checkbox" checked><span>'+esc(x.name)+' · '+esc(x.amount)+' '+esc(x.unit)+'</span></label>').join('')+'</div>';}
+function recipeEditRows(recipe){return '<div id="mg-recipe-rows">'+(recipe.ingredients||[]).map((x,i)=>'<div class="mg-recipe-row">'+[['name','Ingrediënt',120],['amount','Hoeveelheid',40],['unit','Eenheid',40]].map(([key,label,max])=>'<label>'+label+'<input data-mg-ingredient="'+i+'" data-key="'+key+'" maxlength="'+max+'" value="'+esc(x[key])+'"></label>').join('')+btn('×','recipe-remove',i)+'</div>').join('')+'</div>'+btn('+ Ingrediënt','recipe-add');}
 function renderDetail(){
  const n=read().notes.find(x=>x.id===selectedId);
  if(!n)return header("Notitie niet gevonden",true)+"<p>Dit kennisitem is niet meer beschikbaar.</p>";
@@ -329,7 +334,7 @@ function renderDetail(){
  const direct=!n.deletedAt&&!n.journal&&C.typeOf(n)==="note";
  if(direct&&(!editing||editing.id!==n.id||!dirty)){editing=C.clone(n);editing.collectionId=cid;dirty=false;rememberBase();}
  const original=safeURL(n.sourceUrl||"");
- const check=C.typeOf(n)==="checklist"?'<div class="kc-checklist">'+C.checklistItems(n).map(item=>'<label class="kc-check"><input data-kc-check="'+esc(item.id)+'" data-note="'+esc(n.id)+'" type="checkbox"'+(item.done?" checked":"")+(n.deletedAt?" disabled":"")+'><span>'+esc(item.text)+'</span></label>').join("")+"</div>":"";
+ const check=C.typeOf(n)==="checklist"?'<p class="mg-chip">'+C.checklistItems(n).filter(x=>x.done).length+' van '+C.checklistItems(n).length+' afgevinkt</p><div class="kc-checklist">'+C.checklistItems(n).slice().sort((a,b)=>Number(a.done)-Number(b.done)).map(item=>'<label class="kc-check"><input data-kc-check="'+esc(item.id)+'" data-note="'+esc(n.id)+'" type="checkbox"'+(item.done?" checked":"")+(n.deletedAt?" disabled":"")+'><span>'+esc(item.text)+'</span></label>').join("")+"</div>":"";
  return header(n.journal?journalLabel(n.journal.date):n.body?.trim()===n.title.trim()?"Notitie":n.title,true,actions)+
  (n.journal?'<p class="kc-muted">'+esc(n.journal.mood||'Geen stemming')+'</p>':'')+
  '<div class="kc-detail-meta"><span>'+esc(collectionName(cid))+"</span><span>·</span><span>"+esc(kindNames[C.typeOf(n)]||"Notitie")+"</span><span>·</span><span>"+readable(n.updatedAt||n.createdAt)+"</span></div>"+
@@ -358,7 +363,7 @@ function renderEditor(){
  '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+(root.MementoDictation?.button?.("kc-body")||"")+"</div>"+
  '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>"+
  (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
- '<label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label>"+
+ recipeEditRows(recipe)+'<details class="mg-fold"><summary>Tekstinvoer ingrediënten</summary><label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label></details>"+
  '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+"</textarea></label></div>":"")+
  '<label>Tags (gescheiden door komma’s)<input data-kc-edit="tags" maxlength="1000" value="'+esc(tags)+'" placeholder="Bijvoorbeeld: Inspiratie, Project"></label>'+
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
@@ -399,7 +404,8 @@ function render(){
  if(!host)return;
  const life=read();try{C.ensure(life)}catch(e){host.textContent=e.message;return;}
  let output="";
- if(screen==="search")output=renderCentralSearch();
+ if(screen==="recipe-groceries")output=renderRecipeShop();
+ else if(screen==="search")output=renderCentralSearch();
  else if(screen==="home")output=renderHome();
  else if(screen==="sort")output=renderSort();
  else if(screen==="collections")output=renderCollections();
@@ -533,8 +539,12 @@ function copyDiaryAI(){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ if(op==='recipe-add'||op==='recipe-remove'){if(!editing)return;editing.recipe||={ingredients:[],status:'concept',version:1,notes:''};if(op==='recipe-add')editing.recipe.ingredients.push({name:'',amount:'',unit:''});else editing.recipe.ingredients.splice(Number(id),1);schedule();render();return;}
+ if(op==='recipe-shop'){if(!flush())return;screen='recipe-groceries';render();return;}
+ if(op==='recipe-shop-confirm'){const n=read().notes.find(n=>n.id===selectedId);if(!n)return;const rows=ingredientRows(n.recipe).filter((x,i)=>host.querySelector('[data-mg-shop="'+i+'"]')?.checked);if(!rows.length){notify('Kies ten minste één ingrediënt.');return;}if(!confirm(rows.length+' ingrediënten op je boodschappenlijst zetten?'))return;if(bridge.addRecipeIngredients?.(rows)){screen='detail';notice='Ingrediënten toegevoegd.';render();}else notify('Ingrediënten niet opgeslagen. Probeer opnieuw.');return;}
+
  if(op==="central-clear"){centralQuery="";centralType="";centralCollection="";centralStatus="active";screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
- if(op==="search-result"){if(!flush())return;if(el.dataset.kind==="task")bridge.openRelated?.("task",id);else{selectedId=id;editing=null;screen="detail";render();}return;}
+ if(op==="search-result"){if(!flush())return;if(el.dataset.kind==="task")bridge.openRelated?.("task",id);else{if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}return;}
  if(["selection-task","passage-task","convert-task"].includes(op)){
   const field=host.querySelector('#kc-body'),n=editing||read().notes.find(n=>n.id===selectedId);
   const passage=(op==="passage-task"?host.querySelector('#kc-task-passage')?.value:field?field.value.slice(field.selectionStart,field.selectionEnd):window.getSelection()?.toString())?.trim()||"";
@@ -731,6 +741,9 @@ function updateDiaryKeyboard(){
 
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
+ if(field.dataset.kcInput==='journal-search'){journalSearch=field.value;const cursor=field.selectionStart;render();const next=host.querySelector('[data-kc-input="journal-search"]');next?.focus();next?.setSelectionRange(cursor,cursor);return;}
+ if(field.dataset.mgIngredient!==undefined&&editing){const row=editing.recipe?.ingredients[Number(field.dataset.mgIngredient)];if(row){row[field.dataset.key]=field.value;const raw=host.querySelector('[data-kc-edit="ingredients"]');if(raw)raw.value=editing.recipe.ingredients.map(x=>[x.name,x.amount,x.unit].join(' | ')).join('\n');schedule();}return;}
+
  if(field.dataset.kcInput==="central-search"){centralQuery=field.value;screen="search";const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="central-search"]');input?.focus();input?.setSelectionRange(cursor,cursor);return;}
  if(field.dataset.kcInput==="quick"){quickDraft=field.value;return;}
  if(field.dataset.kcInput==="search"){filtersExpanded=true;query=field.value;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
@@ -772,6 +785,8 @@ function onInput(event){
 }
 function onChange(event){
  const el=event.target;
+ if(el.hasAttribute('data-mg-recipe-scale')){recipeFactor=Number(el.value)||1;render();return;}
+ if(el.dataset.mgCook!==undefined){const checked=recipeChecks.get(selectedId)||new Set();if(el.checked)checked.add(Number(el.dataset.mgCook));else checked.delete(Number(el.dataset.mgCook));recipeChecks.set(selectedId,checked);return;}
  if(el.dataset.kcCentral){if(el.dataset.kcCentral==="type"){centralType=el.value;if(centralType==="task")centralCollection="";}if(el.dataset.kcCentral==="status")centralStatus=el.value;if(el.dataset.kcCentral==="collection"){centralCollection=el.value;if(centralCollection)centralType="note";}screen="search";render();root.MementoFeedback?.filter(host.querySelector(".kc-filter-status"));return;}
  if(el.dataset.kcCol||el.dataset.kcJournal||el.dataset.kcManualHealth){onInput(event);return;}
  if(el.dataset.kcChange){filtersExpanded=true;const val=el.value;if(el.dataset.kcChange==="kind")kindFilter=val;if(el.dataset.kcChange==="sort")sort=val;if(el.dataset.kcChange==="tag")tagFilter=val;render();return}
@@ -815,5 +830,5 @@ root.visualViewport?.addEventListener("resize",updateDiaryKeyboard);
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
-root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;selectedId=id;editing=null;screen="detail";render();}};
+root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
 })(window);

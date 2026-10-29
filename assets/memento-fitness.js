@@ -734,7 +734,7 @@
       render();if(id==="today")restorePosition();
     } else if(a==="next-open-set") {
       const target=host?.querySelector('.ft-check[aria-pressed="false"]');
-      if(target){target.closest(".ft-set")?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});target.focus({preventScroll:true});}else error("Alle werksets zijn afgevinkt. Je kunt de training afronden.");
+      if(target){const fold=target.closest("details.mg-exercise-fold");if(fold)fold.open=true;target.closest(".ft-set")?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});target.focus({preventScroll:true});}else error("Alle werksets zijn afgevinkt. Je kunt de training afronden.");
     } else if (a === "duration") {
       selectedMinutes = Number(id);
       render();
@@ -750,8 +750,10 @@
     else if (a === "profile") profile();
     else if (a === "close") close();
     else if (a === "apply-hypertrophy") {
-      if (!confirm("Nieuwe set- en herhalingsdoelen toepassen op jouw A/B/C-schema’s? Bestaande oefeningen met dezelfde naam worden bijgewerkt. Extra eigen oefeningen, notities, resultaten en actieve trainingen blijven behouden.")) return;
-      if (change((f) => C.applyHypertrophyPlan(f))) { tab = "plan"; render(); }
+      const before=data(),after=JSON.parse(JSON.stringify(before));C.applyHypertrophyPlan(after);
+      const prescription=e=>e.sets+' × '+(e.type==='strength'?e.min+'–'+e.max:e.minutes+' min')+' · '+e.rest+' sec rust';
+      const rows=after.routines.filter(r=>!r.archived&&before.routines.some(x=>x.id===r.id)).map(r=>{const old=before.routines.find(x=>x.id===r.id);return '<h3>'+esc(r.name)+'</h3>'+r.exercises.map(e=>{const previous=old.exercises.find(x=>x.id===e.id);return '<div class="ft-row"><div><strong>'+esc(e.name)+'</strong><small>Nu: '+esc(previous?prescription(previous):'Nieuwe oefening')+'</small><small>Voorstel: '+esc(prescription(e))+'</small></div></div>';}).join('');}).join('');
+      dialog('Voorgesteld schema vergelijken',rows+'<p>Bestaande resultaten, notities en actieve training blijven behouden.</p>','Bevestigen en toepassen','hypertrophy-review');
     }
     else if (a === "starter") {
       if (!confirm("Jouw A/B/C-cyclus activeren? Ontbrekende schema’s worden toegevoegd. Je bestaande rooster, overige schema’s, afspraken en trainingsresultaten blijven bewaard.")) return;
@@ -1033,6 +1035,7 @@
     let ok = false,
       after = null;
     try {
+      if(kind==='hypertrophy-review'){ok=commit(f=>C.applyHypertrophyPlan(f));if(ok)tab='plan';}
       if (kind === "profile")
         ok = commit((f) => {
           f.profile = {...f.profile,
@@ -1207,7 +1210,7 @@
         ? "Rust voorbij · klaar voor je volgende set"
         : "Rust begint na het afvinken";
   }
-  function restorePosition(){const id=data().active?.resumeExerciseId;if(id)requestAnimationFrame(()=>document.getElementById('ft-exercise-'+id)?.scrollIntoView({block:'start'}));}
+  function restorePosition(){const id=data().active?.resumeExerciseId;if(id)requestAnimationFrame(()=>{const el=document.getElementById('ft-exercise-'+id);const fold=el?.closest('details.mg-exercise-fold');if(fold)fold.open=true;el?.scrollIntoView({block:'start'});});}
   function dayHTML(f, date, carry = false) {
     if (!f) return "";
     const resume =

@@ -16,27 +16,7 @@ function financeV9(){
   const endOfMonth=new Date(+selectedMonth.slice(0,4),+selectedMonth.slice(5,7),0).getDate();
   return {from,to:salary?dateNow():selectedMonth+'-'+String(endOfMonth).padStart(2,'0'),salary,ids:personal?['personal','creditcard']:['joint']};
  }
- function calc(from,to,ids){
-  let income=0,expenses=0;const cats=new Map(),daily=new Map(),txs=[],selected=new Set(ids);
-  for(const t of state.transactions){
-   if(!t.date||t.date<from||t.date>to)continue;
-   const v=Math.round(Math.abs(Number(t.amount)||0)*100)/100,a=t.account||'personal',aIn=selected.has(a),toIn=selected.has(t.transferToAccount);
-   if(t.type==='transfer'){
-    if(aIn===toIn)continue;
-    txs.push(t);
-    if(aIn){expenses+=v;cats.set('Overboekingen',(cats.get('Overboekingen')||0)+v);daily.set(t.date,(daily.get(t.date)||0)+v)}
-    else income+=v;
-    continue;
-   }
-   if(!aIn)continue;txs.push(t);
-   if(t.type==='income'){income+=v;continue}
-   const amount=t.type==='refund'?-v:v;expenses+=amount;daily.set(t.date,(daily.get(t.date)||0)+amount);
-   const parts=txParts(t);
-   for(const part of parts){const label=part.category||t.category||'Overig',p=Math.abs(Number(part.amount)||0);cats.set(label,(cats.get(label)||0)+(t.type==='refund'?-p:p))}
-  }
-  txs.sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
-  return {income:Math.round(income*100)/100,expenses:Math.round(expenses*100)/100,net:Math.round((income-expenses)*100)/100,cats:[...cats].filter(c=>c[1]>0).sort((a,b)=>b[1]-a[1]),daily,txs};
- }
+ function calc(from,to,ids){return window.MementoReviewCore.finance(state.transactions,from,to,ids,txParts);}
  function dateList(from,to){
   let s=new Date(from+'T12:00:00'),e=new Date(to+'T12:00:00'),n=Math.max(1,Math.min(370,Math.round((e-s)/86400000)+1));
   if(!Number.isFinite(n))return [from];
@@ -79,8 +59,8 @@ function financeV9(){
    else if(b.hasAttribute('data-m9-dot'))go(+b.dataset.m9Dot);
    else if(b.id==='m9-replay'){el.querySelectorAll('.m9-line,.m9-end,.m9-ring,.m9-bar').forEach(item=>{item.style.animation='none';item.getBoundingClientRect();item.style.animation='';})}
    else if(b.hasAttribute('data-m9-tx')){const t=state.transactions.find(x=>x.id===b.dataset.m9Tx);if(t)transactionModal(t.id)}
-   else if(b.hasAttribute('data-m9-cat')){const cat=b.dataset.m9Cat;changeView('transactions');if(cat==='Overboekingen'){const f=document.getElementById('txTypeFilter');if(f&&[...f.options].some(o=>o.value==='transfer'))f.value='transfer';}else{const f=document.getElementById('txCategoryFilter');if(f&&[...f.options].some(o=>o.value===cat))f.value=cat;}renderTransactions()}
-   else if(b.id==='m9-alltx')changeView('transactions');
+   else if(b.hasAttribute('data-m9-cat')){const r=range();bridge.drilldown({...r,category:b.dataset.m9Cat});}
+   else if(b.id==='m9-alltx'){bridge.drilldown(range());}
    else if(b.id==='m9-allcats'){changeView('analysis');document.querySelector('[data-analysis-tab="categories"]')?.click();}
   });
   return el;
@@ -102,15 +82,15 @@ function financeV9(){
  function dots(){
   const sc=root()?.querySelector('#m9-scroll');if(!sc)return;active=Math.max(0,Math.min(2,Math.round(sc.scrollLeft/Math.max(1,sc.clientWidth))));
   root().querySelectorAll('[data-m9-dot]').forEach((b,i)=>b.setAttribute('aria-current',i===active?'true':'false'));
-  root().querySelector('#m9-title').textContent=['Uitgaven + overboekingen','Uitgaven per categorie','Maandvergelijking'][active];
+  root().querySelector('#m9-title').textContent=['Netto uitgaven per dag','Uitgaven per categorie','Maandvergelijking'][active];
   root().querySelector('#m9-position').textContent=`${active+1} van 3`;
  }
  function go(i){active=Math.max(0,Math.min(2,i));const sc=root()?.querySelector('#m9-scroll');if(sc){sc.scrollTo({left:active*sc.clientWidth,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});dots()}}
  function paint(){
   const el=ensure();if(!el)return;
   const header=document.querySelector('#view-dashboard .page-head p');if(header&&header.firstChild?.nodeType===3)header.firstChild.textContent='Je geldzaken in ';
-  const r=range(),d=calc(r.from,r.to,r.ids),sumCats=d.cats.reduce((s,c)=>s+c[1],0);if(!r.salary){const m=bridge.flow(selectedMonth);d.income=m.income;d.expenses=m.outgoing;d.net=m.net;}
-  el.innerHTML=`<div class="m9-filters"><button type="button" id="m9-accounts" class="m9-filter" aria-label="Rekening kiezen">${icon}<span>${dashboardScope==='joint'?'Gezamenlijk':'Persoonlijk'}</span>⌄</button><button type="button" id="m9-period" class="m9-filter" aria-label="Periode kiezen"><span>${r.salary?'Loonperiode':'Kalendermaand'}</span>⌄</button></div><section class="m9-card" aria-label="Financiële stand"><div class="m9-pair"><div><small>Inkomsten</small><strong>${esc(format(d.income))}</strong></div><div><small>Uitgaven</small><strong>${esc(format(d.expenses))}</strong></div></div><div class="m9-net"><small>Actuele stand</small><strong class="${d.net<0?'negative':''}">${esc(signed(d.net))}</strong></div><div class="m9-chart-head"><b id="m9-title">Uitgaven + overboekingen</b><span id="m9-position">1 van 3</span><button type="button" class="m9-replay" id="m9-replay" aria-label="Grafiekanimatie opnieuw afspelen">⟳</button></div><div class="m9-scroll" id="m9-scroll" tabindex="0" aria-label="Veeg voor drie grafieken"><div class="m9-slide">${plot(d,r)}</div><div class="m9-slide">${donut(d)}</div><div class="m9-slide">${bars(r)}</div></div><div class="m9-foot"><div class="m9-dots">${[0,1,2].map(i=>`<button type="button" data-m9-dot="${i}" aria-label="Grafiek ${i+1}" aria-current="${active===i}"></button>`).join('')}</div><small>Veeg voor grafieken</small></div></section><div class="m9-head"><h2>Uitgaven per categorie</h2><button type="button" id="m9-allcats">Bekijk alles ›</button></div><div class="m9-list">${d.cats.length?d.cats.slice(0,5).map(([name,value])=>`<button class="m9-row" type="button" data-m9-cat="${esc(name)}"><span class="m9-icon">${name==='Overboekingen'?'⇄':'◈'}</span><span class="m9-info"><b>${esc(name)}</b><small>${sumCats?Math.round(value/sumCats*100):0}%</small><span class="m9-bartrack"><i style="width:${sumCats?Math.min(100,value/sumCats*100):0}%"></i></span></span><span class="m9-value">${esc(format(value))}</span></button>`).join(''):'<div class="m9-empty">Nog geen uitgaven in deze periode.</div>'}</div><div class="m9-head"><h2>Recente transacties</h2><button type="button" id="m9-alltx">Bekijk alles ›</button></div><div class="m9-list">${d.txs.length?d.txs.slice(0,5).map(t=>{const positive=t.type==='income'||t.type==='refund'||t.type==='transfer'&&r.ids.includes(t.transferToAccount)&&!r.ids.includes(t.account||'personal');return `<button type="button" class="m9-row" data-m9-tx="${esc(t.id)}"><span class="m9-icon">${t.type==='transfer'?'⇄':positive?'↙':'↗'}</span><span class="m9-info"><b>${esc(t.description||t.merchant||'Transactie')}</b><small>${esc(t.date)} · ${esc(t.type==='transfer'?'Overboeking':t.category||'Overig')}</small></span><span class="m9-value ${positive?'':'negative'}">${positive?'+ ':'− '}${esc(format(Math.abs(Number(t.amount)||0)))}</span></button>`}).join(''):'<div class="m9-empty">Nog geen transacties in deze periode.</div>'}</div>`;
+  const r=range(),d=calc(r.from,r.to,r.ids),sumCats=d.cats.reduce((s,c)=>s+c[1],0);
+  el.innerHTML=`<div class="m9-filters"><button type="button" id="m9-accounts" class="m9-filter" aria-label="Rekening kiezen">${icon}<span>${dashboardScope==='joint'?'Gezamenlijk':'Persoonlijk'}</span>⌄</button><button type="button" id="m9-period" class="m9-filter" aria-label="Periode kiezen"><span>${r.salary?'Loonperiode':'Kalendermaand'}</span>⌄</button></div><div class="m9-context">${esc(r.from)} t/m ${esc(r.to)} · ${dashboardScope==='joint'?'Gezamenlijk':'Persoonlijk + creditcard'}</div><section class="m9-card" aria-label="Financiële stand"><div class="m9-pair"><div><small>Inkomsten</small><strong>${esc(format(d.income))}</strong></div><div><small>Netto uitgaven</small><strong>${esc(format(d.expenses))}</strong></div></div><div class="m9-net"><small>Netto geldstroom</small><strong class="${d.net<0?'negative':''}">${esc(signed(d.net))}</strong><small class="m9-transfers">Periode-uitkomst · geen banksaldo</small><details class="m9-transfers"><summary>Overboekingen</summary>Ontvangen ${esc(format(d.transferIn))} · overgemaakt ${esc(format(d.transferOut))}<br>Ontvangen incl. overboekingen ${esc(format(d.received))} · afgeschreven incl. overboekingen ${esc(format(d.outgoing))}</details></div><div class="m9-chart-head"><b id="m9-title">Netto uitgaven per dag</b><span id="m9-position">1 van 3</span><button type="button" class="m9-replay" id="m9-replay" aria-label="Grafiekanimatie opnieuw afspelen">⟳</button></div><div class="m9-scroll" id="m9-scroll" tabindex="0" aria-label="Veeg voor drie grafieken"><div class="m9-slide">${plot(d,r)}</div><div class="m9-slide">${donut(d)}</div><div class="m9-slide">${bars(r)}</div></div><div class="m9-foot"><div class="m9-chart-tabs">${['Trend','Categorieën','Maanden'].map((label,i)=>`<button type="button" data-m9-dot="${i}" aria-label="Grafiek ${i+1}: ${label}" aria-current="${active===i}">${label}</button>`).join('')}</div><small>Veeg voor grafieken</small></div></section><div class="m9-head"><h2>Uitgaven per categorie</h2><button type="button" id="m9-allcats">Bekijk alles ›</button></div><div class="m9-list">${d.cats.length?d.cats.slice(0,5).map(([name,value])=>`<button class="m9-row" type="button" data-m9-cat="${esc(name)}"><span class="m9-icon">${name==='Overboekingen'?'⇄':'◈'}</span><span class="m9-info"><b>${esc(name)}</b><small>${sumCats?Math.round(value/sumCats*100):0}%</small><span class="m9-bartrack"><i style="width:${sumCats?Math.min(100,value/sumCats*100):0}%"></i></span></span><span class="m9-value">${esc(format(value))}</span></button>`).join(''):'<div class="m9-empty">Nog geen uitgaven in deze periode.</div>'}</div><div class="m9-head"><h2>Recente transacties</h2><button type="button" id="m9-alltx">Bekijk alles ›</button></div><div class="m9-list">${d.txs.length?d.txs.slice(0,5).map(t=>{const positive=t.type==='income'||t.type==='refund'||t.type==='transfer'&&r.ids.includes(t.transferToAccount)&&!r.ids.includes(t.account||'personal');return `<button type="button" class="m9-row" data-m9-tx="${esc(t.id)}"><span class="m9-icon">${t.type==='transfer'?'⇄':positive?'↙':'↗'}</span><span class="m9-info"><b>${esc(t.description||t.merchant||'Transactie')}</b><small>${esc(t.date)} · ${esc(t.type==='transfer'?'Overboeking':t.category||'Overig')}</small></span><span class="m9-value ${positive?'':'negative'}">${positive?'+ ':'− '}${esc(format(Math.abs(Number(t.amount)||0)))}</span></button>`}).join(''):'<div class="m9-empty">Nog geen transacties in deze periode.</div>'}</div>`;
   const sc=el.querySelector('#m9-scroll');
   sc.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;dots()})},{passive:true});
   sc.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(active+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(active-1)}});
