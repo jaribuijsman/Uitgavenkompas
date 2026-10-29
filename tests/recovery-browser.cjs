@@ -59,6 +59,9 @@ async function checkbox(page,selector){
   const structure=await page.locator('#lifeContent').innerHTML(),raw=await page.evaluate(()=>localStorage.getItem('compass_life_preview_v1'));
   await page.evaluate(()=>{for(let i=0;i<5;i++)window.MementoLayout.refresh();});await settle(page);assert.equal(await page.locator('#lifeContent').innerHTML(),structure);assert.equal(await page.evaluate(()=>localStorage.getItem('compass_life_preview_v1')),raw);
   if(count===1){
+   await nav(page,'groceries');
+   const shopping=await page.locator('.shopping-row').first().evaluate(n=>({columns:getComputedStyle(n).gridTemplateColumns.split(' ').map(parseFloat),check:n.querySelector('.shopping-check').getBoundingClientRect().toJSON()}));
+   assert.equal(shopping.columns[0],44,'Shopping keeps its original compact 44px column');assert(shopping.check.width>=44&&shopping.check.height>=44);row.shopping=shopping;
    await nav(page,'today');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');await page.screenshot({path:path.join(out,width+'-day.jpg'),type:'jpeg',animations:'disabled'});
    await nav(page,'agenda');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
    const boxes=await page.locator('.memento-unified-event').first().evaluate(n=>[...n.children].map(c=>c.getBoundingClientRect().toJSON()));assert(boxes[0].right<=boxes[1].left+1,'Appointment hitbox stays in its grid column');

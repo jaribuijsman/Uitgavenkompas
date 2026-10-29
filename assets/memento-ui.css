@@ -48,8 +48,8 @@
 #lifeApp .flow-hero blockquote {font-size:18px;font-weight:500;line-height:1.6}
 #lifeApp .flow-weather {border-radius:var(--m-radius)}
 #lifeApp .shopping-list-switch button,#lifeApp .shopping-quick-favorites button {min-height:44px}
-#lifeApp .shopping-row {grid-template-columns:48px minmax(0,1fr) 44px;padding:6px;gap:3px}
-#lifeApp .shopping-row:has(.shopping-ai) {grid-template-columns:48px minmax(0,1fr) 44px 44px}
+#lifeApp .shopping-row {grid-template-columns:44px minmax(0,1fr) 44px;padding:6px;gap:3px}
+#lifeApp .shopping-row:has(.shopping-ai) {grid-template-columns:44px minmax(0,1fr) 44px 44px}
 #lifeApp .shopping-icon-button {width:44px;min-width:44px;min-height:44px}
 #lifeApp .shopping-row-title {min-height:44px;display:flex;align-items:center;font-size:15px;font-weight:600}
 #lifeApp .shopping-row-body small {font-size:12px}
