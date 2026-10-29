@@ -28,7 +28,7 @@ const server=http.createServer((req,res)=>{
   const nav=async(dest)=>{await page.locator('[data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:'+dest+'"]').click()};
   await nav("notes");
   assert.equal(await page.locator("#kc-quick-text").count(),1);
-  await page.locator("#kc-quick-text").fill("Startnotitie");
+  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Startnotitie");
   await page.locator('#kc-quick-mic').click();
   assert.equal(await page.locator("#kc-quick-text").inputValue(),"Startnotitie Herinner me aan de afspraak");
   assert.equal((await stored()).notes.some(n=>n.body.includes("Startnotitie Herinner")),false);
@@ -38,7 +38,7 @@ const server=http.createServer((req,res)=>{
   assert.equal((await stored()).notes.find(n=>n.body.startsWith("Startnotitie")).collectionId,"inbox");
   assert.equal(await page.locator("#kc-quick-text").inputValue(),"");
   checks.push("Quick note saves precisely once in existing Knowledge Inbox");
-  await page.locator("#kc-quick-text").fill("Bij opslagfout bewaren");
+  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Bij opslagfout bewaren");
   await page.evaluate(()=>{
    window.mementoOriginalSetItem=Storage.prototype.setItem;
    Storage.prototype.setItem=function(k,v){if(k==="compass_life_preview_v1")throw Error("Simulated quota");return window.mementoOriginalSetItem.call(this,k,v);}
@@ -50,7 +50,7 @@ const server=http.createServer((req,res)=>{
   await page.locator('[data-kc="quick-save"]').click();
   assert.equal((await stored()).notes.some(n=>n.body==="Bij opslagfout bewaren"),true);
   checks.push("Quota refusal keeps draft and allows explicit retry");
-  await page.locator("#kc-quick-text").fill("Nog uitwerken");
+  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Nog uitwerken");
   await page.locator('[data-kc="quick-expand"]').click();
   assert.equal(await page.locator("#kc-body").inputValue(),"Nog uitwerken");
   await page.locator("#kc-body").fill("Nog uitwerken en aanvullen");
