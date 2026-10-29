@@ -131,6 +131,8 @@
  }
  function refresh(){finance();life();for(const id of ['smartbuy','moneycoach']){const host=$('#view-'+id),intro=host&&$('.'+(id==='smartbuy'?'smartbuy':'moneycoach')+'-intro',host),help=intro?.closest('.memento-disclosure');if(help&&help.parentElement===host&&help!==host.lastElementChild)host.append(help);}}
  document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  // A chosen calendar day reveals the corresponding duty detail even when the roster is collapsed.
+  if(b.matches('[data-gcal-day]')){const show=()=>{const d=$('#lifeApp[data-life-view=agenda] [data-ml-fold=agenda-roster]');if(d)d.open=true;};show();requestAnimationFrame(show);}
   if(['addGoal','addGoalInline'].includes(b.id))$('#ml-planning')?.mlSelect?.('goals');
   if(['addBill','addBillInline'].includes(b.id))$('#ml-planning')?.mlSelect?.('payments');
   if(b.id==='receiptApplyJson')$('#ml-receipts')?.mlSelect?.('check');
