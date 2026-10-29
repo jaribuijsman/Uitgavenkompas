@@ -318,7 +318,7 @@
       }).join("") +
       panel("Training afronden",
         '<label class="ft-field">Trainingnotitie<textarea id="ft-session-note" data-session-note maxlength="4000">' +
-          esc(s.notes) + '</textarea></label>' + window.MementoDictation.button('ft-session-note') + '<div class="ft-actions">' +
+          esc(s.notes) + '</textarea></label>' + (window.MementoDictation?.button?.('ft-session-note')||"") + '<div class="ft-actions">' +
           button("Afronden", "finish", "", true) + button("Later verder", "later") + '</div>' +
         '<details class="ft-details"><summary>Training annuleren</summary>' +
           '<p>Annuleren kun je direct ongedaan maken.</p>' + button("Annuleer training", "cancel") + '</details>')

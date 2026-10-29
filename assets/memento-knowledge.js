@@ -116,7 +116,7 @@ function quickStop(){
 function quickToggleSpeech(){
  const field=host?.querySelector("#kc-quick-text"),button=host?.querySelector("#kc-quick-mic");
  if(!field)return;
- root.MementoDictation.start(field,{button,onState:on=>{quickListening=on;quickPaint();},onStatus:quickMsg});
+ root.MementoDictation?.start?.(field,{button,onState:on=>{quickListening=on;quickPaint();},onStatus:quickMsg});
 }
 function quickSave(){
  quickStop();const body=quickDraft.trim();
@@ -259,7 +259,7 @@ function diarySpeechEditor(){
  return screen==="edit"&&Boolean(editing?.journal)&&root.MementoDictation?.isActive(host?.querySelector("#kc-body"));
 }
 function stopDiaryDictation(message="",keepPreview=true){
- if(diaryDictating)root.MementoDictation.stop({discardPreview:!keepPreview,message});
+ if(diaryDictating)root.MementoDictation?.stop?.({discardPreview:!keepPreview,message});
  diaryDictating=false;paintDiarySpeech();
 }
 function toggleDiaryDictation(){
@@ -355,7 +355,7 @@ function renderEditor(){
  '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
  (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
  '<label for="kc-body">Inhoud</label>'+
- '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+root.MementoDictation.button("kc-body")+"</div>"+
+ '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+(root.MementoDictation?.button?.("kc-body")||"")+"</div>"+
  '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>"+
  (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
  '<label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label>"+
