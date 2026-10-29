@@ -248,9 +248,9 @@ function diaryHealth(j){
  const m=j.manualHealth||{},h=j.health;
  const android=/Android/i.test(navigator.userAgent);
  const fallback="https://play.google.com/store/apps/details?id=com.sec.android.app.shealth";
- // Een browser kan de Android-app alleen openen als Samsung Health een geschikte activiteit aanbiedt.
+ // Best-effort: historische Samsung Health-versies ondersteunen een browsable shealth://-link; moderne ondersteuning is niet gegarandeerd.
  // Het openen van een bepaalde kalenderdag wordt niet door een openbare deep link ondersteund.
- const openLink=android?"intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.shealth;S.browser_fallback_url="+encodeURIComponent(fallback)+";end":fallback;
+ const openLink=android?"intent://#Intent;scheme=shealth;action=android.intent.action.VIEW;package=com.sec.android.app.shealth;S.browser_fallback_url="+encodeURIComponent(fallback)+";end":fallback;
  const numeric=(key,title,max,min=0)=>'<label>'+title+'<input type="number" inputmode="numeric" min="'+min+'" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(m[key]??"")+'" placeholder="—"></label>';
  const sleep=m.sleepMinutes===undefined?null:m.sleepMinutes;
  const sleepField=(key,label,value,max)=>'<label>'+label+'<input type="number" inputmode="numeric" min="0" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(value??"")+'" placeholder="—"></label>';
