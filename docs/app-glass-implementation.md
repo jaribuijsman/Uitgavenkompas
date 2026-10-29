@@ -1,5 +1,7 @@
 # Uitvoering appontwerp — Nieuw Glas
 
+> **Correctie na visuele controle van 29 oktober:** de eerdere schermdekking hieronder beschrijft aanwezige code en functies, niet een volledig uitgevoerd visueel ontwerp. De vergelijking van alle 18 hoofdtabbladen toont wezenlijke open afwijkingen. Zie [de actuele visuele controle](visual-audit-20261029.md).
+
 Werkbasis: actuele GitHub `main` **910e0d4feddc3338c5693511b8d375b5d9ceaee2**, opnieuw gecontroleerd tijdens uitvoering. Het interactieve voorstel van 29 oktober 2026 omvatte 42 schermen en 234 gegroepeerde functiepunten. Dat aantal is een inventarisatie, geen claim van 234 afzonderlijk uitgevoerde browsertests.
 
 De eigenaar gaf expliciet opdracht het voorstel in de app te implementeren en in main te publiceren. Bronregels: Memento Design System (template van 29 oktober), de beschikbare `LEESMIJ.txt`, `docs/masterplan-implementation.md`, het eindrapport en de concrete ontwerp-/gegevensafspraken uit het gesprek. Er waren geen aanvullende projectbestanden bij deze sessie bijgevoegd; niet-beschikbare bijlagen zijn niet als gelezen voorgesteld.

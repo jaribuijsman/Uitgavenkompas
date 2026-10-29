@@ -1,0 +1,97 @@
+{
+  "testedCommit": "6f817efa781c33047f1d467c46af40aff0203da7",
+  "workflowRun": 40920970686,
+  "jobs": [
+    {
+      "id": 123613761965,
+      "name": "upgrade",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762193,
+      "name": "browser (memento-category-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762233,
+      "name": "core",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762258,
+      "name": "browser (visual-layout-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762286,
+      "name": "browser (illustrative-icons-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762390,
+      "name": "browser (knowledge-v2-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762593,
+      "name": "browser (masterplan-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762623,
+      "name": "browser (patches-001-002-004-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762653,
+      "name": "browser (app-review-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762656,
+      "name": "browser (fitness-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762660,
+      "name": "browser (journal-upgrade-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762714,
+      "name": "browser (memento-start-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762778,
+      "name": "browser (quickfit-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762798,
+      "name": "browser (storage-safety-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 123613762885,
+      "name": "browser (knowledge-covers-browser)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "18 main tab first views compared manually; focused task/layout/performance fixes; full proposal not complete"
+}

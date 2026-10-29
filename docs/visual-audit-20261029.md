@@ -51,4 +51,25 @@ Herstel beperkt de glasobserver tot bestaande app-/dialoogwortels en negeert tek
 
 Nieuwe echte Chromium-suite `tests/visual-layout-browser.cjs`: 360/393/412 CSS-pixels, zowel normale als verminderde beweging, begrensde knophoogten, grotere bedieningslettertypen, bereikbaarheid van alle taakstatussen, zichtbare eerste taak, optionele invoer/sortering, titel-/kalenderstatusafbreking en maximaal 99 globale documentzoekacties voor 60 tekstupdates. Bestaande menu-, opslag-, PWA-upgrade- en functietests blijven vereist.
 
-Status bij opstellen: kernberekeningen en cachetests lokaal geslaagd; browservalidatie en publicatie worden hieronder pas na uitvoering vastgelegd. Een fysiek toestel, TalkBack, het Samsung-toetsenbord en batterij-/GPU-prestaties zijn hiermee niet bevestigd. De resterende ontwerpafwijkingen in de tabel zijn niet door deze gerichte herstelpatch opgelost.
+Validatie afgerond: 15 lokale kern-/regressiesuites geslaagd en alle 15 GitHub Actions-jobs op de herstelcode geslaagd (core, upgrade en 13 browsersuites). Een fysiek toestel, TalkBack, het Samsung-toetsenbord en batterij-/GPU-prestaties zijn hiermee niet bevestigd. De resterende ontwerpafwijkingen in de tabel zijn niet door deze gerichte herstelpatch opgelost.
+
+## Controlebeelden
+
+De beelden tonen links de echte app met fictieve data, rechts het oorspronkelijke voorstel met zijn eigen voorbeelddata. De afwijkende teksten en aantallen dienen niet als pixelvergelijking. De labels boven beide telefoons onderscheiden uitgangsversie en herstelversie.
+
+- [Taken vóór herstel](visual-repair-20261029/taken-main-163ef84.jpg)
+- [Taken na herstel](visual-repair-20261029/taken-herstel.jpg)
+- [Aankoopwensen na titelherstel](visual-repair-20261029/wensen-herstel.jpg)
+- [Agenda na stijl-/statusherstel](visual-repair-20261029/agenda-herstel.jpg)
+
+De daadwerkelijke layoutmetingen van de nieuwe browserproef staan in [visual-layout-20261029.json](visual-layout-20261029.json). In alle zes combinaties waren de hoofdkeuzes 46 px hoog, de hele taakbalk 56 px en het aantal globale documentzoekacties voor 60 tekstupdates nul. Bij vergrote bedieningstekst bleef de balk circa 56,4 px. Ook het echte taakmenu is visueel geopend: de acties blijven boven de kaarten en boven de ondernavigatie bereikbaar.
+
+## Validatie en release
+
+Geteste codecommit: `6f817efa781c33047f1d467c46af40aff0203da7`. [De volledige Actions-run](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40920970686) slaagde in alle 15 jobs, inclusief echte opslagconflicten tussen twee tabs, quota-/conceptbehoud, complete ZIP/binaire bijlagen, offline upgrade, bestaande menu's en de nieuwe layoutcontrole. Er zijn geen gegevensasserties verwijderd.
+
+De eerste herstelrun `bccef94` had één mislukte opslagbrowserjob: de test drukte op de nieuwe ingeklapte snelle invoer zonder die eerst via de summary te openen. Die run telt niet als groene acceptatie. De daaropvolgende testwijziging bedient de echte uitklapknop en laat alle oorspronkelijke opslagasserties staan; daarna slaagden alle jobs.
+
+Publicatiepakket: dezelfde geteste appcode, aangevuld met dit verslag, metingen en controlebeelden. Serviceworkerversie `memento-pwa-v67-20261029-visual-repair-v1` en expliciet vernieuwde URLs voor de drie gewijzigde presentatiebestanden. Geen wijziging aan de gebruikeropslag, schrijfbewaking, PIN, historische gegevens of oorspronkelijke illustraties. Een normale app-update volstaat; browsergegevens wissen is niet nodig.
+
+De eerdere 234-punteninventarisatie was een bron-/functievergelijking. Zij bewijst geen 234 visueel afgeronde functies. De open afwijkingen in de tabel blijven open na deze herstelrelease; deze release is geen verklaring dat het hele ontwerpvoorstel af is.
