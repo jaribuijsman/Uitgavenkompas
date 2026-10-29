@@ -89,10 +89,11 @@
   const backup=$('#lifeApp[data-life-view=backup] #lifeContent');if(backup){for(const card of backup.querySelectorAll('.life-panel')){const title=card.querySelector('h2')?.textContent;if(title&&title!=='Volledige Memento-back-up'&&!card.closest('.mg-fold'))fold([card],title);}}
   const scenario=$('#scenarioAmount')?.closest('.card');if(scenario&&!scenario.closest('.mg-fold')){const heading=scenario.previousElementSibling;const nodes=heading?.classList.contains('section-row')?[heading,scenario]:[scenario];fold(nodes,'Scenario berekenen · verandert je gegevens niet');}
   const receipt=$('#receiptImportJson');if(receipt&&!receipt.closest('.mg-fold')){const nodes=[receipt.closest('.form-field')||receipt.parentElement,$('#receiptApplyJson')].filter(Boolean);fold(nodes,'JSON van ChatGPT invoeren');}
-  for(const host of document.querySelectorAll('#view-smartbuy,#view-receipts')){if(host.querySelector('.mg-research-steps,.mg-receipt-steps'))continue;const steps=document.createElement('div');steps.className=host.id==='view-smartbuy'?'mg-research-steps':'mg-receipt-steps';for(const label of host.id==='view-smartbuy'?['Vraag','Eisen','Vergelijk','Keuze']:['Invoer','Controleren','Koppelen']){const s=document.createElement('span');s.textContent=label;steps.append(s);}host.querySelector('.page-head')?.after(steps);}
+  for(const host of document.querySelectorAll('#view-smartbuy,#view-receipts')){if(window.MementoLayout||host.querySelector('.mg-research-steps,.mg-receipt-steps'))continue;const steps=document.createElement('div');steps.className=host.id==='view-smartbuy'?'mg-research-steps':'mg-receipt-steps';for(const label of host.id==='view-smartbuy'?['Vraag','Eisen','Vergelijk','Keuze']:['Invoer','Controleren','Koppelen']){const s=document.createElement('span');s.textContent=label;steps.append(s);}host.querySelector('.page-head')?.after(steps);}
   for(const card of document.querySelectorAll('#lifeContent>.life-panel,#lifeContent .ft-panel,#mementoFinanceV9 .m9-card,.kc-inbox')){
    if(card.dataset.mgLight)continue;card.dataset.mgLight='1';card.classList.add('mg-light','mg-lightfall');
   }
+  window.MementoLayout?.refresh();
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(decorate);}
  document.addEventListener('click',e=>{
@@ -101,7 +102,7 @@
   if(b.dataset.mgNextStep!==undefined){const items=[...b.parentElement.querySelectorAll('p,li')];if(items.length){items.forEach(x=>x.classList.remove('mg-current-step'));const i=Number(b.dataset.mgNextStep)%items.length;items[i].classList.add('mg-current-step');items[i].scrollIntoView({block:'nearest'});b.dataset.mgNextStep=String(i+1);}return;}
   if(b.dataset.mgRoutineJump!==undefined){const card=$('#mementoFitness [data-mg-routine="'+b.dataset.mgRoutineJump+'"]');if(card){card.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});const first=card.querySelector('button');first?.focus({preventScroll:true});}return;}
   if(b.dataset.mgDuty){const C=window.MementoFitnessCore,duty=C.duty(b.dataset.mgDuty),host=b.closest('.memento-calendar-panel');host.querySelectorAll('[data-mg-duty]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));host.querySelector('.mg-roster-detail').textContent=new Date(duty.date+'T12:00:00Z').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'short'})+' · '+duty.label+' · '+duty.time+(duty.carryUntil?' · vorige nachtdienst tot '+duty.carryUntil:'');return;}
-  if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return;}
+  if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));window.MementoLayout?.refresh();return;}
   if(b.dataset.mgClearFinance){const input=$('#'+b.dataset.mgClearFinance);if(input){input.value=input.tagName==='SELECT'?'all':'';input.dispatchEvent(new Event('change',{bubbles:true}));schedule();}return;}
   if(b.dataset.mgConfirmBalance){const input=$('#'+b.dataset.mgConfirmBalance);if(input){input.dataset.mgConfirm='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.mgConfirm;}return;}
  });

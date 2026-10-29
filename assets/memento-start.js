@@ -68,6 +68,7 @@
    window.MementoKnowledge?.open?.();
    requestAnimationFrame(()=>{
     const field=document.getElementById('kc-quick-text')||document.getElementById('kc-body');
+    for(let n=field?.parentElement;n;n=n.parentElement)if(n.tagName==='DETAILS')n.open=true;
     field?.focus();field?.scrollIntoView({block:'center'});
    });
   }
