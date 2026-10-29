@@ -1,0 +1,97 @@
+[
+  {
+    "test": "tests/app-review-core.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/dictation-regression.cjs",
+    "exit": 0,
+    "seconds": 0.04
+  },
+  {
+    "test": "tests/fitness-regression.cjs",
+    "exit": 0,
+    "seconds": 0.06
+  },
+  {
+    "test": "tests/illustrative-icons-core.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/journal-selfcare-core.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/journal-upgrade-core.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/knowledge-covers.cjs",
+    "exit": 0,
+    "seconds": 0.07
+  },
+  {
+    "test": "tests/knowledge-regression.cjs",
+    "exit": 0,
+    "seconds": 0.06
+  },
+  {
+    "test": "tests/knowledge-v2-core.cjs",
+    "exit": 0,
+    "seconds": 0.07
+  },
+  {
+    "test": "tests/knowledge-v2-safety.cjs",
+    "exit": 0,
+    "seconds": 0.08
+  },
+  {
+    "test": "tests/masterplan-core.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/memento-category-integrity.cjs",
+    "exit": 0,
+    "seconds": 0.03
+  },
+  {
+    "test": "tests/memento-regression.cjs",
+    "exit": 0,
+    "seconds": 0.11
+  },
+  {
+    "test": "tests/pin-disabled-regression.cjs",
+    "exit": 0,
+    "seconds": 0.04
+  },
+  {
+    "test": "tests/pin-forest-regression.cjs",
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "test": "tests/service-worker-cache.cjs",
+    "exit": 0,
+    "seconds": 0.07
+  },
+  {
+    "test": "tests/storage-lock-native.cjs",
+    "exit": 0,
+    "seconds": 0.08
+  },
+  {
+    "test": "tests/storage-safety.cjs",
+    "exit": 0,
+    "seconds": 0.22
+  },
+  {
+    "test": "tests/trash-regression.cjs",
+    "exit": 0,
+    "seconds": 0.03
+  }
+]

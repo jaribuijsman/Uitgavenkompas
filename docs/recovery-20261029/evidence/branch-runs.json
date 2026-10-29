@@ -1,0 +1,487 @@
+[
+  {
+    "branch": "backup/pre-memento-salie-2026-10-25",
+    "total_count": 0,
+    "runs": []
+  },
+  {
+    "branch": "codex/app-glass-review",
+    "total_count": 41,
+    "runs": [
+      {
+        "id": 40934882097,
+        "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+        "name": "Memento collection art",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40934882097"
+      },
+      {
+        "id": 40934882251,
+        "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+        "name": "Visual review",
+        "event": "pull_request",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40934882251"
+      },
+      {
+        "id": 40934882144,
+        "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+        "name": "Memento illustrated icons",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40934882144"
+      },
+      {
+        "id": 40934882117,
+        "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+        "name": "Memento masterplan acceptance",
+        "event": "pull_request",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40934882117"
+      },
+      {
+        "id": 40934882016,
+        "sha": "49a22d1c998027c1cc588a8a1610b1a1ff6a890d",
+        "name": "Phase 1 storage safety",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40934882016"
+      }
+    ]
+  },
+  {
+    "branch": "design/memento-mobile-refinement",
+    "total_count": 29,
+    "runs": [
+      {
+        "id": 40442047800,
+        "sha": "ce5d521c1a837026a92454d7e7a282767a8d2ceb",
+        "name": "Knowledge and backup regression",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40442047800"
+      },
+      {
+        "id": 40442047768,
+        "sha": "ce5d521c1a837026a92454d7e7a282767a8d2ceb",
+        "name": "Phase 1 storage safety",
+        "event": "pull_request",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40442047768"
+      },
+      {
+        "id": 40442047760,
+        "sha": "ce5d521c1a837026a92454d7e7a282767a8d2ceb",
+        "name": "Visual review",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40442047760"
+      },
+      {
+        "id": 40442042083,
+        "sha": "ce5d521c1a837026a92454d7e7a282767a8d2ceb",
+        "name": "Visual review",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40442042083"
+      },
+      {
+        "id": 40441541391,
+        "sha": "5af288c1e6a30fec9b89d6d2a73d6bfb5b52ec9d",
+        "name": "Knowledge and backup regression",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40441541391"
+      }
+    ]
+  },
+  {
+    "branch": "design-preview-dark-cockpit-20261024",
+    "total_count": 0,
+    "runs": []
+  },
+  {
+    "branch": "feature/notes-compact-mobile",
+    "total_count": 0,
+    "runs": []
+  },
+  {
+    "branch": "fix/memento-data-safety-phase-1",
+    "total_count": 13,
+    "runs": [
+      {
+        "id": 40436397935,
+        "sha": "4d2f9c8cbb7603190124fb3ca6068d2df74f12b8",
+        "name": "Knowledge and backup regression",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40436397935"
+      },
+      {
+        "id": 40436397998,
+        "sha": "4d2f9c8cbb7603190124fb3ca6068d2df74f12b8",
+        "name": "Phase 1 storage safety",
+        "event": "pull_request",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40436397998"
+      },
+      {
+        "id": 40436390187,
+        "sha": "4d2f9c8cbb7603190124fb3ca6068d2df74f12b8",
+        "name": "Phase 1 storage safety",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40436390187"
+      },
+      {
+        "id": 40436178640,
+        "sha": "6158d3dced4515783fb244e87f9fd63575b13388",
+        "name": "Phase 1 storage safety",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40436178640"
+      },
+      {
+        "id": 40436178365,
+        "sha": "6158d3dced4515783fb244e87f9fd63575b13388",
+        "name": "Knowledge and backup regression",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40436178365"
+      }
+    ]
+  },
+  {
+    "branch": "fix/memento-finance-screen1-20261029",
+    "total_count": 0,
+    "runs": []
+  },
+  {
+    "branch": "fix/memento-sort-icons-1280-20261029",
+    "total_count": 10,
+    "runs": [
+      {
+        "id": 40936105542,
+        "sha": "0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5",
+        "name": "Memento masterplan acceptance",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936105542"
+      },
+      {
+        "id": 40936105638,
+        "sha": "0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5",
+        "name": "Visual review",
+        "event": "pull_request",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936105638"
+      },
+      {
+        "id": 40936105819,
+        "sha": "0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5",
+        "name": "Phase 1 storage safety",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936105819"
+      },
+      {
+        "id": 40936093024,
+        "sha": "0d5ea6820435a7eba194d5b76c1e89a4c8c9a1c5",
+        "name": "Memento complete glass review",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936093024"
+      },
+      {
+        "id": 40936091956,
+        "sha": "d7ddc1fdf1d3e4553b665d8943b3f3799203149b",
+        "name": "Memento masterplan acceptance",
+        "event": "pull_request",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936091956"
+      }
+    ]
+  },
+  {
+    "branch": "main",
+    "total_count": 760,
+    "runs": [
+      {
+        "id": 40936694543,
+        "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+        "name": "Memento masterplan acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936694543"
+      },
+      {
+        "id": 40936694481,
+        "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+        "name": "Memento complete glass review",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936694481"
+      },
+      {
+        "id": 40936694618,
+        "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+        "name": "Phase 1 storage safety",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936694618"
+      },
+      {
+        "id": 40936694551,
+        "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+        "name": "Knowledge 2 acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936694551"
+      },
+      {
+        "id": 40936694121,
+        "sha": "bf81413d6dc35fc097deeeb61c3eb09acf11834e",
+        "name": "pages build and deployment",
+        "event": "dynamic",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40936694121"
+      }
+    ]
+  },
+  {
+    "branch": "test-write-access-2026-10-24",
+    "total_count": 0,
+    "runs": []
+  },
+  {
+    "branch": "work/memento-cover-art-validation",
+    "total_count": 8,
+    "runs": [
+      {
+        "id": 40568992751,
+        "sha": "399d2de2162a75d793fad0ae6869129a01c03e3c",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40568992751"
+      },
+      {
+        "id": 40568992741,
+        "sha": "399d2de2162a75d793fad0ae6869129a01c03e3c",
+        "name": "Memento collection art",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40568992741"
+      },
+      {
+        "id": 40568729691,
+        "sha": "9f26ceb92d8d3ede3a3c366350055245b8247943",
+        "name": "Memento collection art",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40568729691"
+      },
+      {
+        "id": 40568493718,
+        "sha": "b284c9b4afd62781e27a8cbba9e44cb950a3d68f",
+        "name": "Memento collection art",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40568493718"
+      },
+      {
+        "id": 40568493626,
+        "sha": "b284c9b4afd62781e27a8cbba9e44cb950a3d68f",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40568493626"
+      }
+    ]
+  },
+  {
+    "branch": "work/memento-illustrative-icons-validation",
+    "total_count": 7,
+    "runs": [
+      {
+        "id": 40583966983,
+        "sha": "bfaa0acd6c7a15a23de68e7f1bcb1ec593ca7621",
+        "name": "Memento illustrated icons",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40583966983"
+      },
+      {
+        "id": 40583199720,
+        "sha": "ee16f1d5033e6fb3dacf0a25da2d8a6adba3514d",
+        "name": "Memento illustrated icons",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40583199720"
+      },
+      {
+        "id": 40583035371,
+        "sha": "13dc16c2905e7c2efa11abd7d283c3c6b0216711",
+        "name": "Memento illustrated icons",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40583035371"
+      },
+      {
+        "id": 40582919837,
+        "sha": "d0fd48deb2e1dcbb23901cb2821423332f475c94",
+        "name": "Memento collection art",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40582919837"
+      },
+      {
+        "id": 40582919615,
+        "sha": "d0fd48deb2e1dcbb23901cb2821423332f475c94",
+        "name": "Fitness regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40582919615"
+      }
+    ]
+  },
+  {
+    "branch": "work/memento-journal-sleep-voice-ai-20261027",
+    "total_count": 17,
+    "runs": [
+      {
+        "id": 40561755381,
+        "sha": "b7db73e6c5f8869f8c63d378de465b65c1dc055b",
+        "name": "Memento journal sleep and recording acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40561755381"
+      },
+      {
+        "id": 40561755382,
+        "sha": "b7db73e6c5f8869f8c63d378de465b65c1dc055b",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40561755382"
+      },
+      {
+        "id": 40561583738,
+        "sha": "6cdd0e195886d0e63f03ac35ed3c22242fca18a5",
+        "name": "Memento journal sleep and recording acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40561583738"
+      },
+      {
+        "id": 40561583766,
+        "sha": "6cdd0e195886d0e63f03ac35ed3c22242fca18a5",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40561583766"
+      },
+      {
+        "id": 40561230401,
+        "sha": "f5b198bfbbb928513311d5c5f73f55d7da50526d",
+        "name": "Memento journal sleep and recording acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40561230401"
+      }
+    ]
+  },
+  {
+    "branch": "work/memento-kc2-validation",
+    "total_count": 6,
+    "runs": [
+      {
+        "id": 40450441990,
+        "sha": "8a0d148cc4c1deb3181dc8e3e9038462ecd66abf",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40450441990"
+      },
+      {
+        "id": 40450442051,
+        "sha": "8a0d148cc4c1deb3181dc8e3e9038462ecd66abf",
+        "name": "Knowledge 2 acceptance",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40450442051"
+      },
+      {
+        "id": 40450184516,
+        "sha": "e6d0043a6abe90258c3d8240071e9da923329cc4",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40450184516"
+      },
+      {
+        "id": 40450184576,
+        "sha": "e6d0043a6abe90258c3d8240071e9da923329cc4",
+        "name": "Knowledge 2 acceptance",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40450184576"
+      },
+      {
+        "id": 40449846688,
+        "sha": "86f654bf219ea334b4fd7bbae2f011d5757ef23f",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40449846688"
+      }
+    ]
+  },
+  {
+    "branch": "work/memento-quickfit-validation",
+    "total_count": 6,
+    "runs": [
+      {
+        "id": 40549394245,
+        "sha": "86be2d9c3f6458e7e004bd09781cd52e2d0d93ca",
+        "name": "Memento quick notes and Fitness acceptance",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40549394245"
+      },
+      {
+        "id": 40549260147,
+        "sha": "c82b84be5755509a73b8d2e73af4e54fefc37f3e",
+        "name": "Memento quick notes and Fitness acceptance",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40549260147"
+      },
+      {
+        "id": 40549100409,
+        "sha": "e771336638b2f315fc1f31f1bffadc3299f5dcf9",
+        "name": "Memento quick notes and Fitness acceptance",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40549100409"
+      },
+      {
+        "id": 40548863096,
+        "sha": "07a4900d470924536b22c5cbc7cbdf321b0b1297",
+        "name": "Memento quick notes and Fitness acceptance",
+        "event": "push",
+        "conclusion": "failure",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40548863096"
+      },
+      {
+        "id": 40548862098,
+        "sha": "07a4900d470924536b22c5cbc7cbdf321b0b1297",
+        "name": "Knowledge, backup and PIN forest regression",
+        "event": "push",
+        "conclusion": "success",
+        "url": "https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/40548862098"
+      }
+    ]
+  }
+]

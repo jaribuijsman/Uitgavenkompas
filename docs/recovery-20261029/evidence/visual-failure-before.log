@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: button.memento-cal-day
+    at targets (/workspace/Uitgavenkompas/tests/helpers/visual-assertions.cjs:5:275)
+    at async verify (/workspace/Uitgavenkompas/tests/helpers/visual-assertions.cjs:11:40)
+    at async /workspace/Uitgavenkompas/tests/visual-browser.cjs:73:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+VISUAL_CHECKS {"phase":"after","width":393,"checks":["PIN unlocked; fixture writer owns Web Lock","Daily appointments precede inspiration; primary navigation targets >=44px"],"errors":[]}

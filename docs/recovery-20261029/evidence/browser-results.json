@@ -1,0 +1,82 @@
+[
+  {
+    "test": "tests/app-review-browser.cjs",
+    "exit": 0,
+    "seconds": 36.59
+  },
+  {
+    "test": "tests/fitness-browser.cjs",
+    "exit": 0,
+    "seconds": 19.25
+  },
+  {
+    "test": "tests/illustrative-icons-browser.cjs",
+    "exit": 0,
+    "seconds": 12.15
+  },
+  {
+    "test": "tests/journal-selfcare-browser.cjs",
+    "exit": 0,
+    "seconds": 6.18
+  },
+  {
+    "test": "tests/journal-upgrade-browser.cjs",
+    "exit": 0,
+    "seconds": 4.65
+  },
+  {
+    "test": "tests/knowledge-covers-browser.cjs",
+    "exit": 0,
+    "seconds": 3.39
+  },
+  {
+    "test": "tests/knowledge-v2-browser.cjs",
+    "exit": 0,
+    "seconds": 21.4
+  },
+  {
+    "test": "tests/layout-completion-browser.cjs",
+    "exit": 0,
+    "seconds": 22.7
+  },
+  {
+    "test": "tests/masterplan-browser.cjs",
+    "exit": 0,
+    "seconds": 93.49
+  },
+  {
+    "test": "tests/memento-category-browser.cjs",
+    "exit": 0,
+    "seconds": 8.72
+  },
+  {
+    "test": "tests/memento-start-browser.cjs",
+    "exit": 0,
+    "seconds": 14.04
+  },
+  {
+    "test": "tests/patches-001-002-004-browser.cjs",
+    "exit": 0,
+    "seconds": 14.22
+  },
+  {
+    "test": "tests/quickfit-browser.cjs",
+    "exit": 0,
+    "seconds": 3.74
+  },
+  {
+    "test": "tests/storage-safety-browser.cjs",
+    "exit": 0,
+    "seconds": 13.08
+  },
+  {
+    "test": "tests/visual-browser.cjs",
+    "exit": 1,
+    "seconds": 19.1
+  },
+  {
+    "test": "tests/visual-layout-browser.cjs",
+    "exit": 0,
+    "seconds": 22.4
+  }
+]
