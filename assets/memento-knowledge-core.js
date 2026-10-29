@@ -289,6 +289,19 @@ function journalSelfCareValid(c){
  if(!c.completed&&c.completedAt!==undefined)throw Error("Niet-afgeronde zelfzorg heeft een afrondtijd");
  return true;
 }
+// Handmatig ingevoerde waarden staan los van toekomstige gezondheidsimports.
+// De slaapduur hoort bij de dagboekdatum waarop de gebruiker wakker werd.
+function journalManualHealthValid(h){
+ if(h===undefined)return true;
+ if(!h||typeof h!=="object"||Array.isArray(h)||h.version!==1)throw Error("Ongeldige handmatige gezondheidsgegevens");
+ const limits={sleepMinutes:[0,2160],steps:[0,200000],sleepScore:[0,100],restingHeartRateBpm:[20,250],exerciseMinutes:[0,1440]};
+ if(Object.keys(h).some(k=>k!=="version"&&!Object.hasOwn(limits,k)))throw Error("Onbekend handmatig gezondheidsveld");
+ if(!Object.keys(limits).some(k=>h[k]!==undefined))throw Error("Lege handmatige gezondheidsgegevens");
+ for(const [key,[min,max]] of Object.entries(limits)){
+  if(h[key]!==undefined&&(!Number.isInteger(h[key])||h[key]<min||h[key]>max))throw Error("Ongeldige gezondheidswaarde: "+key);
+ }
+ return true;
+}
 // Future import data is read-only and never overwrites a manually entered check-in.
 function journalHealthValid(h,date){
  if(h===undefined)return true;
@@ -300,10 +313,11 @@ function journalHealthValid(h,date){
  return true;
 }
 function journalHasContent(body,j){
- const c=j?.checkin||{},s=j?.selfCare,h=j?.health;
+ const c=j?.checkin||{},s=j?.selfCare,h=j?.health,m=j?.manualHealth;
  return Boolean(String(body||"").trim()||j?.mood||j?.audioOnly||c.energy||c.stress||c.sleepStart||c.sleepEnd||c.nap||c.latency||c.awake||
   (s&&(s.completed||s.note?.trim()||Object.values(s.checks||{}).some(Boolean)))||
-  (h&&["steps","sleepMinutes","restingHeartRateBpm","exerciseMinutes"].some(k=>h[k]!==undefined)));
+  (h&&["steps","sleepMinutes","restingHeartRateBpm","exerciseMinutes"].some(k=>h[k]!==undefined))||
+  (m&&["steps","sleepMinutes","sleepScore","restingHeartRateBpm","exerciseMinutes"].some(k=>m[k]!==undefined)));
 }
 function validateJournal(life,n,checkDuplicates=true){
  const j=n.journal;
@@ -312,24 +326,26 @@ function validateJournal(life,n,checkDuplicates=true){
  journalCheckinValid(j.checkin);
  journalSelfCareValid(j.selfCare);
  journalHealthValid(j.health,j.date);
+ journalManualHealthValid(j.manualHealth);
  // Archived days retain their reservation; deleted days are recoverable separately.
  if(checkDuplicates&&!n.deletedAt&&life.notes.some(x=>x.id!==n.id&&!x.deletedAt&&x.journal?.date===j.date))throw Error("Voor deze datum bestaat al een dagboeknotitie");
 }
 function findJournal(life,date){return life.notes.find(n=>!n.deletedAt&&n.journal?.version===1&&n.journal.date===date)||null;}
-function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId,checkin,audioOnly,selfCare,health}){
+function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId,checkin,audioOnly,selfCare,health,manualHealth}){
  if(!validDate(date))throw Error('Kies een geldige datum');
  const existing=findJournal(life,date);
  if(existing&&existing.id!==id)throw Error('Open de bestaande dagboeknotitie voor deze datum');
  const previous=id?life.notes.find(n=>n.id===id)?.journal:null;
  if(selfCare===undefined)selfCare=previous?.selfCare;
  if(health===undefined)health=previous?.health;
- if(!journalHasContent(body,{mood,checkin,audioOnly,selfCare,health}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
+ if(manualHealth===undefined)manualHealth=previous?.manualHealth;
+ if(!journalHasContent(body,{mood,checkin,audioOnly,selfCare,health,manualHealth}))throw Error('Schrijf iets of vul je dagelijkse check-in in');
  if(String(body).length>20000||String(title).length>180)throw Error('Dagboektekst is te lang');
- const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);if(selfCare!==undefined)journal.selfCare=clone(selfCare);if(health!==undefined)journal.health=clone(health);
+ const journal={version:1,date,mood};if(checkin!==undefined)journal.checkin=clone(checkin);if(audioOnly!==undefined)journal.audioOnly=Boolean(audioOnly);if(selfCare!==undefined)journal.selfCare=clone(selfCare);if(health!==undefined)journal.health=clone(health);if(manualHealth!==undefined)journal.manualHealth=clone(manualHealth);
  if(id){const old=life.notes.find(n=>n.id===id);if(old?.journal){if(checkin===undefined&&old.journal.checkin!==undefined)journal.checkin=clone(old.journal.checkin);if(audioOnly===undefined&&old.journal.audioOnly!==undefined)journal.audioOnly=old.journal.audioOnly;}}
  if(id){const old=life.notes.find(n=>n.id===id);if(!old?.journal)throw Error('Geen bestaande dagboeknotitie');return updateNote(life,id,{title:title.trim()||date,body,tags,journal});}
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
