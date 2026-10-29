@@ -60,7 +60,7 @@ const server=http.createServer((req,res)=>{
   await page.locator(".kc-diary-health > summary").click();
   const healthLink=page.locator(".kc-diary-health-link");
   assert.match(await healthLink.innerText(),/Samsung Health openen/);
-  assert.match(await healthLink.getAttribute("href"),/^intent:#Intent;/);
+  assert.match(await healthLink.getAttribute("href"),/^intent:\/\/#Intent;scheme=shealth;/);
   await page.locator('[data-kc-manual-health="sleepHours"]').fill("5");
   await page.locator('[data-kc-manual-health="sleepRestMinutes"]').fill("20");
   await page.locator('[data-kc-manual-health="steps"]').fill("12000");
