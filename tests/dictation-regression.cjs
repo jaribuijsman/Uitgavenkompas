@@ -8,7 +8,7 @@ const fitness=fs.readFileSync(path.join(base,"assets/memento-fitness.js"),"utf8"
 const check=(s,key)=>assert(s.includes(key),"Missing dictation target "+key);
 for(const id of ["lifeTaskTitle","lifeTaskNotes","mementoEventTitle","mementoEventNotes","lifeWishTitle","lifeWishNotes","lifeProductNotes","smartBuyPreferences","smartBuyExclude","moneyCoachQuestion"])check(main,id);
 for(const id of ["ft-session-note","data-session-note"])check(fitness,id);
-for(const id of ["quickToggleSpeech","toggleDiaryDictation","root.MementoDictation.button(\"kc-body\")"])check(knowledge,id);
+for(const id of ["quickToggleSpeech","toggleDiaryDictation","root.MementoDictation?.button?.(\"kc-body\")"])check(knowledge,id);
 assert(!main.includes('data-memento-dictate="txNote"'),"Transaction notes are out of scope");
 assert(!fitness.includes('data-memento-dictate="ft-note"'),"Other Fitness notes are out of scope");
 const handlers={},created=[],tasks=[],edits=[];
