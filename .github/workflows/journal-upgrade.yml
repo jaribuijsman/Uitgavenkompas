@@ -10,6 +10,7 @@ on:
       - 'index.html'
       - 'sw.js'
       - 'tests/journal-upgrade-*.cjs'
+      - 'tests/journal-selfcare-*.cjs'
       - '.github/workflows/journal-upgrade.yml'
 permissions:
   contents: read
@@ -27,6 +28,7 @@ jobs:
           node --check assets/memento-knowledge-store.js
           node --check sw.js
           node tests/journal-upgrade-core.cjs
+          node tests/journal-selfcare-core.cjs
           node tests/knowledge-regression.cjs
           node tests/knowledge-v2-core.cjs
           node tests/knowledge-v2-safety.cjs
@@ -51,7 +53,9 @@ jobs:
         env:
           JOURNAL_WIDTH: ${{ matrix.width }}
           JOURNAL_SHOT_DIR: ${{ runner.temp }}/diary-review
-        run: node tests/journal-upgrade-browser.cjs
+        run: |
+          node tests/journal-upgrade-browser.cjs
+          node tests/journal-selfcare-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
