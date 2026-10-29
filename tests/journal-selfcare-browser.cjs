@@ -60,7 +60,10 @@ const server=http.createServer((req,res)=>{
   await page.locator(".kc-diary-health > summary").click();
   const healthLink=page.locator(".kc-diary-health-link");
   assert.match(await healthLink.innerText(),/Samsung Health openen/);
-  assert.match(await healthLink.getAttribute("href"),/^intent:\/\/#Intent;scheme=shealth;/);
+  const launchURL=await healthLink.getAttribute("href");
+  assert.match(launchURL,/^intent:\/\/shealth\.samsung\.com\/deepLink\?sc_id=app\.main#Intent;scheme=https;/);
+  assert(!launchURL.includes("play.google.com"),"An installed Samsung Health app must not redirect to Play Store");
+  assert.equal(await page.locator(".kc-diary-health-date a").getAttribute("href"),"https://shealth.samsung.com/deepLink?sc_id=app.main");
   await page.locator('[data-kc-manual-health="sleepHours"]').fill("5");
   await page.locator('[data-kc-manual-health="sleepRestMinutes"]').fill("20");
   await page.locator('[data-kc-manual-health="steps"]').fill("12000");
@@ -84,6 +87,9 @@ const server=http.createServer((req,res)=>{
   assert(viewport.scroll<=viewport.inner+1,"Health editor horizontal overflow: "+JSON.stringify(viewport));
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
+  // De notitiemodule wordt pas gemount nadat de Leven-weergave is geopend.
+  await page.locator(".memento-diary-shortcut").click();
+  await page.locator("#kc-body").waitFor();
   await page.evaluate(()=>window.MementoKnowledge.showJournal("2026-10-28"));
   await page.locator(".kc-diary-health > summary").click();
   assert.equal(await page.locator('[data-kc-manual-health="sleepHours"]').inputValue(),"5");
