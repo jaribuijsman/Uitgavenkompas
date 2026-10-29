@@ -51,7 +51,7 @@ const server=http.createServer((req,res)=>{
   await page.locator("#kc-body").waitFor();
   await page.locator(".kc-diary-health > summary").click();
   const healthLink=page.locator(".kc-diary-health-link");
-  assert.match(await healthLink.innerText(),/Samsung Health openen/);
+  assert.match(await healthLink.innerText(),/Open Samsung Health/);
   const launchURL=await healthLink.getAttribute("href");
   assert.match(launchURL,/^intent:\/\/shealth\.samsung\.com\/deepLink\?sc_id=app\.main#Intent;scheme=https;/);
   assert(!launchURL.includes("play.google.com"),"An installed Samsung Health app must not redirect to Play Store");
