@@ -15,8 +15,6 @@ body #lifeApp :is(.life-task,.life-shopping-row){min-height:64px;gap:10px;paddin
 body #lifeApp .life-task-title{font-size:15px!important;line-height:1.4!important;font-weight:650!important;white-space:normal!important;overflow-wrap:anywhere}
 body #lifeApp :is(.life-task-meta,.life-footnote,.kc-muted,.kc-item-meta,.ft-hint,.ft-prev){color:var(--mg-muted)!important;font-size:12px!important;line-height:1.55}
 body #lifeApp .life-late-text{color:#efc09b!important}
-body #lifeApp .life-complete{width:48px!important;height:48px!important;flex:0 0 48px;border:1px solid #a7c6a45c!important;background:#184c3566!important;border-radius:13px!important}
-body #lifeApp .life-complete[aria-pressed=true]{background:var(--mg-sage)!important;color:#173b25!important}
 body #lifeApp :is(.life-title,.life-page-head h1,.kc-head h2),body[data-compass-area=finance] .app .page-head h1{font-size:27px!important;line-height:1.2!important;font-weight:650!important;letter-spacing:-.6px!important;color:var(--mg-ink)!important}
 body #lifeApp :is(h2,h3),body[data-compass-area=finance] .app :is(h2,h3,.card-title){color:var(--mg-ink)!important}
 body #lifeApp :is(input,textarea,select):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),

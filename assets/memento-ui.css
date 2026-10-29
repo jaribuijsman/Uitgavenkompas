@@ -26,6 +26,12 @@
 #lifeApp .life-task-title {font-weight:600}
 #lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task {grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;padding:10px 6px;min-height:76px;border-radius:14px}
 #lifeApp .life-task .life-task-title {font-size:15px;font-weight:600;min-height:44px;display:flex;align-items:center}
+/* One owner for a compact visual checkbox inside a non-overlapping touch target. */
+#lifeApp .life-task .life-complete {display:grid;place-items:center;position:relative;isolation:isolate;align-self:center;flex:0 0 44px;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:var(--m-on-sage);font-size:15px;line-height:1}
+#lifeApp .life-task .life-complete::before {box-sizing:border-box;content:"";position:absolute;inset:11px;width:22px;height:22px;border:1.5px solid #bfd1c3;border-radius:5px;background:transparent;z-index:-1}
+#lifeApp .life-task .life-complete[aria-pressed=true]::before {background:#bdd3c2;border-color:#bdd3c2}
+#lifeApp .mg-filter-chips:empty {display:none}
+#lifeApp #mgTaskFilterPresets {flex-basis:100%;margin:0}
 #lifeApp .life-task .life-task-meta {font-size:12px;margin-top:0;line-height:1.5}
 #lifeApp .life-task-menu>summary {width:44px;min-width:44px;min-height:44px}
 #lifeApp .memento-capture-card {gap:6px;padding:10px;margin:10px 0 16px;border-radius:var(--m-radius)}
@@ -243,7 +249,5 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-title{min-height:0;display:block;padding:0;font-size:15px;line-height:1.32;font-weight:700;color:#edf5ef}
 #lifeApp[data-life-view="today"] .life-overdue .life-task .life-task-meta{font-size:12px;line-height:1.4;margin-top:5px;gap:3px 9px;color:#bfd1c3}
 #lifeApp[data-life-view="today"] .life-overdue .life-late-text{display:inline-block;padding:2px 7px;border-radius:999px;background:#53343b;color:#ffc1c9;font-weight:600}
-#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete{width:44px;min-width:44px;height:44px;min-height:44px}
-#lifeApp[data-life-view="today"] .life-overdue .life-task .life-complete::before{inset:12px}
 #lifeApp[data-life-view="today"] .life-overdue .life-task-menu>summary{width:44px;min-width:44px;height:44px;min-height:44px}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-overdue-chevron svg{transition:none}}

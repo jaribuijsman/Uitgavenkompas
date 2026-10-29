@@ -41,8 +41,6 @@
   if(tasks){
    const capture=tasks.querySelector('.memento-capture-card');
    if(capture&&!capture.closest('.mg-fold'))fold([capture],'Snelle invoer · taak, notitie of dagboek');
-   const sort=tasks.querySelector('.memento-task-sort'),filters=tasks.querySelector('.memento-filter-fields');
-   if(sort&&filters&&!filters.contains(sort))filters.append(sort);
   }
   if(tabs&&!tabs.dataset.mgReady){
    tabs.dataset.mgReady='1';const rest=[...tabs.children].filter(b=>!['open','done'].includes(b.dataset.lifeTaskTab));

@@ -620,7 +620,6 @@ body.pin-locked #compassAreaBar,body.pin-locked #lifeApp{visibility:hidden;point
 #lifeApp .life-task{display:flex;align-items:flex-start;gap:12px;padding:15px 16px;border-bottom:1px solid var(--life-border);min-width:0}
 #lifeApp .life-task:last-child{border-bottom:0}
 #lifeApp .life-complete{flex:0 0 25px;width:25px;height:25px;background:transparent;color:var(--life-accent);border:1px solid #689a79;border-radius:8px;margin-top:1px;font-size:16px;padding:0;display:grid;place-items:center}
-#lifeApp .life-complete[aria-pressed=true]{background:#2b5439;border-color:#6fa581}
 #lifeApp .life-task-body{flex:1;min-width:0}
 #lifeApp .life-task-title{color:var(--life-text);background:transparent;border:0;padding:0;text-align:left;font-size:13px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
 #lifeApp .life-task-meta{margin-top:6px;color:var(--life-muted);font-size:10px;line-height:1.7;display:flex;gap:5px 10px;flex-wrap:wrap}
@@ -743,10 +742,6 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeApp .life-task-body,#lifeApp .life-day-column .life-task-body{min-width:0;flex-basis:auto}
 #lifeApp .life-task-title{font-size:14px;line-height:1.4;min-height:26px;color:#eff6f0;padding:3px 0;letter-spacing:0}
 #lifeApp .life-task-meta{font-size:11px;line-height:1.5;margin-top:3px;gap:2px 9px;color:#a9b9ae}
-#lifeApp .life-complete,#lifeApp .life-day-column .life-complete{width:48px;height:48px;min-width:48px;border:0;border-radius:0;position:relative;background:transparent;flex-basis:auto;align-self:center;margin:0;isolation:isolate}
-#lifeApp .life-complete::before{content:"";position:absolute;inset:13px;border:1.5px solid #a3b8aa;border-radius:6px;z-index:-1}
-#lifeApp .life-complete[aria-pressed=true]{background:transparent;color:#101f15}
-#lifeApp .life-complete[aria-pressed=true]::before{background:#65e89b;border-color:#65e89b}
 #lifeApp .life-task-menu{position:relative;align-self:center}
 #lifeApp .life-task-menu>summary{list-style:none;text-align:center;width:32px;min-height:44px;display:grid;place-items:center;font-size:23px;color:#acbfb1;cursor:pointer;border-radius:8px}
 #lifeApp .life-task-menu>summary::-webkit-details-marker{display:none}
@@ -2703,7 +2698,7 @@ function toolbar(){
  '<label>Categorie<select id="lifeCategoryFilter">'+option([['all','Alle categorieën'],...categories.map(x=>[x,x])],categoryFilter)+'</select></label>'+
  '<label>Ruimte<select id="lifeRoomFilter">'+option([['all','Alle ruimtes'],...rooms.map(x=>[x,x])],roomFilter)+'</select></label>'+
  '<label>Herhaling<select id="lifeRepeatFilter">'+option([['all','Alle herhalingen'],...Object.entries(repeats)],repeatFilter)+'</select></label>'+
- '</div></details><label class="memento-task-sort">Sorteren<select id="lifeTaskSort">'+option([['priority','Prioriteit en datum'],['date','Plandatum'],['title','Naam']],taskSort)+'</select></label></div>';
+ '<label class="memento-task-sort">Sorteren<select id="lifeTaskSort">'+option([['priority','Prioriteit en datum'],['date','Plandatum'],['title','Naam']],taskSort)+'</select></label><div id="mgTaskFilterPresets" class="mg-filter-chips" aria-label="Bewaarde taakselecties"></div></div></details></div>';
 }
 function segments(entries,current,attr){return '<div class="life-segments" role="group" aria-label="Weergave">'+entries.map(([id,title])=>'<button type="button" '+attr+'="'+id+'" aria-pressed="'+(current===id)+'">'+title+'</button>').join('')+'</div>'}
 /* Memento unified appointments: local Life storage, never modify Google calendars. */
@@ -2990,7 +2985,9 @@ function taskMatches(t){
 function paintTaskFilterChips(){
  let el=$('mgTaskFilterChips');if(!el){el=document.createElement('div');el.id='mgTaskFilterChips';el.className='mg-filter-chips';$('lifeTaskResults')?.before(el);}
  const filters=[['search',search,search],['taskScope',taskScope,$('lifeTaskScopeFilter')?.selectedOptions[0]?.textContent],['categoryFilter',categoryFilter,categoryFilter],['roomFilter',roomFilter,roomFilter],['repeatFilter',repeatFilter,repeats[repeatFilter]]].filter(([k,v])=>v&&v!=='all');
- el.innerHTML=filters.map(([k,v,label])=>'<button type="button" data-mg-clear-task="'+k+'" aria-label="Filter '+esc(label||v)+' wissen">'+esc(label||v)+'</button>').join('')+'<button type="button" data-mg-save-task-filter>Bewaar selectie</button>'+(state.uiPreferences?.taskFilters||[]).map(f=>'<button type="button" data-mg-load-task-filter="'+esc(f.id)+'">'+esc(f.name)+'</button><button type="button" data-mg-remove-task-filter="'+esc(f.id)+'" aria-label="Bewaarde selectie '+esc(f.name)+' verwijderen">×</button>').join('');
+ el.innerHTML=filters.map(([k,v,label])=>'<button type="button" data-mg-clear-task="'+k+'" aria-label="Filter '+esc(label||v)+' wissen">'+esc(label||v)+'</button>').join('');
+ // Preset management belongs to the native filter disclosure; active chips stay by the results.
+ const presets=$('mgTaskFilterPresets');if(presets)presets.innerHTML='<button type="button" data-mg-save-task-filter>Bewaar selectie</button>'+(state.uiPreferences?.taskFilters||[]).map(f=>'<button type="button" data-mg-load-task-filter="'+esc(f.id)+'">'+esc(f.name)+'</button><button type="button" data-mg-remove-task-filter="'+esc(f.id)+'" aria-label="Bewaarde selectie '+esc(f.name)+' verwijderen">×</button>').join('');
 }
 function renderTasks(){
  const host=$('lifeTaskResults');if(!host)return;
@@ -4043,16 +4040,16 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 <style id="memento-appointment-completion-20261025">
 /* One accessible appointment card in Mijn dag and Agenda. */
 #lifeApp .memento-unified-event{
- position:relative;display:grid;grid-template-columns:28px 48px minmax(0,1fr) auto;gap:10px;align-items:center;
+ position:relative;display:grid;grid-template-columns:44px 48px minmax(0,1fr) auto;gap:10px;align-items:center;
  padding:14px;background:#21392a;border:1px solid #4a6b54;border-radius:13px;min-width:0;
 }
 #lifeApp .memento-unified-event::before{position:absolute;left:0;top:14px;bottom:14px;min-height:0;width:3px;align-self:auto}
 #lifeApp .memento-event-complete{
- display:grid;place-items:center;width:28px;height:36px;min-width:28px;padding:0;position:relative;
- background:transparent!important;color:#163725!important;border:1.5px solid #b9cebd!important;border-radius:8px;cursor:pointer;
+ display:grid;place-items:center;width:44px;height:44px;min-width:44px;padding:0;position:relative;isolation:isolate;
+ background:transparent!important;color:#163725!important;border:0;border-radius:0;cursor:pointer;
 }
-#lifeApp .memento-event-complete::after{content:'';position:absolute;inset:-6px -10px}
-#lifeApp .memento-event-complete[aria-checked="true"]{background:#b9cebd!important;border-color:#b9cebd!important}
+#lifeApp .memento-event-complete::before{box-sizing:border-box;content:'';position:absolute;inset:11px;width:22px;height:22px;border:1.5px solid #b9cebd;border-radius:5px;z-index:-1}
+#lifeApp .memento-event-complete[aria-checked="true"]::before{background:#b9cebd;border-color:#b9cebd}
 #lifeApp .memento-event-complete svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
 #lifeApp .memento-unified-event .memento-unified-time{min-width:0;font-size:12px;line-height:1.5}
 #lifeApp .memento-unified-event .memento-unified-info strong{font-size:14px;line-height:1.45;color:#f1f7f3}
@@ -4060,7 +4057,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .memento-unified-event .memento-unified-info .memento-event-original{color:#f2d99f}
 #lifeApp .memento-event-actions{display:flex;align-items:center;justify-content:flex-end;min-width:0}
 #lifeApp .memento-unified-event .memento-edit-event{
- display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 9px;
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 9px;
  background:transparent!important;color:#c3e6cd!important;border:1px solid #62836b!important;border-radius:8px!important;
  font-size:13px!important;font-weight:500;text-decoration:none;white-space:nowrap;line-height:1.4;box-shadow:none;
 }
@@ -4074,7 +4071,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp #memento-gcal-events{display:grid;gap:10px}
 #lifeApp .memento-event-check input{flex:0 0 20px;width:20px;height:20px}
 @media(max-width:400px){
- #lifeApp .memento-unified-event{grid-template-columns:28px minmax(0,1fr) auto;gap:4px 10px;padding:12px}
+ #lifeApp .memento-unified-event{grid-template-columns:44px minmax(0,1fr) auto;gap:4px 10px;padding:12px}
  #lifeApp .memento-unified-event .memento-event-complete{grid-column:1;grid-row:1 / 3;align-self:center}
  #lifeApp .memento-unified-event .memento-unified-time{grid-column:2;grid-row:1}
  #lifeApp .memento-unified-event .memento-unified-info{grid-column:2;grid-row:2}
@@ -4110,9 +4107,6 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .life-list>.life-task.life-task-late{border-left:3px solid #df9aa4}
 #lifeApp .life-task .life-task-title{font-size:16px;line-height:1.4;font-weight:700;color:#edf5ef;min-height:28px;text-align:left;overflow-wrap:anywhere}
 #lifeApp .life-task .life-task-meta{font-size:13px;line-height:1.45;color:#bfd1c3;margin-top:4px;gap:3px 8px}
-#lifeApp .life-task .life-complete,#lifeApp .life-day-column .life-task .life-complete{display:grid;place-items:center;width:48px;min-width:48px;height:48px;min-height:48px;padding:0;border:0;background:transparent;border-radius:10px;font-size:15px;line-height:1;isolation:isolate;color:#14261a}
-#lifeApp .life-task .life-complete::before{box-sizing:border-box;content:"";position:absolute;inset:14px;width:20px;height:20px;border:1.5px solid #bfd1c3;border-radius:5px;background:transparent;z-index:-1}
-#lifeApp .life-task .life-complete[aria-pressed=true]::before{background:#bdd3c2;border-color:#bdd3c2}
 #lifeApp .life-completed .life-task-title{color:#bfd1c3;text-decoration:line-through}
 #lifeApp .life-task-menu>summary{width:40px;min-width:40px;min-height:44px;color:#bfd1c3}
 #lifeApp .memento-capture-card button:focus-visible,#lifeApp .life-complete:focus-visible{outline:2px solid #bdd3c2;outline-offset:3px}
@@ -4225,7 +4219,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 })();
 </script>
 
-<link rel="stylesheet" href="./assets/memento-ui.css?v=20261029-compact-day-v1">
+<link rel="stylesheet" href="./assets/memento-ui.css?v=20261029-recovery-v1">
 <script src="./assets/memento-ui.js?v=20261029-visual-repair-v1"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261029-app-glass-v1"></script>
 <style id="memento-diary-shortcut-20261029">
@@ -4235,10 +4229,10 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut:focus-visible{outline:2px solid #bdd3c2;outline-offset:2px}
 @media(max-width:380px){#lifeApp .memento-capture-card .memento-capture-kinds button{padding:6px 6px;font-size:12px}}
 </style>
-<link rel="stylesheet" href="./assets/memento-glass.css?v=20261029-layout-v1">
+<link rel="stylesheet" href="./assets/memento-glass.css?v=20261029-recovery-v1">
 <link rel="stylesheet" href="./assets/memento-layout.css?v=20261029-layout-v1">
 <script src="./assets/memento-layout.js?v=20261029-layout-v1"></script>
-<script src="./assets/memento-glass.js?v=20261029-layout-v1"></script>
+<script src="./assets/memento-glass.js?v=20261029-recovery-v1"></script>
 </body></html>
 
 
