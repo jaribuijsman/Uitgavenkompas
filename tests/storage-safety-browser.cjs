@@ -75,7 +75,7 @@ async function addTransaction(page, description) {
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     checks.push("Two-tab Life conflict preserves saved task and quick-capture input");
-    await navigate(b, "life", "backup"); await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
+    await navigate(b, "life", "backup"); await require("./helpers/reveal.cjs")(b,"#lifeOpenPurgeTrash");await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
     assert.match(await b.locator("#lifePurgeFeedback").textContent(), /Geen items definitief verwijderd/);
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     await b.locator("#mementoStorageNotice [data-storage-dismiss]").click();
@@ -101,7 +101,7 @@ async function addTransaction(page, description) {
     const archive = fs.readFileSync(await download.path()); assert.equal(archive.readUInt32LE(0), 0x04034b50);
     const before = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     const restoredNavigation=c.waitForNavigation({waitUntil:"domcontentloaded"});
-    await c.locator("#lifeImportFile").setInputFiles({ name: "original-format.zip", mimeType: "application/zip", buffer: archive });
+    await require("./helpers/reveal.cjs")(c,"#lifeImportFile");await c.locator("#lifeImportFile").setInputFiles({ name: "original-format.zip", mimeType: "application/zip", buffer: archive });
     await restoredNavigation; await until(c, () => window.MementoStorageGuard?.writable);
     const after = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     assert.deepEqual(after, before); checks.push("UI ZIP export/restore retains complete objects and existing attachment IDs");

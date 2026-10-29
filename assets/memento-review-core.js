@@ -18,12 +18,12 @@
   return {income:income/100,expenses:expenses/100,transferIn:transferIn/100,transferOut:transferOut/100,received:(income+transferIn)/100,outgoing:(expenses+transferOut)/100,result:(income-expenses)/100,net:(income-expenses+transferIn-transferOut)/100,cats:[...categories].map(([n,v])=>[n,v/100]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),daily:new Map([...daily].map(([d,v])=>[d,v/100])),txs};
  }
  function quantity(text){
-  const s=String(text).trim().replace(',','.');if(!s)return null;
+  const s=String(text??'').trim().replace(',','.');if(!s)return null;
   if(/^\d+(?:\.\d+)?$/.test(s))return Number(s);
   const m=/^(?:(\d+)\s+)?(\d+)\/(\d+)$/.exec(s);if(!m||Number(m[3])===0)return null;
   return Number(m[1]||0)+Number(m[2])/Number(m[3]);
  }
- function scale(text,factor){if(factor===1)return String(text);const v=quantity(text);return v===null?String(text):new Intl.NumberFormat('nl-NL',{maximumFractionDigits:3}).format(v*factor);}
+ function scale(text,factor){if(factor===1)return String(text??'');const v=quantity(text);return v===null?String(text??''):new Intl.NumberFormat('nl-NL',{maximumFractionDigits:3}).format(v*factor);}
  function validFilters(prefs){
   if(!prefs||typeof prefs!=='object'||Array.isArray(prefs))throw Error('Ongeldige weergavevoorkeuren.');
   const rows=prefs.taskFilters;if(rows===undefined)return true;

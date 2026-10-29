@@ -17,7 +17,7 @@
    for(const id of ['lifeTaskTitle','lifeTaskDate','lifeTaskSteps']){const n=field(form,id);if(n)grid.append(n);}
    const nodes=['lifeTaskKind','lifeTaskCategory','lifeTaskRepeat','lifeTaskRepeatDays','lifeTaskRoom','lifeTaskPriority','lifeTaskNotes'].map(id=>field(form,id));
    const summary=['lifeTaskKind','lifeTaskCategory','lifeTaskRoom'].map(id=>form.querySelector('#'+id)?.selectedOptions[0]?.textContent).filter(Boolean).join(' · ');
-   const d=fold(nodes,'Eigenschappen · '+summary);if(d){d.classList.add('wide');grid.append(d);}
+   const d=fold(nodes,'Eigenschappen · '+summary);if(d){d.dataset.mgTaskProperties='1';d.classList.add('wide');grid.append(d);}
   }
   if(form.id==='txForm'&&grid&&!form.querySelector('.memento-payment-details')){
    const primary=['txDescription','txAmount','txDate','txAccount','txCategory','txSubcategory','txPerson'];primary.forEach(id=>{const n=field(form,id);if(n)grid.append(n);});
@@ -28,6 +28,7 @@
  function decorate(){
   frame=0;
   for(const form of document.querySelectorAll('#lifeTaskForm,#txForm'))markForm(form);
+  const taskProps=$('#lifeTaskForm [data-mg-task-properties]>summary');if(taskProps){const text=['lifeTaskKind','lifeTaskCategory','lifeTaskRoom','lifeTaskRepeat','lifeTaskPriority'].map(id=>$('#'+id)?.selectedOptions[0]?.textContent).filter(Boolean).join(' · ');if(taskProps.textContent!=='Eigenschappen · '+text)taskProps.textContent='Eigenschappen · '+text;}
   const today=$('#lifeApp[data-life-view=today] #lifeContent');
   if(today&&!today.querySelector('.mg-day-head')){
    const h=document.createElement('div');h.className='mg-day-head';
@@ -70,6 +71,8 @@
   const cooking=$('.kc-recipe');if(cooking&&!cooking.querySelector('[data-mg-cooking]')){const b=document.createElement('button');b.type='button';b.className='kc-btn';b.dataset.mgCooking='';b.textContent='Kookstand';cooking.append(b);}
   const fitness=$('#mementoFitness');
   if(fitness){const panels=[...fitness.querySelectorAll('.ft-exercise-panel')];panels.forEach((panel,i)=>{if(panel.closest('.mg-exercise-fold'))return;const d=document.createElement('details');d.className='life-panel ft-panel mg-exercise-fold';d.open=openedExercises.has(panel.id)||(!openedExercises.size&&i===0);const head=document.createElement('summary');head.textContent=panel.querySelector('h2')?.textContent||'Oefening '+(i+1);d.append(head);panel.before(d);d.append(panel);d.addEventListener('toggle',()=>{if(d.open)openedExercises.add(panel.id);else openedExercises.delete(panel.id);});});
+   const routines=[...fitness.querySelectorAll('.ft-routine-heading')].filter(h=>h.querySelector('.ft-cycle-label'));if(routines.length&&!fitness.querySelector('.mg-cycle-strip')){const strip=document.createElement('nav');strip.className='mg-cycle-strip';strip.setAttribute('aria-label','Actieve trainingscyclus');routines.forEach((head,i)=>{head.closest('.ft-panel').dataset.mgRoutine=String(i);const b=document.createElement('button');b.type='button';b.dataset.mgRoutineJump=String(i);b.textContent=head.textContent;strip.append(b);});fitness.querySelector('.ft-toolbar')?.after(strip);}
+   for(const card of fitness.querySelectorAll('.ft-panel')){const title=card.querySelector('h2')?.textContent;if(title==='Spieropbouw · jouw huidige niveau'&&!card.closest('.mg-fold'))fold([card],'Voorstel vergelijken en toepassen');}
    const progress=fitness.querySelector('#ft-progress-select');if(progress){const main=progress.closest('.ft-panel');if(main&&!main.dataset.mgOrdered){main.dataset.mgOrdered='1';fitness.querySelector('.ft-stats')?.after(main);}for(const card of fitness.querySelectorAll('.ft-panel')){const title=card.querySelector('h2')?.textContent||'';if(['Trainingsfrequentie','Werksets per hoofdspiergroep · 7 dagen','Spieropbouw · voeding en gewicht','Lichaamsmetingen'].includes(title)&&!card.closest('.mg-fold'))fold([card],title);}}
   }
   // Finances/settings retain native controls and handlers, with contextual administration.
@@ -88,6 +91,7 @@
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.mgCooking!==undefined){const readable=$('.kc-readable');if(readable){const on=readable.classList.toggle('mg-cooking');b.textContent=on?'Normale weergave':'Kookstand';if(on&&!readable.querySelector('[data-mg-next-step]')){const next=document.createElement('button');next.type='button';next.className='kc-btn';next.dataset.mgNextStep='0';next.textContent='Volgende stap';readable.append(next);}}return;}
   if(b.dataset.mgNextStep!==undefined){const items=[...b.parentElement.querySelectorAll('p,li')];if(items.length){items.forEach(x=>x.classList.remove('mg-current-step'));const i=Number(b.dataset.mgNextStep)%items.length;items[i].classList.add('mg-current-step');items[i].scrollIntoView({block:'nearest'});b.dataset.mgNextStep=String(i+1);}return;}
+  if(b.dataset.mgRoutineJump!==undefined){const card=$('#mementoFitness [data-mg-routine="'+b.dataset.mgRoutineJump+'"]');if(card){card.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});const first=card.querySelector('button');first?.focus({preventScroll:true});}return;}
   if(b.dataset.mgDuty){const C=window.MementoFitnessCore,duty=C.duty(b.dataset.mgDuty),host=b.closest('.memento-calendar-panel');host.querySelectorAll('[data-mg-duty]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));host.querySelector('.mg-roster-detail').textContent=new Date(duty.date+'T12:00:00Z').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'short'})+' · '+duty.label+' · '+duty.time+(duty.carryUntil?' · vorige nachtdienst tot '+duty.carryUntil:'');return;}
   if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return;}
   if(b.dataset.mgClearFinance){const input=$('#'+b.dataset.mgClearFinance);if(input){input.value=input.tagName==='SELECT'?'all':'';input.dispatchEvent(new Event('change',{bubbles:true}));schedule();}return;}
@@ -95,6 +99,6 @@
  });
  document.addEventListener('invalid',e=>{let n=e.target.parentElement;while(n){if(n.tagName==='DETAILS')n.open=true;n=n.parentElement;}},true);
  document.addEventListener('change',schedule);document.addEventListener('input',e=>{if(e.target.id==='txSearch')schedule();});
- new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true});
+ new MutationObserver(()=>{for(const form of document.querySelectorAll('#lifeTaskForm,#txForm'))markForm(form);schedule();}).observe(document.body,{subtree:true,childList:true});
  schedule();
 })();

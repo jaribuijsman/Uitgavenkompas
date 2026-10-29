@@ -52,11 +52,7 @@ const server = http.createServer((req, res) => {
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("dialog", (d) => d.accept());
   const url = "http://127.0.0.1:" + server.address().port;
-  const click = (a, id) =>
-    page
-      .locator(`#lifeContent [data-fit="${a}"]${id ? `[data-id="${id}"]` : ""}`)
-      .first()
-      .click();
+  const click = async (a,id) => {const target=page.locator(`#lifeContent [data-fit="${a}"]${id ? `[data-id="${id}"]` : ""}`).first();await require('./helpers/reveal.cjs')(page,target);await target.click();};
   const stored = () =>
     page.evaluate(() =>
       JSON.parse(localStorage.getItem("compass_life_preview_v1")),
@@ -119,12 +115,14 @@ const server = http.createServer((req, res) => {
     await page.locator('#mementoFitness [data-fit="guide"]').first().click();
     assert.equal(await page.locator('#fitnessDialog a[href*="strengthlog.com"]').count(), 1);
     await page.locator('#fitnessDialog [data-fit="close"]').first().click();
+    await require('./helpers/reveal.cjs')(page,'#mementoFitness [data-fit="alternatives"][data-id="' + secondId + '"]');
     await page.locator('#mementoFitness [data-fit="alternatives"][data-id="' + secondId + '"]').click();
     await page.locator('#fitnessDialog [data-fit="replace-with"]').first().click();
     assert.notEqual((await stored()).fitness.active.exercises[1].id, secondId);
     assert.equal((await stored()).fitness.routines[0].exercises[1].id, secondId);
     checks.push("Inline exercise help and one-workout alternative preserve the template");
     const eid = (await stored()).fitness.active.exercises[0].id;
+    await require("./helpers/reveal.cjs")(page,page.locator(`[data-ex="${eid}"][data-field=weight]`).first());
     await page
       .locator(`[data-ex="${eid}"][data-field=weight]`)
       .first()
