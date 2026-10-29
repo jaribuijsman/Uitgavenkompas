@@ -214,51 +214,37 @@ function diaryWeek(date){
  return '<nav class="kc-diary-week" aria-label="Dagboekdagen"><button type="button" data-kc="journal-move" data-id="-7" aria-label="Vorige week">‹</button><div class="kc-diary-days">'+
  Array.from({length:7},(_,i)=>{const d=diaryOffset(date,i-3),t=new Date(d+"T12:00:00Z");return '<button type="button" data-kc="journal-jump" data-id="'+d+'" aria-label="'+esc(journalLabel(d))+'" aria-current="'+(d===date?"date":"false")+'" class="'+(d===date?"selected":"")+'"><small>'+t.toLocaleDateString("nl-NL",{timeZone:"UTC",weekday:"short"}).replace(".","")+'</small><strong>'+t.getUTCDate()+'</strong><i class="'+(marked.has(d)?"written":"")+'"></i></button>';}).join("")+'</div><button type="button" data-kc="journal-move" data-id="7" aria-label="Volgende week">›</button></nav>';
 }
-function sleepMinutes(c){
- if(!c?.sleepStart||!c?.sleepEnd)return null;
- const minutes=(new Date(c.sleepEnd)-new Date(c.sleepStart))/60000,awake=(c.latency||0)+(c.awake||0);
- return Number.isFinite(minutes)&&minutes>0&&minutes<=2160&&awake<=minutes?Math.round(minutes-awake):null;
-}
 function diarySummary(j){
- const c=j?.checkin||{},m=j?.manualHealth||{},parts=[j?.mood||"",c.energy?"Energie "+c.energy+"/5":"",c.stress?"Stress "+c.stress+"/5":""],s=m.sleepMinutes!==undefined?m.sleepMinutes:sleepMinutes(c);
- if(s!==null)parts.push("Slaap "+Math.floor(s/60)+"u "+String(s%60).padStart(2,"0")+"m");
- if(m.steps!==undefined)parts.push("Stappen "+m.steps.toLocaleString("nl-NL"));
- 
- return parts.filter(Boolean).join(" · ")||"Stemming · Energie · Stress · Slaap";
-}
-function diaryCheckin(j){
- const c=j.checkin||{},opt=(key,title)=>'<label>'+title+'<select data-kc-checkin="'+key+'"><option value="">Niet ingevuld</option>'+[1,2,3,4,5].map(n=>'<option value="'+n+'"'+(c[key]===n?" selected":"")+'>'+n+" / 5"+'</option>').join("")+'</select></label>';
- const dt=(key,title)=>'<label>'+title+'<input type="datetime-local" data-kc-checkin="'+key+'" value="'+esc(c[key]||"")+'"></label>';
- const num=(key,title)=>'<label>'+title+'<input type="number" min="0" max="1440" step="1" inputmode="numeric" placeholder="0" data-kc-checkin="'+key+'" value="'+esc(c[key]??"")+'"></label>';
- return '<details class="kc-diary-checkin"><summary><span class="kc-diary-heart">♡</span><span><strong>Hoe voel je je vandaag?</strong><small id="kc-diary-summary">'+esc(diarySummary(j))+'</small></span><b>⌄</b></summary><div class="kc-diary-checkin-body">'+
- '<fieldset><legend>Stemming · optioneel</legend><div class="kc-diary-moods">'+[["Moeilijk","Slecht"],["Minder","Minder"],["Neutraal","Oké"],["Prima","Goed"],["Goed","Heel goed"]].map(([v,n])=>'<button type="button" data-kc="journal-mood" data-id="'+v+'" aria-pressed="'+(j.mood===v)+'">'+n+'</button>').join("")+'</div></fieldset>'+
- '<div class="kc-diary-fields">'+opt("energy","Energie")+opt("stress","Stress")+'</div>'+
- '<section class="kc-diary-sleep"><strong>◕ Slaap</strong><p>Slaap hoort bij de dag waarop je wakker wordt, ook na een nachtdienst. Vul begin- en einddatum in; wakker gelegen tijd wordt afgetrokken.</p><div class="kc-diary-fields">'+dt("sleepStart","In bed vanaf")+dt("sleepEnd","Opgestaan op")+num("latency","Inslapen (min.)")+num("awake","Tussendoor wakker (min.)")+num("nap","Dutje (min.)")+'</div><small id="kc-diary-sleep-result">'+(sleepMinutes(c)===null?"Nog geen berekening":"Geschat: "+Math.floor(sleepMinutes(c)/60)+"u "+String(sleepMinutes(c)%60).padStart(2,"0")+"m")+'</small></section></div></details>';
+ const m=j?.manualHealth||{},h=j?.health||{},parts=[],sleep=m.sleepMinutes??h.sleepMinutes,steps=m.steps??h.steps;
+ if(sleep!==undefined)parts.push("Slaap "+Math.floor(sleep/60)+"u "+String(sleep%60).padStart(2,"0")+"m");
+ if(steps!==undefined)parts.push(steps.toLocaleString("nl-NL")+" stappen");
+ if(!parts.length&&m.sleepScore!==undefined)parts.push("Slaapscore "+m.sleepScore);
+ if(!parts.length&&(m.exerciseMinutes??h.exerciseMinutes)!==undefined)parts.push("Training "+(m.exerciseMinutes??h.exerciseMinutes)+" min");
+ if(!parts.length&&(m.restingHeartRateBpm??h.restingHeartRateBpm)!==undefined)parts.push("Rusthartslag "+(m.restingHeartRateBpm??h.restingHeartRateBpm)+" bpm");
+ return parts.join(" · ")||"Samsung Health";
 }
 function diaryHealth(j){
- const m=j.manualHealth||{},h=j.health;
- const android=/Android/i.test(navigator.userAgent);
- // Samsung Health publiceert app-koppelingen op dit domein, onder meer met sc_id=app.main.
- // Op Android proberen we de HTTPS-link met een expliciet pakket te openen via een browsable Intent.
- // Er is bewust GEEN Play Store-terugval: de app kan al geinstalleerd zijn.
- // Of de huidige Samsung Health-versie deze link verwerkt, moet op het toestel worden getest.
+ const m=j.manualHealth||{},h=j.health,android=/Android/i.test(navigator.userAgent);
  const healthAppLink="https://shealth.samsung.com/deepLink?sc_id=app.main";
  const openLink=android?"intent://shealth.samsung.com/deepLink?sc_id=app.main#Intent;scheme=https;action=android.intent.action.VIEW;package=com.sec.android.app.shealth;end":healthAppLink;
- const numeric=(key,title,max,min=0)=>'<label>'+title+'<input type="number" inputmode="numeric" min="'+min+'" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(m[key]??"")+'" placeholder="—"></label>';
+ const numeric=(key,title,max,min=0,wide=false)=>'<label'+(wide?' class="kc-diary-health-wide"':'')+'>'+title+'<input type="number" inputmode="numeric" min="'+min+'" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(m[key]??"")+'" placeholder="—"></label>';
  const sleep=m.sleepMinutes===undefined?null:m.sleepMinutes;
  const sleepField=(key,label,value,max)=>'<label>'+label+'<input type="number" inputmode="numeric" min="0" max="'+max+'" step="1" data-kc-manual-health="'+key+'" value="'+esc(value??"")+'" placeholder="—"></label>';
- const imported=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaapduur",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" slagen/min"],["exerciseMinutes","Training",v=>v+" minuten"]];
- return '<details class="kc-diary-health"><summary><span aria-hidden="true">◷</span><span><strong>Gezondheid en activiteit</strong><small>'+(Object.keys(m).length>1?"Handmatige waarden ingevuld":"Slaap, stappen en meer · optioneel")+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
- '<a class="kc-diary-health-link" data-kc="journal-health-open" href="'+esc(openLink)+'" rel="noopener noreferrer">Samsung Health openen <span aria-hidden="true">↗</span></a>'+
- '<p class="kc-diary-health-date">Open de juiste dag zelf in Samsung Health. Werkt de knop niet? <a data-kc="journal-health-open" href="'+esc(healthAppLink)+'" rel="noopener noreferrer">Probeer de Samsung-link</a> of open de app op je telefoon. Je dagboek blijft bewaard.</p>'+
- '<p>De slaap in dit dagboek hoort bij de <strong>dag waarop je wakker wordt</strong>. Ook als je de vorige avond naar bed ging of na een nachtdienst overdag sliep.</p>'+
- '<div class="kc-diary-health-grid">'+
- sleepField("sleepHours","Slaapduur · uren",sleep===null?null:Math.floor(sleep/60),35)+
+ const imported=[["steps","Stappen",v=>v.toLocaleString("nl-NL")],["sleepMinutes","Slaap",v=>Math.floor(v/60)+"u "+String(v%60).padStart(2,"0")+"m"],["restingHeartRateBpm","Rusthartslag",v=>v+" bpm"],["exerciseMinutes","Training",v=>v+" min"]];
+ return '<details class="kc-diary-health"><summary><span class="kc-diary-health-icon" aria-hidden="true">♡</span><span><strong>Gezondheid & welzijn</strong><small id="kc-diary-summary">'+esc(diarySummary(j))+'</small></span><b aria-hidden="true">⌄</b></summary><div class="kc-diary-health-body">'+
+ '<div class="kc-diary-health-source"><span>Samsung Health</span><a class="kc-diary-health-link" data-kc="journal-health-open" href="'+esc(openLink)+'" rel="noopener noreferrer">Open Samsung Health <span aria-hidden="true">↗</span></a></div>'+
+ '<section class="kc-diary-health-section"><h4>Slaap</h4><div class="kc-diary-health-grid">'+
+ sleepField("sleepHours","Uren geslapen",sleep===null?null:Math.floor(sleep/60),35)+
  sleepField("sleepRestMinutes","Minuten",sleep===null?null:sleep%60,59)+
- numeric("steps","Stappen",200000)+numeric("sleepScore","Slaapscore (0–100)",100)+
- numeric("restingHeartRateBpm","Rusthartslag (bpm)",250,20)+numeric("exerciseMinutes","Beweging / training (min.)",1440)+
- '</div><p class="kc-diary-health-foot">Handmatig ingevuld voor '+esc(journalLabel(j.date))+'. Je bestaande slaaptijden hierboven en eventuele geïmporteerde waarden blijven apart bewaard.</p>'+
- (h?'<details class="kc-diary-health-import"><summary>Geïmporteerde gegevens bekijken</summary><div>'+imported.filter(([key])=>h[key]!==undefined).map(([key,label,format])=>'<div class="kc-diary-health-metric"><span>'+label+'</span><strong>'+esc(format(h[key]))+'</strong></div>').join("")+'<p>Bron: '+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+' · '+esc(new Date(h.importedAt).toLocaleString("nl-NL"))+'</p></div></details>':'')+
+ numeric("sleepScore","Slaapscore",100,0,true)+
+ '</div></section>'+
+ '<section class="kc-diary-health-section"><h4>Activiteit</h4><div class="kc-diary-health-grid">'+
+ numeric("steps","Stappen",200000)+numeric("exerciseMinutes","Training · min",1440)+
+ '</div></section>'+
+ '<section class="kc-diary-health-section"><h4>Hart</h4><div class="kc-diary-health-grid">'+
+ numeric("restingHeartRateBpm","Rusthartslag · bpm",250,20,true)+
+ '</div></section>'+
+ (h?'<details class="kc-diary-health-import"><summary>Eerdere import</summary><div>'+imported.filter(([key])=>h[key]!==undefined).map(([key,label,format])=>'<div class="kc-diary-health-metric"><span>'+label+'</span><strong>'+esc(format(h[key]))+'</strong></div>').join("")+'<small>'+esc(h.source==="samsung-health"?"Samsung Health":"Health Connect")+' · '+esc(new Date(h.importedAt).toLocaleString("nl-NL"))+'</small></div></details>':'')+
  '</div></details>';
 }
 function diaryPrompts(date){const seed=Math.floor(Date.parse(date+"T12:00:00Z")/86400000);return '<div class="kc-diary-prompts"><div class="kc-diary-heading"><strong>✧ Reflectievragen</strong><small>optioneel</small></div>'+[0,1,2].map(i=>{const q=diaryQuestions[((seed+i*3)%9+9)%9];return '<button type="button" data-kc="journal-prompt" data-id="'+esc(q)+'"><span>'+esc(q)+'</span><b>＋</b></button>';}).join("")+'</div>';}
@@ -296,7 +282,7 @@ function renderJournalEditor(){
  diaryWeek(j.date)+'<div class="kc-diary-selected"><div><small>DAGBOEK</small><h3>'+esc(journalLabel(j.date))+'</h3></div></div>'+
 
  '<section class="kc-diary-write"><div class="kc-diary-heading"><strong>✎ Mijn verhaal</strong><small>Vrij schrijven</small></div><label for="kc-body" class="kc-sr">Dagboektekst</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="9" placeholder="Wat heb je vandaag meegemaakt?">'+esc(e.body)+'</textarea><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(e.title===j.date?"":e.title)+'" placeholder="Titel van deze dag"></label><label>Tags · optioneel<input data-kc-edit="tags" maxlength="1000" value="'+esc((e.tags||[]).join(", "))+'"></label><div class="kc-diary-actions">'+btn("Versiegeschiedenis","versions")+'</div></section>'+
- diaryCheckin(j)+diaryHealth(j)+'<details class="kc-diary-optional"><summary>Reflectievragen · optioneel</summary>'+diaryPrompts(j.date)+'</details>'+diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+btn("Concept verwerpen","discard-draft")+'</div>';
+ diaryHealth(j)+'<details class="kc-diary-optional"><summary>Reflectievragen · optioneel</summary>'+diaryPrompts(j.date)+'</details>'+diaryVoice()+diaryAI()+attachmentsHTML(e)+'<div class="kc-editor-actions">'+btn("Sluiten","cancel-journal")+btn("Concept verwerpen","discard-draft")+'</div>';
 }
 function renderSort(){
  const list=sortState?.ids||[];
@@ -521,9 +507,8 @@ async function openFile(id){
 }
 
 function diaryRefresh(){
- const j=editing?.journal;if(!j)return;const sum=host?.querySelector("#kc-diary-summary");if(sum)sum.textContent=diarySummary(j);
- const span=host?.querySelector("#kc-diary-sleep-result"),n=sleepMinutes(j.checkin);
- if(span)span.textContent=n===null?"Nog geen geldige berekening":"Geschat: "+Math.floor(n/60)+"u "+String(n%60).padStart(2,"0")+"m";
+ const sum=host?.querySelector("#kc-diary-summary");
+ if(sum&&editing?.journal)sum.textContent=diarySummary(editing.journal);
 }
 function voiceStatus(msg){voiceNotice=msg;const el=host?.querySelector("#kc-voice-status");if(el)el.textContent=msg;}
 function releaseMic(){if(voiceStream){voiceStream.getTracks().forEach(t=>t.stop());voiceStream=null;}}
@@ -605,11 +590,6 @@ function click(event){
   journalFilter=next;if(screen==="collection"&&op!=="journal-date-open")render();else openJournal(next);return;
  }
  if(op==="journal-health-open"){clearTimeout(timer);if(!flush()){event.preventDefault();notify("Bewaar of corrigeer eerst je invoer voordat je Samsung Health opent.");}return;}
- if(op==="journal-mood"&&editing?.journal){
-  editing.journal.mood=editing.journal.mood===id?"":id;
-  host.querySelectorAll('[data-kc="journal-mood"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===editing.journal.mood)));
-  diaryRefresh();schedule();return;
- }
  if(op==="journal-prompt"&&editing?.journal){
   const input=host.querySelector("#kc-body");if(input){input.value+=(input.value.trim()?"\n\n":"")+id+"\n";editing.body=input.value;input.focus();schedule();}
   return;
@@ -778,7 +758,6 @@ function onInput(event){
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
  if(colDraft&&ArtUI?.changed(field,host))return;
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
- if(field.dataset.kcCheckin&&editing?.journal){const key=field.dataset.kcCheckin,c=editing.journal.checkin||(editing.journal.checkin={});c[key]=["energy","stress","latency","awake","nap"].includes(key)?(field.value===""?null:Number(field.value)):field.value;diaryRefresh();schedule();return;}
  if(field.dataset.kcManualHealth&&editing?.journal){
   const controls=[...host.querySelectorAll("[data-kc-manual-health]")];
   if(controls.some(el=>!el.validity.valid)){setSaveIndicator("Controleer de gezondheidswaarden");return;}

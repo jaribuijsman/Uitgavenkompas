@@ -222,29 +222,9 @@
 #lifeApp[data-life-view="notes"] .kc-diary-history strong{font-size:12px}
 #lifeApp[data-life-view="notes"] .kc-diary-history small{font-size:11px;color:#b4ceb9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #lifeApp[data-life-view="notes"] .kc-diary-history b{font-size:21px;color:#9cbc9e}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin,#lifeApp[data-life-view="notes"] :is(.kc-diary-prompts,.kc-diary-write,.kc-diary-voice,.kc-diary-ai){background:#1b3627;border:1px solid #416b4b;border-radius:14px;margin:12px 0;padding:12px}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin{padding:0;overflow:hidden}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin>summary{display:flex;align-items:center;gap:11px;cursor:pointer;padding:13px;min-height:70px;list-style:none}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin>summary::-webkit-details-marker{display:none}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin>summary>span:nth-child(2){display:grid;min-width:0;gap:5px;flex:1}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin summary strong{font-size:14px}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin summary small{font-size:11px;color:#b6d0bc;line-height:1.5}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin summary b{font-size:20px;transition:transform .16s ease}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin[open] summary b{transform:rotate(180deg)}
-#lifeApp[data-life-view="notes"] .kc-diary-heart{font-size:26px;color:#b6dabe}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin-body{padding:0 12px 13px;border-top:1px solid #42674c}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin-body fieldset{border:0;padding:11px 0;margin:0}
-#lifeApp[data-life-view="notes"] .kc-diary-checkin-body legend{font-size:12px;font-weight:700;color:#cce2cf}
-#lifeApp[data-life-view="notes"] .kc-diary-moods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:9px}
-#lifeApp[data-life-view="notes"] .kc-diary-moods button{min-width:0;min-height:46px;border-radius:9px;border:1px solid #4b7053;color:#c8dfcc;background:#254632;padding:5px 2px;font-size:10px;font-family:inherit;cursor:pointer}
-#lifeApp[data-life-view="notes"] .kc-diary-moods button[aria-pressed=true]{background:#b7d9bc;border-color:#d6edda;color:#183c24;font-weight:700}
-#lifeApp[data-life-view="notes"] .kc-diary-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
-#lifeApp[data-life-view="notes"] .kc-diary-fields label,#lifeApp[data-life-view="notes"] .kc-diary-write label:not(.kc-sr){display:grid;gap:5px;color:#c0d7c4;font-size:11px}
-#lifeApp[data-life-view="notes"] .kc-diary-fields :is(input,select){min-height:48px;font-size:14px!important}
-#lifeApp[data-life-view="notes"] .kc-diary-sleep{padding:9px 0 0;border-top:1px solid #3d5c44}
-#lifeApp[data-life-view="notes"] .kc-diary-sleep>strong{font-size:13px}
-#lifeApp[data-life-view="notes"] .kc-diary-sleep p,#lifeApp[data-life-view="notes"] :is(.kc-diary-voice,.kc-diary-ai)>p{font-size:12px;line-height:1.6;color:#b9d0bd;margin:7px 0}
-#lifeApp[data-life-view="notes"] .kc-diary-sleep>small{display:block;font-size:12px;color:#c7e6cc;margin:8px 0 2px}
+#lifeApp[data-life-view="notes"] :is(.kc-diary-prompts,.kc-diary-write,.kc-diary-voice,.kc-diary-ai){background:#1b3627;border:1px solid #416b4b;border-radius:14px;margin:12px 0;padding:12px}
+#lifeApp[data-life-view="notes"] .kc-diary-write label:not(.kc-sr){display:grid;gap:5px;color:#c0d7c4;font-size:11px}
+#lifeApp[data-life-view="notes"] :is(.kc-diary-voice,.kc-diary-ai)>p{font-size:12px;line-height:1.6;color:#b9d0bd;margin:7px 0}
 #lifeApp[data-life-view="notes"] .kc-diary-prompts{display:grid;gap:7px}
 #lifeApp[data-life-view="notes"] .kc-diary-prompts button{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:45px;border-radius:10px;padding:9px 12px;background:#254433;border:1px solid #44654c;color:#e1eee3;text-align:left;font:inherit;font-size:12px;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-diary-prompts button b{font-size:19px;font-weight:400}
@@ -259,8 +239,8 @@
 #lifeApp[data-life-view="notes"] .kc-diary-audio>a{color:#c7e7d0;font-size:12px;text-decoration:underline}
 #lifeApp[data-life-view="notes"] #kc-voice-status,#lifeApp[data-life-view="notes"] #kc-ai-status{font-size:11px;color:#c6dcc9;line-height:1.6;display:block;margin-top:8px}
 #lifeApp[data-life-view="notes"] .kc-diary-ai a.kc-btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;text-align:center}
-@media(max-width:390px){#lifeApp[data-life-view="notes"] .kc-diary-hero{height:88px}#lifeApp[data-life-view="notes"] .kc-diary-week{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-week>button{flex-basis:31px;height:44px}#lifeApp[data-life-view="notes"] .kc-diary-days{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-height:58px}#lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:13px}#lifeApp[data-life-view="notes"] .kc-diary-moods{gap:3px}}
-@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-checkin summary b{transition:none}}
+@media(max-width:390px){#lifeApp[data-life-view="notes"] .kc-diary-hero{height:88px}#lifeApp[data-life-view="notes"] .kc-diary-week{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-week>button{flex-basis:31px;height:44px}#lifeApp[data-life-view="notes"] .kc-diary-days{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-height:58px}#lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:13px}}
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-health>summary b{transition:none}}
 
 
 /* Collection cover art. The same components serve main and child collections. */
@@ -319,7 +299,7 @@
 #lifeApp[data-life-view="notes"] .kc-diary-optional>summary {min-height:48px;display:flex;align-items:center;cursor:pointer;color:#d8e9dc}
 #lifeApp[data-life-view="notes"] .kc-app textarea[data-kc-edit="body"] {overflow:hidden;min-height:220px;scroll-margin-top:145px;scroll-margin-bottom:100px;font-size:16px}
 #lifeApp[data-life-view="notes"] .kc-save-state {color:#c4ddca;min-height:24px}
-#lifeApp[data-life-view="notes"] .kc-focus-writing :is(.kc-diary-week,.kc-diary-selected,.kc-diary-checkin,.kc-diary-optional,.kc-diary-voice,.kc-diary-ai,.kc-attachments) {display:none}
+#lifeApp[data-life-view="notes"] .kc-focus-writing :is(.kc-diary-week,.kc-diary-selected,.kc-diary-health,.kc-diary-optional,.kc-diary-voice,.kc-diary-ai,.kc-attachments) {display:none}
 #lifeApp[data-life-view="notes"] .kc-focus-writing .kc-diary-write {border:0;background:transparent;padding:0}
 #lifeApp[data-life-view="notes"] .kc-editor-head .kc-header {flex-wrap:wrap;gap:8px}
 #lifeApp[data-life-view="notes"] .kc-editor-head .kc-head-label {flex:1;min-width:90px}
@@ -355,13 +335,32 @@
 #lifeApp[data-life-view="notes"] .kc-diary-health-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:0 14px;margin:0 0 8px;border-radius:10px;border:1px solid #729879;background:#294635;color:#e8f3e8;font-size:13px;font-weight:650;text-decoration:none;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-diary-health-link:focus-visible{outline:2px solid #d8ebd7;outline-offset:3px}
 #lifeApp[data-life-view="notes"] .kc-diary-health-link span{font-size:17px}
-#lifeApp[data-life-view="notes"] .kc-diary-health-body .kc-diary-health-date{font-size:11px;margin-bottom:12px}
+
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 9px;margin:12px 0}
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid label{display:grid;align-content:start;gap:6px;min-width:0;color:#c7dacb;font-size:12px;line-height:1.35}
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid input{box-sizing:border-box;width:100%;min-width:0;min-height:46px;padding:8px 11px;border:1px solid #57725f;border-radius:10px;background:#13291d;color:#edf5eb;font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid input:focus-visible{outline:2px solid #c4e1c9;outline-offset:1px}
 #lifeApp[data-life-view="notes"] .kc-diary-health-grid input:invalid{border-color:#e5ad87}
-#lifeApp[data-life-view="notes"] .kc-diary-health-body .kc-diary-health-foot{margin:6px 0 0;font-size:11px;line-height:1.55}
+
 #lifeApp[data-life-view="notes"] .kc-diary-health-import{margin-top:12px;padding-top:9px;border-top:1px solid #385340}
 #lifeApp[data-life-view="notes"] .kc-diary-health-import>summary{min-height:44px;display:flex;align-items:center;color:#d8ebd9;font-size:12px;font-weight:600;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-diary-health-import .kc-diary-health-metric{padding:4px 0}
+
+/* Unified Samsung Health diary panel: compact groups, accessible touch targets. */
+#lifeApp[data-life-view="notes"] .kc-diary-health{background:linear-gradient(155deg,#203d2d,#1b3326);border-color:#557661}
+#lifeApp[data-life-view="notes"] .kc-diary-health>summary{min-height:70px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-icon{flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;border:1px solid #58765f;border-radius:10px;color:#c5e1ca;font-size:23px}
+#lifeApp[data-life-view="notes"] .kc-diary-health>summary strong{font-size:16px}
+#lifeApp[data-life-view="notes"] .kc-diary-health>summary small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+#lifeApp[data-life-view="notes"] .kc-diary-health>summary b{font-size:18px;transition:transform .16s ease}
+#lifeApp[data-life-view="notes"] .kc-diary-health[open]>summary b{transform:rotate(180deg)}
+#lifeApp[data-life-view="notes"] .kc-diary-health-source{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+#lifeApp[data-life-view="notes"] .kc-diary-health-source>span{font-size:11px;font-weight:700;color:#c3dfc8}
+#lifeApp[data-life-view="notes"] .kc-diary-health-source .kc-diary-health-link{min-height:44px;margin:0;background:#bcd8c2;border-color:#bcd8c2;color:#1b3324;padding:0 12px;font-weight:700}
+#lifeApp[data-life-view="notes"] .kc-diary-health-section{margin-top:12px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-section+.kc-diary-health-section{border-top:1px solid #47634e;padding-top:12px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-section h4{margin:0 0 9px;font-size:13px;font-weight:700;color:#ebf3e9}
+#lifeApp[data-life-view="notes"] .kc-diary-health-section .kc-diary-health-grid{margin:0;gap:9px}
+#lifeApp[data-life-view="notes"] .kc-diary-health-grid .kc-diary-health-wide{grid-column:1/-1}
+#lifeApp[data-life-view="notes"] .kc-diary-health-import>div>small{display:block;margin-top:9px;font-size:11px;color:#bdd0bf}
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-health>summary b{transition:none}}

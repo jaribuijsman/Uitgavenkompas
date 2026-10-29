@@ -31,7 +31,11 @@ const server=http.createServer((req,res)=>{
   assert.equal(await page.locator(".kc-diary-selfcare").count(),0,"No personal-care card should appear");
   assert.equal(await page.locator("[data-kc-self-care]").count(),0);
   assert.equal(await page.locator('[data-kc="journal-selfcare-done"]').count(),0);
-  assert.equal(await page.locator(".kc-diary-checkin").count(),1);
+  assert.equal(await page.locator(".kc-diary-checkin").count(),0);
+  assert.equal(await page.locator("[data-kc-checkin]").count(),0);
+  assert.equal(await page.locator('[data-kc="journal-mood"]').count(),0);
+  assert.match(await page.locator(".kc-diary-health>summary").innerText(),/Gezondheid & welzijn/);
+  assert.equal(await page.locator(".kc-diary-health-body>p").count(),0);
   assert.equal(await page.locator(".kc-diary-health").count(),1);
   const stored=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
   await page.locator("#kc-body").fill("Dagboek zonder persoonlijke verzorging");
@@ -51,24 +55,21 @@ const server=http.createServer((req,res)=>{
   const launchURL=await healthLink.getAttribute("href");
   assert.match(launchURL,/^intent:\/\/shealth\.samsung\.com\/deepLink\?sc_id=app\.main#Intent;scheme=https;/);
   assert(!launchURL.includes("play.google.com"),"An installed Samsung Health app must not redirect to Play Store");
-  assert.equal(await page.locator(".kc-diary-health-date a").getAttribute("href"),"https://shealth.samsung.com/deepLink?sc_id=app.main");
+  
   await page.locator('[data-kc-manual-health="sleepHours"]').fill("5");
   await page.locator('[data-kc-manual-health="sleepRestMinutes"]').fill("20");
   await page.locator('[data-kc-manual-health="steps"]').fill("12000");
   await page.locator('[data-kc-manual-health="sleepScore"]').fill("72");
   await page.locator('[data-kc-manual-health="restingHeartRateBpm"]').fill("58");
   await page.locator('[data-kc-manual-health="exerciseMinutes"]').fill("30");
-  await page.locator(".kc-diary-checkin > summary").click();
-  await page.locator('[data-kc-checkin="sleepStart"]').fill("2026-10-27T23:00");
-  await page.locator('[data-kc-checkin="sleepEnd"]').fill("2026-10-28T04:20");
   await page.waitForFunction(()=>{
    const life=JSON.parse(localStorage.getItem("compass_life_preview_v1")||"{}");
    const n=life.notes?.find(n=>n.journal?.date==="2026-10-28");
-   return n?.journal?.manualHealth?.steps===12000&&n.journal.manualHealth.sleepMinutes===320&&n.journal.checkin.sleepEnd==="2026-10-28T04:20";
+   return n?.journal?.manualHealth?.steps===12000&&n.journal.manualHealth.sleepMinutes===320&&!n.journal.checkin;
   });
   const healthNote=(await stored()).notes.find(n=>n.journal?.date==="2026-10-28");
   assert.deepEqual(healthNote.journal.manualHealth,{version:1,sleepMinutes:320,steps:12000,sleepScore:72,restingHeartRateBpm:58,exerciseMinutes:30});
-  assert.equal(healthNote.journal.checkin.sleepStart,"2026-10-27T23:00");
+  assert.equal(healthNote.journal.checkin,undefined);
   assert.equal(healthNote.journal.health,undefined);
   assert.equal(healthNote.body,"");
   let viewport=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,inner:innerWidth}));
