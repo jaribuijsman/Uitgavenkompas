@@ -45,4 +45,31 @@ for(const bad of [
  {...health,extraField:"niet toegestaan"}
  ])assert.throws(()=>C.journalHealthValid(bad,date));
 assert.equal(C.journalHealthValid(undefined,date),true);
+
+// De nacht van 27 op 28 oktober staat bij 28 oktober (wakker-word-datum).
+const wakeDate="2026-10-28";
+const manual={version:1,sleepMinutes:320,steps:12000,sleepScore:72,restingHeartRateBpm:58,exerciseMinutes:30};
+C.saveJournal(life,{id:legacy.id,date:wakeDate,collectionId,body:"Oud dagboek",mood:"Goed",
+ checkin:{energy:3,sleepStart:"2026-10-27T23:00",sleepEnd:"2026-10-28T04:20"},manualHealth:manual});
+assert.deepEqual(C.findJournal(life,wakeDate).journal.manualHealth,manual);
+assert.equal(C.findJournal(life,date).journal.manualHealth,undefined);
+assert(C.journalHasContent("",{manualHealth:manual}));
+C.validate(life);
+const copied=JSON.parse(JSON.stringify(life));
+C.validate(copied);
+assert.deepEqual(C.findJournal(copied,wakeDate).journal.manualHealth,manual);
+C.saveJournal(life,{id:legacy.id,date:wakeDate,collectionId,body:"Bewerkt, zonder nieuwe handmatige meting"});
+assert.deepEqual(C.findJournal(life,wakeDate).journal.manualHealth,manual);
+C.saveJournal(life,{id:legacy.id,date:wakeDate,collectionId,body:"Bewerkt, waarden gewist",manualHealth:null});
+assert.equal(C.findJournal(life,wakeDate).journal.manualHealth,undefined);
+assert.deepEqual(C.findJournal(life,date).journal.health,health);
+for(const bad of [
+ {version:1,steps:-1},{version:1,steps:2.5},{version:1,sleepMinutes:2161},
+ {version:1,sleepScore:101},{version:1,restingHeartRateBpm:0},
+ {version:1,exerciseMinutes:1441},{version:1,steps:100,unrecognized:1},
+ {version:1},{version:2,steps:20}
+])assert.throws(()=>C.journalManualHealthValid(bad));
+assert.equal(C.journalManualHealthValid(undefined),true);
+console.log("JOURNAL_MANUAL_HEALTH_CORE_PASS wake-date mapping, preservation, clearing, backup, invalid inputs");
+
 console.log("JOURNAL_SELFCARE_CORE_PASS legacy, check-in only, preservation, backup roundtrip, invalid values");
