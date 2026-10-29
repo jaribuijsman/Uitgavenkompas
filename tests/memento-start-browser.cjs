@@ -48,24 +48,47 @@ const server=http.createServer((req,res)=>{
    assert.match(await page.locator('#ms-events').innerText(),/2\s*afspraken/);
    assert.match(await page.locator('#ms-tasks').innerText(),/4 vandaag · 1 achterstallig/);
    assert.equal(await page.locator('#ms-task-first-title').innerText(),'Leuke outfit scoren');
-   assert.equal(await page.locator('#ms-task-first').innerText(),'1 dag te laat');
-   assert.equal(await page.locator('#mementoStart .ms-card').count(),2);
-   assert.equal(await page.locator('#mementoStart .ms-greeting').count(),0);
-   assert.equal(await page.locator('#mementoStart .ms-footer small').count(),0);
-   const rects=await page.locator('#mementoStart .ms-card').evaluateAll(xs=>xs.map(x=>({y:x.getBoundingClientRect().y,w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height})));
-   assert(Math.abs(rects[0].w-rects[1].w)<1 && Math.abs(rects[0].h-rects[1].h)<1 && Math.abs(rects[0].y-rects[1].y)<1,'Symmetric cards');
+   assert.match(await page.locator('#ms-task-first').innerText(),/27 okt.*1 dag te laat/);
+   assert.equal(await page.locator('#mementoStart .ms-day').count(),1);
+   assert.equal(await page.locator('#mementoStart .ms-cardrow').count(),4);
+   assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
-   for(const height of [640,800]){
+   for(const height of [640,700,800]){
     await page.setViewportSize({width,height});
     await page.locator('#ms-task-row-second').scrollIntoViewIfNeeded();
     const reachable=await page.locator('#ms-task-row-second').evaluate(el=>{const r=el.getBoundingClientRect(),f=document.querySelector('.ms-footer').getBoundingClientRect();return r.top>=0&&r.bottom<=f.top+1});
     assert(reachable,'Last row remains reachable above fixed footer');
-    for(const selector of ['.ms-cardhead','.ms-cardrow','.ms-overview','.ms-continue']){
+    for(const selector of ['.ms-quickbutton','.ms-cardrow','.ms-overview','.ms-continue']){
      assert((await page.locator('#mementoStart '+selector).first().boundingBox()).height>=44,'Touch height '+selector);
     }
+   }
+   if(width===393){
+    await page.setViewportSize({width,height:772});
+    await page.locator('[data-ms-create="note"]').click();
+    await page.locator('#kc-quick-text').waitFor({state:'visible'});
+    await page.evaluate(()=>window.MementoStart.showWelcome());
+    const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')}));
+    await page.locator('[data-ms-create="task"]').click();
+    await page.locator('#lifeTaskForm').waitFor({state:'visible'});
+    for(const id of ['lifeTaskTitle','lifeTaskKind','lifeTaskCategory','lifeTaskDate','lifeTaskRepeat','lifeTaskRoom','lifeTaskPriority','lifeTaskNotes','lifeTaskSteps'])assert.equal(await page.locator('#'+id).count(),1);
+    await page.locator('[data-life-close]').first().click();
+    await page.evaluate(()=>window.MementoStart.showWelcome());
+    await page.locator('[data-ms-create="note"]').click();
+    await page.locator('#kc-quick-text').waitFor({state:'visible'});
+    assert.equal(await page.locator('[data-kc="quick-save"]').count(),1);
+    assert.equal(await page.locator('[data-kc="quick-expand"]').count(),1);
+    assert.equal(await page.locator('#kc-quick-mic').count(),1);
+    await page.evaluate(()=>window.MementoStart.showWelcome());
+    await page.locator('[data-ms-create="transaction"]').click();
+    await page.locator('#txForm').waitFor({state:'visible'});
+    for(const id of ['txDescription','txAmount','txDate','txMerchant','txCategory','txSubcategory','txAccount','txPerson','txPaymentMethod','txNote','toggleSplit'])assert.equal(await page.locator('#'+id).count(),1);
+    for(const type of ['expense','income','refund','transfer'])assert.equal(await page.locator('[data-txtype="'+type+'"]').count(),1);
+    await page.locator('#cancelTx').click();
+    assert.deepEqual(await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')})),before,'Opening/cancelling real editors must not change records');
+    await page.evaluate(()=>window.MementoStart.showWelcome());
    }
    await page.locator('#ms-continue').click();
    await page.locator('#pinLock').waitFor({state:'hidden'});
@@ -93,7 +116,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('#mementoStart').waitFor({state:'visible'});
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.deepEqual(errors,[],'No page errors');
-   console.log('PASS weather, symmetric cards, overdue task and manual PIN at '+width+'px');
+   console.log('PASS real create routes, glass dayline, weather, overdue date and manual PIN at '+width+'px');
    await context.close();
   }
  }finally{if(browser)await browser.close();await new Promise(done=>server.close(done))}

@@ -10,28 +10,17 @@
  const root=document.createElement('section');
  root.id='mementoStart';root.setAttribute('aria-label','Memento dagoverzicht');
  root.innerHTML=`<div class="ms-shell"><div class="ms-content">
-<img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90">
-<div class="ms-date" id="ms-date">Vandaag</div>
-<section class="ms-weather" aria-label="Weersverwachting Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
-<div class="ms-todayhead"><b>JOUW DAG</b><button class="ms-overview" type="button" data-ms-view="today">Bekijk volledig overzicht <span aria-hidden="true">›</span></button></div>
-<div class="ms-cards" aria-label="Agenda en taken">
-<section class="ms-card ms-card-agenda" aria-labelledby="ms-agenda-title">
-<div class="ms-art ms-art-agenda" aria-hidden="true"></div>
-<button class="ms-cardhead" type="button" data-ms-view="agenda"><span id="ms-agenda-title">Agenda</span><span class="ms-arrow" aria-hidden="true">›</span></button>
-<p class="ms-cardcount" id="ms-events" aria-live="polite">Agenda laden…</p>
-<div class="ms-rows">
-<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-rowtext"><strong id="ms-event-first-title">Vandaag</strong><small id="ms-event-first">Afspraken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
-<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-rowtext"><strong id="ms-event-second-title">Morgen</strong><small id="ms-event-second">Afspraken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
+<header class="ms-brand"><img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90"><div class="ms-date" id="ms-date">Vandaag</div></header>
+<section class="ms-weather ms-glass" aria-label="Weersverwachting Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
+<section class="ms-day ms-glass" aria-label="Jouw daglijn"><div class="ms-dayhead"><button class="ms-overview" type="button" data-ms-view="today">Jouw daglijn</button><div class="ms-counts"><span id="ms-events" aria-live="polite">Agenda laden…</span><span id="ms-tasks" aria-live="polite">Taken laden…</span></div></div>
+<div class="ms-timeline">
+<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-time" id="ms-event-first-time">Vandaag</span><span class="ms-rowtext"><strong id="ms-event-first-title">Agenda laden…</strong><small id="ms-event-first">Vandaag · Agenda</small></span><img class="ms-thumb" src="./assets/memento-start-agenda.svg" alt=""></button>
+<button class="ms-cardrow" id="ms-task-row-first" type="button" data-ms-view="tasks"><span class="ms-time">Taken</span><span class="ms-rowtext"><strong id="ms-task-first-title">Taken laden…</strong><small id="ms-task-first">Vandaag · Mijn taken</small></span><img class="ms-thumb" src="./assets/memento-start-tasks.svg" alt=""></button>
+<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-time" id="ms-event-second-time">Morgen</span><span class="ms-rowtext"><strong id="ms-event-second-title">Agenda laden…</strong><small id="ms-event-second">Morgen · Agenda</small></span><img class="ms-thumb" src="./assets/memento-start-agenda.svg" alt=""></button>
+<button class="ms-cardrow" id="ms-task-row-second" type="button" data-ms-view="tasks"><span class="ms-time">Later</span><span class="ms-rowtext"><strong id="ms-task-second-title">Taken laden…</strong><small id="ms-task-second">Komende dagen · Mijn taken</small></span><img class="ms-thumb" src="./assets/memento-start-tasks.svg" alt=""></button>
 </div></section>
-<section class="ms-card ms-card-tasks" aria-labelledby="ms-tasks-title">
-<div class="ms-art ms-art-tasks" aria-hidden="true"></div>
-<button class="ms-cardhead" type="button" data-ms-view="today"><span id="ms-tasks-title">Mijn taken</span><span class="ms-arrow" aria-hidden="true">›</span></button>
-<p class="ms-cardcount" id="ms-tasks" aria-live="polite">Taken laden…</p>
-<div class="ms-rows">
-<button class="ms-cardrow" id="ms-task-row-first" type="button" data-ms-view="tasks"><span class="ms-rowtext"><strong id="ms-task-first-title">Vandaag</strong><small id="ms-task-first">Taken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
-<button class="ms-cardrow" id="ms-task-row-second" type="button" data-ms-view="today"><span class="ms-rowtext"><strong id="ms-task-second-title">Overige taken</strong><small id="ms-task-second">Taken laden…</small></span><span class="ms-rowarrow" aria-hidden="true">›</span></button>
-</div></section></div></div></div>
-<div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
+<nav class="ms-quick" aria-label="Snelfuncties"><button class="ms-quickbutton" type="button" data-ms-create="task"><span aria-hidden="true">＋</span>Taak</button><button class="ms-quickbutton" type="button" data-ms-create="note"><span aria-hidden="true">＋</span>Snelle notitie</button><button class="ms-quickbutton" type="button" data-ms-create="transaction"><span aria-hidden="true">＋</span>Transactie</button></nav>
+</div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
  const one=id=>document.getElementById(id);
  function setFocusBlocked(blocked){
@@ -41,7 +30,7 @@
   if(isLocked())return showPin();
   lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
-  setFocusBlocked(true);refreshDay();refreshWeather();
+  setFocusBlocked(true);refreshDay();refreshWeather();illuminate();
  }
  function showPin(){
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
@@ -56,12 +45,38 @@
   try{
    if(document.body.dataset.compassArea!=='life')document.querySelector('#compassAreaBar [data-compass-area="life"]')?.click();
    document.querySelector('#lifeNavigation [data-life-view="'+view+'"]')?.click();
+   return document.body.dataset.compassArea==='life'&&document.getElementById('lifeApp')?.dataset.lifeView===view;
   }catch{}
+  return false;
  }
  root.querySelector('#ms-continue').addEventListener('click',()=>{if(isLocked()){showPin();return}leave()});
  root.querySelectorAll('[data-ms-view]').forEach(btn=>btn.addEventListener('click',()=>{
   if(isLocked()){showPin();return}leave();navigate(btn.dataset.msView);
  }));
+ // Reuse the real editors and their validation/storage guards; this portal never writes records.
+ function create(kind){
+  if(isLocked()){showPin();return}
+  leave();
+  if(kind==='transaction'){
+   document.querySelector('#compassAreaBar [data-compass-area="finance"]')?.click();
+   if(document.body.dataset.compassArea!=='finance')return;
+   document.getElementById('addTransactionTop')?.click();
+  }else if(kind==='task'){
+   if(navigate('tasks'))document.getElementById('lifeAdd')?.click();
+  }else if(kind==='note'&&navigate('notes')){
+   // open() preserves a pending concept; the existing Inbox capture owns speech/save/expand.
+   window.MementoKnowledge?.open?.();
+   requestAnimationFrame(()=>{
+    const field=document.getElementById('kc-quick-text')||document.getElementById('kc-body');
+    field?.focus();field?.scrollIntoView({block:'center'});
+   });
+  }
+ }
+ root.querySelectorAll('[data-ms-create]').forEach(button=>button.addEventListener('click',()=>create(button.dataset.msCreate)));
+ function illuminate(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  root.classList.remove('ms-illuminate');void root.offsetWidth;root.classList.add('ms-illuminate');
+ }
  function setRow(prefix,title,detail){one(prefix+'-title').textContent=title;one(prefix).textContent=detail;}
  function refreshDay(){
   const iso=date(),tomorrow=new Date(Date.parse(iso+'T12:00:00Z')+86400000).toISOString().slice(0,10);
@@ -70,8 +85,8 @@
   let s;try{s=JSON.parse(localStorage.getItem(LIFE_KEY)||'null')}catch{}
   if(!s||!Array.isArray(s.tasks)||!Array.isArray(s.appointments)){
    one('ms-events').textContent='Agenda niet beschikbaar';one('ms-tasks').textContent='Taken niet beschikbaar';
-   setRow('ms-event-first','Vandaag','Geen gegevens');setRow('ms-event-second','Morgen','Geen gegevens');
-   setRow('ms-task-first','Vandaag','Geen gegevens');setRow('ms-task-second','Overige taken','Geen gegevens');
+   setRow('ms-event-first','Agenda niet beschikbaar','Vandaag · Agenda');setRow('ms-event-second','Agenda niet beschikbaar','Morgen · Agenda');one('ms-event-first-time').textContent='Vandaag';one('ms-event-second-time').textContent='Morgen';
+   setRow('ms-task-first','Taken niet beschikbaar','Geen gegevens');setRow('ms-task-second','Taken niet beschikbaar','Geen gegevens');one('ms-task-row-first').removeAttribute('aria-label');
    one('ms-task-row-first').classList.remove('ms-row-overdue');return;
   }
   const taskDate=t=>/^\d{4}-\d{2}-\d{2}$/.test(t.date||'')?t.date:/^\d{4}-\d{2}-\d{2}$/.test(t.focusDate||'')?t.focusDate:'';
@@ -82,14 +97,16 @@
   one('ms-tasks').textContent=todayTasks.length+' vandaag · '+late.length+' achterstallig';
   if(late.length){
    const t=late[0],days=Math.round((Date.parse(iso+'T12:00:00Z')-Date.parse(taskDate(t)+'T12:00:00Z'))/86400000);
-   setRow('ms-task-first',t.title||'Taak zonder titel',days===1?'1 dag te laat':days+' dagen te laat');
+   const planned=new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short',timeZone:'Europe/Amsterdam'}).format(new Date(taskDate(t)+'T12:00:00Z'));
+   setRow('ms-task-first',t.title||'Taak zonder titel',planned+' · '+(days===1?'1 dag te laat':days+' dagen te laat'));
    one('ms-task-row-first').classList.add('ms-row-overdue');
-   one('ms-task-row-first').setAttribute('aria-label',(t.title||'Taak')+', '+days+' '+(days===1?'dag':'dagen')+' te laat. Open taken.');
-   setRow('ms-task-second','Overige taken',todayTasks.length?todayTasks.length+' gepland vandaag':'Geen taken vandaag');
+   one('ms-task-row-first').setAttribute('aria-label',(t.title||'Taak')+', gepland '+planned+', '+days+' '+(days===1?'dag':'dagen')+' te laat. Open taken.');
+   if(todayTasks.length)setRow('ms-task-second',todayTasks[0].title||'Taak zonder titel','Vandaag · Mijn taken');
+   else setRow('ms-task-second',future[0]?.title||'Geen taken gepland','Komende dagen · Mijn taken');
   }else{
    one('ms-task-row-first').classList.remove('ms-row-overdue');one('ms-task-row-first').removeAttribute('aria-label');
-   setRow('ms-task-first','Vandaag',todayTasks.length?(todayTasks[0].title||'Taak zonder titel'):'Geen taken vandaag');
-   setRow('ms-task-second','Komende dagen',future.length?(future[0].title||'Taak zonder titel'):'Geen taken gepland');
+   setRow('ms-task-first',todayTasks[0]?.title||'Geen taken vandaag','Vandaag · Mijn taken');
+   setRow('ms-task-second',future[0]?.title||'Geen taken gepland','Komende dagen · Mijn taken');
   }
   const appointmentsFor=day=>{
    const personal=s.appointments.filter(e=>e&&!e.deletedAt&&!e.cancelled&&e.date===day).map(e=>({title:e.title||'Afspraak',time:e.time||''}));
@@ -104,9 +121,9 @@
   };
   const events=appointmentsFor(iso),next=appointmentsFor(tomorrow);
   one('ms-events').textContent=events.length+' '+(events.length===1?'afspraak':'afspraken')+' vandaag';
-  const label=e=>(e.time?e.time+' · ':'')+e.title;
-  setRow('ms-event-first','Vandaag',events.length?label(events[0]):'Geen afspraken');
-  setRow('ms-event-second','Morgen',next.length?label(next[0]):'Geen afspraken');
+  one('ms-event-first-time').textContent=events[0]?.time||'Vandaag';one('ms-event-second-time').textContent=next[0]?.time||'Morgen';
+  setRow('ms-event-first',events[0]?.title||'Geen afspraken','Vandaag · Agenda');
+  setRow('ms-event-second',next[0]?.title||'Geen afspraken','Morgen · Agenda');
  }
  function weatherIcon(code,isDay){
   if(code===0||code===1)return isDay?'☀':'☾';
@@ -147,10 +164,11 @@
    }
   }
   if(!hours.length){one('ms-hourly').innerHTML='<span style="font-size:12px;color:#ccdbcd;padding:14px 0">Uurverwachting niet beschikbaar. Vernieuw het weer.</span>';return}
+  one('ms-hourly').style.setProperty('--ms-hour-count',hours.length);
   const now=hour();
   one('ms-hourly').innerHTML=hours.map(x=>{
    const hr=Number(x.time.slice(0,2)),day=hr>=7&&hr<19;
-   return '<div class="ms-hour'+(Math.abs(hr-now)<=1?' now':'')+'"><time>'+esc(x.time)+'</time><b aria-hidden="true">'+weatherIcon(x.code,day)+'</b><strong>'+Math.round(x.temp)+'°</strong><small>'+ (Number.isFinite(x.prob)?Math.round(x.prob)+'% regen':'')+'</small></div>';
+   return '<div class="ms-hour'+(Math.abs(hr-now)<=1?' now':'')+'" aria-label="'+esc(x.time+', '+Math.round(x.temp)+' graden'+(Number.isFinite(x.prob)?', '+Math.round(x.prob)+' procent kans op regen':''))+'"><time>'+esc(x.time)+'</time><b aria-hidden="true">'+weatherIcon(x.code,day)+'</b><strong>'+Math.round(x.temp)+'°</strong><small>'+ (Number.isFinite(x.prob)?Math.round(x.prob)+'%':'')+'</small></div>';
   }).join('');
  }
  root.querySelector('#ms-refresh').addEventListener('click',()=>{
