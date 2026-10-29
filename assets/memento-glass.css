@@ -49,7 +49,7 @@ body .mg-fold-body{padding:13px;display:grid;gap:11px;min-width:0}
 body .mg-filter-chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 12px}
 body .mg-filter-chips button,body .mg-chip{min-height:44px;border:1px solid var(--mg-line);border-radius:10px;background:#1b3929da;color:#d7e4cb;padding:7px 10px;font-size:12px}
 body .mg-chip{display:inline-flex;align-items:center;min-height:32px}
-body .mg-filter-chips button::after{content:' ×';margin-left:5px}
+body .mg-filter-chips button:is([data-mg-clear-task],[data-mg-clear-finance])::after{content:' ×';margin-left:5px}
 body #lifeApp .mg-day-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 body #lifeApp .mg-day-head h2{font-size:25px;margin:0}
 body #lifeApp .mg-overviews{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -161,4 +161,24 @@ body #lifeApp .mg-cycle-strip button{flex:1;min-width:80px;min-height:48px;paddi
 body #view-analysis .donut-svg{max-width:210px!important}
 body #view-planning .goal-card{padding:14px!important}
 /* Fixed viewport menus must escape glass stacking/containing blocks while open. */
-body #lifeApp:has(.life-task-menu[open]),body #lifeApp :has(.life-task-menu[open]){backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;overflow:visible!important;will-change:auto!important;animation:none!important;opacity:1!important}
+body #lifeApp.mg-menu-ancestor,body #lifeApp .mg-menu-ancestor{backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;overflow:visible!important;will-change:auto!important;animation:none!important;opacity:1!important}
+
+/* Three compact destinations; the existing extra statuses remain in a disclosure. */
+body #lifeApp .memento-task-tabs[data-mg-ready]{display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px}
+body #lifeApp .memento-task-tabs[data-mg-ready]>button{flex:1 1 70px;min-height:46px;padding:10px 8px;font-size:13px}
+body #lifeApp .memento-task-tabs .mg-task-overviews{flex:1.4 1 120px;min-width:0;margin:0}
+body #lifeApp .mg-task-overviews>summary{min-height:44px;box-sizing:border-box;padding:10px;font-size:13px;white-space:nowrap;overflow-wrap:normal}
+body #lifeApp .mg-task-overviews .mg-fold-body{padding:6px;gap:6px}
+body #lifeApp .mg-task-overviews .mg-fold-body>button{width:100%;font-size:13px;white-space:normal;min-height:44px}
+body #lifeApp .mg-agenda-tools button{border:1px solid var(--mg-line);border-radius:12px;padding:10px;font:inherit;background:#173d2de0;color:var(--mg-ink)}
+body #lifeApp .memento-cal-intro{flex-wrap:wrap;gap:10px}
+body #lifeApp .memento-cal-intro>div{flex:1 1 200px;min-width:0}
+body #lifeApp[data-life-view=agenda] .memento-cal-status{flex:0 0 auto;max-width:none;white-space:nowrap;overflow-wrap:normal;align-self:flex-start}
+@media(max-width:700px){
+ body #lifeApp[data-life-view=wishes] .life-page-head{flex-wrap:wrap}
+ body #lifeApp[data-life-view=wishes] .life-page-head>div:first-child{flex:1 1 100%}
+ body #lifeApp[data-life-view=wishes] .life-page-head h1{overflow-wrap:normal;word-break:normal}
+ body #view-planning .page-head{display:flex;flex-wrap:wrap}
+ body #view-planning .page-head>div:first-child{display:block;flex:1 1 100%}
+ body #view-planning .page-head>div:not(:first-child){max-width:none;display:flex;flex-wrap:wrap;gap:8px}
+}

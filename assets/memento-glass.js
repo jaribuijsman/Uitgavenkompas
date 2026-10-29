@@ -37,9 +37,17 @@
   }
   const hero=today?.querySelector('.flow-hero');if(hero&&!hero.closest('.mg-fold'))fold([hero],'Gedachte voor vandaag');
   const tabs=$('#lifeApp .memento-task-tabs');
+  const tasks=$('#lifeApp[data-life-view=tasks] #lifeContent');
+  if(tasks){
+   const capture=tasks.querySelector('.memento-capture-card');
+   if(capture&&!capture.closest('.mg-fold'))fold([capture],'Snelle invoer · taak, notitie of dagboek');
+   const sort=tasks.querySelector('.memento-task-sort'),filters=tasks.querySelector('.memento-filter-fields');
+   if(sort&&filters&&!filters.contains(sort))filters.append(sort);
+  }
   if(tabs&&!tabs.dataset.mgReady){
    tabs.dataset.mgReady='1';const rest=[...tabs.children].filter(b=>!['open','done'].includes(b.dataset.lifeTaskTab));
-   const d=fold(rest,'Overzichten · Archief, Bewaard en Prullenbak',rest.some(b=>b.getAttribute('aria-pressed')==='true'));if(d){d.style.flexBasis='100%';tabs.append(d);}
+   const selected=rest.find(b=>b.getAttribute('aria-pressed')==='true');
+   const d=fold(rest,selected?.textContent||'Overzichten');if(d){d.classList.add('mg-task-overviews');tabs.append(d);}
   }
   const agenda=$('#lifeApp[data-life-view=agenda] .memento-calendar-panel');
   if(agenda&&!agenda.querySelector('.mg-agenda-tools')){
@@ -99,6 +107,31 @@
  });
  document.addEventListener('invalid',e=>{let n=e.target.parentElement;while(n){if(n.tagName==='DETAILS')n.open=true;n=n.parentElement;}},true);
  document.addEventListener('change',schedule);document.addEventListener('input',e=>{if(e.target.id==='txSearch')schedule();});
- new MutationObserver(()=>{for(const form of document.querySelectorAll('#lifeTaskForm,#txForm'))markForm(form);schedule();}).observe(document.body,{subtree:true,childList:true});
+ // Text updates (including the training clock) do not change the control structure.
+ // Observe app/modal roots, and synchronously prepare only newly inserted forms.
+ const observer=new MutationObserver(records=>{
+  let structure=false;
+  for(const record of records){
+   for(const node of [...record.addedNodes,...record.removedNodes])if(node.nodeType===1)structure=true;
+   for(const node of record.addedNodes){if(node.nodeType!==1)continue;
+    if(node.matches('#lifeTaskForm,#txForm'))markForm(node);
+    for(const form of node.querySelectorAll('#lifeTaskForm,#txForm'))markForm(form);
+   }
+  }
+  if(structure){releaseMenus();schedule();}
+ });
+ for(const root of document.querySelectorAll('#lifeApp,body>.app,#lifeDialog,#modalBackdrop'))observer.observe(root,{subtree:true,childList:true});
+ // Only ancestors of an open menu need to release their glass containing block.
+ const menuAncestors=new Set();
+ function releaseMenus(){
+  const next=new Set();
+  for(const menu of document.querySelectorAll('#lifeApp .life-task-menu[open]')){
+   for(let n=menu.parentElement;n&&n!==document.body;n=n.parentElement)next.add(n);
+  }
+  for(const n of menuAncestors)if(!next.has(n))n.classList.remove('mg-menu-ancestor');
+  for(const n of next)n.classList.add('mg-menu-ancestor');
+  menuAncestors.clear();for(const n of next)menuAncestors.add(n);
+ }
+ document.addEventListener('toggle',e=>{if(e.target.matches('.life-task-menu'))releaseMenus();},true);
  schedule();
 })();
