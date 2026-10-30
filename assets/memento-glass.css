@@ -126,8 +126,6 @@ body #lifeApp .mg-day-head{padding-top:4px}
 
 /* Real collection/shopping markup, retaining original illustrations and controls. */
 body #lifeApp .kc-collection-row.kc-art-row{min-height:82px;padding:10px 12px;background:var(--mg-surface)!important;border:1px solid var(--mg-line);border-radius:18px;box-shadow:inset 0 1px 0 #ecffc31c;backdrop-filter:none;gap:10px}
-body #lifeApp .kc-art-row .kc-art-wrap{position:relative;inset:auto;order:-1;width:64px;height:60px;flex:0 0 64px;overflow:hidden;border-radius:12px}
-body #lifeApp .kc-art-row .kc-art-wrap:after{background:linear-gradient(0deg,#08241633,transparent)}
 body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon{width:30px;height:30px;flex:0 0 30px;background:transparent;backdrop-filter:none}
 body #lifeApp .kc-art-row .kc-card-arrow{width:24px;min-width:24px}
 body #lifeApp .shopping-row{min-height:65px;padding:8px;border-bottom:1px solid #cce5c31b;background:transparent!important}
