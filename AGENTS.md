@@ -8,6 +8,7 @@ Geldt voor Codex en Work bij werk in deze repository. Specifiekere `AGENTS.md`-b
 - Kies op basis van **impact** niveau 1, 2 of 3. Bij gemengde of onverwacht risicovolle wijzigingen geldt het hoogste niveau. Leg de keuze kort vast; schaal alleen op bij een concrete reden.
 - Wijzig zo weinig mogelijk. Geen ongevraagd redesign, brede refactor, dubbele CSS-regels/`!important`-ketens of nieuwe observers. Inspecteer bij UI-fouten late CSS en DOM-decoratie; oude screenshots zijn geen bewijs van de actuele weergave.
 - Gebruik bestaande code en relevante tests. Test na een gerichte reparatie opnieuw, maar herhaal geen succesvolle suites zonder gewijzigde afhankelijkheden.
+- **Bij goedgekeurde ontwerpwijzigingen actualiseer je relevante tests in dezelfde wijziging.** Zoek expliciet naar assertions/selectors die het verwijderde of verplaatste onderdeel nog verwachten en vervang die door een even sterke controle van het nieuwe gedrag. Laat geen verouderde test achter die een volgende PR blokkeert. Schakel niet de complete visuele of veiligheidscontrole uit omdat één oude verwachting niet meer klopt. Als de gebruiker eerder zelf de visuele controle overnam, blijft dit onderhoud aan de testdekking alsnog verplicht bij het volgende relevante codewerk.
 
 ## Risiconiveaus
 
