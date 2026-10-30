@@ -1,10 +1,7 @@
 name: Memento masterplan acceptance
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: [main]
-    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/masterplan.yml']
-  pull_request:
-    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/masterplan.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
