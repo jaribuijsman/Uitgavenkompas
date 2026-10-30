@@ -49,8 +49,30 @@
  function refreshThought(){
   const host=one('ms-quote-host'),today=date();
   if(!host||host.dataset.date===today)return;
-  const html=window.CompassFlow?.quoteHTML?.();
-  if(html){host.innerHTML=html;host.dataset.date=today}
+  // Prefer the canonical renderer, but support an older cached HTML shell.
+  let html=window.CompassFlow?.quoteHTML?.();
+  if(!html){
+   try{
+    const quotes=JSON.parse(document.getElementById('compassQuoteData')?.textContent||'[]');
+    if(Array.isArray(quotes)&&quotes.length){
+     const n=Math.floor(Date.parse(today+'T00:00:00Z')/86400000);
+     const q=quotes[((n%quotes.length)+quotes.length)%quotes.length];
+     const avatar=document.getElementById('compassAvatarData')?.textContent.trim()||'./assets/memento-avatar.png';
+     const dateLabel=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'}).format(new Date());
+     if(q?.text&&q?.author&&q?.url)html='<div class="flow-hero"><div class="flow-hero-top"><div><div class="flow-eyebrow">Gedachte voor vandaag</div><div class="flow-date">'+esc(dateLabel)+'</div></div><img class="flow-avatar" src="'+esc(avatar)+'" alt="Portret" width="64" height="64"></div><blockquote lang="en">“'+esc(q.text)+'”</blockquote><div class="flow-citation">'+esc(q.author)+' · '+esc(q.work)+' '+esc(q.section)+'<details><summary>Bron & vertaling</summary><span>Engelse vertaling: '+esc(q.translator)+'. </span><a href="'+esc(q.url)+'" target="_blank" rel="noopener noreferrer">Lees de bron ↗</a></details></div></div>';
+    }
+   }catch{}
+  }
+  host.innerHTML=html||'<div class="flow-hero"><div class="flow-eyebrow">Gedachte voor vandaag</div><p>Gedachte tijdelijk niet beschikbaar.</p></div>';
+  host.dataset.date=html?today:'';
+ }
+ function removeLegacyTodayQuote(){
+  // An already-open PWA can combine an older HTML document with newer assets.
+  // Disable the old Mijn dag renderer and clear any quote it already inserted.
+  if(window.CompassFlow&&typeof window.CompassFlow.home==='function')window.CompassFlow.home=()=> '';
+  const today=document.querySelector('#lifeApp[data-life-view="today"] #lifeContent');
+  const old=today?.querySelector('.flow-home');
+  if(old)(old.closest('.mg-fold')||old).remove();
  }
  function setFocusBlocked(blocked){
   for(const el of [document.querySelector('.app'),document.getElementById('lifeApp'),document.getElementById('compassAreaBar')])if(el)el.inert=blocked;
@@ -59,7 +81,7 @@
   if(isLocked())return showPin();
   lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
-  setFocusBlocked(true);refreshDay();refreshWeather();refreshThought();showSlide(0,true);illuminate();
+  setFocusBlocked(true);removeLegacyTodayQuote();refreshDay();refreshWeather();refreshThought();showSlide(0,true);illuminate();
  }
  function showPin(){
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
@@ -68,7 +90,7 @@
   setFocusBlocked(true);
  }
  function leave(){
-  lock.classList.remove('visible','memento-welcome-mode');document.body.classList.remove('memento-start-open','pin-locked');setFocusBlocked(false);
+  lock.classList.remove('visible','memento-welcome-mode');document.body.classList.remove('memento-start-open','pin-locked');setFocusBlocked(false);removeLegacyTodayQuote();
  }
  function navigate(view){
   try{
@@ -206,7 +228,7 @@
 
   window.dispatchEvent(new CustomEvent('memento-start-weather-refresh'));
  });
- window.addEventListener('memento-weather-update',refreshWeather);
+ window.addEventListener('memento-weather-update',event=>{refreshWeather(event);refreshThought()});
  window.addEventListener('storage',e=>{if(e.key===LIFE_KEY&&lock.classList.contains('memento-welcome-mode'))refreshDay();if(e.key===PIN_KEY){if(isLocked())showPin();else showWelcome()}});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather();refreshThought()}});
  lock.addEventListener('keydown',e=>{
