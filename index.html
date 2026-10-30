@@ -2968,6 +2968,17 @@ function taskRow(t){
  if(t.steps?.length)meta.push(t.steps.filter(x=>x.done).length+' van '+t.steps.length+' stappen');
  if(t.priority)meta.push('<span class="life-priority-label">★ Belangrijk</span>');
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
+ if(inDay){
+  // Appointment layout: checkbox | planned date (never an invented time) | content | action.
+  const dateLabel=t.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):'—';
+  return '<article class="life-task memento-unified-event memento-unified-task'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
+   '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
+   '<span class="memento-unified-time">'+esc(dateLabel)+'</span>'+
+   '<div class="life-task-body memento-unified-info"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="life-task-meta">'+meta.map(x=>'<span>'+x+'</span>').join('')+'</div></div>'+
+   '<div class="memento-event-actions"><details class="life-task-menu"><summary class="memento-edit-event" aria-label="'+esc('Bewerken en opties voor '+t.title)+'">Bewerk</summary><div class="life-task-actions">'+actions+
+   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+
+   '</div></details></div></article>';
+ }
  return '<article class="life-task'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
  '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
  '<div class="life-task-body"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="life-task-meta">'+meta.map(x=>'<span>'+x+'</span>').join('')+'</div></div>'+
@@ -4220,7 +4231,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 </script>
 
 <link rel="stylesheet" href="./assets/memento-tokens.css?v=20261029-scroll-v1">
-<link rel="stylesheet" href="./assets/memento-ui.css?v=20261029-recovery-v2">
+<link rel="stylesheet" href="./assets/memento-ui.css?v=20261030-task-event-parity-v1">
 <script src="./assets/memento-ui.js?v=20261029-visual-repair-v1"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261029-scroll-v1"></script>
 <style id="memento-diary-shortcut-20261029">
