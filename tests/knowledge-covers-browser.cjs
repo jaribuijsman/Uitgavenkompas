@@ -78,7 +78,12 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  await page.locator('[data-memento-menu="open"]').click();
  await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();
  await page.locator('.kc-collection-rows [data-id="kc2-levenspad"]').first().click();
- await page.waitForFunction(id=>{const el=document.querySelector('[data-kc="collection"][data-id="'+id+'"] .kc-cover-custom');return el?.src.startsWith("blob:");},sub.id);
+ // Direction C keeps child artwork in its editor, while the folder list stays compact.
+ const subRow=page.locator('[data-kc="collection"][data-id="'+sub.id+'"]');
+ assert.equal(await subRow.locator('.kc-art-wrap').count(),0);
+ await subRow.click();await page.locator('.kc-collection-actions summary').click();
+ await page.locator('.kc-collection-actions [data-kc=edit-collection]').click();
+ await page.waitForFunction(()=>document.querySelector('.kc-cover-preview .kc-cover-custom')?.src.startsWith('blob:'));
  const b=await page.evaluate(async()=>{const life=JSON.parse(localStorage.getItem("compass_life_preview_v1"));const store=window.MementoKnowledgeStore;const result=await window.MementoCompleteBackup.createArchive({life,finance:{transactions:[],categories:[]}},store);const restored=await window.MementoCompleteBackup.prepareArchive(result.blob,store);return {count:result.manifest.files.length,cover:restored.life.knowledge.collections.find(c=>c.name==="Auto-onderhoud").coverFile.id,restored:restored.files.length};});
  assert(b.count>=1&&b.restored>=1&&b.cover===changed.coverFile.id);
  checks.push("Custom card persists across reload and is included in complete ZIP backup roundtrip");
