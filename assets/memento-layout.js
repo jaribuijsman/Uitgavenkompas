@@ -97,17 +97,6 @@
    for(const future of all('.memento-future-day:not(.life-overdue-group)',host)){const counts=$('[data-memento-total]',future);if(counts){let badge=$(':scope>summary .ml-future-count',future);if(!badge){badge=document.createElement('span');badge.className='ml-future-count';$(':scope>summary',future)?.append(badge);}text(badge,counts.textContent);}}
    const head=$('.mg-day-head',host);if(head&&!$('.ml-day-context',head)){const line=document.createElement('p');line.className='ml-day-context';const C=window.MementoFitnessCore,today=C?.date?.();line.textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+(today&&C.duty?' · '+C.duty(today).label+' · '+C.duty(today).time:'');head.prepend(line);}
   }
-  if(view==='agenda'){
-   const panel=$('.memento-calendar-panel',host);once(panel,'mlAgenda',()=>{
-    const intro=$('.memento-cal-intro',panel),tools=$('.mg-agenda-tools',panel);if(tools&&intro)intro.before(tools);
-    const month=$('.memento-cal-toolbar',panel),roster=$('.mg-roster-strip',panel),detail=$('.mg-roster-detail',panel),duty=$('#mementoDutyDetail');
-    fold([roster,detail,duty],'Dienstrooster · tien dagen','agenda-roster');
-    const gcal=$('#memento-gcal-tools')?.closest('.mg-fold');if(gcal){panel.append(gcal);const status=$('.memento-cal-status',panel);if(status)$(':scope>summary',gcal)?.append(status);}
-    if(month){const actions=$('.memento-cal-actions',month),add=$('[data-memento-new-event]',month);if(add){month.before(add);add.classList.add('ml-agenda-add');}fold([month],'Maand en dag kiezen','agenda-month');}
-    const day=$('.memento-gcal-day-section',panel);if(day){const switcher=$('.mg-agenda-tools',panel);switcher?.after(day);}
-   });
-   if(app.dataset.mgAgenda==='month'){const month=$('[data-ml-fold=agenda-month]',host);if(month&&!month.open)month.open=true;}
-  }
   if(view==='wishes')for(const card of all('.mg-wish-card',host))once(card,'mlWish',()=>{
    card.classList.add('ml-wish-row');const heading=$('.life-card-head',card),status=$('.life-pill',card),budget=all(':scope>p',card).find(p=>p.textContent.startsWith('Budget:'));
    const meta=document.createElement('div');meta.className='ml-wish-meta';if(status)meta.append(status);if(budget)meta.append(budget);heading?.after(meta);
@@ -125,8 +114,6 @@
  }
  function refresh(){finance();life();for(const id of ['smartbuy','moneycoach']){const host=$('#view-'+id),intro=host&&$('.'+(id==='smartbuy'?'smartbuy':'moneycoach')+'-intro',host),help=intro?.closest('.memento-disclosure');if(help&&help.parentElement===host&&help!==host.lastElementChild)host.append(help);}}
  document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  // A chosen calendar day reveals the corresponding duty detail even when the roster is collapsed.
-  if(b.matches('[data-gcal-day]')){const show=()=>{const d=$('#lifeApp[data-life-view=agenda] [data-ml-fold=agenda-roster]');if(d)d.open=true;};show();requestAnimationFrame(show);}
   if(['addGoal','addGoalInline'].includes(b.id))$('#ml-planning')?.mlSelect?.('goals');
   if(['addBill','addBillInline'].includes(b.id))$('#ml-planning')?.mlSelect?.('payments');
   if(b.id==='receiptApplyJson')$('#ml-receipts')?.mlSelect?.('check');
