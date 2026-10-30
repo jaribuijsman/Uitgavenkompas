@@ -2898,9 +2898,10 @@ function paintTodayAppointments(){
   const items=appointmentItemsForDay(iso,remote),open=items.filter(e=>!e.done),done=items.filter(e=>e.done);
   const status=window.MementoGoogleCalendar?.todayState?.()||{connected:false,previous:false,loading:false};
   const render=e=>renderUnifiedAppointmentItem(e.x,e.source,{carried:e.carried});
-  const hint=!status.connected&&iso===today()?(status.previous?'<button class="memento-inline-link" data-memento-gcal-connect="true" type="button">Google-agenda opnieuw verbinden</button>':'<button class="memento-inline-link" data-life-view="agenda" type="button">Google-agenda verbinden bij Agenda</button>'):
-   (status.loading?'Google-afspraken laden…':(!open.length?'Geen open afspraken gepland':''));
-  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+dutyBadge(iso)+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(open.length?'<div class="memento-unified-list">'+open.map(render).join('')+'</div>':'')+(done.length?'<details class="memento-completed-appointments"><summary>Afgeronde afspraken ('+done.length+')</summary><div class="memento-unified-list">'+done.map(render).join('')+'</div></details>':'')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
+  const connectLabel=status.connected||status.previous?'Google-agenda opnieuw verbinden':'Google-agenda verbinden';
+  const connect=iso===today()?'<button class="memento-calendar-connect" data-memento-gcal-connect="true" type="button" aria-label="'+connectLabel+'" title="'+connectLabel+'"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#fff" d="M12 12h24v24H12z"/><path fill="#4285f4" d="M36 12H12v24H5V8a3 3 0 0 1 3-3h28z"/><path fill="#1967d2" d="M36 5h4a3 3 0 0 1 3 3v4h-7z"/><path fill="#fbbc04" d="M36 12h7v24h-7z"/><path fill="#34a853" d="M36 36v7H12v-7z"/><path fill="#188038" d="M5 36h7v7H8a3 3 0 0 1-3-3z"/><path fill="#ea4335" d="M36 36v7l7-7z"/><path fill="#4285f4" d="M18.6 29.8c-1.8 0-3.2-.9-3.8-2.4l1.8-.8c.4.9 1 1.3 2 1.3 1.1 0 1.8-.6 1.8-1.5s-.8-1.5-2-1.5h-1v-1.8h1c1 0 1.7-.5 1.7-1.4s-.6-1.4-1.6-1.4c-.9 0-1.5.4-1.8 1.2l-1.8-.8c.6-1.5 1.9-2.3 3.6-2.3 2.2 0 3.7 1.3 3.7 3.2 0 1.1-.6 1.9-1.5 2.4 1.1.5 1.8 1.4 1.8 2.6 0 1.9-1.6 3.2-3.9 3.2zm9.1-.2v-8.4l-2 1.4-1-1.6 3.4-2.4h1.7v11z"/></svg></button>':'';
+  const hint=status.loading?'Google-afspraken laden…':(!open.length?'Geen open afspraken gepland':'');
+  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+dutyBadge(iso)+connect+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(open.length?'<div class="memento-unified-list">'+open.map(render).join('')+'</div>':'')+(done.length?'<details class="memento-completed-appointments"><summary>Afgeronde afspraken ('+done.length+')</summary><div class="memento-unified-list">'+done.map(render).join('')+'</div></details>':'')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
   el.innerHTML+=window.MementoFitnessBridge?.dayHTML(iso,iso===today())||'';
  const count=root.querySelector('[data-memento-total="'+iso+'"]');if(count){const n=Number(count.dataset.tasks)||0;count.textContent=n+' '+(n===1?'taak':'taken')+' · '+open.length+' '+(open.length===1?'afspraak':'afspraken')}
  }
@@ -4231,7 +4232,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 </script>
 
 <link rel="stylesheet" href="./assets/memento-tokens.css?v=20261029-scroll-v1">
-<link rel="stylesheet" href="./assets/memento-ui.css?v=20261030-task-event-parity-v1">
+<link rel="stylesheet" href="./assets/memento-ui.css?v=20261030-calendar-header-v1">
 <script src="./assets/memento-ui.js?v=20261029-visual-repair-v1"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261029-scroll-v1"></script>
 <style id="memento-diary-shortcut-20261029">
@@ -4241,7 +4242,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut:focus-visible{outline:2px solid #bdd3c2;outline-offset:2px}
 @media(max-width:380px){#lifeApp .memento-capture-card .memento-capture-kinds button{padding:6px 6px;font-size:12px}}
 </style>
-<link rel="stylesheet" href="./assets/memento-glass.css?v=20261030-task-event-parity-v1">
+<link rel="stylesheet" href="./assets/memento-glass.css?v=20261030-calendar-header-v1">
 <link rel="stylesheet" href="./assets/memento-layout.css?v=20261030-notes-cover-v1">
 <script src="./assets/memento-disclosure.js?v=20261029-recovery-v2"></script>
 <script src="./assets/memento-layout.js?v=20261029-release-v1"></script>
