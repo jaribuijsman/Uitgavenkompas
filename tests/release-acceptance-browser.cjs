@@ -51,7 +51,7 @@ async function audit(page,screen,width,report){
   }
   await nav(page,'finance','transactions');await page.locator('#addTransaction').click();await audit(page,'transaction-dialog',width,report);await page.locator('#txDescription').focus();await page.keyboard.press('Escape');await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
   await nav(page,'life','tasks');await page.locator('#lifeAdd').click();await audit(page,'task-dialog',width,report);await page.locator('#lifeTaskTitle').focus();await page.keyboard.press('Escape');await page.locator('#lifeDialog').waitFor({state:'hidden'});
-  await nav(page,'life','agenda');await page.locator('[data-mg-agenda=month]').click();await audit(page,'calendar-month',width,report);
+  await nav(page,'life','agenda');assert(await page.locator('.memento-agenda-month-layout').isVisible());await audit(page,'calendar-month',width,report);
   await nav(page,'life','fitness');await page.locator('[data-fit=tab][data-id=plan]').click();await audit(page,'fitness-plan',width,report);await page.locator('[data-fit=tab][data-id=progress]').click();await audit(page,'fitness-progress',width,report);
   const after=await page.evaluate(()=>({finance:localStorage.getItem('uitgavenkompas_v1'),life:localStorage.getItem('compass_life_preview_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));assert.deepEqual(after,before,'Read-only navigation and audits preserve exact guarded data');await ctx.close();console.log('PASS release acceptance '+width);
  }

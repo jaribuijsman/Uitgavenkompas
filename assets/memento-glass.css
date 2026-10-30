@@ -58,13 +58,6 @@ body .mg-recipe-check input{width:22px;height:22px;min-height:22px!important;acc
 body .mg-recipe-check:has(input:checked) span{text-decoration:line-through;color:#aec3b1}
 body .mg-recipe-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin:10px 0}
 body .mg-recipe-tools label{min-width:110px;flex:1}
-body #lifeApp .mg-agenda-tools{display:flex;gap:6px;margin:8px 0}
-body #lifeApp .mg-agenda-tools button{min-height:44px;flex:1}
-body #lifeApp .mg-agenda-tools button[aria-pressed=true]{background:#c4dfbb;color:#173b25}
-body #lifeApp[data-mg-agenda=list] .memento-cal-grid,body #lifeApp[data-mg-agenda=list] .memento-roster-legend{display:none!important}
-body #lifeApp .mg-roster-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:8px 0}
-body #lifeApp .mg-roster-strip button{min-height:48px;border-radius:10px;background:#173d2d;color:#edf4e9;border:1px solid var(--mg-line)}
-body #lifeApp .mg-roster-strip button[aria-pressed=true]{background:#c4dfbb;color:#173b25}
 body #lifeApp .ft-session-progress{margin-bottom:12px}
 body #lifeApp .ft-exercise-panel.mg-exercise-fold>summary{font-size:15px;font-weight:650;min-height:54px;cursor:pointer}
 body #lifeApp .ft-exercise-panel.mg-exercise-fold[open]>summary{border-bottom:1px solid var(--mg-line);margin-bottom:12px}
@@ -140,9 +133,6 @@ body #lifeApp #lifeWishResults .life-grid{grid-template-columns:1fr;gap:10px}
 body #lifeApp .mg-wish-card .life-card-actions{display:flex;align-items:start;gap:8px;flex-wrap:wrap}
 body #lifeApp .mg-wish-card .mg-fold{margin:0}
 body #lifeApp .mg-wish-card p{font-size:13px;margin:7px 0}
-body #lifeApp .mg-roster-strip button{font:inherit;font-size:12px;padding:5px 2px}
-body #lifeApp .mg-roster-strip button span{display:block;font-size:11px}
-body #lifeApp .mg-roster-detail{font-size:13px;line-height:1.5;color:var(--mg-muted);margin:8px 0}
 body #lifeApp .mg-exercise-fold>summary{font-size:15px;font-weight:650;min-height:48px;cursor:pointer}
 body #lifeApp .mg-exercise-fold[open]>summary{border-bottom:1px solid var(--mg-line);margin-bottom:12px;padding-bottom:10px}
 body #view-transactions #txSummary{display:flex;gap:10px;flex-wrap:wrap;margin:9px 0}
@@ -170,7 +160,6 @@ body #lifeApp .memento-task-tabs .mg-task-overviews{flex:1.4 1 120px;min-width:0
 body #lifeApp .mg-task-overviews>summary{min-height:44px;box-sizing:border-box;padding:10px;font-size:13px;white-space:nowrap;overflow-wrap:normal}
 body #lifeApp .mg-task-overviews .mg-fold-body{padding:6px;gap:6px}
 body #lifeApp .mg-task-overviews .mg-fold-body>button{width:100%;font-size:13px;white-space:normal;min-height:44px}
-body #lifeApp .mg-agenda-tools button{border:1px solid var(--mg-line);border-radius:12px;padding:10px;font:inherit;background:#173d2de0;color:var(--mg-ink)}
 body #lifeApp .memento-cal-intro{flex-wrap:wrap;gap:10px}
 body #lifeApp .memento-cal-intro>div{flex:1 1 200px;min-width:0}
 body #lifeApp[data-life-view=agenda] .memento-cal-status{flex:0 0 auto;max-width:none;white-space:nowrap;overflow-wrap:normal;align-self:flex-start}

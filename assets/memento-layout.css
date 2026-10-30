@@ -67,11 +67,7 @@ body #lifeApp .ml-wish-row h2{font-size:16px}
 body #lifeApp .ml-wish-row .mg-fold>summary{min-height:44px;padding:9px 11px}
 body #lifeApp .ml-wish-row .life-card-actions{gap:6px}
 body #lifeApp .ml-wish-row .life-btn{min-height:44px!important;font-size:12px}
-body #lifeApp .memento-calendar-panel>.memento-cal-intro{display:none}
 body #lifeApp .memento-calendar-panel>.memento-gcal-day-section{margin:12px 0}
-body #lifeApp .ml-agenda-add{min-height:46px;padding:10px 14px;border:1px solid var(--mg-line);border-radius:12px;background:#c4dfbb;color:#173b25;font:inherit;font-weight:650}
-body #lifeApp[data-mg-agenda=month] .memento-cal-grid{display:grid!important}
-body #lifeApp[data-mg-agenda=month] [data-ml-fold=agenda-month]{display:block}
 body #lifeApp .kc-quick-optional>.mg-fold-body{padding:12px}
 body #lifeApp .kc-quick-optional .kc-quick{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none}
 body #lifeApp .kc-collection-row.kc-art-row{min-height:82px}
@@ -89,7 +85,7 @@ body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font
  body #view-moneycoach .moneycoach-layout>.card,body #view-smartbuy .smartbuy-layout>.card{margin-bottom:12px}
 }
 
-body #lifeApp[data-life-view=agenda] .life-page-head{display:flex!important}
+body #lifeApp[data-life-view=agenda] .life-page-head{display:none!important}
 
 body #lifeApp .ml-future-count{margin-left:auto;font-size:12px;color:var(--mg-muted)}
 
@@ -148,3 +144,44 @@ body #view-dashboard .m9-context{font-size:11px!important;margin:6px 0 10px!impo
 body #view-dashboard .m9-slide{height:180px!important}
 body #view-dashboard .m9-net{padding:10px 0 5px}
 body #view-dashboard .m9-pair{padding-bottom:10px}
+
+/* Agenda: a directly navigable month, without day-list or roster controls. */
+body #lifeApp[data-life-view=agenda] .memento-agenda-month-layout{width:100%;box-sizing:border-box;padding:12px!important;overflow:hidden}
+/* Seven calendar targets remain >=44px at 360px after container gutters. */
+@media(max-width:380px){body #lifeApp[data-life-view=agenda] .memento-agenda-month-layout{padding:6px!important}}
+body #lifeApp[data-life-view=agenda] .memento-cal-heading{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;margin:0 0 12px}
+body #lifeApp[data-life-view=agenda] .memento-cal-heading h2{font:inherit;font-size:clamp(24px,6vw,29px);font-weight:800;color:#eef8ee;margin:0;letter-spacing:-.5px}
+body #lifeApp[data-life-view=agenda] .memento-cal-heading-actions{display:flex;align-items:center;gap:8px;flex:none}
+body #lifeApp[data-life-view=agenda] .memento-agenda-add{min-height:44px;padding:8px 12px;border:1px solid #b6e5bb;border-radius:12px;background:#c4dfbb;color:#173b25;font:inherit;font-size:14px;font-weight:750;white-space:nowrap;cursor:pointer}
+body #lifeApp[data-life-view=agenda] .memento-cal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:5px;flex-wrap:nowrap;margin:0 0 8px}
+body #lifeApp[data-life-view=agenda] .memento-cal-toolbar h3{flex:1 1 auto;min-width:0;text-align:center;text-transform:capitalize;font-size:clamp(16px,4.5vw,19px);white-space:nowrap}
+body #lifeApp[data-life-view=agenda] .memento-cal-toolbar button{flex:0 0 44px;min-width:44px;min-height:44px;padding:0;border:1px solid #496d54;border-radius:12px;background:#234031;color:#e8f3e8;font:inherit;font-size:25px;cursor:pointer}
+body #lifeApp[data-life-view=agenda] .memento-cal-toolbar .memento-cal-today{flex:0 0 auto;min-width:54px;padding:0 7px;font-size:12px}
+body #lifeApp[data-life-view=agenda] .memento-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;margin:0}
+body #lifeApp[data-life-view=agenda] .memento-cal-weekday{text-align:center;padding:5px 0 7px;font-size:11px;color:#c0d4c2}
+body #lifeApp[data-life-view=agenda] button.memento-cal-day{display:flex;min-width:0;min-height:46px;height:46px;flex-direction:column;justify-content:center;align-items:center;gap:2px;padding:3px 0;border:1px solid transparent;border-radius:12px;background:transparent;color:#e6f3e8;font:inherit;font-size:15px;cursor:pointer}
+body #lifeApp[data-life-view=agenda] .memento-cal-day.muted{min-height:46px;background:transparent;border:0}
+body #lifeApp[data-life-view=agenda] button.memento-cal-day.is-today:not(.selected){border-color:#659c77;background:#2d5840}
+body #lifeApp[data-life-view=agenda] button.memento-cal-day.selected{background:#c4dfbb;color:#173b25;border-color:#c4dfbb;font-weight:800;box-shadow:none}
+body #lifeApp[data-life-view=agenda] button.memento-cal-day.has-gcal-event .memento-cal-dots{background:#bce8be;width:5px;height:5px;border-radius:50%}
+body #lifeApp[data-life-view=agenda] button.memento-cal-day.selected.has-gcal-event .memento-cal-dots{background:#1a4e2c}
+body #lifeApp[data-life-view=agenda] .memento-gcal-day-section{min-height:0;margin:12px 0 0;padding-top:12px;border-top:1px solid #8da99945}
+body #lifeApp[data-life-view=agenda] .memento-gcal-day-head{align-items:baseline;gap:8px}
+body #lifeApp[data-life-view=agenda] .memento-gcal-day-head h3{font-size:clamp(15px,4vw,18px);overflow-wrap:anywhere}
+body #lifeApp[data-life-view=agenda] #memento-gcal-count{white-space:nowrap;font-size:12px}
+body #lifeApp[data-life-view=agenda] #memento-gcal-events{gap:8px}
+body #lifeApp[data-life-view=agenda] #memento-gcal-events .memento-unified-event{min-width:0}
+body #lifeApp[data-life-view=agenda] #memento-gcal-tools{display:flex;align-items:center;flex:none;margin:0}
+body #lifeApp[data-life-view=agenda] .memento-gcal-menu{position:static;margin:0}
+body #lifeApp[data-life-view=agenda] .memento-gcal-menu>summary{position:relative;display:grid;place-items:center;list-style:none;width:44px;height:44px;box-sizing:border-box;border:1px solid #56775e;border-radius:12px;background:#244333;cursor:pointer}
+body #lifeApp[data-life-view=agenda] .memento-gcal-menu>summary::-webkit-details-marker{display:none}
+body #lifeApp[data-life-view=agenda] .memento-gcal-menu>summary svg{width:26px;height:26px}
+body #lifeApp[data-life-view=agenda] .memento-gcal-indicator{position:absolute;right:4px;bottom:4px;width:8px;height:8px;border-radius:50%;background:#819b8b;border:1px solid #173b25}
+body #lifeApp[data-life-view=agenda] .memento-gcal-indicator.is-connected{background:#a4edaa}
+body #lifeApp[data-life-view=agenda] .memento-gcal-popover{position:absolute;z-index:15;right:0;top:calc(100% + 6px);width:min(272px,calc(100vw - 58px));box-sizing:border-box;display:grid;gap:7px;padding:13px;border:1px solid #567c62;border-radius:14px;background:#183827;box-shadow:0 12px 28px #07190eaa}
+body #lifeApp[data-life-view=agenda] .memento-gcal-menu:not([open]) .memento-gcal-popover{display:none}
+body #lifeApp[data-life-view=agenda] .memento-gcal-popover strong{font-size:14px;color:#f0f8ee}
+body #lifeApp[data-life-view=agenda] .memento-gcal-popover p{font-size:12px;color:#bcd3be;margin:0 0 4px}
+body #lifeApp[data-life-view=agenda] .memento-gcal-popover .gcal-btn{min-height:44px;justify-content:flex-start;text-align:left;padding:8px 10px;font-size:13px;border-radius:10px}
+body #lifeApp[data-life-view=agenda] button:focus-visible,body #lifeApp[data-life-view=agenda] summary:focus-visible{outline:2px solid #c4dfbb;outline-offset:2px}
+@media(max-width:370px){body #lifeApp[data-life-view=agenda] .memento-cal-heading h2{font-size:23px}body #lifeApp[data-life-view=agenda] .memento-agenda-add{font-size:13px;padding-inline:9px}body #lifeApp[data-life-view=agenda] .memento-cal-toolbar .memento-cal-today{min-width:49px;padding-inline:4px;font-size:11px}}
