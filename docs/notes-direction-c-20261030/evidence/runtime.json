@@ -1,0 +1,16 @@
+{
+  "baseline": "03fd10052f1e99b370f99a50a2b503fbb2cf8633",
+  "adjacentPixelIdentical393": {
+    "today": true,
+    "tasks": true,
+    "agenda": true
+  },
+  "runtimeSha256": {
+    "index.html": "c7cba4d4b09a9c072cab040909cc8733aa24dbfaae70b6a9f0f71a5dcb439ff8",
+    "sw.js": "4660a39148185297caa5861f0a95699dbd55e906bad7e1c8fff6c6bd266f042c",
+    "assets/memento-knowledge.js": "2736cc1afbecb4453f1e92e734f7de564f4adc4563bc78e58f795cf69cf91b7d",
+    "assets/memento-knowledge.css": "7a3e558e58207e7eb49ad4b71a419e7e709cdc977b556f69bd559407279d1543",
+    "assets/memento-layout.css": "27f89364087715da5ac43b8a3cf8dafeb17ba2e9a3609f851a086b65776293f3",
+    "assets/memento-glass.css": "829a16c036344e16f59616c038f92c2c4887e520322062c43438c897eacfc99d"
+  }
+}

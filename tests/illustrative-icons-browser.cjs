@@ -105,8 +105,8 @@ try{
  checks.push("Five root forest-background cards keep labels and display distinct collection symbols");
  await capture(page,"knowledge-roots");
  await page.locator('.kc-art-row[data-id="kc2-levenspad"]').click();
- assert.equal(await page.locator(".kc-art-row .memento-illustrative-icon").count(),5);
- const distinct=await page.locator(".kc-art-row .memento-illustrative-icon").evaluateAll(list=>new Set(list.map(e=>[...e.querySelectorAll("path")].map(x=>x.getAttribute("d")).join("|"))).size);
+ assert.equal(await page.locator(".kc-folder-row .memento-illustrative-icon").count(),5);
+ const distinct=await page.locator(".kc-folder-row .memento-illustrative-icon").evaluateAll(list=>new Set(list.map(e=>[...e.querySelectorAll("path")].map(x=>x.getAttribute("d")).join("|"))).size);
  assert(distinct>=4);
  checks.push("Levenspad children are recognizable and no longer reuse their parent icon blindly");
  await capture(page,"knowledge-children");
@@ -115,9 +115,9 @@ try{
  const visited=new Set(['kc2-levenspad']);
  for(const root of roots){
   await knowledgeHome();await page.locator('.kc-art-row[data-id="kc2-'+root+'"]').click();
-  const ids=await page.locator('.kc-art-row').evaluateAll(rows=>rows.map(n=>n.dataset.id));visited.add('kc2-'+root);
+  const ids=await page.locator('.kc-folder-row').evaluateAll(rows=>rows.map(n=>n.dataset.id));visited.add('kc2-'+root);
   if(root!=='levenspad')await capture(page,'knowledge-'+root);
-  for(const id of ids){await page.locator('.kc-art-row[data-id="'+id+'"]').click();visited.add(id);await noOverflow();await page.locator('[data-kc="back"]').click();}
+  for(const id of ids){await page.locator('.kc-folder-row[data-id="'+id+'"]').click();visited.add(id);await noOverflow();await page.locator('[data-kc="back"]').click();}
  }
  assert.equal(visited.size,23);checks.push('All 23 categories open through unchanged IDs');
  await knowledgeHome();await page.locator('.kc-art-row[data-id="kc2-levenspad"]').click();

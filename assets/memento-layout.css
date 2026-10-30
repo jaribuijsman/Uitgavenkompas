@@ -70,8 +70,6 @@ body #lifeApp .ml-wish-row .life-btn{min-height:44px!important;font-size:12px}
 body #lifeApp .memento-calendar-panel>.memento-gcal-day-section{margin:12px 0}
 body #lifeApp .kc-quick-optional>.mg-fold-body{padding:12px}
 body #lifeApp .kc-quick-optional .kc-quick{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none}
-body #lifeApp .kc-collection-row.kc-art-row{min-height:82px}
-body #lifeApp .kc-art-row .kc-collection-icon{display:none}
 body #lifeApp .kc-hub-shortcuts{display:block}
 body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font-size:12px;letter-spacing:.08em;margin:8px 4px 0}
 @media(max-width:700px){
@@ -79,9 +77,6 @@ body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font
  body[data-compass-area=finance] .app .topbar .month-select{padding:7px 9px;font-size:12px!important;min-height:38px!important}
  body #view-analysis .analysis-stats-grid .stat-value{font-size:23px}
  body #view-accounts .ml-account-row>.balance-number{font-size:20px}
- body #lifeApp .kc-header .kc-head-label>span{display:none}
- body #lifeApp .kc-header h2{font-size:27px}
- body #lifeApp .kc-header{margin-bottom:12px}
  body #view-moneycoach .moneycoach-layout>.card,body #view-smartbuy .smartbuy-layout>.card{margin-bottom:12px}
 }
 
@@ -114,9 +109,6 @@ body #view-moneycoach #moneyCoachQuestion{min-height:100px}
 body #lifeApp .memento-gcal-tools .memento-cal-status,body #lifeApp .mg-fold>summary .memento-cal-status{margin-left:auto;font-size:10px}
 body #lifeApp .mg-fold>.mg-fold-body .account-card{backdrop-filter:none!important}
 
-body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon{display:flex!important;width:64px!important;height:64px!important;flex:0 0 64px;align-items:center;justify-content:center;border:0;background:transparent!important}
-body #lifeApp .kc-collection-row.kc-art-row .kc-collection-icon svg{width:60px!important;height:60px!important}
-body #lifeApp .kc-collection-row.kc-art-row:has(.kc-art-wrap) .kc-collection-icon{display:none!important}
 body #lifeApp .shopping-category{padding:10px 12px;margin:10px 0;border:1px solid var(--mg-line);border-radius:21px;background:var(--mg-surface)}
 body #lifeApp .shopping-category h3{margin:3px 0 9px}
 body #lifeApp .shopping-category .shopping-rows{background:transparent!important;border:0!important;box-shadow:none!important}

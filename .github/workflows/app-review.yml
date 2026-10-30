@@ -42,7 +42,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        suite: [layout-completion-browser, visual-layout-browser, patches-001-002-004-browser, app-review-browser, masterplan-browser, storage-safety-browser, memento-category-browser, fitness-browser, knowledge-v2-browser, knowledge-covers-browser, illustrative-icons-browser, quickfit-browser, journal-upgrade-browser, journal-selfcare-browser, memento-start-browser, visual-browser, recovery-browser, calendar-header-browser, release-acceptance-browser, glass-rendering-browser]
+        suite: [layout-completion-browser, visual-layout-browser, patches-001-002-004-browser, app-review-browser, masterplan-browser, storage-safety-browser, memento-category-browser, fitness-browser, knowledge-v2-browser, knowledge-covers-browser, notes-direction-c-browser, illustrative-icons-browser, quickfit-browser, journal-upgrade-browser, journal-selfcare-browser, memento-start-browser, visual-browser, recovery-browser, calendar-header-browser, release-acceptance-browser, glass-rendering-browser]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
