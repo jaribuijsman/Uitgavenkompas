@@ -71,6 +71,7 @@ let notesIndex=-1,restoreTransientBack=0;
 const historyScreens=new Set(['home','collection','detail','all','inbox','archive','trash','pinned','search','collections']);
 function resetListFilters(){filtersExpanded=false;query="";kindFilter="";tagFilter="";viewOverride="";sort="recent";}
 function routeKey(s=screen,cid=collectionId,nid=selectedId){return s+(s==='collection'?':'+cid:s==='detail'?':'+nid:'');}
+function listContext(s,cid,nid){return s==='detail'?C.collectionOf(read(),read().notes.find(n=>n.id===nid)||{}):s==='collection'?cid:s;}
 function syncNotesHistory(){
  if(!root.history?.pushState||!historyScreens.has(screen)||restoreTransientBack)return;
  const next={screen,collectionId,selectedId,key:routeKey()};
@@ -96,7 +97,7 @@ root.addEventListener('popstate',event=>{
  }
  if(dirty&&!flush()){restoreTransientBack=2;root.history.go(notesIndex-target.index);return;}
  const next=notesTrail[target.index];
- if(next.screen!==screen||next.collectionId!==collectionId)resetListFilters();
+ if(listContext(screen,collectionId,selectedId)!==listContext(next.screen,next.collectionId,next.selectedId))resetListFilters();
  notesIndex=target.index;screen=next.screen;collectionId=next.collectionId;selectedId=next.selectedId;
  notice="";render();
 });

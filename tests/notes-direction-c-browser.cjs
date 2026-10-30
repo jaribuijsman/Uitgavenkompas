@@ -70,7 +70,10 @@ async function fixture(){
    await page.locator('[data-kc-input=search]').fill('bestaat-niet');await page.waitForTimeout(250);
    assert.equal(await page.getByText('Geen resultaten',{exact:true}).count(),1);await shot('no-results');
    await page.locator('.kc-empty [data-kc=clear-filters]').click();assert.equal(await page.locator('.kc-item').count(),3);
-   await page.locator('.kc-item').first().click();await page.locator('[data-kc=back]').click();assert.equal(await page.locator('.kc-item').count(),3);
+   await page.locator('[data-kc-input=search]').fill('Fictief');
+   await page.locator('.kc-item').first().click();await page.locator('[data-kc=back]').click();assert.equal(await page.locator('.kc-item').count(),1);
+   assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
+   await page.locator('[data-kc-input=search]').fill('');assert.equal(await page.locator('.kc-item').count(),3);
    await page.locator('[data-kc-input=search]').fill('bestaat-niet');await page.waitForTimeout(250);
    await page.locator('[data-kc=back]').click();
    assert.match(await page.locator('.kc-count').innerText(),/^5 notities.*3 subverzamelingen/);
