@@ -2962,7 +2962,7 @@ function taskRow(t){
  const meta=[esc(t.category||'Persoonlijk')];
  if(t.room&&t.room!=='Hele huis')meta.push(esc(t.room));
  if(t.kind==='routine'&&t.repeat!=='none')meta.push('↻ '+esc(repeatLabel(t)));
- if(late&&t.date)meta.push(esc(fmt(t.date)));
+ if(late&&t.date&&!inDay)meta.push(esc(fmt(t.date)));
  if(late)meta.push('<span class="life-late-text">'+esc(late)+'</span>');
  else if(t.date&&!inDay)meta.push(fmt(t.date));
  if(t.steps?.length)meta.push(t.steps.filter(x=>x.done).length+' van '+t.steps.length+' stappen');
