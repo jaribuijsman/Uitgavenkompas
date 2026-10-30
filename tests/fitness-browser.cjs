@@ -98,7 +98,7 @@ const server = http.createServer((req, res) => {
     await page
       .locator('#mementoQuickNav [data-memento-dest="life:agenda"]')
       .click();
-    await page.locator("[data-mg-agenda=month]").click();
+    assert(await page.locator(".memento-agenda-month-layout").isVisible());
     await page
       .locator(`[data-gcal-day="${(await stored()).fitness.bookings[0].date}"]`)
       .click();
