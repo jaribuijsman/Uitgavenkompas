@@ -8,7 +8,7 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   await targets("#compassAreaBar button");if(width<=800)await targets("#mementoQuickNav button");
   checks.push("Daily appointments precede inspiration; primary navigation targets >=44px");
   await navigate(page,"life","groceries");await targets(".shopping-check,.shopping-icon-button,.shopping-row-title");
-  await navigate(page,"life","agenda");await page.locator('[data-mg-agenda=month]').click();await targets("button.memento-cal-day");await shot(page,'agenda-month',false);checks.push("Shopping controls and seven-column calendar targets >=44px");
+  await navigate(page,"life","agenda");assert(await page.locator('.memento-agenda-month-layout').isVisible());await targets("button.memento-cal-day");await shot(page,'agenda-month',false);checks.push("Shopping controls and seven-column calendar targets >=44px");
   await navigate(page,"finance","transactions");
   await onScreen('#txList .tx-card-title');
   const firstTitle=await page.locator('#txList .tx-card-title').first().boundingBox(),bottomNav=await page.locator('#mementoQuickNav').boundingBox();if(width<=800)assert(firstTitle.y+firstTitle.height<=bottomNav.y,"First transaction title stays above bottom navigation");
