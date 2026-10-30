@@ -1,0 +1,1605 @@
+[
+  {
+    "width": 360,
+    "name": "navigation",
+    "beforeSize": [
+      360,
+      1480
+    ],
+    "afterSize": [
+      360,
+      1480
+    ],
+    "differenceBounds": [
+      201,
+      11,
+      343,
+      56
+    ]
+  },
+  {
+    "width": 360,
+    "name": "fitness-progress",
+    "beforeSize": [
+      360,
+      1480
+    ],
+    "afterSize": [
+      360,
+      1480
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "fitness-plan",
+    "beforeSize": [
+      360,
+      1686
+    ],
+    "afterSize": [
+      360,
+      1686
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "transaction-modal",
+    "beforeSize": [
+      360,
+      2121
+    ],
+    "afterSize": [
+      360,
+      2121
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "editor-short",
+    "beforeSize": [
+      360,
+      1307
+    ],
+    "afterSize": [
+      360,
+      1307
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "editor",
+    "beforeSize": [
+      360,
+      1377
+    ],
+    "afterSize": [
+      360,
+      1377
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "note",
+    "beforeSize": [
+      360,
+      1189
+    ],
+    "afterSize": [
+      360,
+      1189
+    ],
+    "differenceBounds": [
+      217,
+      796,
+      220,
+      802
+    ]
+  },
+  {
+    "width": 360,
+    "name": "document",
+    "beforeSize": [
+      360,
+      1190
+    ],
+    "afterSize": [
+      360,
+      1190
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "recipe",
+    "beforeSize": [
+      360,
+      1172
+    ],
+    "afterSize": [
+      360,
+      1172
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "checklist",
+    "beforeSize": [
+      360,
+      852
+    ],
+    "afterSize": [
+      360,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "knowledge-list",
+    "beforeSize": [
+      360,
+      852
+    ],
+    "afterSize": [
+      360,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "settings",
+    "beforeSize": [
+      360,
+      866
+    ],
+    "afterSize": [
+      360,
+      866
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "fitness",
+    "beforeSize": [
+      360,
+      1912
+    ],
+    "afterSize": [
+      360,
+      1912
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "knowledge",
+    "beforeSize": [
+      360,
+      1609
+    ],
+    "afterSize": [
+      360,
+      1609
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "planning",
+    "beforeSize": [
+      360,
+      1398
+    ],
+    "afterSize": [
+      360,
+      1398
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "budgets",
+    "beforeSize": [
+      360,
+      1402
+    ],
+    "afterSize": [
+      360,
+      1402
+    ],
+    "differenceBounds": [
+      217,
+      800,
+      218,
+      802
+    ]
+  },
+  {
+    "width": 360,
+    "name": "moneycoach",
+    "beforeSize": [
+      360,
+      1273
+    ],
+    "afterSize": [
+      360,
+      1273
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "smartbuy",
+    "beforeSize": [
+      360,
+      1519
+    ],
+    "afterSize": [
+      360,
+      1519
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "finance-settings",
+    "beforeSize": [
+      360,
+      987
+    ],
+    "afterSize": [
+      360,
+      987
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "receipts",
+    "beforeSize": [
+      360,
+      920
+    ],
+    "afterSize": [
+      360,
+      920
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "accounts",
+    "beforeSize": [
+      360,
+      1282
+    ],
+    "afterSize": [
+      360,
+      1282
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "analysis",
+    "beforeSize": [
+      360,
+      1612
+    ],
+    "afterSize": [
+      360,
+      1612
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "transactions",
+    "beforeSize": [
+      360,
+      2121
+    ],
+    "afterSize": [
+      360,
+      2121
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "finance",
+    "beforeSize": [
+      360,
+      1893
+    ],
+    "afterSize": [
+      360,
+      1893
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "agenda",
+    "beforeSize": [
+      360,
+      1040
+    ],
+    "afterSize": [
+      360,
+      1040
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "wishes",
+    "beforeSize": [
+      360,
+      852
+    ],
+    "afterSize": [
+      360,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "groceries",
+    "beforeSize": [
+      360,
+      896
+    ],
+    "afterSize": [
+      360,
+      896
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "tasks",
+    "beforeSize": [
+      360,
+      916
+    ],
+    "afterSize": [
+      360,
+      916
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 360,
+    "name": "day",
+    "beforeSize": [
+      360,
+      1764
+    ],
+    "afterSize": [
+      360,
+      1716
+    ],
+    "differenceBounds": "different dimensions"
+  },
+  {
+    "width": 393,
+    "name": "navigation",
+    "beforeSize": [
+      393,
+      1472
+    ],
+    "afterSize": [
+      393,
+      1472
+    ],
+    "differenceBounds": [
+      1,
+      11,
+      376,
+      429
+    ]
+  },
+  {
+    "width": 393,
+    "name": "fitness-progress",
+    "beforeSize": [
+      393,
+      1472
+    ],
+    "afterSize": [
+      393,
+      1472
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "fitness-plan",
+    "beforeSize": [
+      393,
+      1669
+    ],
+    "afterSize": [
+      393,
+      1669
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "transaction-modal",
+    "beforeSize": [
+      393,
+      2121
+    ],
+    "afterSize": [
+      393,
+      2121
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "editor-short",
+    "beforeSize": [
+      393,
+      1307
+    ],
+    "afterSize": [
+      393,
+      1307
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "editor",
+    "beforeSize": [
+      393,
+      1377
+    ],
+    "afterSize": [
+      393,
+      1377
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "note",
+    "beforeSize": [
+      393,
+      1189
+    ],
+    "afterSize": [
+      393,
+      1189
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "document",
+    "beforeSize": [
+      393,
+      1190
+    ],
+    "afterSize": [
+      393,
+      1190
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "recipe",
+    "beforeSize": [
+      393,
+      1149
+    ],
+    "afterSize": [
+      393,
+      1149
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "checklist",
+    "beforeSize": [
+      393,
+      852
+    ],
+    "afterSize": [
+      393,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "knowledge-list",
+    "beforeSize": [
+      393,
+      852
+    ],
+    "afterSize": [
+      393,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "settings",
+    "beforeSize": [
+      393,
+      866
+    ],
+    "afterSize": [
+      393,
+      866
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "fitness",
+    "beforeSize": [
+      393,
+      1895
+    ],
+    "afterSize": [
+      393,
+      1895
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "knowledge",
+    "beforeSize": [
+      393,
+      1598
+    ],
+    "afterSize": [
+      393,
+      1598
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "planning",
+    "beforeSize": [
+      393,
+      1378
+    ],
+    "afterSize": [
+      393,
+      1378
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "budgets",
+    "beforeSize": [
+      393,
+      1378
+    ],
+    "afterSize": [
+      393,
+      1378
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "moneycoach",
+    "beforeSize": [
+      393,
+      1273
+    ],
+    "afterSize": [
+      393,
+      1273
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "smartbuy",
+    "beforeSize": [
+      393,
+      1519
+    ],
+    "afterSize": [
+      393,
+      1519
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "finance-settings",
+    "beforeSize": [
+      393,
+      972
+    ],
+    "afterSize": [
+      393,
+      972
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "receipts",
+    "beforeSize": [
+      393,
+      920
+    ],
+    "afterSize": [
+      393,
+      920
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "accounts",
+    "beforeSize": [
+      393,
+      1244
+    ],
+    "afterSize": [
+      393,
+      1244
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "analysis",
+    "beforeSize": [
+      393,
+      1619
+    ],
+    "afterSize": [
+      393,
+      1619
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "transactions",
+    "beforeSize": [
+      393,
+      2121
+    ],
+    "afterSize": [
+      393,
+      2121
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "finance",
+    "beforeSize": [
+      393,
+      1881
+    ],
+    "afterSize": [
+      393,
+      1881
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "agenda",
+    "beforeSize": [
+      393,
+      1028
+    ],
+    "afterSize": [
+      393,
+      1028
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "wishes",
+    "beforeSize": [
+      393,
+      852
+    ],
+    "afterSize": [
+      393,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "groceries",
+    "beforeSize": [
+      393,
+      896
+    ],
+    "afterSize": [
+      393,
+      896
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "tasks",
+    "beforeSize": [
+      393,
+      916
+    ],
+    "afterSize": [
+      393,
+      916
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 393,
+    "name": "day",
+    "beforeSize": [
+      393,
+      1722
+    ],
+    "afterSize": [
+      393,
+      1674
+    ],
+    "differenceBounds": "different dimensions"
+  },
+  {
+    "width": 412,
+    "name": "navigation",
+    "beforeSize": [
+      412,
+      1479
+    ],
+    "afterSize": [
+      412,
+      1479
+    ],
+    "differenceBounds": [
+      1,
+      11,
+      395,
+      429
+    ]
+  },
+  {
+    "width": 412,
+    "name": "fitness-progress",
+    "beforeSize": [
+      412,
+      1479
+    ],
+    "afterSize": [
+      412,
+      1479
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "fitness-plan",
+    "beforeSize": [
+      412,
+      1651
+    ],
+    "afterSize": [
+      412,
+      1651
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "transaction-modal",
+    "beforeSize": [
+      412,
+      2089
+    ],
+    "afterSize": [
+      412,
+      2089
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "editor-short",
+    "beforeSize": [
+      412,
+      1288
+    ],
+    "afterSize": [
+      412,
+      1288
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "editor",
+    "beforeSize": [
+      412,
+      1358
+    ],
+    "afterSize": [
+      412,
+      1358
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "note",
+    "beforeSize": [
+      412,
+      1189
+    ],
+    "afterSize": [
+      412,
+      1189
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "document",
+    "beforeSize": [
+      412,
+      1190
+    ],
+    "afterSize": [
+      412,
+      1190
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "recipe",
+    "beforeSize": [
+      412,
+      1149
+    ],
+    "afterSize": [
+      412,
+      1149
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "checklist",
+    "beforeSize": [
+      412,
+      852
+    ],
+    "afterSize": [
+      412,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "knowledge-list",
+    "beforeSize": [
+      412,
+      852
+    ],
+    "afterSize": [
+      412,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "settings",
+    "beforeSize": [
+      412,
+      852
+    ],
+    "afterSize": [
+      412,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "fitness",
+    "beforeSize": [
+      412,
+      1841
+    ],
+    "afterSize": [
+      412,
+      1841
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "knowledge",
+    "beforeSize": [
+      412,
+      1598
+    ],
+    "afterSize": [
+      412,
+      1598
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "planning",
+    "beforeSize": [
+      412,
+      1308
+    ],
+    "afterSize": [
+      412,
+      1308
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "budgets",
+    "beforeSize": [
+      412,
+      1378
+    ],
+    "afterSize": [
+      412,
+      1378
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "moneycoach",
+    "beforeSize": [
+      412,
+      1273
+    ],
+    "afterSize": [
+      412,
+      1273
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "smartbuy",
+    "beforeSize": [
+      412,
+      1504
+    ],
+    "afterSize": [
+      412,
+      1504
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "finance-settings",
+    "beforeSize": [
+      412,
+      972
+    ],
+    "afterSize": [
+      412,
+      972
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "receipts",
+    "beforeSize": [
+      412,
+      920
+    ],
+    "afterSize": [
+      412,
+      920
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "accounts",
+    "beforeSize": [
+      412,
+      1244
+    ],
+    "afterSize": [
+      412,
+      1244
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "analysis",
+    "beforeSize": [
+      412,
+      1614
+    ],
+    "afterSize": [
+      412,
+      1614
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "transactions",
+    "beforeSize": [
+      412,
+      2089
+    ],
+    "afterSize": [
+      412,
+      2089
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "finance",
+    "beforeSize": [
+      412,
+      1861
+    ],
+    "afterSize": [
+      412,
+      1861
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "agenda",
+    "beforeSize": [
+      412,
+      957
+    ],
+    "afterSize": [
+      412,
+      957
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "wishes",
+    "beforeSize": [
+      412,
+      852
+    ],
+    "afterSize": [
+      412,
+      852
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "groceries",
+    "beforeSize": [
+      412,
+      896
+    ],
+    "afterSize": [
+      412,
+      896
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "tasks",
+    "beforeSize": [
+      412,
+      912
+    ],
+    "afterSize": [
+      412,
+      912
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 412,
+    "name": "day",
+    "beforeSize": [
+      412,
+      1575
+    ],
+    "afterSize": [
+      412,
+      1527
+    ],
+    "differenceBounds": "different dimensions"
+  },
+  {
+    "width": 1280,
+    "name": "navigation",
+    "beforeSize": [
+      1280,
+      1476
+    ],
+    "afterSize": [
+      1280,
+      1476
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "fitness-progress",
+    "beforeSize": [
+      1280,
+      1476
+    ],
+    "afterSize": [
+      1280,
+      1476
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "fitness-plan",
+    "beforeSize": [
+      1280,
+      1406
+    ],
+    "afterSize": [
+      1280,
+      1406
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "transaction-modal",
+    "beforeSize": [
+      1280,
+      2063
+    ],
+    "afterSize": [
+      1280,
+      2063
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "editor-short",
+    "beforeSize": [
+      1280,
+      1239
+    ],
+    "afterSize": [
+      1280,
+      1239
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "editor",
+    "beforeSize": [
+      1280,
+      1239
+    ],
+    "afterSize": [
+      1280,
+      1239
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "note",
+    "beforeSize": [
+      1280,
+      1035
+    ],
+    "afterSize": [
+      1280,
+      1035
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "document",
+    "beforeSize": [
+      1280,
+      1090
+    ],
+    "afterSize": [
+      1280,
+      1090
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "recipe",
+    "beforeSize": [
+      1280,
+      1049
+    ],
+    "afterSize": [
+      1280,
+      1049
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "checklist",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "knowledge-list",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "settings",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "fitness",
+    "beforeSize": [
+      1280,
+      1769
+    ],
+    "afterSize": [
+      1280,
+      1769
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "knowledge",
+    "beforeSize": [
+      1280,
+      1552
+    ],
+    "afterSize": [
+      1280,
+      1552
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "planning",
+    "beforeSize": [
+      1280,
+      1247
+    ],
+    "afterSize": [
+      1280,
+      1247
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "budgets",
+    "beforeSize": [
+      1280,
+      1056
+    ],
+    "afterSize": [
+      1280,
+      1056
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "moneycoach",
+    "beforeSize": [
+      1280,
+      1192
+    ],
+    "afterSize": [
+      1280,
+      1192
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "smartbuy",
+    "beforeSize": [
+      1280,
+      1368
+    ],
+    "afterSize": [
+      1280,
+      1368
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "finance-settings",
+    "beforeSize": [
+      1280,
+      968
+    ],
+    "afterSize": [
+      1280,
+      968
+    ],
+    "differenceBounds": [
+      1060,
+      11,
+      1250,
+      56
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "receipts",
+    "beforeSize": [
+      1280,
+      968
+    ],
+    "afterSize": [
+      1280,
+      968
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "accounts",
+    "beforeSize": [
+      1280,
+      1125
+    ],
+    "afterSize": [
+      1280,
+      1125
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "analysis",
+    "beforeSize": [
+      1280,
+      1472
+    ],
+    "afterSize": [
+      1280,
+      1472
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "transactions",
+    "beforeSize": [
+      1280,
+      2063
+    ],
+    "afterSize": [
+      1280,
+      2063
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "finance",
+    "beforeSize": [
+      1280,
+      1802
+    ],
+    "afterSize": [
+      1280,
+      1802
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "agenda",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "wishes",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": [
+      15,
+      377,
+      222,
+      411
+    ]
+  },
+  {
+    "width": 1280,
+    "name": "groceries",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "tasks",
+    "beforeSize": [
+      1280,
+      900
+    ],
+    "afterSize": [
+      1280,
+      900
+    ],
+    "differenceBounds": null
+  },
+  {
+    "width": 1280,
+    "name": "day",
+    "beforeSize": [
+      1280,
+      1418
+    ],
+    "afterSize": [
+      1280,
+      1370
+    ],
+    "differenceBounds": "different dimensions"
+  }
+]

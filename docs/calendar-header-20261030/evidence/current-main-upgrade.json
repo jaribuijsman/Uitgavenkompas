@@ -1,0 +1,70 @@
+{
+  "baseline": "667577354f980232df195dd135cf4639b7811ad4",
+  "journeys": [],
+  "upgrade": {
+    "passed": true,
+    "currentCache": "memento-pwa-v75-20261030-calendar-header-v1",
+    "exactMainData": true,
+    "pinUnchanged": true,
+    "attachmentHash": "e8958efc053c366d02a53380c17e0e083c8d2b6f77da99b3d1aac1285d383878",
+    "oldCacheRemoved": true,
+    "legacyCacheIgnored": true,
+    "newAssetsAvailableOffline": true
+  },
+  "failure": null,
+  "upgradeTrace": [
+    {
+      "label": "online-new-worker",
+      "core": "object",
+      "duty": "function",
+      "scripts": [
+        "http://127.0.0.1:44157/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:44157/assets/memento-fitness.js?v=20261029-app-glass-v1"
+      ],
+      "caches": [
+        {
+          "name": "memento-pwa-v74-20261030-task-event-parity-v1",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": [
+            "http://127.0.0.1:44157/assets/memento-fitness-core.js?v=20261028-master-p4"
+          ]
+        },
+        {
+          "name": "uitgavenkompas-legacy-document",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": []
+        },
+        {
+          "name": "memento-pwa-v75-20261030-calendar-header-v1",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": [
+            "http://127.0.0.1:44157/assets/memento-fitness-core.js?v=20261028-master-p4"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "offline",
+      "core": "object",
+      "duty": "function",
+      "scripts": [
+        "http://127.0.0.1:44157/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:44157/assets/memento-fitness.js?v=20261029-app-glass-v1"
+      ],
+      "caches": [
+        {
+          "name": "uitgavenkompas-legacy-document",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": []
+        },
+        {
+          "name": "memento-pwa-v75-20261030-calendar-header-v1",
+          "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
+          "assets": [
+            "http://127.0.0.1:44157/assets/memento-fitness-core.js?v=20261028-master-p4"
+          ]
+        }
+      ]
+    }
+  ]
+}

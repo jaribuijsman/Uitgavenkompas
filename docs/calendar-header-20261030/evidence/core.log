@@ -1,0 +1,245 @@
+COMMAND node tests/app-review-core.cjs
+PASS real expenses and boundary transfers have separate amounts
+PASS joint received amount of 900 remains visible without calling transfer salary
+PASS creditcard purchase counts once and internal repayment counts zero
+PASS refunds and split categories reconcile to net expenses in cents
+PASS date scope, old metadata and the original array are untouched
+PASS zero is zero rather than fabricated data
+PASS quantity "2"
+PASS quantity "1,5"
+PASS quantity "1/2"
+PASS quantity "1 1/2"
+PASS quantity ""
+PASS quantity "naar smaak"
+PASS quantity "1/0"
+PASS quantity "2–3"
+PASS scale never changes an unknown amount or its unit
+PASS saved task selections accept optional metadata
+PASS invalid or duplicate saved selections are rejected before import
+17 app review core checks passed.
+COMMAND node tests/dictation-regression.cjs
+PASS shared dictation: progressive hypotheses, interim, pause restart, manual edit, stop, field isolation and approved targets
+COMMAND node tests/journal-selfcare-core.cjs
+JOURNAL_MANUAL_HEALTH_CORE_PASS wake-date mapping, preservation, clearing, backup, invalid inputs
+JOURNAL_SELFCARE_CORE_PASS legacy, check-in only, preservation, backup roundtrip, invalid values
+COMMAND node tests/memento-category-integrity.cjs
+PASS detect wrong parent
+PASS edit unrelated field keeps old value
+PASS do not erase unmatched subcategory on save
+PASS allow explicit clear
+PASS correct to valid parent
+PASS reject new incorrect combination
+PASS reject newly unknown categories
+PASS preserve historical unknown category
+PASS prevent removal of in-use subcategory
+PASS form retains old, validates on save and warns
+PASS one split row never overwrites the primary category
+PASS split removal is explicit and cannot silently discard split records
+PASS split rows are created only after user activates splitting
+PASS 13 category integrity cases
+COMMAND node tests/knowledge-covers.cjs
+PASS 30 offline scenes and auto-selection
+PASS unchanged IDs and compatible legacy collection fields
+PASS validated secure cover metadata
+PASS ZIP round trip and missing-file fail closed
+COMMAND node tests/pin-forest-regression.cjs
+PIN forest regression: six images, hourly Amsterdam rotation and weather/worker wiring OK
+COMMAND node tests/memento-regression.cjs
+PASS public starter data is empty
+PASS monthly budgets preserve legacy values without changing other months
+PASS budget groups stay independent and zero removes a monthly limit
+PASS refunds and internal transfers are handled correctly in scoped budget spending
+PASS weekly bills create every occurrence including the daylight-saving month
+PASS monthly payments retain month-end dates and respect start and quarterly intervals
+PASS bill payment history remains paid in both October and November
+PASS deleting a payment unpays its bill and safely restores receipt links
+PASS restoring an earlier payment cannot duplicate a replacement for the same bill occurrence
+PASS personal, joint and creditcard debt stay separate across repayment and salary totals
+PASS weekly reservation totals and cashflow agree
+PASS receipt matching requires compatible amount, date and merchant
+PASS legacy paid marker is retained without fabricating a transaction
+PASS Geldcoach keeps signed numeric totals through preview and prompt for zero, negative, positive and cents
+PASS financial renderers accept an empty state
+PASS PIN defaults to 15 minutes and expires at the actual inactivity deadline
+PASS all eight current Life views render from a genuinely empty start
+PASS old Life backups preserve existing tasks and receive empty missing collections
+PASS task deletion and restore retain steps and history
+PASS wish and grocery deletion are reversible and keep original product data
+PASS checklist text is escaped and item state is rendered
+PASS note conversion tracks destination without deleting its source
+PASS a failed financial save rolls back the in-memory mutation
+PASS corrupted financial storage is preserved until explicit recovery
+PASS demo edits do not persist or mix with the real financial data
+PASS research dossiers persist answers and link results back to the original wish
+PASS phase 2 cannot be approved with an empty profile
+PASS Life notifications expire after three seconds and replacing one cancels its timer
+PASS financial notifications also expire after three seconds
+PASS notice position reserves the real navigation height and safe-area space
+PASS transaction palette meets normal-text contrast for labels, fields and amounts
+PASS open local appointments follow Today for multiple days without changing the original date
+PASS checking and reopening a local appointment keeps a recoverable completed state
+PASS the checkbox click route marks the correct appointment
+PASS older appointment backups migrate to open without losing fields
+PASS future appointments do not appear early and completed future items do not become overdue
+PASS Google completion is local and separate for each recurring instance
+PASS tracked Google appointments survive a restart and remain open until checked
+PASS Google history is not automatically imported as a large backlog
+PASS successful refresh reconciles cancelled Google events without clearing unrelated dates
+PASS live and cached copies of the same Google event appear only once
+PASS all-day and multi-day Google appointments carry only after their last scheduled day
+PASS shared appointment cards expose checkbox state, safe text and the outlined edit button
+PASS Agenda uses the same appointment markup and does not jump away from Today
+PASS day counters count only open appointments and completed items stay reopenable
+PASS editing a completed appointment preserves its completion timestamp
+PASS a failed completion save leaves the appointment open
+PASS Google refresh covers tracked overdue items while retaining the three-day future window
+PASS a past Google appointment can be checked directly in Agenda without importing all history
+PASS quick capture creates a dated task in Today and completion preserves its title
+PASS quick notes go to Inbox even with a task date selected
+PASS quick tasks support future dates and no planning date
+PASS switching capture type preserves text and disables the hidden date input
+PASS blank input and invalid task dates cannot create records
+PASS failed quick capture preserves both existing records and the draft
+PASS routine finance save status stays quiet but errors and demo mode remain visible
+PASS Life save failures remain visible until a successful save
+PASS appointment cards omit redundant local origin but preserve Google origin and completion
+PASS legacy grocery backups keep all products, quantities and completion during migration
+PASS shopping lists, favorites and purchase research survive a backup round trip
+PASS shopping quick entry creates products only in the selected list and never in wishes
+PASS quick entry prevents repeated products with casing and whitespace differences
+PASS the same product name can be used independently in the two lists
+PASS adding a saved product keeps quantity and notes and resets its bought state
+PASS blank input and identifiers from another list cannot add products
+PASS failed quick shopping save restores the draft, view and original product collection
+PASS moving a product preserves completion, favorite, notes, quantity and research without making a wish
+PASS bought toggles are reversible and do not create financial transactions
+PASS clearing bought products affects only the active list and keeps saved favorites and trash
+PASS active and bought sections are separate, with escaped titles and accurate remaining counts
+PASS favorites do not replace the complete product collection and are scoped by list
+PASS purchase rows show a Slim Kopen shortcut while grocery rows do not
+PASS editing a purchase preserves legacy fields and saves notes, favorites and its selected list
+PASS a deleted product cannot be edited or favorited through an obsolete action
+PASS purchase research has its own dossier and never links its result into Aankoopwensen
+PASS switching research between purchases and wishes does not leak the previous dossier or approval
+PASS undoing a move restores the original list and keeps its product details
+PASS purchase deletion and restoration keep the list, favorite and research association
+PASS cleanup during a search leaves purchased products outside the search untouched
+PASS the Slim Kopen route prefills purchase details and only navigates to the research screen
+PASS moving a purchase back to groceries keeps its budget and ignores a hidden budget draft
+PASS bottom-row menu opens upward above mobile navigation
+PASS top-row menu opens downward without crossing the header
+PASS menus clamp horizontally and become scrollable in a short viewport
+84 regression tests passed; 9 executable scripts parsed.
+COMMAND node tests/masterplan-core.cjs
+PASS central content search, filters, snippets, finance exclusion, recursive counts, move/archive/restore and stable links through JSON
+PASS fixed roster vectors/year boundary/overnight intervals, unchanged legacy profile and non-destructive apparatus switch with blank new measurements
+COMMAND node tests/storage-safety.cjs
+PASS only one simultaneous tab obtains the native session writer role
+PASS A's saved transaction survives a stale B save without false success
+PASS stale Life tasks and note drafts cannot replace A's persisted records
+PASS raw source verification rejects an external write even in the owner tab
+PASS stale permanent purge retains newer active records, files and recovery copies
+PASS quota failure rolls back memory, keeps draft fields and never reports success
+PASS cross-domain write failure restores both originals and preserves recovery snapshots
+PASS failed rollback retains exact original data in a durable journal and blocks writes
+PASS unavailable locks, insecure origins and rejected requests fail closed
+PASS closing or page-hiding an owner releases the slot without a persisted lease
+PASS description matches survive repeated read-only loads with all financial links intact
+PASS a zero opening balance is never changed to compensate description-matching transactions
+PASS old JSON data, IDs, amounts, Fitness and the unchanged ZIP format remain compatible
+PASS stale ZIP/JSON restore and direct bridge writes fail before replacing data or blobs
+PASS financial import and both previous-version restore buttons cannot bypass read-only mode
+PASS actual asynchronous ZIP restore retains exclusion across an awaited file write
+PASS ordinary full export uses a stable guarded snapshot and retains ZIP version 2
+PASS asynchronous restore excludes same-tab mutations and standalone bridges
+PASS normal purge commits both domains and preserves active/shared/recovery data
+PASS all persistent primary writes and file transactions go through the guard
+PASS historical HTML contains no executable writer and SW routes before cache lookup
+PASS new worker redirects a legacy URL even when an executable old response is cached
+22 phase-1 storage safety tests passed.
+COMMAND node tests/storage-lock-native.cjs
+PASS native Web Locks deny a concurrent writer and release on owner termination
+COMMAND node tests/service-worker-cache.cjs
+PASS offline document, fallback and asset ignore resurrected old caches; historical writer redirects
+COMMAND node tests/knowledge-regression.cjs
+PASS legacy notes retain identities, categories and original content
+PASS reopening an existing collection does not add duplicate collections
+PASS legacy checklist checkboxes retain their state
+PASS checklist lines preserve IDs when reordered or edited
+PASS a collection rename preserves legacy note destination
+PASS create, edit, tags and filters work together
+PASS autosave snapshots are coalesced and restorable
+PASS recipe metadata survives revisions
+PASS soft delete and archiving are distinct states
+PASS collection IDs remain stable and independent of display name
+PASS real MIME signatures are required for PDFs and images
+PASS ZIP STORE archives roundtrip byte-identically
+PASS corrupted ZIP entries are rejected by CRC32
+PASS complete ZIP includes exact Life, Finance, preferences and attachment bytes
+PASS archive creation refuses missing attachments
+PASS archive creation refuses missing finance instead of exporting partial data
+16 knowledge regression checks passed.
+COMMAND node tests/knowledge-v2-core.cjs
+PASS additive migration preserves every old collection and note
+PASS migration is idempotent and respects renamed defaults
+PASS unknown migration versions and reserved identity collisions fail closed
+PASS create, rename, icon and parent updates preserve note links
+PASS duplicate siblings rejected but equal names under different roots allowed
+PASS third level, self-parenting and HTML icon values rejected
+PASS reorder persists through JSON and cannot change parents
+PASS opening a diary date never creates a note; repeated save cannot duplicate
+PASS journal date collision, invalid dates and empty text rejected
+PASS Amsterdam local date handles midnight and daylight saving time
+PASS JSON round trip retains hierarchy, diary, revisions and legacy recipe
+PASS explicit collection IDs take precedence over legacy category names
+PASS moving a legacy recipe collection retains original ID and ingredients
+13 knowledge v2 core checks passed
+COMMAND node tests/knowledge-v2-safety.cjs
+PASS guarded migration retains the exact raw original in previous-version recovery
+PASS read-only bridges refuse collection create/edit/reorder/archive and journal writes
+PASS old JSON import remains valid and malformed v2 hierarchy is rejected before writes
+PASS old and new ZIP v2 retain attachment bytes, finance, hierarchy, journal and revisions
+PASS invalid diary dates, duplicate days and cycles fail validation on import
+5 knowledge v2 safety groups passed
+COMMAND node tests/journal-upgrade-core.cjs
+PASS Old diary with no check-in is preserved through validation
+PASS Sleep across calendar midnight and day-only check-in are stored without body text
+PASS Sleep after night shift can begin and end in daylight
+PASS Updating a saved check-in keeps IDs, existing tags and text history
+PASS Duplicate journal days and malformed metrics are rejected
+PASS Blank days without any diary content remain blocked
+PASS Legacy PDF & image signatures and recording MIME checks are retained
+PASS total 7
+COMMAND node tests/fitness-regression.cjs
+PASS empty fitness state is valid and contains no user records
+PASS starter templates are independent and have no recorded results
+PASS short training retains core exercises without changing the routine
+PASS cannot overwrite an active workout or complete an empty one
+PASS completion advances rotation, closes only linked booking and is not duplicated
+PASS prescription edits never mutate recorded sessions
+PASS previous values use same movement, equipment and location only
+PASS progression requires two complete comparable exposures and exertion feedback
+PASS pain or inconsistent loads never produce a progression suggestion
+PASS full JSON round trip retains active drafts, rest deadline, notes and ids
+PASS invalid data, duplicate ids and impossible dates are rejected
+PASS canonical night shifts and existing bookings are excluded while legacy codes stay unchanged
+PASS archived routines are skipped without deleting training history
+PASS deleted sessions do not affect performance suggestions
+PASS personal split has three plans, real short variants and no demo results
+PASS legacy backups without a routineCycle field remain valid
+PASS an older unrelated routine stays saved but out of the active split
+PASS cycle skips archived plans but keeps references for restoration
+PASS corrupt cycle identifiers or duplicates are rejected
+PASS history matches exercise across routines but never mixes equipment
+PASS library offers known movement-specific equipment alternatives
+PASS short workouts remain shorter with old nonoptional routines
+PASS finishing an unrelated manual workout preserves the next A/B/C position
+PASS hypertrophy plan preserves custom exercises, IDs and notes
+PASS expanded exercise library has unique IDs and offline technique instructions
+25 fitness regression checks passed.
+COMMAND node tests/trash-regression.cjs
+PASS permanent-trash tests: all trash kinds, live records, shared files, idempotence and invalid data.
+COMMAND node tests/pin-disabled-regression.cjs
+PASS manual PIN, preserved PIN hash, no auto timeout, weather/day data sources, 9 inline JS scripts
+COMMAND node tests/illustrative-icons-core.cjs
+{"result":"PASS","uniqueIllustrations":66,"defaultCategories":23,"distinctDefaults":23,"individualShapeTests":66,"navigationMapped":true,"storageSchemaUnchanged":true,"serviceWorkerCache":true}
