@@ -3465,7 +3465,7 @@ root.addEventListener('click',e=>{
  if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
  if(d.mementoConvert&&d.mementoNoteId){convertNote(d.mementoNoteId,d.mementoConvert);return}
  if(d.mementoGcalConnect){window.MementoGoogleCalendar?.connect?.();return}
- if(d.mementoAgendaShift!==undefined){mementoAgendaOffset=d.mementoAgendaShift==='0'?0:mementoAgendaOffset+Number(d.mementoAgendaShift);renderAgenda();return}
+ if(d.mementoAgendaShift!==undefined){if(d.mementoAgendaShift==='0'){mementoAgendaOffset=0;window.MementoGoogleCalendar?.selectToday?.()}else mementoAgendaOffset+=Number(d.mementoAgendaShift);renderAgenda();return}
  if(d.lifeEditTask){editTask(d.lifeEditTask);return}if(d.lifeDuplicate){duplicateTask(d.lifeDuplicate);return}if(d.lifeTaskDelete){removeTask(d.lifeTaskDelete);return}if(d.lifeTaskRestore){restoreTask(d.lifeTaskRestore);return}
  if(d.lifeWishTab){wishTab=d.lifeWishTab;render();return}if(d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore){const wish=Boolean(d.lifeWishDelete||d.lifeWishRestore),id=d.lifeWishDelete||d.lifeWishRestore||d.lifeGroceryDelete||d.lifeGroceryRestore,item=(wish?state.wishes:state.groceries).find(x=>x.id===id);if(item)mutate(()=>{item.deletedAt=(d.lifeWishDelete||d.lifeGroceryDelete)?new Date().toISOString():''},(d.lifeWishDelete||d.lifeGroceryDelete)?'Naar prullenbak verplaatst.':'Teruggezet.',true);return}if(d.mementoNoteAi){openMementoNoteAI(d.mementoNoteAi);return}
  if(d.mementoNoteToggle){noteOpenId=noteOpenId===d.mementoNoteToggle?'':d.mementoNoteToggle;noteCards();return}
@@ -3839,7 +3839,7 @@ try{
   const button=e.target.closest('[data-gcal-action]');if(!button)return;
   const ym=monthShown();switch(button.dataset.gcalAction){case 'connect':connect();break;case 'refresh':if(ym)load(...ym);ensureUpcoming(true);break;case 'disconnect':disconnect();break}
  });
- window.MementoGoogleCalendar={render,connect,ensureUpcoming,getEventById:id=>events.find(e=>e.id===id)||upcoming.find(e=>e.id===id),refreshAgenda:()=>{const ym=monthShown();if(ym)paintEvents(...ym);syncToday()},getUpcomingForDay:iso=>valid()&&upcomingLoaded?upcoming.filter(e=>spans(e,iso)):[],todayState:()=>({connected:valid(),previous:previouslyConnected(),loading:upcomingLoading,loaded:upcomingLoaded,error:upcomingError})};
+ window.MementoGoogleCalendar={render,connect,ensureUpcoming,selectToday:()=>{selectedDay=localIso(new Date())},getEventById:id=>events.find(e=>e.id===id)||upcoming.find(e=>e.id===id),refreshAgenda:()=>{const ym=monthShown();if(ym)paintEvents(...ym);syncToday()},getUpcomingForDay:iso=>valid()&&upcomingLoaded?upcoming.filter(e=>spans(e,iso)):[],todayState:()=>({connected:valid(),previous:previouslyConnected(),loading:upcomingLoading,loaded:upcomingLoaded,error:upcomingError})};
 })();
 </script>
 
