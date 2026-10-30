@@ -1339,37 +1339,37 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
               ],
               "html": "<span class=\"ft-kicker\">OEFENING 1 VAN 4</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > h2"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > h2"
               ],
               "html": "<h2>Chest press</h2>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > p"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > p"
               ],
               "html": "<p>Machine · Borst</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Uitleg</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Uitleg</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prescription"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prescription"
               ],
               "html": "<p class=\"ft-prescription\">Doel: 3 × 8–12 herhalingen · Rust 120 sec.</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prev"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prev"
               ],
               "html": "<p class=\"ft-prev\">Vorige meting: 22 okt · Machine · Sportschool. Resultaten staan als referentie bij je sets.</p>"
             },
@@ -1383,7 +1383,7 @@
               "target": [
                 "button[aria-label=\"Chest press set 1 weer openen\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"341f6219-90dd-4706-9f0a-e67bf71b066b\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8ca579b9-0b5c-41e4-879f-e9573f59fc41\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
             },
             {
               "target": [
@@ -1393,109 +1393,109 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 2</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 2 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"0775c9fd-72f2-447c-ba61-50d67d522389\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 3</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 3 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Ander apparaat</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Ander apparaat</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Andere uitvoering</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Andere uitvoering</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
               ],
               "html": "<summary>Meer</summary>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-details > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-details > summary"
               ],
               "html": "<summary>Notitie en uitvoering</summary>"
             },
@@ -6464,25 +6464,25 @@
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Als volgende</button>"
             },
             {
               "target": [
@@ -6512,25 +6512,25 @@
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Als volgende</button>"
             },
             {
               "target": [
@@ -6560,25 +6560,25 @@
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Als volgende</button>"
             },
             {
               "target": [
@@ -6798,37 +6798,37 @@
               "target": [
                 ".ft-row:nth-child(2) > div > strong"
               ],
-              "html": "<strong>Borst &amp; Triceps</strong>"
+              "html": "<strong>Rug &amp; Biceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > div > small"
               ],
-              "html": "<small>22 okt · 10 werksets</small>"
+              "html": "<small>24 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"90455bec-3a3f-4906-9119-70e8ca2b24a0\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"236adb82-0cd4-4e00-b362-f95a4b0c6e97\">Bekijken</button>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > strong"
               ],
-              "html": "<strong>Rug &amp; Biceps</strong>"
+              "html": "<strong>Borst &amp; Triceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > small"
               ],
-              "html": "<small>24 okt · 10 werksets</small>"
+              "html": "<small>22 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"faf5636b-cf5e-457c-9d2a-0961664df8b2\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"4d26b8ea-c892-433b-a987-1faa8bfba044\">Bekijken</button>"
             },
             {
               "target": [
@@ -8265,37 +8265,37 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
               ],
               "html": "<span class=\"ft-kicker\">OEFENING 1 VAN 4</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > h2"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > h2"
               ],
               "html": "<h2>Chest press</h2>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > p"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > p"
               ],
               "html": "<p>Machine · Borst</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Uitleg</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Uitleg</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prescription"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prescription"
               ],
               "html": "<p class=\"ft-prescription\">Doel: 3 × 8–12 herhalingen · Rust 120 sec.</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prev"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prev"
               ],
               "html": "<p class=\"ft-prev\">Vorige meting: 22 okt · Machine · Sportschool. Resultaten staan als referentie bij je sets.</p>"
             },
@@ -8309,7 +8309,7 @@
               "target": [
                 "button[aria-label=\"Chest press set 1 weer openen\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"341f6219-90dd-4706-9f0a-e67bf71b066b\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8ca579b9-0b5c-41e4-879f-e9573f59fc41\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
             },
             {
               "target": [
@@ -8319,109 +8319,109 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 2</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 2 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"0775c9fd-72f2-447c-ba61-50d67d522389\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 3</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 3 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Ander apparaat</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Ander apparaat</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Andere uitvoering</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Andere uitvoering</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
               ],
               "html": "<summary>Meer</summary>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-details > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-details > summary"
               ],
               "html": "<summary>Notitie en uitvoering</summary>"
             },
@@ -13384,25 +13384,25 @@
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Als volgende</button>"
             },
             {
               "target": [
@@ -13432,25 +13432,25 @@
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Als volgende</button>"
             },
             {
               "target": [
@@ -13480,25 +13480,25 @@
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Als volgende</button>"
             },
             {
               "target": [
@@ -13718,37 +13718,37 @@
               "target": [
                 ".ft-row:nth-child(2) > div > strong"
               ],
-              "html": "<strong>Borst &amp; Triceps</strong>"
+              "html": "<strong>Rug &amp; Biceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > div > small"
               ],
-              "html": "<small>22 okt · 10 werksets</small>"
+              "html": "<small>24 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"90455bec-3a3f-4906-9119-70e8ca2b24a0\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"236adb82-0cd4-4e00-b362-f95a4b0c6e97\">Bekijken</button>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > strong"
               ],
-              "html": "<strong>Rug &amp; Biceps</strong>"
+              "html": "<strong>Borst &amp; Triceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > small"
               ],
-              "html": "<small>24 okt · 10 werksets</small>"
+              "html": "<small>22 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"faf5636b-cf5e-457c-9d2a-0961664df8b2\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"4d26b8ea-c892-433b-a987-1faa8bfba044\">Bekijken</button>"
             },
             {
               "target": [
@@ -15149,37 +15149,37 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
               ],
               "html": "<span class=\"ft-kicker\">OEFENING 1 VAN 4</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > h2"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > h2"
               ],
               "html": "<h2>Chest press</h2>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > p"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > p"
               ],
               "html": "<p>Machine · Borst</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Uitleg</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Uitleg</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prescription"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prescription"
               ],
               "html": "<p class=\"ft-prescription\">Doel: 3 × 8–12 herhalingen · Rust 120 sec.</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prev"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prev"
               ],
               "html": "<p class=\"ft-prev\">Vorige meting: 22 okt · Machine · Sportschool. Resultaten staan als referentie bij je sets.</p>"
             },
@@ -15193,7 +15193,7 @@
               "target": [
                 "button[aria-label=\"Chest press set 1 weer openen\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"341f6219-90dd-4706-9f0a-e67bf71b066b\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8ca579b9-0b5c-41e4-879f-e9573f59fc41\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
             },
             {
               "target": [
@@ -15203,109 +15203,109 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 2</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 2 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"0775c9fd-72f2-447c-ba61-50d67d522389\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 3</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 3 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Ander apparaat</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Ander apparaat</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Andere uitvoering</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Andere uitvoering</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
               ],
               "html": "<summary>Meer</summary>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-details > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-details > summary"
               ],
               "html": "<summary>Notitie en uitvoering</summary>"
             },
@@ -20262,25 +20262,25 @@
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Als volgende</button>"
             },
             {
               "target": [
@@ -20310,25 +20310,25 @@
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Als volgende</button>"
             },
             {
               "target": [
@@ -20358,25 +20358,25 @@
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Als volgende</button>"
             },
             {
               "target": [
@@ -20596,37 +20596,37 @@
               "target": [
                 ".ft-row:nth-child(2) > div > strong"
               ],
-              "html": "<strong>Borst &amp; Triceps</strong>"
+              "html": "<strong>Rug &amp; Biceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > div > small"
               ],
-              "html": "<small>22 okt · 10 werksets</small>"
+              "html": "<small>24 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"90455bec-3a3f-4906-9119-70e8ca2b24a0\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"236adb82-0cd4-4e00-b362-f95a4b0c6e97\">Bekijken</button>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > strong"
               ],
-              "html": "<strong>Rug &amp; Biceps</strong>"
+              "html": "<strong>Borst &amp; Triceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > small"
               ],
-              "html": "<small>24 okt · 10 werksets</small>"
+              "html": "<small>22 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"faf5636b-cf5e-457c-9d2a-0961664df8b2\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"4d26b8ea-c892-433b-a987-1faa8bfba044\">Bekijken</button>"
             },
             {
               "target": [
@@ -21901,37 +21901,37 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > .ft-kicker"
               ],
               "html": "<span class=\"ft-kicker\">OEFENING 1 VAN 4</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > h2"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > h2"
               ],
               "html": "<h2>Chest press</h2>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .ft-exercise-title > p"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .ft-exercise-title > p"
               ],
               "html": "<p>Machine · Borst</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-head > .life-btn[data-fit=\"guide\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Uitleg</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"guide\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Uitleg</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prescription"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prescription"
               ],
               "html": "<p class=\"ft-prescription\">Doel: 3 × 8–12 herhalingen · Rust 120 sec.</p>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-prev"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-prev"
               ],
               "html": "<p class=\"ft-prev\">Vorige meting: 22 okt · Machine · Sportschool. Resultaten staan als referentie bij je sets.</p>"
             },
@@ -21945,7 +21945,7 @@
               "target": [
                 "button[aria-label=\"Chest press set 1 weer openen\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"341f6219-90dd-4706-9f0a-e67bf71b066b\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8ca579b9-0b5c-41e4-879f-e9573f59fc41\" aria-label=\"Chest press set 1 weer openen\" aria-pressed=\"true\">✓</button>"
             },
             {
               "target": [
@@ -21955,109 +21955,109 @@
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 2</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 2 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"0775c9fd-72f2-447c-ba61-50d67d522389\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 2 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 2 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"0775c9fd-72f2-447c-ba61-50d67d522389\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"8c27d4ea-9f71-476b-a5cd-7139c92a3d03\" aria-label=\"Chest press set 2 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(2) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-label"
               ],
               "html": "<div class=\"ft-set-label\">Set 3</div>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(1)"
               ],
-              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\"></label>"
+              "html": "<label class=\"\">kg<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 kg\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"weight\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 kg\" type=\"number\" inputmode=\"decimal\" min=\"0\" max=\"100000\" step=\"0.25\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"weight\" value=\"\">"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-fields > label:nth-child(2)"
               ],
-              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\"></label>"
+              "html": "<label class=\"\">reps<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\"></label>"
             },
             {
               "target": [
                 "input[aria-label=\"Chest press set 3 reps\"]"
               ],
-              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-log=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" data-field=\"reps\" value=\"\">"
+              "html": "<input aria-label=\"Chest press set 3 reps\" type=\"number\" inputmode=\"numeric\" min=\"0\" max=\"1000\" step=\"1\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-log=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" data-field=\"reps\" value=\"\">"
             },
             {
               "target": [
                 "button[aria-label=\"Chest press set 3 afvinken\"]"
               ],
-              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"9b072690-2b98-4e70-b3af-0483964a7ead\" data-id=\"abced2c1-2651-4186-8fe2-ab25fc0a6b52\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
+              "html": "<button type=\"button\" class=\"ft-check\" data-fit=\"toggle-set\" data-ex=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\" data-id=\"d9b93c4b-c28a-4a08-a400-857bc9b754ef\" aria-label=\"Chest press set 3 afvinken\" aria-pressed=\"false\">○</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-sets > .ft-set:nth-child(3) > .ft-set-reference"
               ],
               "html": "<span class=\"ft-set-reference\">Vorige set: 25 kg × 10</span>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"machine\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Ander apparaat</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"machine\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Ander apparaat</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .life-btn[data-fit=\"alternatives\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"9b072690-2b98-4e70-b3af-0483964a7ead\">Andere uitvoering</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"alternatives\" data-id=\"12a4241e-b7b4-45b9-9c8f-3014f8bfa40f\">Andere uitvoering</button>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-exercise-actions.ft-actions > .ft-more-actions > summary"
               ],
               "html": "<summary>Meer</summary>"
             },
             {
               "target": [
-                "#ft-exercise-9b072690-2b98-4e70-b3af-0483964a7ead > .ft-details > summary"
+                "#ft-exercise-12a4241e-b7b4-45b9-9c8f-3014f8bfa40f > .ft-details > summary"
               ],
               "html": "<summary>Notitie en uitvoering</summary>"
             },
@@ -27522,25 +27522,25 @@
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"0\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e8e58f3a-de4e-44cb-af03-e8ebcf9c0e94\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"22cba72f-27f5-4e46-8974-878e479f7e6e\">Als volgende</button>"
             },
             {
               "target": [
@@ -27570,25 +27570,25 @@
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"1\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"dab9c235-fcf6-4ffd-87fd-7f4b4b819b6a\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"e57a671d-7a1e-41d8-b2f3-59eb83ed51bc\">Als volgende</button>"
             },
             {
               "target": [
@@ -27618,25 +27618,25 @@
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn-primary.life-btn[data-fit=\"start\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Start</button>"
+              "html": "<button type=\"button\" class=\"life-btn life-btn-primary\" data-fit=\"start\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Start</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"routine-edit\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Bewerken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"routine-edit\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Bewerken</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"toggle-cycle\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Uit cyclus</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"toggle-cycle\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Uit cyclus</button>"
             },
             {
               "target": [
                 "section[data-mg-routine=\"2\"] > .ft-actions > .life-btn[data-fit=\"next\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"a490a519-1dfa-44da-bd72-4eda21dc82e0\">Als volgende</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"next\" data-id=\"20c72448-234e-4e88-b914-1581c83e6ccd\">Als volgende</button>"
             },
             {
               "target": [
@@ -27826,37 +27826,37 @@
               "target": [
                 ".ft-row:nth-child(2) > div > strong"
               ],
-              "html": "<strong>Borst &amp; Triceps</strong>"
+              "html": "<strong>Rug &amp; Biceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > div > small"
               ],
-              "html": "<small>22 okt · 10 werksets</small>"
+              "html": "<small>24 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(2) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"90455bec-3a3f-4906-9119-70e8ca2b24a0\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"236adb82-0cd4-4e00-b362-f95a4b0c6e97\">Bekijken</button>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > strong"
               ],
-              "html": "<strong>Rug &amp; Biceps</strong>"
+              "html": "<strong>Borst &amp; Triceps</strong>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > div > small"
               ],
-              "html": "<small>24 okt · 10 werksets</small>"
+              "html": "<small>22 okt · 10 werksets</small>"
             },
             {
               "target": [
                 ".ft-row:nth-child(3) > .life-btn[data-fit=\"history\"][type=\"button\"]"
               ],
-              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"faf5636b-cf5e-457c-9d2a-0961664df8b2\">Bekijken</button>"
+              "html": "<button type=\"button\" class=\"life-btn\" data-fit=\"history\" data-id=\"4d26b8ea-c892-433b-a987-1faa8bfba044\">Bekijken</button>"
             },
             {
               "target": [

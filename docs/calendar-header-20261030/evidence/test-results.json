@@ -2,141 +2,161 @@
   {
     "suite": "core",
     "exit": 0,
-    "seconds": 1.7
+    "seconds": 2.0
   },
   {
     "suite": "patches-001-002-004-browser",
     "exit": 0,
-    "seconds": 11.2
+    "seconds": 14.9
   },
   {
     "suite": "layout-completion-browser",
     "exit": 0,
-    "seconds": 18.7
+    "seconds": 22.8
   },
   {
     "suite": "visual-layout-browser",
     "exit": 0,
-    "seconds": 21.6
+    "seconds": 24.0
   },
   {
     "suite": "storage-safety-browser",
     "exit": 0,
-    "seconds": 13.1
-  },
-  {
-    "suite": "app-review-browser",
-    "exit": 0,
-    "seconds": 26.8
+    "seconds": 10.6
   },
   {
     "suite": "memento-category-browser",
     "exit": 0,
-    "seconds": 6.1
+    "seconds": 5.9
+  },
+  {
+    "suite": "app-review-browser",
+    "exit": 0,
+    "seconds": 26.4
   },
   {
     "suite": "fitness-browser",
     "exit": 0,
-    "seconds": 11.5
+    "seconds": 12.5
   },
   {
     "suite": "knowledge-covers-browser",
     "exit": 0,
-    "seconds": 3.4
+    "seconds": 3.6
   },
   {
     "suite": "knowledge-v2-browser",
     "exit": 0,
-    "seconds": 17.1
+    "seconds": 20.3
   },
   {
     "suite": "quickfit-browser",
     "exit": 0,
-    "seconds": 2.8
-  },
-  {
-    "suite": "journal-upgrade-browser",
-    "exit": 0,
-    "seconds": 3.7
+    "seconds": 3.5
   },
   {
     "suite": "illustrative-icons-browser",
     "exit": 0,
-    "seconds": 10.2
+    "seconds": 13.0
+  },
+  {
+    "suite": "journal-upgrade-browser",
+    "exit": 0,
+    "seconds": 5.5
   },
   {
     "suite": "journal-selfcare-browser",
     "exit": 0,
-    "seconds": 7.0
+    "seconds": 7.3
   },
   {
     "suite": "memento-start-browser",
     "exit": 0,
-    "seconds": 10.3
+    "seconds": 10.9
   },
   {
     "suite": "visual-360",
     "exit": 0,
-    "seconds": 19.4
+    "seconds": 20.1
   },
   {
     "suite": "masterplan-browser",
     "exit": 0,
-    "seconds": 74.6
-  },
-  {
-    "suite": "visual-393",
-    "exit": 0,
-    "seconds": 20.0
+    "seconds": 76.3
   },
   {
     "suite": "visual-412",
     "exit": 0,
-    "seconds": 22.8
+    "seconds": 17.9
   },
   {
     "suite": "visual-1280",
     "exit": 0,
-    "seconds": 25.8
+    "seconds": 19.7
   },
   {
     "suite": "calendar-header-browser",
     "exit": 0,
-    "seconds": 11.2
+    "seconds": 8.1
+  },
+  {
+    "suite": "visual-393",
+    "exit": 0,
+    "seconds": 49.3,
+    "attempts": [
+      {
+        "exit": 1,
+        "log": "visual-393.log"
+      },
+      {
+        "exit": 0,
+        "log": "visual-393-retry.log"
+      }
+    ]
   },
   {
     "suite": "recovery-browser",
     "exit": 0,
-    "seconds": 36.2
+    "seconds": 32.5
   },
   {
     "suite": "original-upgrade",
     "exit": 0,
-    "seconds": 13.7
-  },
-  {
-    "suite": "recovery-upgrade",
-    "exit": 0,
-    "seconds": 4.1
-  },
-  {
-    "suite": "v71-upgrade",
-    "exit": 0,
-    "seconds": 4.5
+    "seconds": 14.5
   },
   {
     "suite": "glass-rendering-browser",
     "exit": 0,
-    "seconds": 29.7
+    "seconds": 30.2
+  },
+  {
+    "suite": "recovery-upgrade",
+    "exit": 0,
+    "seconds": 5.1
+  },
+  {
+    "suite": "v71-upgrade",
+    "exit": 0,
+    "seconds": 6.0
   },
   {
     "suite": "current-main-upgrade",
     "exit": 0,
-    "seconds": 3.9
+    "seconds": 33.3,
+    "attempts": [
+      {
+        "exit": 1,
+        "log": "current-main-upgrade.log"
+      },
+      {
+        "exit": 0,
+        "log": "current-main-upgrade-retry.log"
+      }
+    ]
   },
   {
     "suite": "release-acceptance-browser",
     "exit": 0,
-    "seconds": 117.1
+    "seconds": 111.7
   }
 ]

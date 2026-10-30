@@ -11,10 +11,10 @@
       1480
     ],
     "differenceBounds": [
-      201,
+      1,
       11,
       343,
-      56
+      458
     ]
   },
   {
@@ -215,12 +215,7 @@
       360,
       1402
     ],
-    "differenceBounds": [
-      217,
-      800,
-      218,
-      802
-    ]
+    "differenceBounds": null
   },
   {
     "width": 360,
@@ -337,7 +332,12 @@
       360,
       1040
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      146,
+      796,
+      214,
+      802
+    ]
   },
   {
     "width": 360,
@@ -403,10 +403,10 @@
       1472
     ],
     "differenceBounds": [
-      1,
+      234,
       11,
       376,
-      429
+      56
     ]
   },
   {
@@ -459,7 +459,12 @@
       393,
       1307
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      16,
+      813,
+      190,
+      906
+    ]
   },
   {
     "width": 393,
@@ -784,12 +789,7 @@
       412,
       1479
     ],
-    "differenceBounds": [
-      1,
-      11,
-      395,
-      429
-    ]
+    "differenceBounds": null
   },
   {
     "width": 412,
@@ -802,7 +802,12 @@
       412,
       1479
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      253,
+      11,
+      395,
+      56
+    ]
   },
   {
     "width": 412,
@@ -815,7 +820,12 @@
       412,
       1651
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      253,
+      11,
+      395,
+      56
+    ]
   },
   {
     "width": 412,
@@ -841,7 +851,12 @@
       412,
       1288
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      16,
+      876,
+      384,
+      927
+    ]
   },
   {
     "width": 412,
@@ -1167,7 +1182,7 @@
       1476
     ],
     "differenceBounds": [
-      1060,
+      25,
       11,
       1250,
       56
@@ -1184,7 +1199,12 @@
       1280,
       1476
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      11,
+      1250,
+      56
+    ]
   },
   {
     "width": 1280,
@@ -1197,7 +1217,12 @@
       1280,
       1406
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1210,7 +1235,12 @@
       1280,
       2063
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      11,
+      1250,
+      56
+    ]
   },
   {
     "width": 1280,
@@ -1223,7 +1253,12 @@
       1280,
       1239
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      324,
+      148,
+      349
+    ]
   },
   {
     "width": 1280,
@@ -1236,7 +1271,12 @@
       1280,
       1239
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1250,7 +1290,7 @@
       1035
     ],
     "differenceBounds": [
-      1060,
+      25,
       11,
       1250,
       56
@@ -1268,7 +1308,7 @@
       1090
     ],
     "differenceBounds": [
-      1060,
+      25,
       11,
       1250,
       56
@@ -1286,10 +1326,10 @@
       1049
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1304,10 +1344,10 @@
       900
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1322,10 +1362,10 @@
       900
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1340,10 +1380,10 @@
       900
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1358,10 +1398,10 @@
       1769
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1376,10 +1416,10 @@
       1552
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1394,10 +1434,10 @@
       1247
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1411,7 +1451,12 @@
       1280,
       1056
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1425,10 +1470,10 @@
       1192
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1443,10 +1488,10 @@
       1368
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1461,10 +1506,10 @@
       968
     ],
     "differenceBounds": [
-      1060,
-      11,
-      1250,
-      56
+      25,
+      21,
+      148,
+      46
     ]
   },
   {
@@ -1478,7 +1523,12 @@
       1280,
       968
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1491,7 +1541,12 @@
       1280,
       1125
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1504,7 +1559,12 @@
       1280,
       1472
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1517,7 +1577,12 @@
       1280,
       2063
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1530,7 +1595,12 @@
       1280,
       1802
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1543,7 +1613,12 @@
       1280,
       900
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1558,7 +1633,7 @@
     ],
     "differenceBounds": [
       15,
-      377,
+      21,
       222,
       411
     ]
@@ -1574,7 +1649,12 @@
       1280,
       900
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,
@@ -1587,7 +1667,12 @@
       1280,
       900
     ],
-    "differenceBounds": null
+    "differenceBounds": [
+      25,
+      21,
+      148,
+      46
+    ]
   },
   {
     "width": 1280,

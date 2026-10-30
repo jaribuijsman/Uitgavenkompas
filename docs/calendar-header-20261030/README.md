@@ -2,7 +2,7 @@
 
 De verbindingsactie stond als tekstlink onder de afgeronde afspraken. Zij staat nu als Google Agenda-pictogram direct na de diensttijd en vóór `+ Afspraak` in de header van Vandaag. Het pictogram blijft beschikbaar na verbinden; het label is `Google-agenda verbinden` of `Google-agenda opnieuw verbinden`. De oude link is verwijderd.
 
-Uitgangspunt: actuele `origin/main` op 30 oktober 2026, `667577354f980232df195dd135cf4639b7811ad4`. Herstelpunt: dezelfde onveranderlijke commit en lokale tag `checkpoint/google-calendar-header-20261030`. Branch: `fix/memento-google-calendar-header`; [PR #9](https://github.com/jaribuijsman/Uitgavenkompas/pull/9). Productiecode en tests: `fb9163e9fab4eb4e9b73246e93335ec7cf39dcfb`. Het bewijscommit voegt alleen dit rapport en testartefacten toe. De uiteindelijke PR-controles en publicatienacontrole staan bij de PR.
+Uitgangspunt: actuele `origin/main` op 30 oktober 2026, `667577354f980232df195dd135cf4639b7811ad4`. Herstelpunt: dezelfde onveranderlijke commit en lokale tag `checkpoint/google-calendar-header-20261030`. Branch: `fix/memento-google-calendar-header`; [PR #9](https://github.com/jaribuijsman/Uitgavenkompas/pull/9). De eerste implementatie was `fb9163e9fab4eb4e9b73246e93335ec7cf39dcfb`; de definitieve PR-head bevat de hieronder beschreven correctie voor bredere platformfonts, nieuwe captures en opnieuw uitgevoerde controles. De exacte head-/merge-SHA, uiteindelijke CI en publicatienacontrole staan bij de PR.
 
 ## Ontwerp en scope
 
@@ -12,7 +12,7 @@ Bronnen: actuele `AGENTS.md`, `LEESMIJ.txt`, de bestaande UI-/glass-/layout-eige
 - Diensttijd → Google Agenda → `+ Afspraak`, zonder overlap of regelafbreking bij 360/393/412/1280 px. De header blijft 44 px hoog. Geen extra kaart of microtekst.
 - Duidelijke toegankelijke naam, tooltip, zichtbare toetsenbordfocus en native knopbediening. Alleen de header van Vandaag krijgt de verbindingsknop; toekomstige dagen behouden hun bestaande afspraakactie.
 - `paintTodayAppointments()` gebruikt dezelfde `data-memento-gcal-connect`-handler en `MementoGoogleCalendar.connect()`. Geen tweede OAuth-clientimplementatie, opslagkey, schemawijziging, migratie of reset.
-- Bedieningsgeometrie in `memento-ui.css`; materiaal in `memento-glass.css`. Geen nieuwe observer of `!important`-override. Beide asset-URLs zijn gelijk bijgewerkt in `index.html` en `sw.js` CORE; cache `memento-pwa-v75-20261030-calendar-header-v1`.
+- Bedieningsgeometrie in `memento-ui.css`; materiaal in `memento-glass.css`. Geen nieuwe observer of `!important`-override. Beide asset-URLs zijn gelijk bijgewerkt in `index.html` en `sw.js` CORE; cache `memento-pwa-v75-20261030-calendar-header-v2`.
 - Afspraken, taken, navigatie, financiële berekeningen, PIN, bijlagen en oorspronkelijke artwork vallen buiten de functionele wijziging. Alleen fictieve fixtures in nieuwe browsercontexten gebruikt.
 
 ## Werkelijk uitgevoerde verificatie
@@ -35,6 +35,10 @@ Playwright 1.62.1 met de bijbehorende Chromium-renderer; tooling buiten de produ
 
 Alle 28 lokale testgroepen zijn geslaagd (19 core-invocations, 23 browser-invocations inclusief vier visual-breedtes, vier upgrade-invocations). Ook `git diff --check` is uitgevoerd. De oude door bestaande tests overschreven screenshots onder `docs/patches-001-002-004` zijn hersteld; dit rapport bewaart nieuwe bewijsartefacten in een eigen map.
 
+De eerste CI-run op `e3b50b1` blokkeerde terecht op de nieuwe headerassertie: de bredere systeemfont van Ubuntu 26 brak bij 360 px de toevoegknop af naar een tweede regel. Het [screenshot en meetrapport](evidence/ci-font-failure/) zijn behouden. Hersteld door alleen binnen de header met de Google-knop tracking, kolomafstand en horizontale badge-/knoppadding compacter te maken. De diensttijd blijft 12 px en de knop 44 × 44 px. Toekomstige headers behouden hun oorspronkelijke afstand. De oorspronkelijke veiligheidsasserties blijven intact; een extra assertie vereist nu bovendien een headerhoogte van 44 px. Een afzonderlijke run met `DejaVu Sans, sans-serif` slaagt op alle vier breedtes ([rapport](evidence/fallback-font.json), [360 px](evidence/360-fallback-font.png)).
+
+Tijdens de volledige lokale herhaling traden twee timeouts op: bij het sluiten van het bestaande taakmenu in visual-393 en bij offline herladen in de extra main-upgrade. Beide volledige suites slaagden bij afzonderlijke herhaling, zonder bron- of assertiewijziging. De mislukte pogingen en geslaagde herhalingen blijven expliciet in [test-results.json](evidence/test-results.json) en de bijbehorende logs staan. Alle overige groepen, waaronder de volledige 108-toestanden-acceptatie en de drie overige upgrades, slaagden direct.
+
 ## Werkelijke voor/na-weergave
 
 Beide fasen gebruiken dezelfde fictieve fixture, vaste datum 30 oktober 2026 (middagdienst 14:00–22:00), viewport, taal, tijdzone en renderer. De vóórfase rendert de onveranderlijke main-snapshot; de nafase de gewijzigde productiecode. Screenshots en geometrie zijn bekeken. Het exacte aanraakvlak is 44 × 44 px op alle vier breedtes; de duty-badge, verbindingsknop en toevoegknop overlappen niet. De eerste taak onder afspraken begint 48 px hoger door het verwijderen van de oude link, terwijl de headerhoogte gelijk blijft.
@@ -46,7 +50,7 @@ Beide fasen gebruiken dezelfde fictieve fixture, vaste datum 30 oktober 2026 (mi
 | 412 | [afspraken](evidence/before/412-appointments.png), [hele pagina](evidence/before/412-day.png) | [afspraken](evidence/after/412-appointments.png), [hele pagina](evidence/after/412-day.png) | 44 px / 44 × 44 px |
 | 1280 | [afspraken](evidence/before/1280-appointments.png) | [afspraken](evidence/after/1280-appointments.png) | 44 px / 44 × 44 px |
 
-DOM-metingen: [vóór](evidence/before/report.json), [na](evidence/after/report.json). Ook de volledige bestaande visual-suite is met dezelfde fixture op de main-snapshot gerenderd. Taken, Agenda en de financiële hoofdpagina zijn op alle breedtes pixelgelijk vóór/na. De [beeldvergelijking](evidence/visual-comparison.json) bevat daarnaast kleine raster-/transitieverschillen in bestaande navigatievlakken; deze beelden zijn bekeken en tonen geen gewijzigde indeling. Mijn dag verandert volgens bovenstaand contract.
+DOM-metingen: [vóór](evidence/before/report.json), [na](evidence/after/report.json). Ook de volledige bestaande visual-suite is met dezelfde fixture op de main-snapshot gerenderd. De hoofdinhoud van Taken, Agenda en de financiële hoofdpagina toont op alle breedtes geen gewijzigde indeling. De [beeldvergelijking](evidence/visual-comparison.json) is grotendeels pixelgelijk, met kleine raster-/transitieverschillen in bestaande navigatie- en brandingvlakken; deze beelden zijn bekeken. Mijn dag verandert volgens bovenstaand contract.
 
 ## Vrijgave en grenzen
 
