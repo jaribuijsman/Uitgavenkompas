@@ -3188,23 +3188,24 @@ function dutyDetail(iso){const d=window.MementoFitnessCore?.duty?.(iso);return d
 function rosterLegend(){return '<details class="memento-roster-legend"><summary>Rooster · OOMMVNNVVV</summary><p>Vanaf 28 oktober 2026, dag 1 = O. De cyclus herhaalt elke tien kalenderdagen.</p><div class="memento-duty-cycle" aria-label="Tiendaagse cyclus">'+[...'OOMMVNNVVV'].map((c,i)=>'<span data-duty-code="'+c+'" title="Dag '+(i+1)+'">'+c+'</span>').join('')+'</div><p>O · Ochtenddienst 06:00–14:00<br>M · Middagdienst 14:00–22:00<br>N · Nachtdienst 22:00–06:00 de volgende dag<br>V · Vrije dag: geen nieuwe dienst</p></details>';}
 function renderAgenda(){
  const base=new Date();base.setDate(1);base.setMonth(base.getMonth()+mementoAgendaOffset);
- const year=base.getFullYear(),month=base.getMonth();
- const label=new Intl.DateTimeFormat('nl-NL',{month:'long',year:'numeric'}).format(base);
- const first=(new Date(year,month,1).getDay()+6)%7;
- const total=new Date(year,month+1,0).getDate();
- const now=today();
- const names=['ma','di','wo','do','vr','za','zo'];
- const cells=[];
+ const year=base.getFullYear(),month=base.getMonth(),label=new Intl.DateTimeFormat('nl-NL',{month:'long',year:'numeric'}).format(base);
+ const first=(new Date(year,month,1).getDay()+6)%7,total=new Date(year,month+1,0).getDate(),now=today();
+ const names=['ma','di','wo','do','vr','za','zo'],cells=[];
  for(let i=0;i<Math.ceil((first+total)/7)*7;i++){
   const dayNo=i-first+1;
   if(dayNo<1||dayNo>total){cells.push('<span class="memento-cal-day muted" aria-hidden="true"></span>');continue}
   const iso=year+'-'+String(month+1).padStart(2,'0')+'-'+String(dayNo).padStart(2,'0');
-  const duty=window.MementoFitnessCore?.duty?.(iso);
-  cells.push('<button type="button" data-gcal-day="'+iso+'" data-duty-code="'+(duty?.code||'')+'" class="memento-cal-day'+(iso===now?' is-today':'')+'" aria-label="'+dayNo+' '+esc(label)+(duty?' · '+esc(duty.label)+' · '+esc(duty.time)+(duty.carryUntil?' · nachtdienst van gisteren tot 06:00':''):'')+'" aria-pressed="false"><span>'+dayNo+'</span>'+(duty?'<small class="memento-duty-code" aria-hidden="true">'+duty.code+'</small>':'')+'<span class="memento-cal-dots" aria-hidden="true"></span></button>')
+  const dayLabel=new Intl.DateTimeFormat('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(year,month,dayNo));
+  cells.push('<button type="button" data-gcal-day="'+iso+'" class="memento-cal-day'+(iso===now?' is-today':'')+'" aria-label="'+esc(dayLabel)+'" aria-pressed="false"><span>'+dayNo+'</span><span class="memento-cal-dots" aria-hidden="true"></span></button>');
  }
- content.innerHTML='<section class="life-panel memento-calendar-panel" data-gcal-year="'+year+'" data-gcal-month="'+month+'"><div class="memento-cal-intro"><div><div class="memento-cal-eyebrow">JOUW PLANNING</div><h2>Agenda</h2><p>Vink af wat klaar is. Open afspraken van eerdere dagen blijven bij Vandaag staan.</p></div><span class="memento-cal-status" id="memento-gcal-status">Niet verbonden</span></div><div class="memento-cal-toolbar"><h3>'+esc(label)+'</h3><div class="memento-cal-actions"><button type="button" class="memento-agenda-add" data-memento-new-event="" title="Nieuwe afspraak">＋ Afspraak</button><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><button type="button" data-memento-agenda-shift="0" aria-label="Huidige maand">Vandaag</button><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button></div></div><div class="memento-cal-grid">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div><p id="mementoDutyDetail" class="memento-duty-detail">'+esc(dutyDetail(now.slice(0,7)===year+'-'+String(month+1).padStart(2,'0')?now:year+'-'+String(month+1).padStart(2,'0')+'-01'))+'</p>'+rosterLegend()+'<div class="memento-gcal-tools" id="memento-gcal-tools"></div><section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
- if(window.MementoGoogleCalendar)window.MementoGoogleCalendar.render(year,month);
+ content.innerHTML='<section class="life-panel memento-calendar-panel memento-agenda-month-layout" data-gcal-year="'+year+'" data-gcal-month="'+month+'">'+
+  '<div class="memento-cal-heading"><h2>Agenda</h2><div class="memento-cal-heading-actions"><div id="memento-gcal-tools" class="memento-gcal-tools"></div><button type="button" class="memento-agenda-add" data-memento-new-event="">＋ Afspraak</button></div></div>'+
+  '<div class="memento-cal-toolbar"><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><h3>'+esc(label)+'</h3><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button><button type="button" class="memento-cal-today" data-memento-agenda-shift="0">Vandaag</button></div>'+
+  '<div class="memento-cal-grid" aria-label="Maandkalender">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div>'+
+  '<section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
+ window.MementoGoogleCalendar?.render(year,month);
 }
+
 const TRASH_PENDING_KEY='memento_trash_pending_files_v1';
 function pendingTrashFileIds(){
  const raw=localStorage.getItem(TRASH_PENDING_KEY);
@@ -3460,7 +3461,7 @@ root.addEventListener('click',e=>{
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
  if(d.lifeJournal!==undefined){setView('notes');window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
- if(d.mementoNewEvent!==undefined){editAppointment(null,d.mementoNewEvent||today());return}
+ if(d.mementoNewEvent!==undefined){const chosen=document.querySelector('#lifeApp[data-life-view="agenda"] .memento-cal-day.selected')?.dataset.gcalDay;editAppointment(null,d.mementoNewEvent||chosen||today());return}
  if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
  if(d.mementoConvert&&d.mementoNoteId){convertNote(d.mementoNoteId,d.mementoConvert);return}
  if(d.mementoGcalConnect){window.MementoGoogleCalendar?.connect?.();return}
@@ -3757,12 +3758,15 @@ try{
  const myDay=(iso)=>local().filter(e=>e.date===iso);
  function setDefaultDay(y,m){if(selectedDay&&sameMonth(selectedDay,y,m))return;const d=localIso(new Date());selectedDay=sameMonth(d,y,m)?d:y+'-'+String(m+1).padStart(2,'0')+'-01'}
  function paintControls(){
-  const el=$('memento-gcal-tools');if(!el||!active())return;
-  const known=previouslyConnected();
-  el.innerHTML=(valid()?'<button type="button" class="gcal-btn" data-gcal-action="refresh">↻ Vernieuwen</button><details class="gcal-settings"><summary aria-label="Google Calendar-instellingen">⋯</summary><div class="gcal-settings-menu"><button type="button" class="gcal-btn" data-gcal-action="connect">Opnieuw aanmelden</button><button type="button" class="gcal-btn" data-gcal-action="disconnect">Ontkoppelen</button></div></details>':'<button type="button" class="gcal-btn primary" data-gcal-action="connect">'+(known?'↻ Verbinding herstellen':'Google Calendar verbinden')+'</button>')+'<p class="gcal-note">'+(valid()?'Google verbonden · alleen lezen.':'Je Google-agenda is niet verbonden.')+'</p>';
-  const status=$('memento-gcal-status');if(status)status.textContent=busy?'Synchroniseren…':valid()?'✓ Google verbonden':known?'Eerder gekoppeld':'Niet verbonden';
- }
- function paintEvents(y,m){
+ const el=$('memento-gcal-tools');if(!el||!active())return;
+ const connected=valid(),known=previouslyConnected();
+ const status=busy?'Google-afspraken worden geladen':connected?'Verbonden · alleen lezen':known?'Eerder gekoppeld · opnieuw aanmelden':'Niet verbonden';
+ const icon='<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#fff" d="M12 12h24v24H12z"/><path fill="#4285f4" d="M36 12H12v24H5V8a3 3 0 0 1 3-3h28z"/><path fill="#1967d2" d="M36 5h4a3 3 0 0 1 3 3v4h-7z"/><path fill="#fbbc04" d="M36 12h7v24h-7z"/><path fill="#34a853" d="M36 36v7H12v-7z"/><path fill="#188038" d="M5 36h7v7H8a3 3 0 0 1-3-3z"/><path fill="#ea4335" d="M36 36v7l7-7z"/><path fill="#4285f4" d="M18.6 29.8c-1.8 0-3.2-.9-3.8-2.4l1.8-.8c.4.9 1 1.3 2 1.3 1.1 0 1.8-.6 1.8-1.5s-.8-1.5-2-1.5h-1v-1.8h1c1 0 1.7-.5 1.7-1.4s-.6-1.4-1.6-1.4c-.9 0-1.5.4-1.8 1.2l-1.8-.8c.6-1.5 1.9-2.3 3.6-2.3 2.2 0 3.7 1.3 3.7 3.2 0 1.1-.6 1.9-1.5 2.4 1.1.5 1.8 1.4 1.8 2.6 0 1.9-1.6 3.2-3.9 3.2zm9.1-.2v-8.4l-2 1.4-1-1.6 3.4-2.4h1.7v11z"/></svg>';
+ el.innerHTML='<details class="memento-gcal-menu"><summary aria-label="Google Agenda: '+status+'" title="Google Agenda">'+icon+'<span class="memento-gcal-indicator'+(connected?' is-connected':'')+'" aria-hidden="true"></span></summary>'+
+ '<div class="memento-gcal-popover"><strong>Google Agenda</strong><p role="status">'+esc(status)+'</p><button type="button" class="gcal-btn" data-gcal-action="connect">'+(connected?'Opnieuw aanmelden':known?'Verbinding herstellen':'Google Agenda verbinden')+'</button>'+
+ (connected?'<button type="button" class="gcal-btn" data-gcal-action="refresh">Afspraken vernieuwen</button><button type="button" class="gcal-btn" data-gcal-action="disconnect">Ontkoppelen</button>':'')+'</div></details>';
+}
+  function paintEvents(y,m){
   const el=$('memento-gcal-events');if(!el||!active())return;
   setDefaultDay(y,m);
   const available=valid()&&loadedMonth===y+'-'+m,life=window.MementoLife;
@@ -3778,9 +3782,9 @@ try{
   if($('memento-gcal-count'))$('memento-gcal-count').textContent=rows.length+(rows.length===1?' afspraak':' afspraken')+(completed?' · '+completed+' afgerond':'');
   let result=rows.map(item=>life.renderAppointmentItem(item.x,item.source,{carried:item.carried})).join('');
   if(message)result+='<p class="gcal-message" role="status">'+esc(message)+'</p>';
-  if(!valid())result+='<p class="gcal-message">'+(previouslyConnected()?'Herstel je Google-verbinding om afspraken bij te werken. Eerder opgehaalde afspraken blijven in Memento bewaard.':'Verbind Google Calendar om ook je Google-afspraken te zien.')+'</p>';
+  if(!valid()&&!rows.length&&!message)result+='<p class="gcal-message">Geen lokale afspraken. Google Agenda is niet verbonden.</p>';
   else if(!available)result+='<p class="gcal-message">Google-afspraken ophalen…</p>';
-  else if(!rows.length&&!message)result='<p class="gcal-message">Geen afspraken op deze dag. Je kunt hier zelf een afspraak toevoegen.</p>';
+  else if(!rows.length&&!message)result='<p class="gcal-message">Geen afspraken op deze dag.</p>';
   el.innerHTML=result+(window.MementoFitnessBridge?.dayHTML(selectedDay)||'');
  }
  async function listGoogleEvents(start,end){
@@ -4242,11 +4246,11 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut:focus-visible{outline:2px solid #bdd3c2;outline-offset:2px}
 @media(max-width:380px){#lifeApp .memento-capture-card .memento-capture-kinds button{padding:6px 6px;font-size:12px}}
 </style>
-<link rel="stylesheet" href="./assets/memento-glass.css?v=20261030-calendar-header-v2">
-<link rel="stylesheet" href="./assets/memento-layout.css?v=20261030-notes-cover-v1">
+<link rel="stylesheet" href="./assets/memento-glass.css?v=20261030-agenda-month-v1">
+<link rel="stylesheet" href="./assets/memento-layout.css?v=20261030-agenda-month-v1">
 <script src="./assets/memento-disclosure.js?v=20261029-recovery-v2"></script>
-<script src="./assets/memento-layout.js?v=20261029-release-v1"></script>
-<script src="./assets/memento-glass.js?v=20261029-release-v1"></script>
+<script src="./assets/memento-layout.js?v=20261030-agenda-month-v1"></script>
+<script src="./assets/memento-glass.js?v=20261030-agenda-month-v1"></script>
 </body></html>
 
 
