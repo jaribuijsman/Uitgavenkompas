@@ -1,0 +1,9 @@
+COMMAND node tests/recovery-upgrade-browser.cjs
+page.reload: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for navigation until "domcontentloaded"[22m
+
+    at /workspace/Uitgavenkompas/tests/recovery-upgrade-browser.cjs:41:41 {
+  log: [ '  - waiting for navigation until "domcontentloaded"' ],
+  name: 'TimeoutError'
+}

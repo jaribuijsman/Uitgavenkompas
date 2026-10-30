@@ -25,6 +25,7 @@ body #lifeApp :is(.life-segments,.kc-view-switch,.ft-tabs){background:transparen
 body #lifeApp :is(.life-segments,.ft-tabs) button[aria-pressed=true]{background:#c9dfbb!important;color:#1b3825!important;border-color:#c9dfbb!important}
 body :is(#lifeApp,.app) :is(.life-toolbar,.memento-task-toolbar,.analysis-filters){gap:10px}
 body #lifeApp .life-page-head{margin-bottom:14px}
+body #lifeApp .memento-calendar-connect{background:var(--mg-surface);box-shadow:inset 0 1px 0 #ecffc31c;color:var(--mg-ink)}
 body #lifeApp .life-horizon{gap:12px}
 body #lifeApp :is(.life-day,.flow-hero){padding:15px!important}
 body #lifeApp .memento-capture-card{padding:12px!important}
