@@ -3198,8 +3198,8 @@ function renderAgenda(){
   const dayLabel=new Intl.DateTimeFormat('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(year,month,dayNo));
   cells.push('<button type="button" data-gcal-day="'+iso+'" class="memento-cal-day'+(iso===now?' is-today':'')+'" aria-label="'+esc(dayLabel)+'" aria-pressed="false"><span>'+dayNo+'</span><span class="memento-cal-dots" aria-hidden="true"></span></button>');
  }
- content.innerHTML='<section class="life-panel memento-calendar-panel memento-agenda-month-layout" data-gcal-year="'+year+'" data-gcal-month="'+month+'">'+
-  '<div class="memento-cal-heading"><h2>Agenda</h2><div class="memento-cal-heading-actions"><div id="memento-gcal-tools" class="memento-gcal-tools"></div><button type="button" class="memento-agenda-add" data-memento-new-event="">＋ Afspraak</button></div></div>'+
+ content.innerHTML='<div class="memento-cal-heading"><h2>Agenda</h2><div class="memento-cal-heading-actions"><div id="memento-gcal-tools" class="memento-gcal-tools"></div><button type="button" class="memento-agenda-add" data-memento-new-event="">＋ Afspraak</button></div></div>'+
+  '<section class="life-panel memento-calendar-panel memento-agenda-month-layout" data-gcal-year="'+year+'" data-gcal-month="'+month+'">'+
   '<div class="memento-cal-toolbar"><button type="button" data-memento-agenda-shift="-1" aria-label="Vorige maand">‹</button><h3>'+esc(label)+'</h3><button type="button" data-memento-agenda-shift="1" aria-label="Volgende maand">›</button><button type="button" class="memento-cal-today" data-memento-agenda-shift="0">Vandaag</button></div>'+
   '<div class="memento-cal-grid" aria-label="Maandkalender">'+names.map(n=>'<span class="memento-cal-weekday">'+n+'</span>').join('')+cells.join('')+'</div>'+
   '<section class="memento-gcal-day-section" aria-label="Afspraken voor de gekozen dag"><div class="memento-gcal-day-head"><h3 id="memento-gcal-selected-label">Afspraken</h3><span id="memento-gcal-count"></span></div><div id="memento-gcal-events" aria-live="polite"></div></section></section>';
