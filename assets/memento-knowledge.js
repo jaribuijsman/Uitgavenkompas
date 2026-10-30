@@ -218,7 +218,7 @@ function renderList(){
  '<div class="kc-mode-switch" role="group" aria-label="Weergave">'+btn("Lijst","mode","list",mode==="list")+btn("Galerij","mode","gallery",mode==="gallery")+btn("Tabel","mode","table",mode==="table")+'</div>'+btn('Wis filters','clear-filters')+'</div></details></div>';
  const summary=screen==='collection'?counts(collectionId)+' notities'+(subs.length?' · '+subs.length+' subverzamelingen':''):items.length+' notities';
  return header(title,true,tools)+
- '<div class="kc-list-summary"><p class="kc-count">'+summary+'</p>'+(screen==='trash'?btn('Definitief leegmaken','purge-trash'):btn('+ Nieuw','new','',true))+'</div>'+
+ '<div class="kc-list-summary"><p class="kc-count">'+summary+'</p>'+(screen==='trash'?btn('Definitief leegmaken','purge-trash'):direct||subs.length||filtered||['archive','pinned'].includes(screen)?btn('+ Nieuw','new','',true):'')+'</div>'+
  (subs.length?'<h3 class="kc-content-caption">Subverzamelingen</h3>'+collectionRows(subs):'')+
  (direct||!subs.length?(subs.length?'<h3 class="kc-content-caption">Rechtstreekse notities</h3>':'')+searchTools+itemRows(items,mode,{filtered,create:!['archive','trash','pinned'].includes(screen)}):'');
 }

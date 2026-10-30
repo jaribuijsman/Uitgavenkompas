@@ -79,7 +79,7 @@ async function fixture(){
    assert.match(await page.locator('.kc-count').innerText(),/^5 notities.*3 subverzamelingen/);
    assert.equal(await page.locator('.kc-empty').count(),0,'No empty direct-notes card under folders');
    await page.locator('[data-kc=collection][data-id="'+products+'"]').click();
-   assert.equal(await page.getByText('Hier staan nog geen notities',{exact:true}).count(),1);await shot('empty');
+   assert.equal(await page.getByText('Hier staan nog geen notities',{exact:true}).count(),1);assert.equal(await page.locator('[data-kc=new]').count(),1);await shot('empty');
    await page.locator('.kc-empty [data-kc=new]').click();assert.equal(await page.locator('[data-kc-edit=collectionId]').inputValue(),products);
    await page.goBack();await page.locator('.kc-empty').waitFor();
    // New draft opening and canceling must not write empty notes.
