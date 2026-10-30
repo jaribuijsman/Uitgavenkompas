@@ -11,7 +11,15 @@
  root.id='mementoStart';root.setAttribute('aria-label','Memento dagoverzicht');
  root.innerHTML=`<div class="ms-shell"><div class="ms-content">
 <header class="ms-brand"><img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90"><div class="ms-date" id="ms-date">Vandaag</div></header>
-<section class="ms-weather ms-glass" aria-label="Weersverwachting Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
+<div class="ms-feature">
+<div class="ms-feature-track" id="ms-feature-track" role="region" aria-roledescription="carrousel" aria-label="Weer en gedachte voor vandaag">
+<section class="ms-weather ms-glass ms-feature-slide" role="group" aria-label="1 van 2: Weer in Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
+<section class="ms-thought ms-glass ms-feature-slide" role="group" aria-label="2 van 2: Gedachte voor vandaag"><div id="ms-quote-host"><div class="flow-hero"><div class="flow-eyebrow">Gedachte voor vandaag</div><p>Gedachte laden…</p></div></div></section>
+</div>
+<nav class="ms-feature-nav" aria-label="Kaart kiezen">
+<button type="button" data-ms-slide="0" aria-controls="ms-feature-track" aria-label="Toon weer" aria-pressed="true"></button>
+<button type="button" data-ms-slide="1" aria-controls="ms-feature-track" aria-label="Toon gedachte voor vandaag" aria-pressed="false"></button>
+</nav></div>
 <section class="ms-day ms-glass" aria-label="Jouw daglijn"><div class="ms-dayhead"><button class="ms-overview" type="button" data-ms-view="today">Jouw daglijn</button><div class="ms-counts"><span id="ms-events" aria-live="polite">Agenda laden…</span><span id="ms-tasks" aria-live="polite">Taken laden…</span></div></div>
 <div class="ms-timeline">
 <button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-time" id="ms-event-first-time">Vandaag</span><span class="ms-rowtext"><strong id="ms-event-first-title">Agenda laden…</strong><small id="ms-event-first">Vandaag · Agenda</small></span><img class="ms-thumb" src="./assets/memento-start-agenda.svg" alt=""></button>
@@ -23,6 +31,27 @@
 </div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
  const one=id=>document.getElementById(id);
+
+ const featureTrack=one('ms-feature-track');
+ const featureButtons=[...root.querySelectorAll('[data-ms-slide]')];
+ function activeSlide(index){featureButtons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)))}
+ function showSlide(index,immediate=false){
+  const next=index===1?1:0;
+  activeSlide(next);
+  featureTrack.scrollTo({left:next*featureTrack.clientWidth,behavior:immediate||matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+ }
+ featureButtons.forEach(button=>button.addEventListener('click',()=>showSlide(Number(button.dataset.msSlide))));
+ let slideFrame=0;
+ featureTrack.addEventListener('scroll',()=>{
+  cancelAnimationFrame(slideFrame);
+  slideFrame=requestAnimationFrame(()=>activeSlide(Math.round(featureTrack.scrollLeft/Math.max(1,featureTrack.clientWidth))));
+ },{passive:true});
+ function refreshThought(){
+  const host=one('ms-quote-host'),today=date();
+  if(!host||host.dataset.date===today)return;
+  const html=window.CompassFlow?.quoteHTML?.();
+  if(html){host.innerHTML=html;host.dataset.date=today}
+ }
  function setFocusBlocked(blocked){
   for(const el of [document.querySelector('.app'),document.getElementById('lifeApp'),document.getElementById('compassAreaBar')])if(el)el.inert=blocked;
  }
@@ -30,7 +59,7 @@
   if(isLocked())return showPin();
   lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
-  setFocusBlocked(true);refreshDay();refreshWeather();illuminate();
+  setFocusBlocked(true);refreshDay();refreshWeather();refreshThought();showSlide(0,true);illuminate();
  }
  function showPin(){
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
@@ -179,7 +208,7 @@
  });
  window.addEventListener('memento-weather-update',refreshWeather);
  window.addEventListener('storage',e=>{if(e.key===LIFE_KEY&&lock.classList.contains('memento-welcome-mode'))refreshDay();if(e.key===PIN_KEY){if(isLocked())showPin();else showWelcome()}});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather()}});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather();refreshThought()}});
  lock.addEventListener('keydown',e=>{
   if(e.key!=='Tab'||!lock.classList.contains('visible'))return;
   const surface=lock.classList.contains('memento-welcome-mode')?root:form;
