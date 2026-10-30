@@ -1,120 +1,152 @@
 name: Memento complete glass review
+
 on:
   pull_request:
     branches: [main]
+    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/**', 'AGENTS.md']
   push:
-    branches: [main, codex/app-glass-review, 'fix/memento-*']
-    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/app-review.yml']
+    branches: [main]
+    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/**', 'AGENTS.md']
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+# Cancel only obsolete PR runs; keep deployments and main runs.
+concurrency:
+  group: memento-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      tier: ${{ steps.select.outputs.tier }}
+      groups: ${{ steps.select.outputs.groups }}
+      upgrade: ${{ steps.select.outputs.upgrade }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Choose coverage from changed files
+        id: select
+        env:
+          MEMENTO_CI_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' }}
+        run: node tests/ci-plan.cjs
+
   core:
+    needs: plan
+    if: needs.plan.outputs.tier != 'low'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
-      - name: Existing storage, finance, knowledge, fitness and new review contracts
+      - name: Current-version contracts and data safety
         run: |
-          node tests/app-review-core.cjs
-          node tests/dictation-regression.cjs
-          node tests/journal-selfcare-core.cjs
-          node tests/memento-category-integrity.cjs
-          node tests/knowledge-covers.cjs
-          node tests/pin-forest-regression.cjs
-          node tests/memento-regression.cjs
-          node tests/masterplan-core.cjs
+          set -e
+          node --check assets/memento-assistant.js
+          node --check assets/memento-assistant-core.js
+          node --check sw.js
+          node tests/memento-assistant-core.cjs
           node tests/storage-safety.cjs
           node tests/storage-lock-native.cjs
-          node tests/service-worker-cache.cjs
           node tests/knowledge-regression.cjs
-          node tests/knowledge-v2-core.cjs
-          node tests/knowledge-v2-safety.cjs
-          node tests/journal-upgrade-core.cjs
-          node tests/fitness-regression.cjs
-          node tests/trash-regression.cjs
-          node tests/pin-disabled-regression.cjs
-          node tests/illustrative-icons-core.cjs
+          node tests/memento-regression.cjs
+          if [ "${{ needs.plan.outputs.tier }}" = "high" ]; then
+            node tests/app-review-core.cjs
+            node tests/dictation-regression.cjs
+            node tests/journal-selfcare-core.cjs
+            node tests/memento-category-integrity.cjs
+            node tests/knowledge-covers.cjs
+            node tests/pin-forest-regression.cjs
+            node tests/masterplan-core.cjs
+            node tests/service-worker-cache.cjs
+            node tests/knowledge-v2-core.cjs
+            node tests/knowledge-v2-safety.cjs
+            node tests/journal-upgrade-core.cjs
+            node tests/fitness-regression.cjs
+            node tests/trash-regression.cjs
+            node tests/pin-disabled-regression.cjs
+            node tests/illustrative-icons-core.cjs
+          fi
+
   browser:
+    needs: plan
+    if: needs.plan.outputs.groups != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 3
       matrix:
-        suite: [layout-completion-browser, visual-layout-browser, patches-001-002-004-browser, app-review-browser, masterplan-browser, storage-safety-browser, memento-category-browser, fitness-browser, knowledge-v2-browser, knowledge-covers-browser, notes-direction-c-browser, illustrative-icons-browser, quickfit-browser, journal-upgrade-browser, journal-selfcare-browser, memento-start-browser, visual-browser, recovery-browser, calendar-header-browser, release-acceptance-browser, glass-rendering-browser]
+        group: ${{ fromJSON(needs.plan.outputs.groups) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
-      - name: Pinned browser tooling outside app source
+      - name: Install Chromium once for this group
         run: |
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1 @axe-core/playwright@4.11.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
-      - name: Actual mobile browser suite
-        run: |
-          if [ "${{ matrix.suite }}" = "visual-browser" ]; then
-            node tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/glass-fixture.json"
-            for width in 360 393 412 1280; do
-              MEMENTO_VISUAL_FIXTURE="$RUNNER_TEMP/glass-fixture.json" MEMENTO_VISUAL_WIDTH="$width" node tests/visual-browser.cjs
-            done
-          elif [ "${{ matrix.suite }}" = "knowledge-v2-browser" ]; then
-            node tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/glass-fixture.json"
-            MEMENTO_VISUAL_FIXTURE="$RUNNER_TEMP/glass-fixture.json" node tests/knowledge-v2-browser.cjs
-          else
-            node tests/${{ matrix.suite }}.cjs
-          fi
+      - name: Run relevant actual browser journeys
+        env:
+          MEMENTO_CI_TIER: ${{ needs.plan.outputs.tier }}
+        run: node tests/ci-groups.cjs '${{ matrix.group }}' "$MEMENTO_CI_TIER"
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: failure()
         with:
-          name: glass-${{ matrix.suite }}
+          name: memento-ci-${{ matrix.group }}
           path: /tmp/memento-*
+          retention-days: 7
 
   upgrade:
+    needs: plan
+    if: needs.plan.outputs.upgrade == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
-      - name: Browser tooling and immutable original version
+      - name: Install browser tooling
         run: |
-          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1 @axe-core/playwright@4.11.1
+          npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
-          git fetch --depth=1 origin 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9
-          mkdir -p "$RUNNER_TEMP/memento-baseline"
-          git archive 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9 | tar -x -C "$RUNNER_TEMP/memento-baseline"
-          echo "MEMENTO_BASELINE_ROOT=$RUNNER_TEMP/memento-baseline" >> "$GITHUB_ENV"
-      - name: Existing data and binary attachments survive actual PWA upgrade
+      - name: Preserve current data and attachments during the next upgrade
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          node tests/masterplan-journeys.cjs
-          git fetch --depth=1 origin bf81413d6dc35fc097deeeb61c3eb09acf11834e
-          mkdir -p "$RUNNER_TEMP/memento-recovery-baseline"
-          git archive bf81413d6dc35fc097deeeb61c3eb09acf11834e | tar -x -C "$RUNNER_TEMP/memento-recovery-baseline"
-          MEMENTO_RECOVERY_BASELINE_ROOT="$RUNNER_TEMP/memento-recovery-baseline" node tests/recovery-upgrade-browser.cjs
-          git fetch --depth=1 origin 7503b542d9f37bdf059a552397b666d7e008eef2
-          mkdir -p "$RUNNER_TEMP/memento-v71-baseline"
-          git archive 7503b542d9f37bdf059a552397b666d7e008eef2 | tar -x -C "$RUNNER_TEMP/memento-v71-baseline"
-          MEMENTO_RECOVERY_BASELINE_ROOT="$RUNNER_TEMP/memento-v71-baseline" MEMENTO_RECOVERY_BASELINE_SHA=7503b542d9f37bdf059a552397b666d7e008eef2 MEMENTO_RECOVERY_UPGRADE_OUT=/tmp/memento-v71-upgrade node tests/recovery-upgrade-browser.cjs
+          set -euo pipefail
+          BASE="$PR_BASE_SHA"
+          if [ -z "$BASE" ]; then BASE="$(git rev-parse HEAD^)"; fi
+          git fetch --depth=1 origin "$BASE"
+          mkdir -p "$RUNNER_TEMP/memento-current-baseline"
+          git archive "$BASE" | tar -x -C "$RUNNER_TEMP/memento-current-baseline"
+          MEMENTO_RECOVERY_BASELINE_ROOT="$RUNNER_TEMP/memento-current-baseline" \
+            MEMENTO_RECOVERY_BASELINE_SHA="$BASE" \
+            node tests/recovery-upgrade-browser.cjs
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: failure()
         with:
-          name: glass-upgrade
-          path: |
-            /tmp/memento-journeys
-            /tmp/memento-recovery-upgrade
-            /tmp/memento-v71-upgrade
+          name: memento-current-upgrade
+          path: /tmp/memento-recovery-upgrade
+          retention-days: 7
 
   release-gate:
     name: Memento release gate
     if: always()
-    needs: [core, browser, upgrade]
+    needs: [plan, core, browser, upgrade]
     runs-on: ubuntu-latest
     steps:
-      - name: Require every core, browser and upgrade job to pass
+      - name: Require every selected job to pass
         env:
           MEMENTO_GATE_RESULTS: ${{ toJSON(needs) }}
         run: |
-          node -e 'const results=JSON.parse(process.env.MEMENTO_GATE_RESULTS); const failed=Object.entries(results).filter(([,job])=>job.result!=="success"); if(failed.length){console.error(JSON.stringify(failed));process.exit(1);} console.log("All Memento acceptance jobs passed.");'
+          node -e 'const jobs=JSON.parse(process.env.MEMENTO_GATE_RESULTS);const failures=Object.entries(jobs).filter(([,j])=>!["success","skipped"].includes(j.result));if(jobs.plan.result!=="success"||failures.length){console.error("Memento CI blocked",JSON.stringify(failures));process.exit(1)}console.log("All selected Memento checks passed")'

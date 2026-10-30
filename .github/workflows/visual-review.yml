@@ -1,9 +1,7 @@
 name: Visual review
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: ["design/memento-mobile-refinement"]
-  pull_request:
-    paths: ["index.html", "assets/**", "tests/visual-browser.cjs", "tests/helpers/visual-fixture.cjs", ".github/workflows/visual-review.yml"]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

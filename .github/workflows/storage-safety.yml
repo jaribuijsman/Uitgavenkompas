@@ -1,16 +1,7 @@
 name: Phase 1 storage safety
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: ["main", "fix/memento-data-safety-phase-1"]
-  pull_request:
-    paths:
-      - "index.html"
-      - "sw.js"
-      - "uitgavenkompas-v20-pincode-vergrendeling-1.html"
-      - "assets/memento-storage-guard.js"
-      - "assets/memento-knowledge*.js"
-      - "tests/**"
-      - ".github/workflows/storage-safety.yml"
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

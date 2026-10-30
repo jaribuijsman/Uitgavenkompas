@@ -1,41 +1,7 @@
 name: Knowledge, backup and PIN forest regression
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    paths:
-      - "assets/memento-knowledge-core.js"
-      - "assets/memento-knowledge-store.js"
-      - "assets/memento-knowledge.js"
-      - "assets/memento-knowledge.css"
-      - "assets/memento-backup.js"
-      - "assets/memento-trash-core.js"
-      - "tests/trash-regression.cjs"
-      - "index.html"
-      - "sw.js"
-      - "tests/knowledge-regression.cjs"
-      - ".github/workflows/knowledge-regression.yml"
-      - "assets/memento-forest-*.js"
-      - "assets/memento-forest-lock.css"
-      - "assets/pin-forests/**"
-      - "tests/pin-forest-regression.cjs"
-      - "tests/pin-disabled-regression.cjs"
-  pull_request:
-    paths:
-      - "assets/memento-knowledge-core.js"
-      - "assets/memento-knowledge-store.js"
-      - "assets/memento-knowledge.js"
-      - "assets/memento-knowledge.css"
-      - "assets/memento-backup.js"
-      - "assets/memento-trash-core.js"
-      - "tests/trash-regression.cjs"
-      - "index.html"
-      - "sw.js"
-      - "tests/knowledge-regression.cjs"
-      - ".github/workflows/knowledge-regression.yml"
-      - "assets/memento-forest-*.js"
-      - "assets/memento-forest-lock.css"
-      - "assets/pin-forests/**"
-      - "tests/pin-forest-regression.cjs"
-
+  workflow_dispatch:
 permissions:
   contents: read
 

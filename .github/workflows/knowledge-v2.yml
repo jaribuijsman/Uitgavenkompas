@@ -1,8 +1,7 @@
 name: Knowledge 2 acceptance
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: [main, work/memento-kc2-validation, 'fix/memento-*']
-    paths: ['assets/memento-knowledge*', 'assets/memento-layout.css', 'index.html', 'sw.js', 'tests/knowledge-v2*', 'tests/helpers/knowledge-v2*', '.github/workflows/knowledge-v2.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:

@@ -8,6 +8,7 @@ Geldt voor Codex en Work bij werk in deze repository. Specifiekere `AGENTS.md`-b
 - Kies op basis van **impact** niveau 1, 2 of 3. Bij gemengde of onverwacht risicovolle wijzigingen geldt het hoogste niveau. Leg de keuze kort vast; schaal alleen op bij een concrete reden.
 - Wijzig zo weinig mogelijk. Geen ongevraagd redesign, brede refactor, dubbele CSS-regels/`!important`-ketens of nieuwe observers. Inspecteer bij UI-fouten late CSS en DOM-decoratie; oude screenshots zijn geen bewijs van de actuele weergave.
 - Gebruik bestaande code en relevante tests. Test na een gerichte reparatie opnieuw, maar herhaal geen succesvolle suites zonder gewijzigde afhankelijkheden.
+- **Bij goedgekeurde ontwerpwijzigingen actualiseer je relevante tests in dezelfde wijziging.** Zoek expliciet naar assertions/selectors die het verwijderde of verplaatste onderdeel nog verwachten en vervang die door een even sterke controle van het nieuwe gedrag. Laat geen verouderde test achter die een volgende PR blokkeert. Schakel niet de complete visuele of veiligheidscontrole uit omdat één oude verwachting niet meer klopt. Als de gebruiker eerder zelf de visuele controle overnam, blijft dit onderhoud aan de testdekking alsnog verplicht bij het volgende relevante codewerk.
 
 ## Risiconiveaus
 
@@ -34,5 +35,6 @@ Controle: volledige toepasselijke `app-review.yml`-matrix, `tests/recovery-brows
 ## GitHub, publicatie en rapportage
 
 - **Niveau 1:** direct naar `main` mag alleen bij expliciete reeds gegeven publicatieautorisatie en als de repository het toelaat, na gerichte controle; anders branch/PR. **Niveau 2/3:** altijd aparte branch en PR. Vergelijk vóór merge met de actuele `main`; reconcileer verschillen.
-- GitHub Actions kan onafhankelijk van dit bestand een volledige suite starten. **Dit bestand verandert CI niet.** Start dezelfde brede suite niet nóg eens lokaal; respecteer verplichte statuschecks. Merge niet bij falende vereiste checks of kritieke regressies; los concrete blokkades op.
+- De automatische GitHub Actions-controles worden centraal geselecteerd door `.github/workflows/app-review.yml` en `tests/ci-plan.cjs`. De overige gespecialiseerde workflows zijn handmatig beschikbaar. Het wijzigen van `AGENTS.md` alleen past de CI-configuratie niet aan. Start brede suites niet dubbel; respecteer de centrale releasecheck en merge niet bij falende relevante tests.
+- De actuele `main` is de referentie voor een upgrade. Test gegevensbehoud bij een overgang van de vorige gepubliceerde versie naar de nieuwe versie, zonder bij iedere PR meerdere verouderde historische appversies te reconstrueren. Verwijder geen bestaande gebruikersdata, back-upcompatibiliteit of herstelcontroles.
 - Rapporteer compact in het Nederlands: risiconiveau, wijziging, daadwerkelijk uitgevoerde controles, SHA/PR, status en rollbackmogelijkheid. Een browseremulator is geen fysieke Samsung-/Android-, TalkBack- of geïnstalleerde-PWA-test.

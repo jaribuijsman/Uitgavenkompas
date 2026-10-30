@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="nl" data-memento-pin-lock="manual">
 <head>
-<script src="./assets/memento-storage-guard.js?v=20261027-safety-v1"></script>
+<script src="./assets/memento-storage-guard.js?v=20261030-assistant-guard-v1"></script>
 <script src="./assets/memento-category-integrity.js?v=20261028-v1"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102b22"><meta name="application-name" content="Memento">
 <meta name="uk-slimbuy-version" content="definitief-v1"><meta name="description" content="Memento — persoonlijk inzicht in je geld, uitgaven en spaardoelen.">
@@ -2929,6 +2929,41 @@ window.MementoKnowledgeBridge={
 };
 window.MementoLife={openWish:id=>{const w=state.wishes.find(x=>x.id===id);if(!w){status('De oorspronkelijke aankoopwens ontbreekt; het dossier blijft bewaard.',false,true);return}if(w.deletedAt){if(!confirm('Deze aankoopwens staat in de prullenbak. Herstellen en openen?'))return;if(!mutate(()=>{w.deletedAt=''},'Aankoopwens hersteld.'))return}setArea('life');setView('wishes');editWish(id);},openTrash:()=>{setArea('life');setView('backup');openPermanentTrashDialog();},linkPurchaseResearch:(id,researchId,result)=>{const g=state.groceries.find(x=>x.id===id);if(g)return mutate(()=>{g.researchId=researchId;g.researchSummary=String(result||'').slice(0,30000)})},getLocalAppointments:()=>localAppointments(),getGoogleRefreshStart:googleRefreshStart,rememberGoogleAppointments,appointmentItemsForDay,appointmentCompletion,renderAppointmentItem:renderUnifiedAppointmentItem,paintTodayAppointments,exportBackup,refreshBackupStatus,openBackup:()=>{setArea('life');setView('backup')},linkResearch:(id,researchId,result)=>{const w=state.wishes.find(x=>x.id===id);if(w)return mutate(()=>{w.researchId=researchId;w.researchSummary=String(result||'').slice(0,30000);if(w.status!=='bought')w.status='research'})}};
 
+
+const MEMENTO_ASSISTANT_UNDO='memento_assistant_undo_v1';
+window.MementoAssistantBridge={
+ read:()=>state,
+ undoInfo:()=>{
+  try{const data=JSON.parse(localStorage.getItem(MEMENTO_ASSISTANT_UNDO)||'null');return data?.format==='memento-life-assistant-undo'&&data.version===1&&Array.isArray(data.changes)&&data.changes.length?data:null;}catch{return null}
+ },
+ apply:(proposal,selected)=>{
+  if(blocked||!storageGuard)throw Error('Leven-opslag is niet schrijfbaar. Bewaar je gegevens en herlaad de app.');
+  const C=window.MementoAssistantCore;if(!C)throw Error('Assistentmodule ontbreekt. Vernieuw Memento.');
+  const token=storageGuard.beginOperation();
+  try{
+   const plan=C.prepare(state,proposal,selected);
+   if(!plan.changes.length)throw Error('Geen wijzigingen geselecteerd.');
+   const next=validate(plan.next);window.MementoKnowledgeCore?.validate(next);
+   const history={format:'memento-life-assistant-undo',version:1,appliedAt:new Date().toISOString(),changes:plan.changes};
+   storageGuard.commit({life:JSON.stringify(next)},{token,extra:{[MEMENTO_ASSISTANT_UNDO]:JSON.stringify(history)}});
+   state=next;undo=null;render();status(plan.changes.length+' wijzigingen verwerkt. Aanpassen kan per item.');
+   return plan.changes.length;
+  }finally{storageGuard.endOperation(token)}
+ },
+ undo:()=>{
+  if(blocked||!storageGuard)throw Error('Leven-opslag is niet schrijfbaar.');
+  const data=window.MementoAssistantBridge.undoInfo();if(!data)throw Error('Geen herstelbare bulkbewerking gevonden.');
+  const C=window.MementoAssistantCore;
+  const token=storageGuard.beginOperation();
+  try{
+   const next=validate(C.reverse(state,data));window.MementoKnowledgeCore?.validate(next);
+   storageGuard.commit({life:JSON.stringify(next)},{token,extra:{[MEMENTO_ASSISTANT_UNDO]:null}});
+   state=next;undo=null;render();status(data.changes.length+' wijzigingen hersteld.');
+   return data.changes.length;
+  }finally{storageGuard.endOperation(token)}
+ }
+};
+
 function quickForm(){
  const task=quickKind==='task',date=quickDate===null?today():quickDate;
  return '<form class="life-quick-add memento-quick-note memento-capture-card" id="lifeQuickForm">'+
@@ -3315,7 +3350,7 @@ function render(){
  '</select></label></div><div id="lifeWishResults"></div>';
  wishCards();return;
  }
- if(view==='agenda')renderAgenda();if(view==='backup')renderBackup();
+ if(view==='agenda')renderAgenda();if(view==='backup'){renderBackup();window.MementoAssistant?.mount(content,window.MementoAssistantBridge)}
 }
 function showDialog(title,description,body,footer){previousFocus=document.activeElement;$('lifeDialogPanel').innerHTML='<div class="life-dialog-head"><div><h2 id="lifeDialogTitle">'+esc(title)+'</h2><p class="life-dialog-description">'+esc(description)+'</p></div><button type="button" class="life-close" data-life-close aria-label="Sluiten">×</button></div><div class="life-dialog-body">'+body+'</div><div class="life-dialog-footer">'+footer+'</div>';dialog.hidden=false;dialog.classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{$('lifeDialogPanel').querySelector('input,textarea,select,button')?.focus()},20)}
 function closeDialog(){if(!dialog.classList.contains('open'))return;dialog.hidden=true;dialog.classList.remove('open');document.body.style.overflow='';modal=null;if(previousFocus?.isConnected)previousFocus.focus()}
@@ -4251,6 +4286,9 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 <script src="./assets/memento-disclosure.js?v=20261029-recovery-v2"></script>
 <script src="./assets/memento-layout.js?v=20261030-agenda-month-v1"></script>
 <script src="./assets/memento-glass.js?v=20261030-agenda-month-v1"></script>
+<link rel="stylesheet" href="./assets/memento-assistant.css?v=20261030-life-assistant-v1">
+<script src="./assets/memento-assistant-core.js?v=20261030-life-assistant-v1"></script>
+<script src="./assets/memento-assistant.js?v=20261030-life-assistant-v1"></script>
 </body></html>
 
 

@@ -1,21 +1,7 @@
 name: Memento journal sleep and recording acceptance
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: [main, work/memento-journal-sleep-voice-ai-20261027]
-    paths:
-      - 'assets/memento-knowledge-core.js'
-      - 'assets/memento-knowledge-store.js'
-      - 'assets/memento-dictation.js'
-      - 'assets/memento-dictation.css'
-      - 'assets/memento-fitness.js'
-      - 'tests/dictation-regression.cjs'
-      - 'assets/memento-knowledge.js'
-      - 'assets/memento-knowledge.css'
-      - 'index.html'
-      - 'sw.js'
-      - 'tests/journal-upgrade-*.cjs'
-      - 'tests/journal-selfcare-*.cjs'
-      - '.github/workflows/journal-upgrade.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
