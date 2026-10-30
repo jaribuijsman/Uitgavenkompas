@@ -1,9 +1,7 @@
 name: Memento illustrated icons
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-knowledge-core.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
-  pull_request:
-    paths: ["assets/memento-illustrative-icons.js", "assets/memento-illustrative-icons.css", "assets/memento-knowledge.js", "assets/memento-knowledge-core.js", "assets/memento-fitness.js", "index.html", "sw.js", "docs/icon-audit.html", "tests/illustrative-icons*.cjs", ".github/workflows/illustrative-icons.yml"]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
