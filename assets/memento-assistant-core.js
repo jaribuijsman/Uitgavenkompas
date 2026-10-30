@@ -92,7 +92,16 @@ function applyRecords(s,changes,side){
 }
 function reverse(s,undo){
  if(!undo||undo.format!=="memento-life-assistant-undo"||undo.version!==1||!Array.isArray(undo.changes)||undo.changes.length>1000)fail("Herstelgegevens ontbreken of zijn ongeldig.");
- const changes=undo.changes;
+ const changes=undo.changes,seen=new Set();
+ for(const change of changes){
+  if(!change||!own(TYPES,change.type)||typeof change.id!=="string"||!change.id||seen.has(change.type+":"+change.id))fail("Ongeldige herstelverwijzing.");
+  seen.add(change.type+":"+change.id);
+  const before=change.before,after=change.after;
+  if(!before||!after||typeof before!=="object"||typeof after!=="object"||Array.isArray(before)||Array.isArray(after))fail("Ongeldige herstelwaarden.");
+  const keys=Object.keys(before);
+  if(!keys.length||keys.length>8||keys.some(k=>!PERMITTED[change.type].includes(k)||!own(after,k))||Object.keys(after).length!==keys.length)fail("Herstel bevat niet-toegestane velden.");
+  for(const field of keys){if(!valueValid(change.type,field,after[field],s))fail("Ongeldige herstelwaarde.");}
+ }
  // Validate the entire batch before touching any item.
  return applyRecords(s,changes.slice().reverse(),"before");
 }
