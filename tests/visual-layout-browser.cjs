@@ -27,11 +27,11 @@ async function nav(page,area,view){if(await page.locator('#ms-continue').isVisib
  const agenda=page.locator('.memento-agenda-month-layout');assert(await agenda.isVisible(),'Month calendar is default');
  assert.equal(await agenda.locator('.mg-agenda-tools,.mg-roster-strip,[data-ml-fold=agenda-month]').count(),0,'Old mode/roster/fold removed');
  const days=agenda.locator('button[data-gcal-day]');const count=await days.count();assert(count>=28&&count<=31,'Calendar renders actual month days');
- const calIcon=agenda.locator('.memento-gcal-menu>summary'),add=agenda.locator('.memento-agenda-add');
+ const calIcon=page.locator('#lifeContent .memento-gcal-menu>summary'),add=page.locator('#lifeContent .memento-agenda-add');
  const iconBox=await calIcon.boundingBox(),addBox=await add.boundingBox();
  assert(iconBox&&addBox&&iconBox.width>=44&&iconBox.height>=44&&addBox.height>=44,'Accessible agenda actions');
  assert(Math.abs(iconBox.y-addBox.y)<2,'Google action and New appointment share a row');
- await calIcon.click();assert(await agenda.getByRole('button',{name:'Google Agenda verbinden'}).isVisible(),'Live connection action reachable');
+ await calIcon.click();assert(await page.getByRole('button',{name:'Google Agenda verbinden'}).isVisible(),'Live connection action reachable');
  await calIcon.click();
  const chosen=days.nth(10),iso=await chosen.getAttribute('data-gcal-day');await chosen.click();
  assert.equal(await chosen.getAttribute('aria-pressed'),'true','Selected day announced');
