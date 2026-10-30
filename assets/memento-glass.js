@@ -41,20 +41,6 @@
    const selected=rest.find(b=>b.getAttribute('aria-pressed')==='true');
    const d=fold(rest,selected?.textContent||'Overzichten');if(d){d.classList.add('mg-task-overviews');tabs.append(d);}
   }
-  const agenda=$('#lifeApp[data-life-view=agenda] .memento-calendar-panel');
-  if(agenda&&!agenda.querySelector('.mg-agenda-tools')){
-   $('#lifeApp').dataset.mgAgenda||($('#lifeApp').dataset.mgAgenda='list');
-   const row=document.createElement('div');row.className='mg-agenda-tools';row.setAttribute('aria-label','Agendaweergave');
-   for(const [mode,label]of [['list','Daglijst'],['month','Maand']]){const b=document.createElement('button');b.type='button';b.dataset.mgAgenda=mode;b.textContent=label;b.setAttribute('aria-pressed',String(($('#lifeApp').dataset.mgAgenda||'list')===mode));row.append(b);}
-   agenda.querySelector('.memento-cal-toolbar')?.before(row);
-   const tools=agenda.querySelector('#memento-gcal-tools');if(tools&&!tools.closest('.mg-fold'))fold([tools],'Google Calendar · verbinding');
-  }
-  if(agenda&&!agenda.querySelector('.mg-roster-strip')&&window.MementoFitnessCore){
-   const C=window.MementoFitnessCore,strip=document.createElement('div');strip.className='mg-roster-strip';strip.setAttribute('aria-label','Dienstrooster komende tien dagen');
-   const detail=document.createElement('p');detail.className='mg-roster-detail';detail.setAttribute('aria-live','polite');
-   for(let i=0;i<10;i++){const d=new Date(C.date()+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);const iso=d.toISOString().slice(0,10),duty=C.duty(iso),b=document.createElement('button');b.type='button';b.dataset.mgDuty=iso;b.textContent=String(d.getUTCDate());const code=document.createElement('span');code.textContent=duty.code;b.append(code);b.setAttribute('aria-pressed',String(i===0));b.setAttribute('aria-label',iso+' · '+duty.label+' · '+duty.time);strip.append(b);if(i===0)detail.textContent=duty.label+' · '+duty.time+(duty.carryUntil?' · vorige nachtdienst tot '+duty.carryUntil:'');}
-   const tools=agenda.querySelector('.mg-agenda-tools');tools?.after(strip,detail);
-  }
   for(const card of document.querySelectorAll('#lifeWishResults .life-panel')){if(card.dataset.mgWish)continue;card.dataset.mgWish='1';card.classList.add('mg-wish-card');const actions=card.querySelector('.life-card-actions');if(actions){const manage=[...actions.querySelectorAll('[data-life-wish-edit],[data-life-wish-delete]')];const d=fold(manage,'Beheer');if(d)actions.append(d);}const ps=[...card.querySelectorAll(':scope>p')].filter(p=>!p.textContent.startsWith('Budget:'));if(ps.length)fold(ps,'Notitie');}
   // Context and chips expose the real native financial filters; clicking clears that control.
   const tx=$('#view-transactions');if(tx){
@@ -93,8 +79,6 @@
   if(b.dataset.mgCooking!==undefined){const readable=$('.kc-readable');if(readable){const on=readable.classList.toggle('mg-cooking');b.textContent=on?'Normale weergave':'Kookstand';if(on&&!readable.querySelector('[data-mg-next-step]')){const next=document.createElement('button');next.type='button';next.className='kc-btn';next.dataset.mgNextStep='0';next.textContent='Volgende stap';readable.append(next);}}return;}
   if(b.dataset.mgNextStep!==undefined){const items=[...b.parentElement.querySelectorAll('p,li')];if(items.length){items.forEach(x=>x.classList.remove('mg-current-step'));const i=Number(b.dataset.mgNextStep)%items.length;items[i].classList.add('mg-current-step');items[i].scrollIntoView({block:'nearest'});b.dataset.mgNextStep=String(i+1);}return;}
   if(b.dataset.mgRoutineJump!==undefined){const card=$('#mementoFitness [data-mg-routine="'+b.dataset.mgRoutineJump+'"]');if(card){card.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});const first=card.querySelector('button');first?.focus({preventScroll:true});}return;}
-  if(b.dataset.mgDuty){const C=window.MementoFitnessCore,duty=C.duty(b.dataset.mgDuty),host=b.closest('.memento-calendar-panel');host.querySelectorAll('[data-mg-duty]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));host.querySelector('.mg-roster-detail').textContent=new Date(duty.date+'T12:00:00Z').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'short'})+' · '+duty.label+' · '+duty.time+(duty.carryUntil?' · vorige nachtdienst tot '+duty.carryUntil:'');return;}
-  if(b.dataset.mgAgenda){const app=$('#lifeApp');app.dataset.mgAgenda=b.dataset.mgAgenda;app.querySelectorAll('[data-mg-agenda]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));window.MementoLayout?.refresh();return;}
   if(b.dataset.mgClearFinance){const input=$('#'+b.dataset.mgClearFinance);if(input){input.value=input.tagName==='SELECT'?'all':'';input.dispatchEvent(new Event('change',{bubbles:true}));schedule();}return;}
   if(b.dataset.mgConfirmBalance){const input=$('#'+b.dataset.mgConfirmBalance);if(input){input.dataset.mgConfirm='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.mgConfirm;}return;}
  });
