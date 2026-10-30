@@ -146,7 +146,7 @@ body #view-dashboard .m9-net{padding:10px 0 5px}
 body #view-dashboard .m9-pair{padding-bottom:10px}
 
 /* Agenda: a directly navigable month, without day-list or roster controls. */
-body #lifeApp[data-life-view=agenda] .memento-agenda-month-layout{width:100%;box-sizing:border-box;padding:12px!important;overflow:visible}
+body #lifeApp[data-life-view=agenda] .memento-agenda-month-layout{width:100%;box-sizing:border-box;padding:12px!important;overflow:hidden}
 /* Seven calendar targets remain >=44px at 360px after container gutters. */
 @media(max-width:380px){body #lifeApp[data-life-view=agenda] .memento-agenda-month-layout{padding:6px!important}}
 body #lifeApp[data-life-view=agenda] .memento-cal-heading{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;margin:0 0 12px}
