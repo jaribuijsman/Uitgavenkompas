@@ -1,9 +1,7 @@
 name: Memento collection art
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    paths: ["assets/memento-knowledge*.js", "assets/memento-knowledge.css", "assets/memento-backup.js", "index.html", "sw.js", "tests/knowledge-covers*.cjs", ".github/workflows/knowledge-covers.yml"]
-  pull_request:
-    paths: ["assets/memento-knowledge*.js", "assets/memento-knowledge.css", "assets/memento-backup.js", "index.html", "sw.js", "tests/knowledge-covers*.cjs", ".github/workflows/knowledge-covers.yml"]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
