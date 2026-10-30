@@ -4,9 +4,21 @@ module.exports=async function verify(page,navigate,width,checks,shot){
   async function onScreen(selector){await page.waitForFunction(selector=>{const n=document.querySelector(selector),r=n?.getBoundingClientRect();return !!r&&r.x>=-1&&r.y>=-1&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1},selector,{timeout:3000});const r=await page.locator(selector).first().boundingBox();const size=page.viewportSize();assert(r&&r.x>=-1&&r.y>=-1&&r.x+r.width<=size.width+1&&r.y+r.height<=size.height+1,selector+" must fit visible viewport: "+JSON.stringify(r));}
   async function targets(selector){const sizes=await page.locator(selector).evaluateAll(nodes=>nodes.filter(n=>n.getClientRects().length).map(n=>{const r=n.getBoundingClientRect();return {text:n.getAttribute('aria-label')||n.textContent.slice(0,40),w:r.width,h:r.height}}));assert(sizes.length,selector);for(const n of sizes)assert(n.w>=43.9&&n.h>=43.9,selector+" target "+JSON.stringify(n));}
   await navigate(page,"life","today");
-  const order=await page.evaluate(()=>{const a=document.querySelector('.memento-day-appointments'),b=document.querySelector('.flow-home');return !!a&&!!b&&Boolean(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING)});assert(order,"Appointments precede inspiration");
+  // The approved start carousel replaced the legacy quote on Mijn dag.
+  // Keep an actual layout assertion: appointments precede the tasks caption.
+  const layout=await page.evaluate(()=>{
+   const today=document.querySelector('#lifeContent .life-day-column');
+   const appointments=today?.querySelector('.memento-day-appointments');
+   const tasks=today?.querySelector('.memento-day-task-label');
+   const quote=document.querySelector('#lifeContent .flow-home,#lifeContent .flow-hero');
+   const startThought=document.querySelector('#mementoStart .ms-thought');
+   return {today:!!today,appointments:!!appointments,tasks:!!tasks,
+    appointmentsFirst:!!appointments&&!!tasks&&Boolean(appointments.compareDocumentPosition(tasks)&Node.DOCUMENT_POSITION_FOLLOWING),
+    noLegacyQuote:!quote,startThought:!!startThought};
+  });
+  assert(layout.today&&layout.appointments&&layout.tasks&&layout.appointmentsFirst&&layout.noLegacyQuote&&layout.startThought,"Today's appointments must precede tasks; thought belongs only to the start carousel: "+JSON.stringify(layout));
   await targets("#compassAreaBar button");if(width<=800)await targets("#mementoQuickNav button");
-  checks.push("Daily appointments precede inspiration; primary navigation targets >=44px");
+  checks.push("Today's appointments precede tasks; thought only in start carousel; navigation targets >=44px");
   await navigate(page,"life","groceries");await targets(".shopping-check,.shopping-icon-button,.shopping-row-title");
   await navigate(page,"life","agenda");assert(await page.locator('.memento-agenda-month-layout').isVisible());await targets("button.memento-cal-day");await shot(page,'agenda-month',false);checks.push("Shopping controls and seven-column calendar targets >=44px");
   await navigate(page,"finance","transactions");
