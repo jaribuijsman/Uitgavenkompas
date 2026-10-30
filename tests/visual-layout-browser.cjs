@@ -23,7 +23,26 @@ async function nav(page,area,view){if(await page.locator('#ms-continue').isVisib
  await page.addStyleTag({content:'body #lifeApp .memento-task-tabs :is(button,summary){font-size:16.25px!important}'});const large=await bounds();assert(large.height<=150&&large.items.every(r=>r.height<=80&&r.width>=64),JSON.stringify(large));
  await page.screenshot({path:path.join(out,width+'-'+reducedMotion+'-tasks.jpg'),type:'jpeg',animations:'disabled'});
  await nav(page,'life','wishes');const heading=await page.locator('#lifeTitle').boundingBox();assert(heading&&heading.height<70,'Wish title broke into fragments');
- await nav(page,'life','agenda');assert(await page.locator('.mg-agenda-tools button').first().evaluate(e=>parseFloat(getComputedStyle(e).borderRadius)>=10));const status=await page.locator('.memento-cal-status').boundingBox();assert(status&&status.height<50,'Calendar status broke into fragments');
+ await nav(page,'life','agenda');
+ const agenda=page.locator('.memento-agenda-month-layout');assert(await agenda.isVisible(),'Month calendar is default');
+ assert.equal(await agenda.locator('.mg-agenda-tools,.mg-roster-strip,[data-ml-fold=agenda-month]').count(),0,'Old mode/roster/fold removed');
+ const days=agenda.locator('button[data-gcal-day]');const count=await days.count();assert(count>=28&&count<=31,'Calendar renders actual month days');
+ const calIcon=agenda.locator('.memento-gcal-menu>summary'),add=agenda.locator('.memento-agenda-add');
+ const iconBox=await calIcon.boundingBox(),addBox=await add.boundingBox();
+ assert(iconBox&&addBox&&iconBox.width>=44&&iconBox.height>=44&&addBox.height>=44,'Accessible agenda actions');
+ assert(Math.abs(iconBox.y-addBox.y)<2,'Google action and New appointment share a row');
+ await calIcon.click();assert(await agenda.getByRole('button',{name:'Google Agenda verbinden'}).isVisible(),'Live connection action reachable');
+ await calIcon.click();
+ const chosen=days.nth(10),iso=await chosen.getAttribute('data-gcal-day');await chosen.click();
+ assert.equal(await chosen.getAttribute('aria-pressed'),'true','Selected day announced');
+ await add.click();assert.equal(await page.locator('#mementoEventDate').inputValue(),iso,'New appointment uses selected date');
+ await page.locator('[data-life-close]').last().click();
+ const month=await agenda.getAttribute('data-gcal-month');
+ await agenda.locator('[data-memento-agenda-shift="1"]').click();
+ assert.notEqual(await page.locator('.memento-agenda-month-layout').getAttribute('data-gcal-month'),month,'Next month works');
+ await page.locator('[data-memento-agenda-shift="0"]').click();
+ assert.equal(await page.locator('.memento-agenda-month-layout').getAttribute('data-gcal-month'),String(new Date().getMonth()),'Today resets the month');
+ await page.screenshot({path:path.join(out,width+'-'+reducedMotion+'-agenda.jpg'),type:'jpeg',animations:'disabled'});
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));report.push({width,reducedMotion,compact,large,textUpdates:60,documentQueries:queries,allTaskStatusesReachable:true});await ctx.close();
  }
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({report,errors},null,2));console.log(JSON.stringify({PASS:report,errors}));
