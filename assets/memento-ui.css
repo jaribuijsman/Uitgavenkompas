@@ -258,7 +258,8 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-unified-task .life-task-body{min-width:0;grid-column:auto;grid-row:auto;flex-basis:auto}
 #lifeApp[data-life-view="today"] .memento-unified-task .life-task-title,
 #lifeApp[data-life-view="today"] .life-overdue .life-task.memento-unified-task .life-task-title{
- display:block;min-height:0;padding:0;font-size:14px;line-height:1.45;font-weight:650;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+ min-height:0;padding:0;font-size:14px;line-height:1.45;font-weight:650;
 }
 #lifeApp[data-life-view="today"] .memento-unified-task .life-task-meta{margin-top:4px;gap:3px 8px;font-size:12px;line-height:1.45}
 #lifeApp[data-life-view="today"] .memento-unified-task .memento-unified-time{min-width:0;white-space:nowrap;font-size:12px;font-weight:650;line-height:1.5;color:#bdd3c4}
