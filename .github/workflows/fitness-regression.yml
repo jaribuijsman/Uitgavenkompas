@@ -1,19 +1,8 @@
 name: Fitness regression
 
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    paths:
-      - "assets/memento-fitness-core.js"
-      - "assets/memento-fitness.js"
-      - "tests/fitness-regression.cjs"
-      - ".github/workflows/fitness-regression.yml"
-  pull_request:
-    paths:
-      - "assets/memento-fitness-core.js"
-      - "assets/memento-fitness.js"
-      - "tests/fitness-regression.cjs"
-      - ".github/workflows/fitness-regression.yml"
-
+  workflow_dispatch:
 permissions:
   contents: read
 
