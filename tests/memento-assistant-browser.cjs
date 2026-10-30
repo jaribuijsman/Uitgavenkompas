@@ -44,17 +44,16 @@ const server=http.createServer((req,res)=>{
    assert.equal(diagnostic.area,'life',JSON.stringify(diagnostic));
    assert.equal(diagnostic.view,'backup',JSON.stringify(diagnostic));
    assert.equal(diagnostic.pinLocked,false,JSON.stringify(diagnostic));
-   const assistantVisibility=await page.locator('#mementoAssistant').evaluate(el=>{
-    const path=[];for(let n=el;n&&path.length<12;n=n.parentElement){
-     const st=getComputedStyle(n),rect=n.getBoundingClientRect();
-     path.push({tag:n.tagName,id:n.id,cls:String(n.className).slice(0,80),hidden:n.hidden,inert:n.inert,
-      display:st.display,visibility:st.visibility,opacity:st.opacity,width:Math.round(rect.width),height:Math.round(rect.height)});
-    }
-    return {path,rootClass:document.documentElement.className,bodyClass:document.body.className,bodyArea:document.body.dataset.compassArea,
-     portal:document.getElementById('pinLock')?.className};
-   });
-   console.log('ASSISTANT_VISIBILITY',JSON.stringify(assistantVisibility));
-   await page.locator('#mementoAssistant').waitFor({state:'visible',timeout:12000});
+   // The glass layer intentionally folds administration cards. Open the real summary,
+   // rather than expecting private controls to be exposed by default.
+   const assistant=page.locator('#mementoAssistant');
+   const unfold=async()=>{
+    await page.waitForFunction(()=>Boolean(document.querySelector('#mementoAssistant')?.closest('details.mg-fold')));
+    const details=assistant.locator('xpath=ancestor::details[contains(@class,"mg-fold")][1]');
+    await details.locator(':scope > summary').click();
+    await assistant.waitFor({state:'visible',timeout:12000});
+   };
+   await unfold();
    assert.equal(await page.locator('#mementoAssistant').count(),1);
    await page.locator('[data-ma="export"]').click();
    assert.match(await page.locator('#ma-status').innerText(),/Bevestig eerst/);
