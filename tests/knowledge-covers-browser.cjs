@@ -15,7 +15,23 @@ const srv=http.createServer((req,res)=>{const pathname=new URL(req.url,"http://l
  await page.locator('[data-memento-menu="open"]').click();
  await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();
  assert.equal(await page.locator(".kc-art-row .kc-art-wrap img").count()>=5,true);
- checks.push("All root category cards have pixel-art scenes");
+ const coverGeometry=await page.locator(".kc-collection-rows .kc-art-row").first().evaluate(card=>{
+  const wrap=card.querySelector(".kc-art-wrap"),image=wrap?.querySelector("img.kc-cover-image"),title=card.querySelector("strong");
+  const b=card.getBoundingClientRect(),a=wrap.getBoundingClientRect(),i=image.getBoundingClientRect(),t=title.getBoundingClientRect();
+  return {position:getComputedStyle(wrap).position,overflow:getComputedStyle(card).overflow,
+   overlay:getComputedStyle(wrap,"::after").backgroundImage,cardWidth:b.width,artWidth:a.width,
+   artLeft:a.left-b.left,artHeight:a.height,cardHeight:b.height,
+   imageWidth:i.width,titleVisible:t.width>0&&t.left>=b.left&&t.right<=b.right};
+ });
+ assert.equal(coverGeometry.position,"absolute","Collection artwork must stay a full-bleed background, not an inline thumbnail");
+ assert.equal(coverGeometry.overflow,"hidden","Artwork must clip to card corners");
+ assert(coverGeometry.artWidth>=coverGeometry.cardWidth-2,"Artwork must cover the full card width");
+ assert(coverGeometry.artHeight>=coverGeometry.cardHeight-2,"Artwork must cover the full card height");
+ assert(Math.abs(coverGeometry.artLeft)<=2,"Artwork must align with the card left edge");
+ assert(coverGeometry.imageWidth>=coverGeometry.cardWidth-2,"Cover image must fill the background");
+ assert(coverGeometry.overlay.includes("linear-gradient"),"Readable title overlay must be preserved");
+ assert(coverGeometry.titleVisible,"Collection title must remain visible inside the card");
+ checks.push("Root category artwork fills the banner, clips to card bounds and retains readable-title overlay");
  await page.locator('.kc-section-head summary').first().click();
  await page.locator('[data-kc="new-collection"]').first().click();
  await page.locator("#kc-col-name").fill("Mijn leesprojecten");
