@@ -9,7 +9,7 @@
   const JOURNAL = "memento_storage_pending_v1";
   const KEYS = Object.freeze({ finance: "uitgavenkompas_v1", life: "compass_life_preview_v1" });
   const BACKUPS = { finance: "uitgavenkompas_auto_backup_v1", life: "compass_life_preview_v1_vorige" };
-  const AUX = new Set(["memento_trash_pending_files_v1", "UK_DASHBOARD_PERIOD_MODE", "UK_DASHBOARD_SCOPE"]);
+  const AUX = new Set(["memento_trash_pending_files_v1", "memento_assistant_undo_v1", "UK_DASHBOARD_PERIOD_MODE", "UK_DASHBOARD_SCOPE"]);
   function create(host) {
     const storage = host.localStorage, expected = {};
     let owner = false, stopped = false, busy = null, release = null, reason = "Memento controleert het schrijfslot. Probeer zo opnieuw.", pending = null;
