@@ -75,7 +75,6 @@ body #lifeApp[data-mg-agenda=month] [data-ml-fold=agenda-month]{display:block}
 body #lifeApp .kc-quick-optional>.mg-fold-body{padding:12px}
 body #lifeApp .kc-quick-optional .kc-quick{margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none}
 body #lifeApp .kc-collection-row.kc-art-row{min-height:82px}
-body #lifeApp .kc-art-row .kc-art-wrap{width:76px;flex-basis:76px}
 body #lifeApp .kc-art-row .kc-collection-icon{display:none}
 body #lifeApp .kc-hub-shortcuts{display:block}
 body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font-size:12px;letter-spacing:.08em;margin:8px 4px 0}
