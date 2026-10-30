@@ -16,6 +16,17 @@ let proposal=null, chosen=new Set();
 function download(name,content){const url=URL.createObjectURL(new Blob([content],{type:"application/json;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 function feedback(box,msg,error=false){box.textContent=msg;box.dataset.error=String(error);box.setAttribute("role",error?"alert":"status");}
 function labelValue(v){return typeof v==="string"?v:JSON.stringify(v);}
+function showBulkResult(message){
+ // The guarded write already re-renders Leven. Keep the native settings disclosure
+ // open after the glass decorator has wrapped the refreshed card.
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  const current=document.querySelector('#mementoAssistant');
+  const disclosure=current?.closest('details.mg-fold');
+  if(disclosure)disclosure.open=true;
+  const status=current?.querySelector('#ma-status');
+  if(status)feedback(status,message);
+ }));
+}
 function mount(host,bridge){
  if(!host||!bridge)return;
  const section=document.createElement("section");section.id="mementoAssistant";section.className="life-panel ma-panel";
@@ -56,9 +67,7 @@ function mount(host,bridge){
    try{
     const n=bridge.apply(proposal,[...chosen]);
     proposal=null;chosen.clear();
-    const current=document.querySelector("#mementoAssistant");
-    if(current){const parent=current.parentElement;current.remove();window.MementoAssistant.mount(parent,bridge);}
-    feedback(document.querySelector("#ma-status"),n+" wijzigingen verwerkt. Je kunt alle items later afzonderlijk aanpassen.");
+    showBulkResult(n+" wijzigingen verwerkt. Je kunt alle items later afzonderlijk aanpassen.");
    }catch(e){feedback(notice,e.message,true);}
   });
   review.append(applyButton);
@@ -91,9 +100,7 @@ function mount(host,bridge){
   try{
    const n=bridge.undo();
    proposal=null;
-   const current=document.querySelector("#mementoAssistant");
-   if(current){const parent=current.parentElement;current.remove();window.MementoAssistant.mount(parent,bridge);}
-   feedback(document.querySelector("#ma-status"),n+" wijzigingen hersteld.");
+   showBulkResult(n+" wijzigingen hersteld.");
   }catch(e){feedback(notice,e.message,true);}
  });
  undoInfo();
