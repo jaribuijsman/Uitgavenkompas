@@ -27,8 +27,24 @@ const server=http.createServer((req,res)=>{
    await page.evaluate(data=>{localStorage.setItem('compass_life_preview_v1',JSON.stringify(data.life));localStorage.setItem('uitgavenkompas_v1',JSON.stringify(data.finance));},fixture);
    await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
-   await page.evaluate(()=>{document.querySelector('#ms-continue')?.click();window.MementoLife.openBackup();});
-   await page.locator('#mementoAssistant').waitFor();
+   // Navigate through the same mobile controls used by the user.
+   await page.locator('#ms-continue').click();
+   await page.locator('[data-memento-menu="open"]').click();
+   if(await page.evaluate(()=>document.body.dataset.compassArea)!=='life')
+    await page.locator('[data-memento-switch="life"]').click();
+   await page.locator('#mementoMenuGrid [data-memento-dest="life:backup"]').click();
+   const diagnostic=await page.evaluate(()=>({
+    area:document.body.dataset.compassArea,
+    view:document.querySelector('#lifeApp')?.dataset.lifeView,
+    pinLocked:document.body.classList.contains('pin-locked'),
+    portalVisible:document.querySelector('#pinLock')?.classList.contains('visible'),
+    display:getComputedStyle(document.querySelector('#lifeApp')).display,
+    visibility:getComputedStyle(document.querySelector('#lifeApp')).visibility
+   }));
+   assert.equal(diagnostic.area,'life',JSON.stringify(diagnostic));
+   assert.equal(diagnostic.view,'backup',JSON.stringify(diagnostic));
+   assert.equal(diagnostic.pinLocked,false,JSON.stringify(diagnostic));
+   await page.locator('#mementoAssistant').waitFor({state:'visible',timeout:12000});
    assert.equal(await page.locator('#mementoAssistant').count(),1);
    await page.locator('[data-ma="export"]').click();
    assert.match(await page.locator('#ma-status').innerText(),/Bevestig eerst/);
