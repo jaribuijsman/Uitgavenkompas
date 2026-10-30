@@ -68,5 +68,26 @@
 body.memento-start-open{overflow:hidden!important}
 @media(max-height:740px){#mementoStart .ms-shell{padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0}#mementoStart .ms-content{gap:5px}#mementoStart .ms-brand{height:53px;min-height:53px}#mementoStart .ms-logo{width:170px}#mementoStart .ms-date{font-size:10px;max-width:118px}#mementoStart .ms-weather{padding-top:10px}#mementoStart .ms-temperature{font-size:39px}#mementoStart .ms-hour{padding-block:3px}#mementoStart .ms-day{min-height:250px;padding-bottom:8px}#mementoStart .ms-dayhead{min-height:45px}#mementoStart .ms-timeline{grid-template-rows:repeat(4,minmax(44px,1fr))}#mementoStart .ms-cardrow{min-height:44px;gap:7px;padding-inline:6px}#mementoStart .ms-rowtext strong{font-size:13px}#mementoStart .ms-thumb{width:38px;height:36px}#mementoStart .ms-quickbutton{min-height:51px;font-size:11px}#mementoStart .ms-footer{padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px))}#mementoStart .ms-continue{min-height:52px}}
 @media(max-width:350px){#mementoStart .ms-shell,#mementoStart .ms-footer{padding-inline:10px}#mementoStart .ms-time{width:36px;flex-basis:36px;font-size:11px}#mementoStart .ms-cardrow{gap:6px;padding-inline:5px}#mementoStart .ms-thumb{width:34px;height:34px}#mementoStart .ms-rowtext strong{font-size:13px}#mementoStart .ms-quickbutton{font-size:11px;gap:2px}#mementoStart .ms-condition{font-size:12px}}
+
+/* Startportaal: twee bestaande kaarten in één native, horizontaal veegbare sectie. */
+#mementoStart .ms-feature{min-width:0;width:100%;flex-shrink:0}
+#mementoStart .ms-feature-track{display:flex;align-items:stretch;width:100%;min-width:0;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:23px}
+#mementoStart .ms-feature-track::-webkit-scrollbar{display:none}
+#mementoStart .ms-feature-slide{flex:0 0 100%;min-width:0;width:100%;scroll-snap-align:start;scroll-snap-stop:always}
+#mementoStart .ms-thought{display:flex;flex-direction:column;color:#f0f7f2}
+#mementoStart .ms-thought #ms-quote-host{display:flex;flex:1;min-width:0}
+#mementoStart .ms-thought .flow-hero{flex:1;min-width:0;min-height:100%;border:0;border-radius:22px;padding:16px;background:linear-gradient(140deg,#244c32e8,#172c20e8)}
+#mementoStart .ms-thought .flow-hero-top{margin-bottom:14px;gap:8px}
+#mementoStart .ms-thought .flow-eyebrow{font-size:11px}
+#mementoStart .ms-thought .flow-date{font-size:12px}
+#mementoStart .ms-thought .flow-avatar{width:52px;height:52px}
+#mementoStart .ms-thought .flow-hero blockquote{font-size:clamp(16px,4.4vw,20px);line-height:1.45;margin:0 0 13px;overflow-wrap:anywhere}
+#mementoStart .ms-thought .flow-citation{font-size:12px;overflow-wrap:anywhere}
+#mementoStart .ms-thought .flow-citation summary{min-height:44px;display:list-item;padding:10px 0}
+#mementoStart .ms-thought .flow-citation a{display:inline-block;min-height:44px;padding:10px 0}
+#mementoStart .ms-feature-nav{height:32px;display:flex;justify-content:center;align-items:center;gap:2px}
+#mementoStart .ms-feature-nav button{position:relative;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:transparent}
+#mementoStart .ms-feature-nav button::before{content:'';display:block;width:7px;height:7px;border-radius:999px;background:#dce8cb85;transition:width .2s,background-color .2s}
+#mementoStart .ms-feature-nav button[aria-pressed=true]::before{width:19px;background:#e6d6a3}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#mementoStart .ms-glass,#mementoStart .ms-quickbutton{background:#15382dec}}
 @media(prefers-reduced-motion:reduce){#mementoStart *,#mementoStart *::before,#mementoStart *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
