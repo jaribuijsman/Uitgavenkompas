@@ -1,8 +1,7 @@
 name: Memento quick notes and Fitness acceptance
+# Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
-  push:
-    branches: [main, work/memento-quickfit-validation]
-    paths: ['assets/memento-knowledge.js', 'assets/memento-knowledge.css', 'assets/memento-fitness.js', 'assets/memento-fitness.css', 'index.html', 'sw.js', 'tests/quickfit-browser.cjs', '.github/workflows/quickfit.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
