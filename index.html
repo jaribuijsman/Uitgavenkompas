@@ -1126,7 +1126,7 @@ body[data-compass-area="finance"] .app :is(.analysis-tab,.account-scope-switch b
 @media(max-width:360px){#pinLock{padding-left:14px!important;padding-right:14px!important}#pinLock .memento-pin-brand{padding:0 12px}#pinLock .memento-pin-entry{padding:22px 17px 12px}#pinLock .pin-keypad{gap:14px}#pinLock .memento-lock-motto{font-size:9px;letter-spacing:1.35px;gap:7px}}
 </style>
 <link rel="stylesheet" href="./assets/memento-forest-lock.css?v=20261027-pixelforest-v1">
-<link rel="stylesheet" href="./assets/memento-start.css?v=20261029-daglijn-glass-v1">
+<link rel="stylesheet" href="./assets/memento-start.css?v=20261030-feature-carousel-v1">
 <style id="mementoChosenGoldLogo">
 #pinLock #pinTitle{width:100%!important;max-width:354px;margin:0 auto!important;filter:drop-shadow(0 2px 6px #0008)}
 #pinLock .memento-gold-art{display:block;width:100%;height:auto;max-height:none}
@@ -2553,7 +2553,7 @@ init();
 <script type="text/plain" id="compassAvatarData">./assets/memento-avatar.png</script>
 <script defer src="./assets/memento-forest-art.js?v=20261027-pixelforest-v1"></script>
 <script defer src="./assets/memento-forest-lock.js?v=20261027-pin-disabled-v1"></script>
-<script defer src="./assets/memento-start.js?v=20261029-layout-v1"></script>
+<script defer src="./assets/memento-start.js?v=20261030-feature-carousel-v1"></script>
 <script id="compassFlowScript">(()=>{'use strict';
 const root=document,quotes=JSON.parse(document.getElementById('compassQuoteData').textContent),avatar=document.getElementById('compassAvatarData').textContent.trim();
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2574,9 +2574,9 @@ function paintWeather(){root.querySelectorAll('[data-flow-weather]').forEach(el=
 async function refresh(force=false){if(busy)return;if(!force&&Date.now()-lastAttempt<5*60000)return;if(!force&&!failed&&cached&&Date.now()-cached.fetchedAt>=0&&Date.now()-cached.fetchedAt<30*60000&&cached.data.current.time.slice(0,10)===day()&&Array.isArray(cached.data.hourly?.time)){paintWeather();return}busy=true;lastAttempt=Date.now();paintWeather();const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{const res=await fetch(URL,{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(!validData(data))throw Error('Ongeldige weersgegevens');cached={fetchedAt:Date.now(),data};failed=false;try{localStorage.setItem(KEY,JSON.stringify(cached))}catch{}}catch{failed=true}finally{clearTimeout(timer);busy=false;paintWeather()}}
 window.addEventListener('memento-start-weather-refresh',()=>refresh(true));
 function mount(){root.querySelectorAll('[data-flow-quote]').forEach(el=>el.innerHTML=quoteHTML());paintWeather();if(!document.hidden&&(document.getElementById('pinLock')?.classList.contains('visible')||(document.body.dataset.compassArea==='life'&&document.getElementById('lifeApp')?.dataset.lifeView==='today')))refresh()}
-window.CompassFlow={weatherState:()=>({cached,busy,failed}),home:()=>'<section class="flow-home" aria-label="Start van je dag"><div data-flow-quote>'+quoteHTML()+'</div></section>',mount};
+window.CompassFlow={weatherState:()=>({cached,busy,failed}),home:()=>'',quoteHTML,mount};
 const mark=document.querySelector('#pinLock .pin-mark');mark.replaceChildren();const img=document.createElement('img');img.src=avatar;img.alt='Lachend portret van Jari';mark.append(img);mark.setAttribute('aria-hidden','false');
-/* Memento: weather stays on the Mijn dag dashboard. Nothing is mounted on the PIN screen. */
+/* Weather and the shared daily thought are available on the start portal. */
 const foot=document.querySelector('#pinLock .pin-foot');if(foot)foot.hidden=true;
 document.addEventListener('click',e=>{if(e.target.closest('[data-flow-weather-refresh]'))refresh(true)});
 const update=()=>{mount()};
@@ -3023,7 +3023,7 @@ function renderToday(){
  const dayKeys=[0,1,2].map(n=>{const d=parseDate(now);d.setDate(d.getDate()+n);return formatISO(d)}),labels=['Vandaag','Morgen','Overmorgen'];
  const days=dayKeys.map((key,i)=>{const list=open.filter(t=>!(t.date&&t.date<now)&&(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));const panel='<section class="life-day-column" data-life-day="'+key+'"><div class="life-day-heading"><h2>'+labels[i]+'</h2>'+(i?'<span>'+fmt(key)+' · <span data-memento-total="'+key+'" data-tasks="'+list.length+'">'+list.length+' '+(list.length===1?'taak':'taken')+'</span></span>':'')+'</div><div class="memento-day-appointments" data-memento-date="'+key+'"></div><div class="memento-day-caption memento-day-task-label">Taken</div>'+(list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">'+'Geen taken gepland'+'</p>')+'</section>';return i?'<details class="memento-future-day"><summary>'+labels[i]+' · '+fmt(key)+'</summary>'+panel+'</details>':panel}).join('');
  const unplanned=open.filter(t=>!t.date&&t.focusDate!==now),completed=state.tasks.reduce((n,t)=>n+(t.deletedAt?0:t.history.filter(h=>h.date===now).length),0);
- content.innerHTML=quickForm()+(overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Nog te doen — eerder gepland</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'')+'<div class="life-horizon">'+days+'</div><div class="life-day-foot">Vandaag '+completed+' '+(completed===1?'taak':'taken')+' afgerond.</div><details class="life-unplanned"><summary>Nog zonder planning ('+unplanned.length+')</summary><div class="life-list">'+(unplanned.length?unplanned.slice(0,5).map(taskRow).join(''):empty('Alles heeft een plek',''))+'</div><button type="button" class="life-btn life-btn-small" data-life-view="tasks">Alle taken bekijken →</button></details>'+window.CompassFlow.home();window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();
+ content.innerHTML=quickForm()+(overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Nog te doen — eerder gepland</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'')+'<div class="life-horizon">'+days+'</div><div class="life-day-foot">Vandaag '+completed+' '+(completed===1?'taak':'taken')+' afgerond.</div><details class="life-unplanned"><summary>Nog zonder planning ('+unplanned.length+')</summary><div class="life-list">'+(unplanned.length?unplanned.slice(0,5).map(taskRow).join(''):empty('Alles heeft een plek',''))+'</div><button type="button" class="life-btn life-btn-small" data-life-view="tasks">Alle taken bekijken →</button></details>';window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();
 }
 
 const shoppingListOf=g=>g.list==='purchases'?'purchases':'groceries';
