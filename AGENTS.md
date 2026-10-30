@@ -1,15 +1,38 @@
-# Memento — projectafspraken
+# Memento — risicogestuurde projectafspraken
 
-Deze regels gelden vanaf deze map. Systeem-/ontwikkelaarsinstructies en de nieuwste expliciete gebruikersopdracht gaan voor; specifiekere AGENTS.md-bestanden gelden binnen hun submap. Dit bestand voegt geen toestemmingsmoment toe aan werk waarvoor de gebruiker al toestemming gaf.
+Geldt voor Codex en Work bij werk in deze repository. Specifiekere `AGENTS.md`-bestanden gelden in hun submap. Hogere instructies en de recentste expliciete gebruikersopdracht gaan voor. Vraag niet opnieuw om toestemming voor reeds geautoriseerd werk.
 
-- Controleer actuele `origin/main`, leg SHA en scope vast en werk op een aparte branch. Bewaar een controleerbaar herstelpunt vóór productiecodewijzigingen. Reconcileer een gewijzigde main vóór merge.
-- Onderzoek fouten in de echte app, inclusief late CSS en DOM-decoratie. Historische rapporten en mock-ups zijn referentie, geen actueel renderingbewijs. Geen nieuwe functies/redesigns tijdens herstel tenzij expliciet gevraagd.
-- Bescherm alle bestaande opslagkeys, IDs, schema's, berekeningen, ZIP/binaire bijlagen, PIN, oorspronkelijke assets en bestaande functies. Geen opslagreset of destructieve migratie. Gebruik alleen fictieve fixtures in geïsoleerde browsercontexten.
-- Domeinmodules bezitten data en guarded persistence. `memento-ui.js` bezit viewport/notice; `memento-ui.css` de gedeelde bediening; glass bezit materiaal; layout bestaande leesvolgorde. Gedeelde tokens en disclosureconstructie hebben één bron. Voeg geen algemene `!important`-keten of extra observer toe als de eigenaar gerepareerd kan worden.
-- Verifieer de gewijzigde code met passende bestaande suites. Browsertooling staat buiten productiebron: `npm install --prefix /tmp/memento-browser --no-package-lock --no-save playwright@1.62.1`, daarna Chromium installeren en `NODE_PATH=/tmp/memento-browser/node_modules` gebruiken. Geen productbuild/npm-project nodig.
-- Bij gedeelde UI-wijzigingen: `tests/recovery-browser.cjs`, de volledige `app-review.yml`-matrix, `tests/visual-browser.cjs` op 360/393/412/1280 met `MEMENTO_VISUAL_FIXTURE` gegenereerd door `tests/helpers/visual-fixture.cjs`, en relevante opslag-/PWA-tests. Open native disclosures via hun zichtbare knoppen; gebruik geen force-click om tests groen te krijgen. Verwijder of verzwak geen veiligheidsasserties.
-- Maak echte vóór/na-captures met dezelfde fixtures en viewport. Controleer pixels én geometrie: geen afgesneden inhoud of overlappende targets; compacte 22–24px checkbox binnen een doel van minstens 44×44px. Taken: 0/1/43, lange titel, menu open/dicht, filters/presets, completeren/heropenen. Bekijk ook Mijn dag en Agenda.
-- Wijzig bij nieuwe/gewijzigde offline-assets zowel index-URLs als `sw.js` CORE en gebruik een nieuwe cacheversie. Test een daadwerkelijke worker-upgrade met bestaande Life/Finance/PIN/IndexedDB en offline herladen. Een revert krijgt ook een nieuwe cacheversie; nooit gebruikersopslag wissen.
-- Sommige bestaande tests schrijven screenshots onder `docs/`. Inspecteer zulke verschillen en bewaar alleen de bedoelde nieuwe bewijsartefacten; overschrijf historische screenshots niet ongemerkt.
-- Rapporteer Nederlands: SHA/branch/PR, oorzaak, wijzigingen, werkelijk uitgevoerde tests/captures, beperkingen, publicatiestatus en rollback. Browseremulatie is geen fysieke Android-, Samsung-toetsenbord-, TalkBack- of PWA-installatietest.
-- Merge/publiceer alleen binnen de gebruikersautorisatie én met alle relevante poorten aantoonbaar gehaald. Workflow-YAML is geen branch protection. Ontbrekend verplicht bewijs, falende checks of kritieke regressies blokkeren merge; documenteer de concrete blokkade.
+## Werkwijze
+
+- Controleer één keer de actuele `main`-SHA als herstelpunt en bepaal welke bestanden, selectors en handlers geraakt worden. Zoek gericht op symbolen/regelnummers; lees de enorme `index.html` niet standaard integraal. Hergebruik bevindingen als ze nog actueel zijn.
+- Kies op basis van **impact** niveau 1, 2 of 3. Bij gemengde of onverwacht risicovolle wijzigingen geldt het hoogste niveau. Leg de keuze kort vast; schaal alleen op bij een concrete reden.
+- Wijzig zo weinig mogelijk. Geen ongevraagd redesign, brede refactor, dubbele CSS-regels/`!important`-ketens of nieuwe observers. Inspecteer bij UI-fouten late CSS en DOM-decoratie; oude screenshots zijn geen bewijs van de actuele weergave.
+- Gebruik bestaande code en relevante tests. Test na een gerichte reparatie opnieuw, maar herhaal geen succesvolle suites zonder gewijzigde afhankelijkheden.
+
+## Risiconiveaus
+
+**1 — Laag (lokale presentatie of documentatie).**
+Voorbeelden: tekst, icoon, lokale CSS, knop verplaatsen met bestaande handler, HTML-rendering zonder nieuwe logica of opslagwijziging.
+Controle: gerichte diff + syntax/handlercontrole. Bij zichtbare UI-wijzigingen één mobiele rooktest rond **393 px**; ook **360 px** als overloop aannemelijk is. Screenshot alleen als visuele verificatie dat vereist. **Geen** volledige app-matrix, taakscenario's 0/1/43, opslagtests of standaard vier viewport-captures. Alleen documentatie (`AGENTS.md`, README): diff en inhoud controleren, geen runtime-tests.
+
+**2 — Middel (scherm of bestaande interactie).**
+Voorbeelden: formulier, menu of navigatie aanpassen, meerdere componenten binnen één scherm, interactie met bestaande state, gedeelde CSS met aantoonbare impact op enkele schermen.
+Controle: relevante functie-/regressietests en getroffen gebruikersroutes; mobiel 360/393/412 voor zover beïnvloed. Bij belangrijke visuele veranderingen één vergelijkbare vóór/na-fixturecapture plus controle op overlap, afsnijding en focus. Desktop en aangrenzende schermen alleen als geraakt. **Geen** volledige testmatrix zonder breed risico.
+
+**3 — Hoog (gegevens, beveiliging of breed systeemgedrag).**
+Voorbeelden: opslagkeys/schema, guarded persistence, migraties, back-up/ZIP/attachments, PIN/toegang, financiële berekeningen, service-worker- of offline-logica, destructieve functies, architectuur, breed gedeelde componenten of tokens.
+Controle: volledige toepasselijke `app-review.yml`-matrix, `tests/recovery-browser.cjs`, `tests/visual-browser.cjs` op **360/393/412/1280** (fixture via `tests/helpers/visual-fixture.cjs`), relevante opslag-, veiligheids- en PWA-upgradetests. Vóór/na-captures en echte interactie-, fout- en herstelpaden. Bij brede taakwijzigingen: 0/1/43 taken, lange titel, menu, filters, afronden/heropenen, Mijn dag én Agenda.
+
+## Veiligheidsregels voor ieder niveau
+
+- Bescherm gegevens, bestaande keys/IDs/schema's, PIN, berekeningen, ZIP/binaire bijlagen, originele assets en functies. **Nooit gebruikersopslag wissen**, destructief migreren of tests/veiligheidsasserties verzwakken om een controle te laten slagen. Gebruik uitsluitend fictieve fixtures in geïsoleerde browsers.
+- Domeinmodules beheren gegevens en guarded persistence; `memento-ui.js` de viewport/notice, `memento-ui.css` gedeelde bediening, glass het materiaal en layout de leesvolgorde. Houd gedeelde tokens/disclosures bij één eigenaar.
+- Houd focus en labels toegankelijk, aanraakdoelen minimaal **44×44 px**, visuele checkbox **22–24 px**. Open native disclosures met zichtbare knoppen, nooit met force-click om tests te passeren.
+- **Offline asset bijgewerkt?** Synchroniseer bestandsversies in `index.html` en `sw.js` CORE en verhoog de cacheversie. Bij uitsluitend CSS-/assetversies: beperkte URL-, precache- en laadcontrole (niveau 1/2). Bij verandering van worker-fetch-/upgradelogica of kritieke opslag: volledige PWA-upgradetest (niveau 3). Wis geen gebruikersopslag.
+- Indien browsertooling nodig: installeer Playwright 1.62.1 buiten de app (`npm install --prefix /tmp/memento-browser --no-package-lock --no-save playwright@1.62.1`), installeer Chromium en gebruik `NODE_PATH=/tmp/memento-browser/node_modules`. Geen nieuw productie-npm-project. Bekijk door tests gewijzigde screenshots in `docs/`; commit geen onbedoelde artefacten.
+
+## GitHub, publicatie en rapportage
+
+- **Niveau 1:** direct naar `main` mag alleen bij expliciete reeds gegeven publicatieautorisatie en als de repository het toelaat, na gerichte controle; anders branch/PR. **Niveau 2/3:** altijd aparte branch en PR. Vergelijk vóór merge met de actuele `main`; reconcileer verschillen.
+- GitHub Actions kan onafhankelijk van dit bestand een volledige suite starten. **Dit bestand verandert CI niet.** Start dezelfde brede suite niet nóg eens lokaal; respecteer verplichte statuschecks. Merge niet bij falende vereiste checks of kritieke regressies; los concrete blokkades op.
+- Rapporteer compact in het Nederlands: risiconiveau, wijziging, daadwerkelijk uitgevoerde controles, SHA/PR, status en rollbackmogelijkheid. Een browseremulator is geen fysieke Samsung-/Android-, TalkBack- of geïnstalleerde-PWA-test.
