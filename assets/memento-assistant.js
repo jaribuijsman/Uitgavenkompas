@@ -57,7 +57,7 @@ function mount(host,bridge){
     const n=bridge.apply(proposal,[...chosen]);
     proposal=null;chosen.clear();
     const current=document.querySelector("#mementoAssistant");
-    if(current)window.MementoAssistant.mount(current.parentElement,bridge);
+    if(current){const parent=current.parentElement;current.remove();window.MementoAssistant.mount(parent,bridge);}
     feedback(document.querySelector("#ma-status"),n+" wijzigingen verwerkt. Je kunt alle items later afzonderlijk aanpassen.");
    }catch(e){feedback(notice,e.message,true);}
   });
@@ -92,7 +92,7 @@ function mount(host,bridge){
    const n=bridge.undo();
    proposal=null;
    const current=document.querySelector("#mementoAssistant");
-   if(current)window.MementoAssistant.mount(current.parentElement,bridge);
+   if(current){const parent=current.parentElement;current.remove();window.MementoAssistant.mount(parent,bridge);}
    feedback(document.querySelector("#ma-status"),n+" wijzigingen hersteld.");
   }catch(e){feedback(notice,e.message,true);}
  });
