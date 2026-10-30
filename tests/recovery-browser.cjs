@@ -62,7 +62,40 @@ async function checkbox(page,selector){
    await nav(page,'groceries');
    const shopping=await page.locator('.shopping-row').first().evaluate(n=>({columns:getComputedStyle(n).gridTemplateColumns.split(' ').map(parseFloat),check:n.querySelector('.shopping-check').getBoundingClientRect().toJSON()}));
    assert.equal(shopping.columns[0],44,'Shopping keeps its original compact 44px column');assert(shopping.check.width>=44&&shopping.check.height>=44);row.shopping=shopping;
-   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');await page.screenshot({path:path.join(out,width+'-day.jpg'),type:'jpeg',animations:'disabled'});
+   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
+   const taskCard=page.locator('#lifeApp[data-life-view="today"] .life-overdue .memento-unified-task').first();
+   assert.equal(await taskCard.count(),1,'Overdue task uses the same visual card structure as appointments');
+   assert.equal(await taskCard.locator(':scope > .memento-unified-time').textContent(),'26 okt','Task date is shown instead of an invented clock time');
+   const parity=await taskCard.evaluate(card=>{
+    const appointment=document.querySelector('.memento-unified-event:not(.memento-unified-task)');
+    const styles=[card,appointment].map(n=>getComputedStyle(n));
+    const rects=n=>Array.from(n.children).map(el=>el.getBoundingClientRect().toJSON());
+    const task=rects(card),event=rects(appointment);
+    const rect=card.getBoundingClientRect();
+    return {taskColumns:styles[0].gridTemplateColumns.split(' ').length,eventColumns:styles[1].gridTemplateColumns.split(' ').length,
+      taskElements:task.length,eventElements:event.length,taskRect:rect.toJSON(),
+      firstTarget:task[0],date:task[1],info:task[2],action:task[3],
+      taskSurface:styles[0].backgroundColor,eventSurface:styles[1].backgroundColor,
+      taskRadius:styles[0].borderRadius,eventRadius:styles[1].borderRadius,
+      taskBorders:[styles[0].borderTopWidth,styles[0].borderBottomWidth],
+      label:card.querySelector('.life-task-menu>summary')?.textContent?.trim()};
+   });
+   assert.equal(parity.taskColumns,parity.eventColumns,'Task and appointment must have equal grid structure');
+   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,4);
+   assert(parity.firstTarget.right<=parity.date.left+1,'Task checkbox must not overlap date');
+   assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
+   assert.equal(parity.taskSurface,parity.eventSurface,'Matching cards must have same card background');
+   assert.equal(parity.taskRadius,parity.eventRadius,'Matching cards must have same corner radius');
+   assert.equal(parity.label,'Bewerk');
+   await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-edit-event');
+   await taskCard.locator('.memento-edit-event').click();
+   const menuActions=taskCard.locator('.life-task-menu[open] .life-task-actions');await menuActions.waitFor({state:'visible'});
+   assert.equal(await menuActions.locator('[data-life-duplicate]').count(),1,'Duplicate action stays accessible');
+   assert.equal(await menuActions.locator('[data-life-star]').count(),1,'Priority action stays accessible');
+   await menuActions.locator('[data-life-edit-task]').click();await page.locator('#lifeDialog').waitFor({state:'visible'});
+   assert((await page.locator('#lifeDialogTitle').textContent()).includes('Taak bewerken'));
+   await page.keyboard.press('Escape');assert.equal(await page.locator('#lifeDialog').isVisible(),false);
+   await page.screenshot({path:path.join(out,width+'-day.jpg'),type:'jpeg',animations:'disabled'});
    await nav(page,'agenda');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
    const boxes=await page.locator('.memento-unified-event').first().evaluate(n=>[...n.children].map(c=>c.getBoundingClientRect().toJSON()));assert(boxes[0].right<=boxes[1].left+1,'Appointment hitbox stays in its grid column');
    await page.locator('.memento-event-complete').first().click();assert((await stored()).appointments.some(a=>a.done));
