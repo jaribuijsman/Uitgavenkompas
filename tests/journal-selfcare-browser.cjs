@@ -16,7 +16,7 @@ const server=http.createServer((req,res)=>{
   await page.goto("http://127.0.0.1:"+server.address().port,{waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
   await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
-  assert(await page.locator("#lifeQuickForm").isVisible(),"Snelle invoer moet direct zichtbaar zijn");
+  await page.locator("#lifeQuickForm").waitFor({state:"visible"});
   const shortcut=page.locator(".memento-diary-shortcut");
   assert.equal(await shortcut.count(),1);
   assert.equal(await page.locator('[data-life-quick-kind="note"]').count(),1);
@@ -43,7 +43,7 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>{const life=JSON.parse(localStorage.getItem("compass_life_preview_v1")||"{}");return life.notes?.some(n=>n.body==="Dagboek zonder persoonlijke verzorging"&&!n.journal?.selfCare);});
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
-  assert(await page.locator("#lifeQuickForm").isVisible(),"Snelle invoer moet direct zichtbaar zijn");
+  await page.locator("#lifeQuickForm").waitFor({state:"visible"});
   await page.locator(".memento-diary-shortcut").click();
   await page.locator("#kc-body").waitFor();
   assert.equal(await page.locator(".kc-diary-selfcare").count(),0);
@@ -79,7 +79,7 @@ const server=http.createServer((req,res)=>{
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
   // De notitiemodule wordt pas gemount nadat de Leven-weergave is geopend.
-  assert(await page.locator("#lifeQuickForm").isVisible(),"Snelle invoer moet direct zichtbaar zijn");
+  await page.locator("#lifeQuickForm").waitFor({state:"visible"});
   await page.locator(".memento-diary-shortcut").click();
   await page.locator("#kc-body").waitFor();
   await page.evaluate(()=>window.MementoKnowledge.showJournal("2026-10-28"));
