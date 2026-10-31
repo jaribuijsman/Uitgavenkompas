@@ -2,7 +2,7 @@ const fs=require('node:fs');const vm=require('node:vm');const assert=require('no
 const html=fs.readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
 const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)].filter(m=>!m[1].includes('src=')&&!/type="(?!text\/javascript|application\/javascript|module)[^"]+"/.test(m[1]));
 for(const [i,s]of scripts.entries())new vm.Script(s[2],{filename:'inline-'+i+'.js'});
-const first=scripts[0][2];
+const first=fs.readFileSync(require('node:path').join(__dirname,'..','assets/memento-finance-app.js'),'utf8');
 const storage=new Map();
 const dummy=()=>({value:'all',textContent:'',innerHTML:'',hidden:false,dataset:{},style:{},get parentElement(){return this},classList:{add(){},remove(){},toggle(){},contains(){return false}},listeners:{},addEventListener(type,fn){(this.listeners[type]||=[]).push(fn)},reset(){},append(){},appendChild(){},remove(){},querySelectorAll(){return []},querySelector(){return dummy()},setAttribute(){},getAttribute(){return null},focus(){},selectedOptions:[{textContent:'Alle rekeningen'}],children:[],options:[],closest(){return dummy()}});
 const nodes=new Map();const getNode=id=>{if(!nodes.has(id))nodes.set(id,dummy());return nodes.get(id)};
@@ -50,8 +50,8 @@ test('Geldcoach keeps signed numeric totals through preview and prompt for zero,
 test('financial renderers accept an empty state',()=>{fresh();for(const f of ['renderPlanning','renderBudgets','renderAccounts','renderReceipts','renderSettings'])app[f]()});
 
 
-test('PIN defaults to 15 minutes and expires at the actual inactivity deadline',()=>{app.pinUnlock();assert.equal(app.getPinTimeoutMinutes(),15);assert.equal(app.pinCheckExpiry(),true);app.pinTime=Date.now()-15*60*1000-1;assert.equal(app.pinCheckExpiry(),false);assert.equal(app.pinUnlocked,false);assert.ok(html.includes("addEventListener('DOMContentLoaded',initPinLock,{once:true})"))});
-const lifeScript=scripts.find(s=>s[1].includes('compassLifeScript'))[2];
+test('PIN defaults to 15 minutes and expires at the actual inactivity deadline',()=>{app.pinUnlock();assert.equal(app.getPinTimeoutMinutes(),15);assert.equal(app.pinCheckExpiry(),true);app.pinTime=Date.now()-15*60*1000-1;assert.equal(app.pinCheckExpiry(),false);assert.equal(app.pinUnlocked,false);assert.ok(first.includes("addEventListener('DOMContentLoaded',initPinLock,{once:true})"))});
+const lifeScript=fs.readFileSync(require('node:path').join(__dirname,'..','assets/memento-life-app.js'),'utf8');
 getNode('compassLifeSeed').textContent=html.match(/id="compassLifeSeed"[^>]*>([\s\S]*?)<\/script>/)[1];
 sandbox.window.CompassFlow={home:()=>'',mount(){}};
 const lifeEnd=lifeScript.lastIndexOf('scheduleDayRefresh();\nrender();setArea(area);');assert.ok(lifeEnd>0);
