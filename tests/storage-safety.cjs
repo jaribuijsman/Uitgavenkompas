@@ -160,7 +160,7 @@ async function test(name, run) { await run(); passed++; console.log("PASS", name
     assert.equal(s.storage.get("compass_life_preview_v1_vorige"), recovery); assert.equal(s.storage.get("uitgavenkompas_auto_backup_v1"), financialRecovery); s.MementoStorageGuard.close();
   });
   await test("all persistent primary writes and file transactions go through the guard", async () => {
-    for (const source of [html.match(/<script>([\s\S]*?)<\/script>/)[1], html.match(/<script id="compassLifeScript">([\s\S]*?)<\/script>/)[1]]) {
+    for (const source of [fs.readFileSync(path.join(root, "assets/memento-finance-app.js"), "utf8"), fs.readFileSync(path.join(root, "assets/memento-life-app.js"), "utf8")]) {
       assert(!/localStorage\.(?:setItem|removeItem)\((?:STORAGE_KEY|KEY|FINANCE_KEY)[,)]/.test(source));
     }
     const store = fs.readFileSync(path.join(root, "assets/memento-knowledge-store.js"), "utf8"); assert.match(store, /guard\.assertCurrent\(token\)/);
