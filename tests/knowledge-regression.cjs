@@ -76,6 +76,25 @@ async function run(){
   n.deletedAt=new Date().toISOString();
   assert.equal(C.search(f,{status:"trash"}).some(x=>x.id===n.id),true);
  });
+ await test("archive and trash honor search, collection, kind and tag filters",()=>{
+  const f=legacy();C.ensure(f);
+  const archived=C.makeNote({title:"Gevonden archief",body:"Uitzoeken",collectionId:"home"},f);
+  archived.tags=["bewaar"];archived.archived=true;
+  const otherArchived=C.makeNote({title:"Gevonden in een andere verzameling",body:"Uitzoeken",collectionId:"projects"},f);
+  otherArchived.tags=["bewaar"];otherArchived.archived=true;
+  const deleted=C.makeNote({title:"Gevonden prullenbak",body:"Uitzoeken",collectionId:"home"},f);
+  deleted.tags=["bewaar"];deleted.deletedAt="2026-10-31T00:00:00.000Z";
+  const otherDeleted=C.makeNote({title:"Niet relevant",body:"Uitzoeken",collectionId:"home"},f);
+  otherDeleted.tags=["bewaar"];otherDeleted.deletedAt="2026-10-31T00:00:00.000Z";
+  f.notes.push(archived,otherArchived,deleted,otherDeleted);
+  const opts={collectionId:"home",query:"gevonden",kind:"note",tag:"bewaar"};
+  assert.deepEqual(C.search(f,{...opts,status:"archive"}).map(n=>n.id),[archived.id]);
+  assert.deepEqual(C.search(f,{...opts,status:"trash"}).map(n=>n.id),[deleted.id]);
+  assert.deepEqual(C.search(f,{status:"archive",query:"niet-bestaand"}),[]);
+  assert.deepEqual(C.search(f,{status:"trash",query:"niet-bestaand"}),[]);
+  assert.deepEqual(C.search(f,{status:"active",query:"gevonden"}),[]);
+  assert.deepEqual(C.search(f,{status:"trash",collectionId:"projects"}),[]);
+ });
  await test("collection IDs remain stable and independent of display name",()=>{
   const f=legacy();C.ensure(f);
   const c=C.addCollection(f,"Boeken","folder","list");const n=C.makeNote({title:"Artikel",collectionId:c.id},f);f.notes.push(n);
