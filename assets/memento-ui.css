@@ -259,7 +259,8 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-v3-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;min-height:44px}
 #lifeApp[data-life-view="today"] #mementoDaySelectedDate{font-size:13px;color:#c4d6c7;font-weight:600}
 #lifeApp[data-life-view="today"] .memento-day-add-menu{position:relative;z-index:15;flex:0 0 auto}
-#lifeApp[data-life-view="today"] .memento-day-add-menu>summary{display:grid;place-items:center;box-sizing:border-box;min-height:44px;padding:9px 14px;border:1px solid #b4d8bf;border-radius:13px;list-style:none;background:#bdd9c5;color:#153524;font-size:14px;font-weight:700;cursor:pointer}
+#lifeApp[data-life-view="today"] .memento-day-add-menu>summary{display:flex;align-items:center;justify-content:center;gap:7px;box-sizing:border-box;min-height:44px;padding:9px 14px;border:1px solid #b4d8bf;border-radius:13px;list-style:none;background:#bdd9c5;color:#153524;font-size:14px;font-weight:700;cursor:pointer}
+#lifeApp[data-life-view="today"] .memento-day-add-menu>summary svg{width:18px;height:18px;flex:none}
 #lifeApp[data-life-view="today"] .memento-day-add-menu>summary::-webkit-details-marker{display:none}
 #lifeApp[data-life-view="today"] .memento-day-add-actions{position:absolute;top:calc(100% + 6px);right:0;display:grid;width:190px;max-width:calc(100vw - 42px);padding:6px;gap:3px;border:1px solid #61816b;border-radius:13px;background:#1d392a;box-shadow:0 12px 30px #071b12b8;z-index:30}
 #lifeApp[data-life-view="today"] .memento-day-add-actions button{box-sizing:border-box;width:100%;min-height:44px;padding:9px 12px;border:0;border-radius:9px;background:transparent;color:#edf6ef;text-align:left;font:inherit;font-size:14px;cursor:pointer}
@@ -282,15 +283,15 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
 #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
 #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
- box-sizing:border-box;position:relative;display:grid;grid-template-columns:44px 49px minmax(0,1fr) auto;
- gap:6px;align-items:center;min-height:76px;padding:9px 7px 9px 9px;
+ box-sizing:border-box;position:relative;display:grid;grid-template-columns:44px 56px minmax(0,1fr) 44px;
+ gap:4px;align-items:center;min-height:70px;padding:6px 8px 6px 6px;
  background:#233f30;border:1px solid #55725b;border-radius:15px;box-shadow:none;overflow:visible;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card::before{top:13px;bottom:13px;left:0;width:3px}
 #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late{border-left:3px solid #e0a0a6}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{box-sizing:border-box;min-width:0;white-space:nowrap;color:#cee4d2;font-size:12px;line-height:1.3;font-weight:700}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
-#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:4px;grid-column:auto;grid-row:auto}
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:0;grid-column:auto;grid-row:auto}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong,
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{
@@ -299,11 +300,12 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
  background:none;border:0;box-shadow:none;cursor:pointer;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{cursor:default}
-/* Long mobile titles remain available through the existing task detail button.
-   Bound the preview to three lines so attached note/action icons do not elongate cards. */
+/* Full titles stay available in the existing detail/editor. Keep previews compact. */
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info>strong,
 #lifeApp[data-life-view="today"] .life-overdue .life-task.memento-v3-card .life-task-title,
 #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card .life-task-title{
- max-height:calc(1.36em * 3);overflow:hidden;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;max-height:calc(1.36em * 3);overflow:hidden;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta{display:block;margin:0;font-size:12px;line-height:1.4;color:#bed2c2}
@@ -336,22 +338,24 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-v3-card :is(button,summary):focus-visible,
 #lifeApp[data-life-view="today"] .memento-day-add-menu>summary:focus-visible,
 #lifeApp[data-life-view="today"] .memento-day-quick>summary:focus-visible{outline:2px solid #d3efd9;outline-offset:2px}
-@media(max-width:480px){
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions,
+#lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:auto;grid-row:auto}
+#lifeApp[data-life-view="today"] .memento-v3-bottom{display:flex;align-items:center;gap:2px;min-width:0}
+#lifeApp[data-life-view="today"] .memento-v3-bottom:empty{display:none}
+#lifeApp[data-life-view="today"] .memento-v3-bottom>:first-child:not(.memento-day-note){flex:1;min-width:0}
+#lifeApp[data-life-view="today"] .memento-day-note{margin-left:auto}
+#lifeApp[data-life-view="today"] .memento-day-note>summary{color:#e6cf9a}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small{font-size:11.5px;line-height:1.3}
+@media(max-width:375px){
  #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
  #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
- #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
-  grid-template-columns:44px minmax(0,1fr) auto;gap:3px 7px;padding:8px 5px;
- }
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{grid-column:2;grid-row:1}
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
- #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{grid-column:2;grid-row:2}
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions{grid-column:3;grid-row:1/3}
- #lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:1;grid-row:1/3}
- #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title,
+ #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{grid-template-columns:44px 51px minmax(0,1fr) 44px;gap:2px;padding-right:6px}
  #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;
- }
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{font-size:13.7px}
 }
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}
+

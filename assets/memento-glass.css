@@ -148,7 +148,7 @@ body #lifeApp .mg-cycle-strip button{flex:1;min-width:80px;min-height:48px;paddi
 body #view-analysis .donut-svg{max-width:210px!important}
 body #view-planning .goal-card{padding:14px!important}
 /* Fixed viewport menus must escape glass stacking/containing blocks while open. */
-body #lifeApp.mg-menu-ancestor,body #lifeApp .mg-menu-ancestor{backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;overflow:visible!important;will-change:auto!important;animation:none!important;opacity:1!important}
+body #lifeApp.mg-menu-ancestor,body #lifeApp .mg-menu-ancestor{backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;will-change:auto!important;animation:none!important;opacity:1!important}
 
 /* Three compact destinations; the existing extra statuses remain in a disclosure. */
 body #lifeApp .memento-task-tabs[data-mg-ready]{display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px}
@@ -168,3 +168,4 @@ body #lifeApp[data-life-view=agenda] .memento-cal-status{flex:0 0 auto;max-width
  body #view-planning .page-head>div:first-child{display:block;flex:1 1 100%}
  body #view-planning .page-head>div:not(:first-child){max-width:none;display:flex;flex-wrap:wrap;gap:8px}
 }
+

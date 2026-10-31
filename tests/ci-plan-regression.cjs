@@ -17,6 +17,11 @@ check("local CSS selects only a mobile smoke journey",()=>{
 check("shared CSS selects visual and layout checks, not all safety suites",()=>{
  const a=planFor(["assets/memento-glass.css"]);assert.equal(a.tier,"medium");assert(a.groups.includes("interface-layout-smoke"));assert(!a.groups.includes("data-full"));
 });
+check("day materials and menu decorators retain the V3 integration contract",()=>{
+ for(const file of ["assets/memento-glass.css","assets/memento-glass.js","assets/memento-ui.css","assets/memento-base-app.css"]){
+  assert(planFor([file]).groups.includes("interface-day"),file);
+ }
+});
 check("knowledge UI selects relevant life browser journeys",()=>{
  const a=planFor(["assets/memento-knowledge.css"]);assert(a.groups.includes("life-knowledge"));assert(!a.groups.includes("life-full"));
 });
@@ -78,3 +83,4 @@ check("manual full test request retains all browser suites",()=>{
  const a=planFor([],()=>null,true);assert.equal(a.tier,"high");assert.deepEqual(a.groups,FULL);
 });
 console.log("CI_PLANNER_REGRESSION_PASS "+count+" cases");
+
