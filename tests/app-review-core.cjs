@@ -57,4 +57,20 @@ test('finance and life entrypoints load once in order and survive offline update
  assert(!/<script id="compassLifeScript">/.test(html));
  assert(html.includes('memento-storage-guard.js?'),'Storage guard must load before entrypoints');
 });
+test('extracted base CSS keeps its cascade position and PWA precache',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+ const file='assets/memento-base-app.css',url='./'+file+'?v=20261031-base-extract-v1';
+ const tag='<link id="compassGreenFlowV12" rel="stylesheet" href="'+url+'">';
+ assert.equal(html.split(tag).length-1,1,'exactly one base stylesheet must load');
+ assert.equal(sw.split('"'+url+'"').length-1,1,'stylesheet must be cached offline');
+ assert(html.indexOf(tag)<html.indexOf('id="mementoUnifiedPatchStyles"'),'preserve original style cascade order');
+ assert(!html.includes('<style id="compassGreenFlowV12">'),'do not load duplicate inline styles');
+ const css=fs.readFileSync(path.join(root,file),'utf8');
+ assert(css.length>100000,'avoid silently truncating base app styles');
+ assert(css.includes(':root{--bg:'),'keep existing base tokens');
+ assert(css.includes('@media(prefers-reduced-motion:reduce)'),'retain accessibility styles');
+ assert(!/@import\\b|url\\s*\\(/i.test(css),'relative resource URLs must be audited before extraction');
+});
 console.log(n+' app review core checks passed.');
