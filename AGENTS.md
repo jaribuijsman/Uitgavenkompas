@@ -21,6 +21,19 @@ Memento wordt primair als geïnstalleerde Android-PWA gebruikt. Beoordeel releva
 
 **Efficiëntie is verplicht:** volg de bestaande CI-risiconiveaus; voeg géén algemene extra testmatrix, nieuwe frameworkinstallatie of verplichte fysieke toesteltest toe. Bij een lokale, laagrisico visuele wijziging volstaat de bestaande gerichte 393px-rooktest. Voeg uitsluitend bij concreet risico een extra breedte, korte viewport of keyboard/standalone-scenario toe. Hergebruik screenshots/artifacts en stop na bewezen passende checks. Voor nieuwe of aangepaste primaire mobiele bediening: streef naar een aanraakvlak van 48×48 CSS-px, met 44×44 px als bestaande minimale projectgrens; controleer de daadwerkelijke bediening en niet uitsluitend het pictogram. Bij echte toestelafwijkingen: een gerichte handmatige A54-check, niet standaard voor iedere kleine patch.
 
+## Één uitvoeringscontract voor GPT, Codex en Work
+
+**Verplicht en identiek** voor ChatGPT/GPT via GitHub-tools, Codex, Work en alle andere agents. De gebruikte omgeving is geen uitzondering op risicoselectie, gebruikersautorisatie of veiligheidscontroles.
+
+1. **Inspecteer één keer:** actuele `main`-SHA, relevante skill, concrete code-diff en bestaande handlers. Bepaal de werkelijke impact, niet alleen de bestandsnaam. Spreek een minimale toepasselijke testset af met de bestaande `tests/ci-plan.cjs`.
+2. **Eerst lokaal klein testen:** controleer syntax, diff en directe regressie/browserroute. Vermijd extra brede matrices. Als GPT of een andere agent geen lokale runtime heeft, meld dit expliciet als **NIET GEVERIFIEERD**; claim nooit dat een lokale test is uitgevoerd.
+3. **Eén definitieve push:** bundel verwante correcties in een samenhangende branchcommit na lokale verificatie. Start geen CI bij iedere kleine selector- of assertionwijziging. Bij een echte CI-fout: inspecteer uitsluitend de falende test, herstel gericht en push zo nodig één correctie.
+4. **Één centrale PR-gate:** gebruik `.github/workflows/app-review.yml` en de planner voor het exacte PR-head-SHA. Geen extra handmatige domeinworkflows of volledige tweede matrix wanneer het bewijs voor dezelfde code al bestaat.
+5. **Veilige postmerge:** normale en squash-merges krijgen alleen korte controles bij een bewezen identieke Git-tree, exact groen PR-head-SHA, dezelfde `main`-basis en gemergede PR. Directe pushes, manual full en onbewezen merges volgen het normale risicoplan.
+6. **Gelijke eindrapportage:** noem werkelijke SHA/PR, checks, uitgevallen checks, gegevensveiligheid en productie/PR-status. Browseremulatie is geen A54-toesteltest; zeg dit waar relevant.
+
+Een gemengde module zoals `assets/memento-life-app.js` bevat ook persistentie. Verlaag die niet op grond van een tekstmarker, modelinschatting of cosmetisch klinkende taak. Pas risicodowngrades eerst toe ná aantoonbaar veilige isolatie van presentatiecode, met regressie en negatieve veiligheidstests.
+
 ## Werkstroom: inspecteer → herstel → controleer → lever op
 
 1. Controleer **eenmalig** de actuele `main`-SHA en relevante bestanden/handlers; lees grote bestanden alleen op gerichte regels. Lees uitsluitend de toepasselijke passages uit projectbronnen; historische audits en alle projectdocumenten zijn géén verplichte dagelijkse preflight. Kijk vóór nieuwe code of een bestaande helper of stijlregel het al oplost.
@@ -65,7 +78,7 @@ vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
 - `tests/ci-plan.cjs`: kiest op basis van de **werkelijke file-inhoud/diff** passende risicoklasse en domeinen. `tests/ci-plan-regression.cjs` controleert de beslisregels.
 - `tests/ci-groups.cjs`: voert geselecteerde suites uit, registreert **tijd per suite** en voert de volledige dekking bij niveau 3 in parallelle shards uit.
 - De overige domeinworkflows zijn handmatig/gericht; start ze **niet nogmaals** als de centrale run dezelfde controles al uitvoert.
-- Een na merge volledig identieke Git-tree met een **bewezen groene PR-run voor exact die head** krijgt op `main` alleen een korte rooktest en cachecontractcontrole. `tests/ci-postmerge.cjs` verifieert Git-parents, tree en GitHub-PR/Actions-bewijs. Als verificatie ontbreekt of faalt, start het normale volledige risicoplan; directe pushes of `workflow_dispatch` slaan de veiligheidschecks nooit over.
+- Een na merge volledig identieke Git-tree met een **bewezen groene PR-run voor exact die head** krijgt op `main` alleen een korte rooktest en cachecontractcontrole. `tests/ci-postmerge.cjs` verifieert gewone/squash-parent(s), de identieke PR-head-tree en GitHub-PR/Actions-bewijs. Als verificatie ontbreekt of faalt, start het normale volledige risicoplan; directe pushes of `workflow_dispatch` slaan de veiligheidschecks nooit over.
 - Gebruik `workflow_dispatch` voor een bewuste volledige controle, niet als standaard bij kleine UI-wijzigingen.
 - Een groene PR-releasecheck is noodzakelijk; falende relevante tests niet overslaan, hernoemen of versoepelen. Flakiness eerst reproduceren en oplossen (echte toestand, gerichte wait, screenshots/foutlog), niet blind herhalen tot groen.
 

@@ -3,7 +3,7 @@
 // state/security/worker/inline-code changes, not cache version-only churn.
 const cp=require("node:child_process"),fs=require("node:fs");
 const FULL=["interface-layout","interface-feature","interface-acceptance","interface-visual","life-full","data-full"];
-const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|life-app|category-integrity)\.js$)/;
+const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|life-app|category-integrity)\.js$)/;
 function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
@@ -76,7 +76,7 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  const shared=htmlStyleOnly||application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
  const onlyTests=application.every(p=>p.startsWith("tests/"));
- const groups=new Set(onlyTests?[]:["interface-smoke"]);
+ const groups=new Set();
  for(const p of application){
   const match=p.match(/^tests\/([\w-]+-browser)\.cjs$/);
   if(match)groups.add("test-"+match[1]);
@@ -93,6 +93,9 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  // Global material/style changes require a layout check, but not every domain suite.
  if(shared)groups.add("interface-layout-smoke");
  if(application.some(p=>/^assets\/memento-(?:glass|ui|base-app)\.(?:css|js)$/.test(p)))groups.add("interface-day");
+ // A domain-specific browser journey already covers the UI. Do not spawn a
+ // redundant general visual journey on a second Chromium runner.
+ if(!onlyTests&&groups.size===0)groups.add("interface-smoke");
  return {tier:medium?"medium":"low",groups:[...groups],upgrade:false,files:paths};
 }
 function git(args){return cp.execFileSync("git",args,{encoding:"utf8",stdio:["ignore","pipe","pipe"]})}
