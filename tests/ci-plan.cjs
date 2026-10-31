@@ -45,6 +45,8 @@ function planFor(paths,read=()=>null,forceFull=false){
   const match=p.match(/^tests\/([\w-]+-browser)\.cjs$/);
   if(match)groups.add("test-"+match[1]);
  }
+ // A PR changing only browser tests runs those exact tests, without duplicates.
+ if(onlyTests&&application.every(p=>/^tests\/[\w-]+-browser\.cjs$/.test(p)))return {tier:"medium",groups:[...groups],upgrade:false,files:paths};
  if(application.some(p=>/knowledge|note|journal|cover/i.test(p)))groups.add("life-knowledge");
  if(application.some(p=>/fitness|quickfit/i.test(p)))groups.add("life-fitness");
  if(application.some(p=>/assistant|dictation/i.test(p)&&p.endsWith(".js")))groups.add("life-assistant");
