@@ -4,6 +4,7 @@ const I=require("../assets/memento-illustrative-icons.js");
 const K=require("../assets/memento-knowledge-core.js");
 const ksrc=fs.readFileSync(path.join(__dirname,"../assets/memento-knowledge.js"),"utf8");
 const index=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
+const finance=fs.readFileSync(path.join(__dirname,"../assets/memento-finance-app.js"),"utf8");
 const css=fs.readFileSync(path.join(__dirname,"../assets/memento-illustrative-icons.css"),"utf8");
 const sw=fs.readFileSync(path.join(__dirname,"../sw.js"),"utf8");
 const headings=["levenspad","huis-wonen","recepten-creaties","projecten-onderzoek","ideeen-inspiratie"];
@@ -49,7 +50,7 @@ for(const key of K.iconIds){
 const changed={...builtins.find(c=>c.id==="kc2-levenspad-leren"),icon:"camera"};
 assert.equal(I.collection(changed),"camera","User-selected icon must override default category visual");
 assert.equal(I.fromGlyph('↘'),'shopping');assert.equal(I.fromGlyph('✈️'),'travel');
-const financeDefaults=JSON.parse(index.match(/const DEFAULT_CATEGORIES=(\[.*?\]);/)[1]);
+const financeDefaults=JSON.parse(finance.match(/const DEFAULT_CATEGORIES=(\[.*?\]);/)[1]);
 for(const c of financeDefaults)assert.notEqual(I.financeCategory(c.name),'folder',c.name);
 for(const [name,key] of [['Vaste lasten','house'],['Cadeaus & donaties','star'],['Huis & inrichting','sofa'],['Financiën','accounts'],['Vakantie & reizen','compass']])assert.equal(I.financeCategory(name),key);
 for(const name of ["Dagboek","Reizen en vakanties","Auto & vervoer","Gezondheid","Boodschappen","Wonen"]){
@@ -67,8 +68,8 @@ assert(index.includes("memento-illustrative-icons.css?v=20261027-iconset-v2"),"M
 const navigation=fs.readFileSync(path.join(__dirname,"../assets/memento-unified-nav.js"),"utf8");
 assert(index.includes('src="./assets/memento-unified-nav.js?v=20261031-extract-v1"'),"Unified navigation module not loaded");
 assert(navigation.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
-assert(index.includes("transactionArt(t)"),"Financial transactions not using icons");
-assert(index.includes("categoryArt(c.name)"),"Budgets not using icons");
+assert(finance.includes("transactionArt(t)"),"Financial transactions not using icons");
+assert(finance.includes("categoryArt(c.name)"),"Budgets not using icons");
 assert.match(sw,/const CACHE = "memento-pwa-v\d+-[^"\n]+"/,"Versioned app cache required");
 for(const entry of JSON.parse(sw.match(/const CORE = (\[[^;]+\]);/)[1]).filter(x=>/\.(js|css)\?/.test(x)))assert(index.includes(entry),"Cache and HTML must agree: "+entry);
 assert(sw.includes("./assets/memento-illustrative-icons.js?v=20261027-iconset-v2"));

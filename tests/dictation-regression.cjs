@@ -2,7 +2,8 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 const base=path.resolve(__dirname,"..");
 const source=fs.readFileSync(path.join(base,"assets/memento-dictation.js"),"utf8");
-const main=fs.readFileSync(path.join(base,"index.html"),"utf8");
+// Retain the original target coverage across HTML and its extracted executable entrypoints.
+const main=["index.html","assets/memento-finance-app.js","assets/memento-life-app.js"].map(file=>fs.readFileSync(path.join(base,file),"utf8")).join("\n");
 const knowledge=fs.readFileSync(path.join(base,"assets/memento-knowledge.js"),"utf8");
 const fitness=fs.readFileSync(path.join(base,"assets/memento-fitness.js"),"utf8");
 const check=(s,key)=>assert(s.includes(key),"Missing dictation target "+key);

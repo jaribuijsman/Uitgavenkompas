@@ -37,4 +37,24 @@ test('navigation modules stay ordered, synchronous and offline-cacheable',()=>{
  assert(!html.includes('<script id="mementoUnifiedNavScript">'));
  assert(!html.includes('<script id="mementoTabLayout">'));
 });
+test('finance and life entrypoints load once in order and survive offline updates',()=>{
+ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+ const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),worker=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+ const urls=[
+  ['./assets/memento-finance-app.js?v=20261031-entrypoints-v1','<script src="./assets/memento-finance-app.js?v=20261031-entrypoints-v1"></script>','assets/memento-finance-app.js'],
+  ['./assets/memento-life-app.js?v=20261031-entrypoints-v1','<script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261031-entrypoints-v1"></script>','assets/memento-life-app.js']
+ ];
+ const positions=[];
+ for(const [url,tag,file] of urls){
+  assert.equal(html.split(tag).length-1,1,'Missing synchronous entrypoint '+file);
+  assert.equal(worker.split('"'+url+'"').length-1,1,'Missing offline asset '+file);
+  const source=fs.readFileSync(path.join(root,file),'utf8');
+  new vm.Script(source,{filename:file});
+  positions.push(html.indexOf(tag));
+ }
+ assert(positions[0]<positions[1],'Finance must load before Life');
+ assert(html.indexOf('id="compassLifeSeed"')<positions[1],'Life seed must exist before Life initialization');
+ assert(!/<script id="compassLifeScript">/.test(html));
+ assert(html.includes('memento-storage-guard.js?'),'Storage guard must load before entrypoints');
+});
 console.log(n+' app review core checks passed.');

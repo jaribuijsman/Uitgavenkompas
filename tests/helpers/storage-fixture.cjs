@@ -32,12 +32,11 @@ async function tab(storage = new Map(), manager = locks(), options = {}) {
     MementoKnowledgeCore: K, MementoFitnessCore: F, MementoTrashCore: Trash, MementoCompleteBackup: { ...ZIP }, CompassFlow: { home: () => "", mount() {} } };
   s.window = s; s.get = get; s.storage = storage; s.listeners = listeners; s.MementoStorageGuard = Guard.create(s);
   await s.MementoStorageGuard.ready; vm.createContext(s);
-  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];
-  const first = scripts.find(m => !m[1].includes("src=") && !m[1].includes("type="))[2];
+  const first = fs.readFileSync(path.join(root, "assets/memento-finance-app.js"), "utf8");
   const exports = `renderAll=()=>{};globalThis.fin={get state(){return state},set state(v){state=v},get blocked(){return financeStorageBlocked},loadState,emptyState,save,softDeleteFinance,restoreFinance,restoreAutoBackup,importBackup,renderSalaryPeriod,transactionModal,billModal,goalModal,budgetRecord,editableBudget};`;
   vm.runInContext(first.replace(/\ninit\(\);\s*\n\}\)\(\);\s*$/, "\n" + exports + "\n})();"), s, { filename: "finance-under-test.js" });
   get("compassLifeSeed").textContent = html.match(/id="compassLifeSeed"[^>]*>([\s\S]*?)<\/script>/)[1];
-  const source = html.match(/<script id="compassLifeScript">([\s\S]*?)<\/script>/)[1];
+  const source = fs.readFileSync(path.join(root, "assets/memento-life-app.js"), "utf8");
   const end = source.lastIndexOf("scheduleDayRefresh();\nrender();setArea(area);");
   if (end < 0) throw Error("Life bootstrap marker changed");
   const lifeExports = `render=()=>{globalThis.renderCalls=(globalThis.renderCalls||0)+1};globalThis.life={get state(){return state},set state(v){state=v},get blocked(){return blocked},set blocked(v){blocked=v},save,mutate,validate,importBackup,importCompleteBackup,restorePreviousLife,performPermanentTrashPurge,exportBackup,submitQuickCapture,set quickKind(v){quickKind=v}};`;
