@@ -39,12 +39,13 @@ const reports=[];
    const original=await stored();
    const measure=()=>page.evaluate(()=>{
     const track=document.querySelector('#lifeDayTrack'),r=track.getBoundingClientRect(),card=track.querySelector('.memento-v3-card');
-    return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,overflow:getComputedStyle(track).overflowX,track:r.toJSON(),scrollLeft:track.scrollLeft,slideWidths:[...track.children].map(n=>n.getBoundingClientRect().width),card:card?.getBoundingClientRect().toJSON(),zones:card?[...card.children].map(n=>n.getBoundingClientRect().toJSON()):[]};
+    return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,overflow:getComputedStyle(track).overflowX,verticalOverflow:getComputedStyle(track).overflowY,track:r.toJSON(),scrollLeft:track.scrollLeft,slideWidths:[...track.children].map(n=>n.getBoundingClientRect().width),card:card?.getBoundingClientRect().toJSON(),zones:card?[...card.children].map(n=>n.getBoundingClientRect().toJSON()):[]};
    });
    async function contained(label){
     const m=await measure();reports.push({tag,label,...m});
     assert(m.scrollWidth<=m.viewport+1,label+' page overflow: '+JSON.stringify(m));
     assert(['auto','scroll'].includes(m.overflow),label+' lost carousel scroll containment');
+    assert.equal(m.verticalOverflow,'hidden',label+' must not introduce a nested vertical scroll area');
     assert(m.slideWidths.every(w=>Math.abs(w-m.track.width)<2),label+' day widths changed');
    }
    await contained('closed');assert.equal(await page.locator('.memento-day-quick').getAttribute('open'),null);await shot('day');
