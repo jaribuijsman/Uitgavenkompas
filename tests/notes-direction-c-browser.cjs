@@ -76,7 +76,19 @@ async function fixture(){
    await page.locator('[data-kc-input=search]').fill('');
    // Popstate and list rendering can settle after the input event. Poll the
    // actual rendered, cleared search; keep the original strict result count.
-   await page.waitForFunction(() => document.querySelector('[data-kc-input="search"]')?.value === '' && document.querySelectorAll('.kc-item').length === 3, null, {timeout:5000});
+       try{
+     await page.waitForFunction(() => document.querySelector('[data-kc-input="search"]')?.value === '' && document.querySelectorAll('.kc-item').length === 3, null, {timeout:5000});
+    }catch(error){
+     const state=await page.evaluate(()=>{
+      const input=document.querySelector('[data-kc-input="search"]'),filter=sel=>document.querySelector(sel)?.value;
+      const life=JSON.parse(localStorage.getItem('compass_life_preview_v1')||'{}');
+      const collection='kc2-projecten-onderzoek-dossiers';
+      const matches=window.MementoKnowledgeCore?.search(life,{collectionId:collection,query:'',status:'active'})||[];
+      return {input:input?.value??null,items:document.querySelectorAll('.kc-item').length,summary:document.querySelector('.kc-count')?.textContent||null,header:document.querySelector('.kc-header h2')?.textContent||null,tag:filter('[data-kc-change="tag"]'),kind:filter('[data-kc-change="kind"]'),sort:filter('[data-kc-change="sort"]'),coreMatches:matches.length,notes:life.notes?.length,route:history.state?.mementoNotes||null};
+     });
+     console.error('KC_SEARCH_CLEAR_DIAGNOSTIC '+JSON.stringify({width,...state}));
+     throw error;
+    }
    assert.equal(await page.locator('.kc-item').count(),3);
    await page.locator('[data-kc-input=search]').fill('bestaat-niet');await page.waitForTimeout(250);
    await page.locator('[data-kc=back]').click();
