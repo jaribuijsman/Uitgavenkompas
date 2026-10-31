@@ -13,4 +13,28 @@ for(const [text,expected]of [['2',2],['1,5',1.5],['1/2',.5],['1 1/2',1.5],['',nu
 test('scale never changes an unknown amount or its unit',()=>{assert.equal(C.scale('naar smaak',2),'naar smaak');assert.equal(C.scale('1/2',2),'1');assert.equal(C.scale('1,5',2),'3')});
 test('saved task selections accept optional metadata',()=>{assert(C.validFilters({taskFilters:[{id:'one',name:'Huishouden',filters:{search:'',taskScope:'household',categoryFilter:'all',roomFilter:'all',repeatFilter:'all',taskSort:'date',taskTab:'open'}}]}));assert(C.validFilters({}))});
 test('invalid or duplicate saved selections are rejected before import',()=>{assert.throws(()=>C.validFilters(null));assert.throws(()=>C.validFilters({taskFilters:[{id:'bad'}]}));assert.throws(()=>C.validFilters({taskFilters:Array(13).fill({})}))});
+
+// Structural guard: extracted navigation scripts execute at their original
+// synchronous positions, and the offline precache includes both exact URLs.
+test('navigation modules stay ordered, synchronous and offline-cacheable',()=>{
+ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+ const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+ const modules=[
+  ['mementoUnifiedNavScript','assets/memento-unified-nav.js','20261031-extract-v1'],
+  ['mementoTabLayout','assets/memento-tab-layout.js','20261031-extract-v1']
+ ];
+ const offsets=[];
+ for(const [id,file,version] of modules){
+  const url='./'+file+'?v='+version,tag='<script id="'+id+'" src="'+url+'"></script>';
+  assert.equal(html.split(tag).length-1,1,id+' must load exactly once without async/defer');
+  assert.equal(sw.split('"'+url+'"').length-1,1,file+' must be in service worker precache');
+  const source=fs.readFileSync(path.join(root,file),'utf8');
+  new vm.Script(source,{filename:file});
+  offsets.push(html.indexOf(tag));
+ }
+ assert(offsets[0]<offsets[1],'menu navigation must initialize before tab layout');
+ assert(html.indexOf('id="mementoQuickNav"')<offsets[0],'navigation DOM must exist before initialization');
+ assert(!html.includes('<script id="mementoUnifiedNavScript">'));
+ assert(!html.includes('<script id="mementoTabLayout">'));
+});
 console.log(n+' app review core checks passed.');
