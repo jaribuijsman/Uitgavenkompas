@@ -23,6 +23,22 @@ check("knowledge UI selects relevant life browser journeys",()=>{
 check("finance code touching calculations forces full coverage",()=>{
  const a=planFor(["assets/memento-review-core.js"]);assert.equal(a.tier,"high");assert.deepEqual(a.groups,FULL);
 });
+
+check("extracted Finance and Life applications always retain offline data safety",()=>{
+ for(const file of ["assets/memento-finance-app.js","assets/memento-life-app.js"]){
+  const a=planFor([file]);
+  assert.equal(a.tier,"high",file);
+  assert.deepEqual(a.groups,FULL,file);
+  assert.equal(a.upgrade,true,file+" must test old stored records when updating entrypoint code");
+ }
+});
+check("base stylesheet is shared UI, not a trivial isolated cosmetic patch",()=>{
+ const a=planFor(["assets/memento-base-app.css"]);
+ assert.equal(a.tier,"medium");
+ assert(a.groups.includes("interface-layout-smoke"));
+ assert(a.groups.includes("interface-smoke"));
+ assert.equal(a.upgrade,false);
+});
 check("storage guard changes require full coverage and upgrade",()=>{
  const a=planFor(["assets/memento-storage-guard.js"]);assert.equal(a.tier,"high");assert(a.upgrade);
 });
