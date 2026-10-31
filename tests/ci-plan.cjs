@@ -13,7 +13,15 @@ function normalizeWorker(s){
          .replace(/^const CORE = [^\n]*\n/m,"const CORE = VERSION;\n");
 }
 function workerCacheOnly(before,after){
- return typeof before==="string"&&typeof after==="string"&&normalizeWorker(before)===normalizeWorker(after);
+ if(typeof before!=="string"||typeof after!=="string"||normalizeWorker(before)!==normalizeWorker(after))return false;
+ const capture=s=>s.match(/^const CORE = (\[[^\n]*\]);/m);
+ const a=capture(before),b=capture(after);
+ if(!a||!b)return false;
+ try{
+  const norm=entry=>entry.replace(/\?v=[\w.-]+(?=$)/,"?v=VERSION");
+  const names=s=>JSON.parse(s[1]).map(norm);
+  return JSON.stringify(names(a))===JSON.stringify(names(b));
+ }catch{return false}
 }
 function planFor(paths,read=()=>null,forceFull=false){
  const application=[...new Set(paths)].filter(p=>p&&!/^docs\//.test(p)&&!["AGENTS.md","README.md"].includes(p));
@@ -33,7 +41,7 @@ function planFor(paths,read=()=>null,forceFull=false){
  const groups=new Set(["interface-smoke"]);
  if(application.some(p=>/knowledge|note|journal|cover/i.test(p)))groups.add("life-knowledge");
  if(application.some(p=>/fitness|quickfit/i.test(p)))groups.add("life-fitness");
- if(application.some(p=>/assistant|dictation/i.test(p)))groups.add("life-assistant");
+ if(application.some(p=>/assistant|dictation/i.test(p)&&p.endsWith(".js")))groups.add("life-assistant");
  if(application.some(p=>/finance|account|transaction|receipt|categor|budget/i.test(p)))groups.add("data-finance");
  if(application.some(p=>/storage|backup|recovery/i.test(p)))groups.add("data-storage");
  if(application.some(p=>/calendar|agenda/i.test(p)))groups.add("interface-calendar");
