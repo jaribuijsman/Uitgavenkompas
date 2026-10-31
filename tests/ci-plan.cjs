@@ -83,6 +83,9 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  }
  // A PR changing only browser tests runs those exact tests, without duplicates.
  if(onlyTests&&application.every(p=>/^tests\/[\w-]+-browser\.cjs$/.test(p)))return {tier:"medium",groups:[...groups],upgrade:false,files:paths};
+ // Reuse the existing search journey for search assets and shared menu routing;
+ // it also verifies rejected navigation and note/Fitness draft preservation.
+ if(application.some(p=>/^assets\/memento-(?:global-search(?:-core)?\.js|global-search\.css|unified-nav\.js)$/.test(p)))groups.add("test-global-search-browser");
  if(application.some(p=>/knowledge|note|journal|cover/i.test(p)))groups.add("life-knowledge");
  if(application.some(p=>/fitness|quickfit/i.test(p)))groups.add("life-fitness");
  if(application.some(p=>/assistant|dictation/i.test(p)&&p.endsWith(".js")))groups.add("life-assistant");
