@@ -4,7 +4,7 @@
 const fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=require("node:child_process");
 const domain=process.argv[2],tier=process.argv[3]||"high";
 const suitesByGroup={
- "interface-layout":["layout-completion-browser","visual-layout-browser","patches-001-002-004-browser"],
+ "interface-layout":["layout-completion-browser","visual-layout-browser","patches-001-002-004-browser","day-swipe-browser"],
  "interface-feature":["masterplan-browser","memento-start-browser","calendar-header-browser"],
  "interface-acceptance":["release-acceptance-browser"],
  "interface-visual":["glass-rendering-browser","visual-browser"],

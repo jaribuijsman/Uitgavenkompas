@@ -628,3 +628,15 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 @media(max-width:520px){#lifeApp .life-task,#lifeApp .life-day-column .life-task{padding:7px 6px;grid-template-columns:38px minmax(0,1fr) 32px;gap:4px}#lifeApp .life-task-body,#lifeApp .life-day-column .life-task-body{flex-basis:auto}#lifeApp .life-task-title{font-size:14px}#lifeApp .life-quick-add input{font-size:16px}#lifeApp .life-quick-add .life-btn{font-size:12px;padding:9px 12px}#lifeApp .life-main{padding:15px 12px 28px}.flow-hero{padding:17px 15px}.flow-hero blockquote{font-size:18px}.flow-avatar{width:59px;height:59px}.flow-hero-top{gap:8px}.flow-weather{padding:10px 12px}.flow-weather-icon{width:27px;font-size:25px}}
 @media(max-width:360px){#pinLock{padding:12px 10px!important}#pinLock .pin-panel{padding:14px 9px 18px!important}#pinLock .pin-keypad{gap:11px}#lifeApp .life-day-heading>span{max-width:150px}#lifeApp .life-task-meta{font-size:11px}}
 @media(prefers-reduced-motion:reduce){#pinLock *{animation:none!important;transition:none!important}}
+
+/* Mijn dag: horizontale dagkeuze. Alleen weergave; taak- en afspraakopslag blijven ongewijzigd. */
+#lifeApp[data-life-view="today"] .life-day-carousel{min-width:0;max-width:100%;margin:14px 0 18px}
+#lifeApp[data-life-view="today"] .life-day-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:4px;margin:0 0 12px;border:1px solid #46634f;border-radius:16px;background:#152c20}
+#lifeApp[data-life-view="today"] .life-day-tab{box-sizing:border-box;min-width:0;min-height:44px;padding:9px 5px;border:1px solid transparent;border-radius:12px;background:transparent;color:#c7ddcd;font:inherit;font-size:clamp(12px,3.5vw,15px);font-weight:650;cursor:pointer;white-space:nowrap}
+#lifeApp[data-life-view="today"] .life-day-tab[aria-pressed="true"]{background:#bdd3c2;border-color:#cfe2d2;color:#142b1d}
+#lifeApp[data-life-view="today"] .life-day-tab:focus-visible,#lifeApp[data-life-view="today"] .life-day-track:focus-visible{outline:2px solid #e0f3c4;outline-offset:2px}
+#lifeApp[data-life-view="today"] .life-day-track{display:flex;gap:0;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#lifeApp[data-life-view="today"] .life-day-track::-webkit-scrollbar{display:none}
+#lifeApp[data-life-view="today"] .life-day-track>.life-day-column{box-sizing:border-box;flex:0 0 100%;width:100%;min-width:0;margin:0;padding-top:4px;scroll-snap-align:start;scroll-snap-stop:always}
+#lifeApp[data-life-view="today"] .life-day-track>.life-day-column .life-day-heading{margin-top:0}
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .life-day-track{scroll-behavior:auto}}

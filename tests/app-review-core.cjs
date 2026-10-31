@@ -61,9 +61,11 @@ test('extracted base CSS keeps its cascade position and PWA precache',()=>{
  const fs=require('node:fs'),path=require('node:path');
  const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
- const file='assets/memento-base-app.css',url='./'+file+'?v=20261031-base-extract-v1';
- const tag='<link id="compassGreenFlowV12" rel="stylesheet" href="'+url+'">';
- assert.equal(html.split(tag).length-1,1,'exactly one base stylesheet must load');
+ const file='assets/memento-base-app.css';
+ const tags=[...html.matchAll(/<link\b[^>]*\bid="compassGreenFlowV12"[^>]*>/g)];
+ assert.equal(tags.length,1,'exactly one base stylesheet must load');
+ const tag=tags[0][0],url=tag.match(/\bhref="([^"]+)"/)?.[1];
+ assert.match(url,/^\.\/assets\/memento-base-app\.css\?v=[\w.-]+$/,'base stylesheet URL and version must be valid');
  assert.equal(sw.split('"'+url+'"').length-1,1,'stylesheet must be cached offline');
  assert(html.indexOf(tag)<html.indexOf('id="mementoUnifiedPatchStyles"'),'preserve original style cascade order');
  assert(!html.includes('<style id="compassGreenFlowV12">'),'do not load duplicate inline styles');
