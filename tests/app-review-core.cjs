@@ -71,6 +71,6 @@ test('extracted base CSS keeps its cascade position and PWA precache',()=>{
  assert(css.length>100000,'avoid silently truncating base app styles');
  assert(css.includes(':root{--bg:'),'keep existing base tokens');
  assert(css.includes('@media(prefers-reduced-motion:reduce)'),'retain accessibility styles');
- assert(!/@import\\b|url\\s*\\(/i.test(css),'relative resource URLs must be audited before extraction');
+ assert(!/@import\b|url\s*\(/i.test(css),'relative resource URLs must be audited before extraction');
 });
 console.log(n+' app review core checks passed.');
