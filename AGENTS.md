@@ -2,6 +2,19 @@
 
 Geldt voor Codex, ChatGPT Work en andere agents in deze repository. De recentste gebruikersopdracht en hogere instructies gaan voor. De gebruiker heeft gevraagd om opdrachten zoveel mogelijk **in één uitvoering volledig af te handelen**; vraag niet opnieuw om reeds verstrekte toestemming en stop niet na alleen een plan.
 
+## Taakgerichte skillrouter (ook als cloudcatalogus leeg is)
+
+Bij werk in deze repository: gebruik `AGENTS.md` als basis. Selecteer **alleen de relevante** lokale instructies uit `.agents/skills/<naam>/SKILL.md` op basis van de taak, ook wanneer de cloud-/executor-skillcatalogus ze niet automatisch toont. Dit is handmatig lezen van projectinstructies, **geen bewijs van automatische skillactivering**.
+
+- Release, PR, deployment of acceptatiebewijs → `release-guardian`
+- Testselectie, regressie of CI-efficiëntie → `smart-regression`
+- CSS, componentconsistentie of visuele stijlen → `design-system-guardian`
+- Dupliceerde code, bugs, onderhoud of opschoning → `code-auditor`
+- Nieuwe functie, scherm, gegevensstroom of ontwerp → `feature-architect`
+- Android, touch, viewport, scroll of mobiele dialogen → `android-ux-inspector`
+
+Lees alleen benodigde skillbestanden (bij overlap maximaal de direct relevante); ga daarna direct verder met de bestaande risicogestuurde workflow. Skills vervangen de CI-gates, privacyregels of gebruikersopdracht niet. Als het bestand ontbreekt, meld dat en werk volgens `AGENTS.md`; maak geen nieuw duplicaat. Zoek vanaf de repositoryroot, niet vanuit een lege `/workspace`.
+
 ## Werkstroom: inspecteer → herstel → controleer → lever op
 
 1. Controleer **eenmalig** de actuele `main`-SHA en relevante bestanden/handlers; lees grote bestanden alleen op gerichte regels. Lees uitsluitend de toepasselijke passages uit projectbronnen; historische audits en alle projectdocumenten zijn géén verplichte dagelijkse preflight. Kijk vóór nieuwe code of een bestaande helper of stijlregel het al oplost.
