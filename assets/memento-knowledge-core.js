@@ -138,11 +138,15 @@ function validate(life){
 function search(life,{collectionId="",query="",kind="",status="active",sort="recent",tag=""}={}){
  const q=nameKey(query);
  return life.notes.filter(n=>{
-  if(status==="trash")return Boolean(n.deletedAt);
-  if(n.deletedAt)return false;
-  if(status==="archive")return Boolean(n.archived);
-  if(n.archived)return false;
-  if(status==="pinned"&&!n.pinned)return false;
+  // Select the lifecycle state first; apply the same query, collection, kind
+  // and tag filters to active, archived and deleted notes.
+  if(status==="trash"){if(!n.deletedAt)return false;}
+  else{
+   if(n.deletedAt)return false;
+   if(status==="archive"){if(!n.archived)return false;}
+   else if(n.archived)return false;
+   if(status==="pinned"&&!n.pinned)return false;
+  }
   if(collectionId&&collectionOf(life,n)!==collectionId)return false;
   if(kind&&typeOf(n)!==kind)return false;
   if(tag&&!(n.tags||[]).includes(tag))return false;
