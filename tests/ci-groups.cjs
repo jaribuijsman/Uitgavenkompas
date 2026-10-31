@@ -20,8 +20,11 @@ const suitesByGroup={
  "data-finance":["app-review-browser"],
  "data-storage":["storage-safety-browser"]
 };
-if(!Object.hasOwn(suitesByGroup,domain))throw Error("Unknown CI group: "+domain);
-const suites=suitesByGroup[domain],root=path.join(__dirname,"..");
+const direct=domain.startsWith("test-")?domain.slice(5):"";
+const allowed=new Set(Object.values(suitesByGroup).flat());
+if(direct&&!allowed.has(direct))throw Error("Unknown direct browser suite: "+direct);
+if(!direct&&!Object.hasOwn(suitesByGroup,domain))throw Error("Unknown CI group: "+domain);
+const suites=direct?[direct]:suitesByGroup[domain],root=path.join(__dirname,"..");
 let count=0,failures=[],fixture="";
 const timings=[];
 function run(script,extra={}){
