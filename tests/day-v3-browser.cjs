@@ -48,7 +48,21 @@ const reports=[];
     assert.equal(m.verticalOverflow,'hidden',label+' must not introduce a nested vertical scroll area');
     assert(m.slideWidths.every(w=>Math.abs(w-m.track.width)<2),label+' day widths changed');
    }
-   await contained('closed');assert.equal(await page.locator('.memento-day-quick').getAttribute('open'),null);await shot('day');
+   await contained('closed');
+   const quick=page.locator('#lifeQuickForm');
+   assert(await quick.isVisible(),'Quick capture must be visible without expansion');
+   assert.equal(await page.locator('.memento-day-quick').count(),0,'Obsolete quick-capture disclosure should be removed');
+   assert.equal(await page.locator('.mg-day-head [data-life-journal]').count(),0,'Duplicate header diary shortcut');
+   assert.equal(await page.locator('.memento-duty-badge').count(),0,'Duplicate shift hours in appointment caption');
+   const quickOrder=await page.evaluate(()=>{const q=document.querySelector('#lifeQuickForm'),s=document.querySelector('#mementoUniversalSearchHost'),d=document.querySelector('.memento-day-v3-bar');return Boolean(q&&s&&d&&(s.compareDocumentPosition(q)&Node.DOCUMENT_POSITION_FOLLOWING)&&(q.compareDocumentPosition(d)&Node.DOCUMENT_POSITION_FOLLOWING))});
+   assert(quickOrder,'Quick capture must be between universal search and day selector');
+   assert.equal(await quick.locator('[data-life-quick-kind]').count(),2);
+   assert.equal(await quick.locator('[data-life-journal]').count(),1);
+   await quick.locator('[data-life-quick-kind="note"]').click();
+   assert.equal(await page.locator('#lifeQuickTitle').getAttribute('placeholder'),'Wat wil je onthouden?');
+   await quick.locator('[data-life-quick-kind="task"]').click();
+   assert.equal(await page.locator('#lifeQuickTitle').getAttribute('placeholder'),'Wat wil je doen?');
+   await shot('day');
    if(!count){assert.equal(await page.locator('.memento-v3-card').count(),0);continue;}
    const event=page.locator('[data-life-day="2026-10-31"] .memento-v3-card').filter({has:page.locator('[data-memento-edit-event="v3-event"]')});
    const zones=await event.evaluate(el=>[...el.children].map(n=>n.getBoundingClientRect().toJSON()));
