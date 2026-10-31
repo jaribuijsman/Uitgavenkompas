@@ -471,7 +471,7 @@ function syncDayCarousel(restorePosition=false){
  root.querySelectorAll('[data-life-day-slide]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.lifeDaySlide)===daySlide)));
  if(restorePosition){
   track.scrollLeft=daySlide*track.clientWidth;
-  requestAnimationFrame(()=>{if(track.isConnected)track.scrollLeft=daySlide*track.clientWidth});
+  window.requestAnimationFrame?.(()=>{if(track.isConnected)track.scrollLeft=daySlide*track.clientWidth});
  }
 }
 function showDaySlide(index){
