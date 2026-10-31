@@ -45,6 +45,15 @@ check("worker fetch event changes remain high risk",()=>{
  const a=planFor(["sw.js"],read({"sw.js":{before:swA,after:swB.replace("fetch","activate")}}));
  assert.equal(a.tier,"high");assert(a.upgrade);
 });
+check("modified browser test runs itself, without unrelated suites",()=>{
+ const a=planFor(["tests/notes-direction-c-browser.cjs"]);
+ assert.equal(a.tier,"medium");
+ assert.deepEqual(a.groups,["test-notes-direction-c-browser"]);
+});
+check("upgrade-browser changes retain full offline upgrade",()=>{
+ const a=planFor(["tests/recovery-upgrade-browser.cjs"]);
+ assert.equal(a.tier,"high");assert(a.upgrade);
+});
 check("CI and workflow changes run full coverage",()=>{
  assert.equal(planFor(["tests/ci-groups.cjs"]).tier,"high");
  assert.equal(planFor([".github/workflows/app-review.yml"]).tier,"high");
