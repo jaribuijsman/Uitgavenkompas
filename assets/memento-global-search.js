@@ -57,28 +57,24 @@
    opened=false;selected=-1;render();
  }
  function go(r){
-   if(!r)return;
-   const required=r.area;
-   close();
-   if(required==='finance'){
-     document.querySelector('#compassAreaBar [data-compass-area="finance"]')?.click();
-     if(document.body.dataset.compassArea!=='finance')return;
-     const bridge=window.MementoFinanceBridgeV9;
-     if(r.kind==='transactions'){bridge?.changeView?.('transactions');bridge?.edit?.(r.id);return;}
-     if(r.kind==='receipts'){bridge?.openReceipt?.(r.id);return;}
-     if(r.kind==='bills'){bridge?.openBill?.(r.id);return;}
-     if(r.kind==='goals'){bridge?.openGoal?.(r.id);return;}
-     bridge?.changeView?.(r.view);
-     return;
+   if(!r)return false;
+   if(r.area==='finance'){
+     if(window.MementoNavigation?.setArea('finance')!==true)return false;
+     const bridge=window.MementoFinanceBridgeV9;if(!bridge)return false;
+     if(r.kind==='transactions'){bridge.changeView('transactions');bridge.edit(r.id);}
+     else if(r.kind==='receipts')bridge.openReceipt(r.id);
+     else if(r.kind==='bills')bridge.openBill(r.id);
+     else if(r.kind==='goals')bridge.openGoal(r.id);
+     else bridge.changeView(r.view);
+     close();return true;
    }
-   if(r.kind==='notes'||r.kind==='tasks'||r.kind==='wishes'||r.kind==='appointments'){
-     if(r.kind==='appointments'&&r.source==='google'){
-       window.MementoGlobalSearchLifeOpen?.('appointments-google',r.id,r.date);return;
-     }
-     window.MementoKnowledgeBridge?.openRelated?.(r.kind==='wishes'?'wish':r.kind==='appointments'?'appointment':r.kind==='tasks'?'task':'note',r.id);
-     return;
-   }
-   window.MementoGlobalSearchLifeOpen?.(r.kind,r.id,r.date);
+   let accepted;
+   if(r.kind==='appointments'&&r.source==='google')accepted=window.MementoGlobalSearchLifeOpen?.('appointments-google',r.id,r.date);
+   else if(r.kind==='notes'||r.kind==='tasks'||r.kind==='wishes'||r.kind==='appointments'){
+     accepted=window.MementoKnowledgeBridge?.openRelated?.(r.kind==='wishes'?'wish':r.kind==='appointments'?'appointment':r.kind==='tasks'?'task':'note',r.id);
+   }else accepted=window.MementoGlobalSearchLifeOpen?.(r.kind,r.id,r.date);
+   if(accepted===true)close();
+   return accepted===true;
  }
  function mount(){
    const next=document.getElementById('mementoUniversalSearchHost');

@@ -20,7 +20,7 @@ test('navigation modules stay ordered, synchronous and offline-cacheable',()=>{
  const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
  const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
  const modules=[
-  ['mementoUnifiedNavScript','assets/memento-unified-nav.js','20261031-extract-v1'],
+  ['mementoUnifiedNavScript','assets/memento-unified-nav.js','20261031-navigation-contract-v1'],
   ['mementoTabLayout','assets/memento-tab-layout.js','20261031-extract-v1']
  ];
  const offsets=[];

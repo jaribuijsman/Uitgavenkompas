@@ -71,20 +71,32 @@ function save(token){
 function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;return false}undo=allowUndo?before:null;render();if(text)status(text,allowUndo);return true}
 function nextDate(base,repeat,days=4){if(repeat==='none')return '';const d=parseDate(base),day=d.getDate();if(['daily','weekly','custom'].includes(repeat)){d.setDate(day+(repeat==='daily'?1:repeat==='weekly'?7:days));return formatISO(d)}const n={monthly:1,quarterly:3,yearly:12}[repeat];d.setDate(1);d.setMonth(d.getMonth()+n);const end=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,end));return formatISO(d)}
 function sourceLink(t){const u=safeLink(t.sourceUrl||'');return u?'<a class="life-source" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':''}
-function setArea(next){if(window.MementoFitness?.hasPending?.()){status('Je fitnessinvoer is nog niet opgeslagen. Open Fitness en probeer opnieuw.',false,true);return}
- if(window.MementoKnowledge?.hasPending?.()){status('Sla eerst je conceptnotitie op in het Notities.',false,true);return}
- area=next==='finance'?'finance':'life';document.body.dataset.compassArea=area;document.querySelectorAll('[data-compass-area]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',String(b.dataset.compassArea===area))});closeDialog();try{sessionStorage.setItem('compass_preview_area',area)}catch{}window.MementoSyncNav?.();window.scrollTo(0,0)}
+// Navigation returns true only when the requested destination is accepted.
+// Re-selecting a pending editor must keep its current DOM and draft.
+function setArea(next){
+ if(!['life','finance'].includes(next))return false;
+ const fitnessPending=window.MementoFitness?.hasPending?.(),notePending=window.MementoKnowledge?.hasPending?.();
+ if(next===area&&(fitnessPending||notePending))return true;
+ if(fitnessPending){status('Je fitnessinvoer is nog niet opgeslagen. Open Fitness en probeer opnieuw.',false,true);return false}
+ if(notePending){status('Sla eerst je conceptnotitie op in het Notities.',false,true);return false}
+ area=next;document.body.dataset.compassArea=area;document.querySelectorAll('[data-compass-area]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',String(b.dataset.compassArea===area))});closeDialog();try{sessionStorage.setItem('compass_preview_area',area)}catch{}window.MementoSyncNav?.();window.scrollTo(0,0);return true;
+}
 function setView(next){
- if(window.MementoFitness?.hasPending?.()&&next!=='fitness'){status('Sla eerst je fitnessinvoer opnieuw op.',false,true);return}
- if(window.MementoKnowledge?.hasPending?.()&&next!=='notes'){status('Sla eerst je conceptnotitie op.',false,true);return}
  const old=next;if(next==='library'||next==='household')next='tasks';
- if(!views.some(v=>v[0]===next))return;
+ if(!views.some(v=>v[0]===next))return false;
+ const fitnessPending=window.MementoFitness?.hasPending?.(),notePending=window.MementoKnowledge?.hasPending?.();
+ if(fitnessPending&&next!=='fitness'){status('Sla eerst je fitnessinvoer opnieuw op.',false,true);return false}
+ if(notePending&&next!=='notes'){status('Sla eerst je conceptnotitie op.',false,true);return false}
+ if(next===view&&(fitnessPending||notePending))return true;
  if(view==='tasks')viewContexts.tasks={filters:taskFilterSnapshot(),scroll:window.scrollY};
  view=next;search='';roomFilter='all';repeatFilter='all';categoryFilter='all';
  taskScope=old==='household'?'household':'all';taskTab=old==='library'?'saved':'open';
  if(next==='tasks'&&old==='tasks'&&viewContexts.tasks)restoreTaskFilter(viewContexts.tasks.filters);
- closeDialog();render();window.scrollTo(0,0);
+ closeDialog();render();window.scrollTo(0,0);return true;
 }
+function openLifeView(next){return setArea('life')&&setView(next)}
+window.MementoNavigation={setArea,setView};
+
 function renderNav(){
  const activeToday=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&(t.focusDate===today()||t.date&&t.date<=today())).length;
  $('lifeNavigation').innerHTML=views.map(([id,icon,label])=>'<button type="button" data-life-view="'+id+'"'+(id===view?' aria-current="page"':'')+'><span class="life-nav-icon" aria-hidden="true">'+(window.MementoIllustratedIcons?.svg(id)||icon)+'</span><span>'+label+'</span>'+(id==='today'&&activeToday?'<span class="life-nav-count">'+activeToday+'</span>':'')+'</button>').join('');
@@ -343,7 +355,7 @@ function paintTodayAppointments(){
  }
 }
 
-window.MementoFitnessBridge={read:()=>state.fitness||window.MementoFitnessCore.empty(),replace:fitness=>{if(blocked)return false;const before=state.fitness;state.fitness=fitness;if(!save()){state.fitness=before;return false}return true},open:()=>{setArea('life');setView('fitness')},bookingsForDay:d=>state.fitness?.bookings.filter(b=>b.status==='planned'&&b.date===d)||[],dayHTML:(d,carry=false)=>window.MementoFitness?.dayHTML(state.fitness,d,carry)||''};
+window.MementoFitnessBridge={read:()=>state.fitness||window.MementoFitnessCore.empty(),replace:fitness=>{if(blocked)return false;const before=state.fitness;state.fitness=fitness;if(!save()){state.fitness=before;return false}return true},open:()=>openLifeView('fitness'),bookingsForDay:d=>state.fitness?.bookings.filter(b=>b.status==='planned'&&b.date===d)||[],dayHTML:(d,carry=false)=>window.MementoFitness?.dayHTML(state.fitness,d,carry)||''};
 window.MementoKnowledgeBridge={
  read:()=>state,
  addRecipeIngredients:(rows)=>{if(!Array.isArray(rows)||!rows.length)return false;return mutate(()=>{for(const row of rows){if(!row.name?.trim())continue;const title=row.name.trim().slice(0,180),quantity=[row.amount,row.unit].filter(Boolean).join(' ').slice(0,180);const existing=state.groceries.find(g=>!g.deletedAt&&g.list==='groceries'&&g.title.toLowerCase()===title.toLowerCase()&&String(g.quantity||'')===quantity);if(existing){existing.needed=true;existing.bought=false}else state.groceries.push({id:uid(),title,quantity,category:'Overig',notes:'',list:'groceries',needed:true,bought:false,favorite:false,deletedAt:''});}},'Ingrediënten op je boodschappenlijst gezet.',true);},
@@ -357,24 +369,35 @@ window.MementoKnowledgeBridge={
  convert:(id,kind,passage)=>convertNote(id,kind,passage),
  openAI:id=>openMementoNoteAI(id),
  openRelated:(kind,id)=>{
-  if(kind==='note'){setView('notes');window.MementoKnowledge?.showNote?.(id);return}
-  if(kind==='task'){setView('tasks');if(state.tasks.some(t=>t.id===id))detail(id);return}
-  if(kind==='wish'){setView('wishes');if(state.wishes.some(w=>w.id===id))editWish(id);return}
-  if(kind==='appointment'){setView('agenda');if(state.appointments.some(a=>a.id===id))editAppointment(id);return}
+  const destination={note:'notes',task:'tasks',wish:'wishes',appointment:'agenda'}[kind];
+  const records={note:state.notes,task:state.tasks,wish:state.wishes,appointment:state.appointments}[kind];
+  if(!destination||!records.some(x=>x.id===id)||!openLifeView(destination))return false;
+  if(kind==='note'){window.MementoKnowledge?.showNote?.(id);return true}
+  if(kind==='task'){detail(id);return true}
+  if(kind==='wish'){editWish(id);return true}
+  if(kind==='appointment'){editAppointment(id);return true}
  }
 };
-window.MementoLife={openWish:id=>{const w=state.wishes.find(x=>x.id===id);if(!w){status('De oorspronkelijke aankoopwens ontbreekt; het dossier blijft bewaard.',false,true);return}if(w.deletedAt){if(!confirm('Deze aankoopwens staat in de prullenbak. Herstellen en openen?'))return;if(!mutate(()=>{w.deletedAt=''},'Aankoopwens hersteld.'))return}setArea('life');setView('wishes');editWish(id);},openTrash:()=>{setArea('life');setView('backup');openPermanentTrashDialog();},linkPurchaseResearch:(id,researchId,result)=>{const g=state.groceries.find(x=>x.id===id);if(g)return mutate(()=>{g.researchId=researchId;g.researchSummary=String(result||'').slice(0,30000)})},getLocalAppointments:()=>localAppointments(),getGoogleRefreshStart:googleRefreshStart,rememberGoogleAppointments,appointmentItemsForDay,appointmentCompletion,renderAppointmentItem:renderUnifiedAppointmentItem,paintTodayAppointments,exportBackup,refreshBackupStatus,openBackup:()=>{setArea('life');setView('backup')},linkResearch:(id,researchId,result)=>{const w=state.wishes.find(x=>x.id===id);if(w)return mutate(()=>{w.researchId=researchId;w.researchSummary=String(result||'').slice(0,30000);if(w.status!=='bought')w.status='research'})}};
-
+window.MementoLife={
+ openWish:id=>{
+  const w=state.wishes.find(x=>x.id===id);
+  if(!w){status('De oorspronkelijke aankoopwens ontbreekt; het dossier blijft bewaard.',false,true);return false}
+  if(w.deletedAt&&!confirm('Deze aankoopwens staat in de prullenbak. Herstellen en openen?'))return false;
+  if(!openLifeView('wishes'))return false;
+  if(w.deletedAt&&!mutate(()=>{w.deletedAt=''},'Aankoopwens hersteld.'))return false;
+  editWish(id);return true;
+ },openTrash:()=>{if(!openLifeView('backup'))return false;openPermanentTrashDialog();return true;},linkPurchaseResearch:(id,researchId,result)=>{const g=state.groceries.find(x=>x.id===id);if(g)return mutate(()=>{g.researchId=researchId;g.researchSummary=String(result||'').slice(0,30000)})},getLocalAppointments:()=>localAppointments(),getGoogleRefreshStart:googleRefreshStart,rememberGoogleAppointments,appointmentItemsForDay,appointmentCompletion,renderAppointmentItem:renderUnifiedAppointmentItem,paintTodayAppointments,exportBackup,refreshBackupStatus,openBackup:()=>openLifeView('backup'),linkResearch:(id,researchId,result)=>{const w=state.wishes.find(x=>x.id===id);if(w)return mutate(()=>{w.researchId=researchId;w.researchSummary=String(result||'').slice(0,30000);if(w.status!=='bought')w.status='research'})}};
 
 /* Search routes to existing editors without writing or changing storage. */
 window.MementoGlobalSearchLifeOpen=(kind,id,date)=>{
- setArea('life');
- if(document.body.dataset.compassArea!=='life')return;
- if(kind==='groceries'){setView('groceries');if(state.groceries.some(g=>g.id===id&&!g.deletedAt))editGrocery(id);return;}
- if(kind==='templates'){setView('tasks');taskTab='saved';render();if(state.templates.some(t=>t.id===id&&!t.deletedAt))editTask(id,null,true);return;}
- if(kind==='fitness'){setView('fitness');return;}
- if(kind==='appointments-google'){setView('agenda');return;}
- if(kind==='tasks'){setView('tasks');if(state.tasks.some(t=>t.id===id&&!t.deletedAt))detail(id);return;}
+ const destination={groceries:'groceries',templates:'tasks',fitness:'fitness','appointments-google':'agenda',tasks:'tasks'}[kind];
+ if(!destination)return false;
+ const records={groceries:state.groceries,templates:state.templates,tasks:state.tasks}[kind];
+ if(records&&!records.some(x=>x.id===id&&!x.deletedAt)||!openLifeView(destination))return false;
+ if(kind==='groceries')editGrocery(id);
+ if(kind==='templates'){taskTab='saved';render();editTask(id,null,true);}
+ if(kind==='tasks')detail(id);
+ return true;
 };
 const MEMENTO_ASSISTANT_UNDO='memento_assistant_undo_v1';
 window.MementoAssistantBridge={
@@ -620,7 +643,7 @@ function clearShoppingBought(){
 }
 function openShoppingResearch(id){
  const g=state.groceries.find(x=>x.id===id&&!x.deletedAt&&shoppingListOf(x)==='purchases');if(!g)return false;
- setArea('finance');document.querySelector('#sideNav [data-view="smartbuy"]').click();
+ if(!setArea('finance'))return false;document.querySelector('#sideNav [data-view="smartbuy"]').click();
  window.MementoResearch?.fromPurchase?.(g.id,{product:g.title,budget:g.budget||'',preferences:[g.notes,g.quantity?'Hoeveelheid: '+g.quantity:''].filter(Boolean).join('\n')});
  return true;
 }
@@ -982,7 +1005,7 @@ root.addEventListener('click',e=>{
  if(d.mementoQuickOpen!==undefined){quickKind='note';syncQuickForm();$('lifeQuickTitle')?.focus();root.querySelector('.memento-day-add-menu')?.removeAttribute('open');return}
  if(d.mementoDayNewEvent!==undefined){b.dataset.mementoNewEvent=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();}
  if(d.mementoDeleteDayEvent){const event=localAppointments().find(x=>x.id===d.mementoDeleteDayEvent);if(event&&confirm('Afspraak ‘'+event.title+'’ verwijderen uit Memento?')){if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==event.id)},'Lokale afspraak verwijderd.',true))window.MementoGoogleCalendar?.refreshAgenda?.();}return}
- if(d.lifeSourceNote){setView('notes');window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
+ if(d.lifeSourceNote){if(setView('notes'))window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
  if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;render();return}
  if(d.shoppingAdd){addShoppingItem(d.shoppingAdd);return}
  if(d.shoppingFavorite){changeShoppingItem(d.shoppingFavorite,'favorite');return}
@@ -992,7 +1015,7 @@ root.addEventListener('click',e=>{
  if(d.shoppingNew){editGrocery();return}
  if(d.lifeQuickKind){quickKind=d.lifeQuickKind==='note'?'note':'task';syncQuickForm();return}
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
- if(d.lifeJournal!==undefined){setView('notes');window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
+ if(d.lifeJournal!==undefined){if(!setView('notes'))return;window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
  if(d.mementoNewEvent!==undefined){const chosen=document.querySelector('#lifeApp[data-life-view="agenda"] .memento-cal-day.selected')?.dataset.gcalDay;editAppointment(null,d.mementoNewEvent||chosen||today());return}
  if(d.mementoEditEvent){editAppointment(d.mementoEditEvent);return}
@@ -1020,7 +1043,7 @@ root.addEventListener('click',e=>{
  if(d.lifeTaskTab){taskTab=d.lifeTaskTab;render();return}if(d.lifeGroceryTab){groceryTab=d.lifeGroceryTab;groceryDraft='';render();return}
  if(d.lifeNeeded){changeShoppingItem(d.lifeNeeded,'needed');return}
  if(d.lifeGroceryEdit){editGrocery(d.lifeGroceryEdit);return}if(d.lifeWishEdit){editWish(d.lifeWishEdit);return}if(d.lifeNoteEdit){editNote(d.lifeNoteEdit);return}
- if(d.lifeResearch){const w=state.wishes.find(x=>x.id===d.lifeResearch);setArea('finance');document.querySelector('#sideNav [data-view="smartbuy"]').click();$('smartBuyProduct').value=w.title;$('smartBuyPreferences').value=w.notes||'';$('smartBuyBudget').value=w.budget||'';window.MementoResearch?.fromWish?.(w.id);$('smartBuyOutputCard').hidden=true;$('smartBuyPrompt').value='';status('Aankoopwens klaargezet bij Slim Kopen.');return}
+ if(d.lifeResearch){const w=state.wishes.find(x=>x.id===d.lifeResearch);if(!setArea('finance'))return false;document.querySelector('#sideNav [data-view="smartbuy"]').click();$('smartBuyProduct').value=w.title;$('smartBuyPreferences').value=w.notes||'';$('smartBuyBudget').value=w.budget||'';window.MementoResearch?.fromWish?.(w.id);$('smartBuyOutputCard').hidden=true;$('smartBuyPrompt').value='';status('Aankoopwens klaargezet bij Slim Kopen.');return}
  if(d.lifeAction==='undo'&&undo){const current=clone(state);state=undo;undo=null;if(save()){render();status('Laatste wijziging hersteld.')}else state=current;return}
  if(b.id==='lifeAdd'){if(view==='groceries')editGrocery();else if(view==='wishes')editWish();else if(view==='notes')window.MementoKnowledge?.newNote?.()||editNote();else editTask();return}
  if(b.id==='lifeClearBought'){clearShoppingBought();return}
@@ -1033,7 +1056,7 @@ root.addEventListener('scroll',e=>{if(e.target.id!=='lifeDayTrack')return;const 
 root.addEventListener('keydown',e=>{if(e.target.id==='lifeDayTrack'&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();showDaySlide(daySlide+(e.key==='ArrowRight'?1:-1))}});
 root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{
- const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeNoteCategoryFilter'){noteCategoryFilter=el.value;noteOpenId='';noteCards();return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
+ const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeNoteCategoryFilter'){noteCategoryFilter=el.value;noteOpenId='';noteCards();return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){if(!setView(el.value))el.value=view;return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
  if(el.dataset.lifeBought){changeShoppingItem(el.dataset.lifeBought,'bought',el.checked);return}
  if(el.id==='lifeImportFile'&&el.files[0]){const file=el.files[0],include=$('lifeRestoreFinance').checked;el.value='';if(file.name.toLowerCase().endsWith('.zip'))importCompleteBackup(file);else importBackup(file,include)}
 });
@@ -1063,7 +1086,7 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
  if(entry&&confirm('Afspraak ‘'+entry.title+'’ verwijderen uit Memento?')){
   if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==id)},'Lokale afspraak verwijderd.',true)){closeDialog();window.MementoGoogleCalendar?.refreshAgenda?.()}
  }return;
- }if(b.dataset.lifeSourceNote){closeDialog();setView("notes");window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
+ }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
 dialog.addEventListener('change',e=>{if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
@@ -1103,8 +1126,7 @@ try{
  if(shared.get('memento-share')==='1'&&window.MementoKnowledge){
   const title=(shared.get('title')||'').slice(0,180),text=(shared.get('text')||'').slice(0,20000),url=(shared.get('url')||'').slice(0,2000);
   if(title||text||url){
-   setArea('life');setView('notes');
-   window.MementoKnowledge.prefillShared({title,text,url});
+   if(openLifeView('notes'))window.MementoKnowledge.prefillShared({title,text,url});
   }
   window.history.replaceState(null,'',window.location.pathname+window.location.hash);
  }

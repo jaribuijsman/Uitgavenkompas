@@ -66,7 +66,7 @@ assert(ksrc.includes("MementoIllustratedIcons?.svg(key)"),"Knowledge picker not 
 assert(index.includes("memento-illustrative-icons.js?v=20261027-iconset-v2"),"Missing shared module");
 assert(index.includes("memento-illustrative-icons.css?v=20261027-iconset-v2"),"Missing CSS");
 const navigation=fs.readFileSync(path.join(__dirname,"../assets/memento-unified-nav.js"),"utf8");
-assert(index.includes('src="./assets/memento-unified-nav.js?v=20261031-extract-v1"'),"Unified navigation module not loaded");
+assert(index.includes('src="./assets/memento-unified-nav.js?v=20261031-navigation-contract-v1"'),"Unified navigation module not loaded");
 assert(navigation.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
 assert(finance.includes("transactionArt(t)"),"Financial transactions not using icons");
 assert(finance.includes("categoryArt(c.name)"),"Budgets not using icons");

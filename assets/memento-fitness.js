@@ -1252,13 +1252,13 @@
   };
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-fitness-resume]")) {
-      window.MementoFitnessBridge?.open();
+      if(window.MementoFitnessBridge?.open()!==true)return;
       window.MementoFitness.resume();
       return;
     }
     const b = e.target.closest("[data-fitness-booking]");
     if (b) {
-      window.MementoFitnessBridge?.open();
+      if(window.MementoFitnessBridge?.open()!==true)return;
       window.MementoFitness.openBooking(b.dataset.fitnessBooking);
     }
   });
