@@ -34,11 +34,12 @@ jobs:
         id: select
         env:
           MEMENTO_CI_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' }}
+          MEMENTO_CI_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node tests/ci-plan.cjs
 
   core:
     needs: plan
-    if: needs.plan.outputs.tier != 'low'
+    if: needs.plan.outputs.tier != 'none'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,6 +48,11 @@ jobs:
       - name: Current-version contracts and data safety
         run: |
           set -e
+          node --check tests/ci-plan.cjs
+          node --check tests/ci-groups.cjs
+          node tests/ci-plan-regression.cjs
+          node tests/service-worker-cache.cjs
+          if [ "${{ needs.plan.outputs.tier }}" = "low" ]; then exit 0; fi
           node --check assets/memento-assistant.js
           node --check assets/memento-assistant-core.js
           node --check sw.js
@@ -63,7 +69,6 @@ jobs:
             node tests/knowledge-covers.cjs
             node tests/pin-forest-regression.cjs
             node tests/masterplan-core.cjs
-            node tests/service-worker-cache.cjs
             node tests/knowledge-v2-core.cjs
             node tests/knowledge-v2-safety.cjs
             node tests/journal-upgrade-core.cjs
@@ -80,17 +85,27 @@ jobs:
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 6
       matrix:
         group: ${{ fromJSON(needs.plan.outputs.groups) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
-      - name: Install Chromium once for this group
+      - name: Cache Chromium binary
+        id: chromium-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-1.62.1-v1
+      - name: Install browser dependencies
         run: |
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1 @axe-core/playwright@4.11.1
-          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          if [ "${{ steps.chromium-cache.outputs.cache-hit }}" = "true" ]; then
+            "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install chromium
+          else
+            "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          fi
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
       - name: Run relevant actual browser journeys
         env:
