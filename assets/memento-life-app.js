@@ -281,6 +281,13 @@ function googleEventDay(e,iso){
  const until=e.end?.date?toDay(end):toDay(new Date(new Date(end).getTime()-1).toISOString());
  return iso>=sd&&iso<=(e.end?.date?formatISO(new Date(parseDate(until).getTime()-86400000)):until);
 }
+
+function dayNoteControl(e,title){
+ const linked=state.notes.find(n=>n.id===e.sourceNoteId&&!n.deletedAt);
+ const body=String(e.notes||linked?.body||'').trim();
+ if(!body&&!linked)return '';
+ return '<details class="memento-day-note"><summary aria-label="'+esc('Notitie bekijken: '+title)+'" title="Notitie"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></summary><div class="memento-day-note-content"><strong>Notitie</strong>'+(body?'<p>'+esc(body)+'</p>':'')+(linked?'<button type="button" data-life-source-note="'+esc(linked.id)+'">Open gekoppelde notitie</button>':'')+'</div></details>';
+}
 function renderUnifiedAppointmentItem(e,source,options={}){
  const local=source==='local',date=appointmentDate(e,source),done=appointmentCompletion(e,source).done;
  const raw=local?'':e.start?.dateTime,parsed=raw?new Date(raw):null;
@@ -289,6 +296,20 @@ function renderUnifiedAppointmentItem(e,source,options={}){
  const carried=Boolean(options.carried&&date<today());
  const googleLink=!local&&/^https:\/\/(calendar\.google\.com|www\.google\.com)\//.test(e.htmlLink||'');
  const label=local?'':'Google';
+
+ if(options.dayCard){
+  const titleControl=local?'<button type="button" class="memento-v3-title" data-memento-edit-event="'+esc(e.id)+'">'+esc(title)+'</button>':'<strong>'+esc(title)+'</strong>';
+  const meta=[carried?'Oorspr. '+fmt(date)+' · nog open':'',e.location||'',label,done?'Afgerond':''].filter(Boolean);
+  const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+title)+'">⋮</summary><div class="life-task-actions">'+
+   (local?'<button type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerken</button>':'')+
+   '<button type="button" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'">'+(done?'Heropenen':'Afronden')+'</button>'+
+   (local?'<button type="button" class="life-task-delete" data-memento-delete-day-event="'+esc(e.id)+'">Verwijderen</button>':googleLink?'<a href="'+esc(e.htmlLink)+'" target="_blank" rel="noopener noreferrer">Open in Google Agenda</a>':'')+
+   '</div></details>';
+  return '<article class="memento-unified-event memento-v3-card'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
+   '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
+   '<span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info">'+titleControl+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+'</div>'+
+   '<div class="memento-event-actions">'+(local?dayNoteControl(e,title):'')+menu+'</div></article>';
+ }
  return '<div class="memento-unified-event'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
  '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
  '<span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info"><strong>'+esc(title)+'</strong>'+(carried?'<small class="memento-event-original">'+(done?'Oorspronkelijk ':'Nog open · oorspronkelijk ')+esc(fmt(date))+'</small>':'')+(e.location?'<small>'+esc(e.location)+'</small>':'')+(label||done?'<small>'+esc([label,done?'Afgerond':''].filter(Boolean).join(' · '))+'</small>':'')+'</div>'+
@@ -299,11 +320,17 @@ function paintTodayAppointments(){
   const iso=el.dataset.mementoDate,remote=window.MementoGoogleCalendar?.getUpcomingForDay?.(iso)||[];
   const items=appointmentItemsForDay(iso,remote),open=items.filter(e=>!e.done),done=items.filter(e=>e.done);
   const status=window.MementoGoogleCalendar?.todayState?.()||{connected:false,previous:false,loading:false};
-  const render=e=>renderUnifiedAppointmentItem(e.x,e.source,{carried:e.carried});
+  const render=e=>renderUnifiedAppointmentItem(e.x,e.source,{carried:e.carried,dayCard:true});
   const connectLabel=status.connected||status.previous?'Google-agenda opnieuw verbinden':'Google-agenda verbinden';
   const connect=iso===today()?'<button class="memento-calendar-connect" data-memento-gcal-connect="true" type="button" aria-label="'+connectLabel+'" title="'+connectLabel+'"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#fff" d="M12 12h24v24H12z"/><path fill="#4285f4" d="M36 12H12v24H5V8a3 3 0 0 1 3-3h28z"/><path fill="#1967d2" d="M36 5h4a3 3 0 0 1 3 3v4h-7z"/><path fill="#fbbc04" d="M36 12h7v24h-7z"/><path fill="#34a853" d="M36 36v7H12v-7z"/><path fill="#188038" d="M5 36h7v7H8a3 3 0 0 1-3-3z"/><path fill="#ea4335" d="M36 36v7l7-7z"/><path fill="#4285f4" d="M18.6 29.8c-1.8 0-3.2-.9-3.8-2.4l1.8-.8c.4.9 1 1.3 2 1.3 1.1 0 1.8-.6 1.8-1.5s-.8-1.5-2-1.5h-1v-1.8h1c1 0 1.7-.5 1.7-1.4s-.6-1.4-1.6-1.4c-.9 0-1.5.4-1.8 1.2l-1.8-.8c.6-1.5 1.9-2.3 3.6-2.3 2.2 0 3.7 1.3 3.7 3.2 0 1.1-.6 1.9-1.5 2.4 1.1.5 1.8 1.4 1.8 2.6 0 1.9-1.6 3.2-3.9 3.2zm9.1-.2v-8.4l-2 1.4-1-1.6 3.4-2.4h1.7v11z"/></svg></button>':'';
   const hint=status.loading?'Google-afspraken laden…':(!open.length?'Geen open afspraken gepland':'');
-  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+dutyBadge(iso)+connect+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(open.length?'<div class="memento-unified-list">'+open.map(render).join('')+'</div>':'')+(done.length?'<details class="memento-completed-appointments"><summary>Afgeronde afspraken ('+done.length+')</summary><div class="memento-unified-list">'+done.map(render).join('')+'</div></details>':'')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
+  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+dutyBadge(iso)+connect+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(open.length?'<div class="memento-unified-list">'+open.map(render).join('')+'</div>':'')(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
+  const completeHost=root.querySelector('[data-memento-completed-appointments="'+iso+'"]');
+  if(completeHost){
+   completeHost.innerHTML=done.length?'<div class="memento-unified-list">'+done.map(render).join('')+'</div>':'';
+   const group=completeHost.closest('details'),count=Number(group?.dataset.completedTasks||0);
+   if(group){group.hidden=count+done.length===0;group.querySelector('[data-memento-done-count]').textContent=count+done.length;}
+  }
   el.innerHTML+=window.MementoFitnessBridge?.dayHTML(iso,iso===today())||'';
  const count=root.querySelector('[data-memento-total="'+iso+'"]');if(count){const n=Number(count.dataset.tasks)||0;count.textContent=n+' '+(n===1?'taak':'taken')+' · '+open.length+' '+(open.length===1?'afspraak':'afspraken')}
  }
@@ -416,16 +443,16 @@ function taskRow(t){
  if(t.steps?.length)meta.push(t.steps.filter(x=>x.done).length+' van '+t.steps.length+' stappen');
  if(t.priority)meta.push('<span class="life-priority-label">★ Belangrijk</span>');
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
+
  if(inDay){
-  // Appointment layout: checkbox | planned date (never an invented time) | content | action.
   const dateLabel=t.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):'—';
-  return '<article class="life-task memento-unified-event memento-unified-task'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
+  const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+t.title)+'">⋮</summary><div class="life-task-actions">'+actions+
+   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+'</div></details>';
+  return '<article class="life-task memento-unified-event memento-unified-task memento-v3-card'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
    '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
    '<span class="memento-unified-time">'+esc(dateLabel)+'</span>'+
    '<div class="life-task-body memento-unified-info"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="life-task-meta">'+meta.map(x=>'<span>'+x+'</span>').join('')+'</div></div>'+
-   '<div class="memento-event-actions"><details class="life-task-menu"><summary class="memento-edit-event" aria-label="'+esc('Bewerken en opties voor '+t.title)+'">Bewerk</summary><div class="life-task-actions">'+actions+
-   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+
-   '</div></details></div></article>';
+   '<div class="memento-event-actions">'+dayNoteControl(t,t.title)+menu+'</div></article>';
  }
  return '<article class="life-task'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
  '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
@@ -469,6 +496,8 @@ function syncDayCarousel(restorePosition=false){
  const track=$('lifeDayTrack');if(!track)return;
  daySlide=Math.max(0,Math.min(2,daySlide));
  root.querySelectorAll('[data-life-day-slide]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.lifeDaySlide)===daySlide)));
+ const selected=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay;
+ if(selected&&$('mementoDaySelectedDate'))$('mementoDaySelectedDate').textContent=fmt(selected);
  if(restorePosition){
   track.scrollLeft=daySlide*track.clientWidth;
   window.requestAnimationFrame?.(()=>{if(track.isConnected)track.scrollLeft=daySlide*track.clientWidth});
@@ -486,17 +515,20 @@ function renderToday(){
  const overdueMarkup=overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Nog te doen — eerder gepland</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'';
  const days=dayKeys.map((key,i)=>{
   const list=open.filter(t=>!(t.date&&t.date<now)&&(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));
+  const completedTasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&t.done&&(t.lastDone===key||(!t.lastDone&&t.date===key)));
   return '<section class="life-day-column" data-life-day="'+key+'" role="group" aria-label="'+labels[i]+' '+fmt(key)+'">'+
-   '<div class="life-day-heading"><h2>'+labels[i]+'</h2>'+(i?'<span>'+fmt(key)+' · <span data-memento-total="'+key+'" data-tasks="'+list.length+'">'+list.length+' '+(list.length===1?'taak':'taken')+'</span></span>':'')+'</div>'+
    '<div class="memento-day-appointments" data-memento-date="'+key+'"></div>'+
    (i===0?overdueMarkup:'')+
-   '<div class="memento-day-caption memento-day-task-label">Taken</div>'+
+   '<div class="memento-day-caption memento-day-task-label"><strong>Taken</strong><span>'+list.length+'</span></div>'+
    (list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">Geen taken gepland</p>')+
+   '<details class="memento-day-completed" data-completed-tasks="'+completedTasks.length+'"'+(completedTasks.length?'':' hidden')+'><summary>Afgerond <span data-memento-done-count>'+completedTasks.length+'</span></summary><div data-memento-completed-appointments="'+key+'"></div>'+(completedTasks.length?'<div class="life-list">'+completedTasks.map(taskRow).join('')+'</div>':'')+'</details>'+ 
    '</section>';
  }).join('');
  const tabs=labels.map((label,i)=>'<button type="button" class="life-day-tab" data-life-day-slide="'+i+'" aria-pressed="'+(daySlide===i)+'" aria-controls="lifeDayTrack">'+label+'</button>').join('');
- content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+quickForm()+
+ content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+
+  '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+fmt(dayKeys[daySlide])+'</span><details class="memento-day-add-menu"><summary>＋ Toevoegen</summary><div class="memento-day-add-actions"><button type="button" data-memento-new-task>Taak</button><button type="button" data-memento-new-event="'+dayKeys[daySlide]+'" data-memento-day-new-event>Afspraak</button><button type="button" data-memento-quick-open>Snelle notitie</button><button type="button" data-life-journal>Dagboek</button></div></details></div>'+
   '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
+  '<details class="memento-day-quick"><summary>Snelle invoer (taak of notitie)</summary>'+quickForm()+'</details>'+
   '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div></div>';
  window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
 }
@@ -926,6 +958,11 @@ document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.ad
 root.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
  if(d.lifeDaySlide!==undefined){showDaySlide(Number(d.lifeDaySlide));return}
+ if(d.mementoNewTask!==undefined){const date=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();editTask();if($('lifeTaskDate'))$('lifeTaskDate').value=date;return}
+ if(d.mementoQuickOpen!==undefined){const quick=root.querySelector('.memento-day-quick');if(quick){quick.open=true;quickKind='note';syncQuickForm();$('lifeQuickTitle')?.focus();}root.querySelector('.memento-day-add-menu')?.removeAttribute('open');return}
+ if(d.mementoDayNewEvent!==undefined){b.dataset.mementoNewEvent=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();}
+ if(d.mementoDeleteDayEvent){const event=localAppointments().find(x=>x.id===d.mementoDeleteDayEvent);if(event&&confirm('Afspraak ‘'+event.title+'’ verwijderen uit Memento?')){if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==event.id)},'Lokale afspraak verwijderd.',true))window.MementoGoogleCalendar?.refreshAgenda?.();}return}
+ if(d.lifeSourceNote){setView('notes');window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
  if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;render();return}
  if(d.shoppingAdd){addShoppingItem(d.shoppingAdd);return}
  if(d.shoppingFavorite){changeShoppingItem(d.shoppingFavorite,'favorite');return}
