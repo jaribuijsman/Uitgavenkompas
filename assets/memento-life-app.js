@@ -337,7 +337,7 @@ window.MementoGlobalSearchLifeOpen=(kind,id,date)=>{
  setArea('life');
  if(document.body.dataset.compassArea!=='life')return;
  if(kind==='groceries'){setView('groceries');if(state.groceries.some(g=>g.id===id&&!g.deletedAt))editGrocery(id);return;}
- if(kind==='templates'){setView('tasks');taskTab='saved';render();return;}
+ if(kind==='templates'){setView('tasks');taskTab='saved';render();if(state.templates.some(t=>t.id===id&&!t.deletedAt))editTask(id,null,true);return;}
  if(kind==='fitness'){setView('fitness');return;}
  if(kind==='appointments-google'){setView('agenda');return;}
  if(kind==='tasks'){setView('tasks');if(state.tasks.some(t=>t.id===id&&!t.deletedAt))detail(id);return;}
