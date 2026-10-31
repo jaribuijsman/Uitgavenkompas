@@ -27,7 +27,7 @@
   if(today&&!today.querySelector('.mg-day-head')){
    const h=document.createElement('div');h.className='mg-day-head';
    const title=document.createElement('h2');title.textContent='Mijn dag';h.append(title);
-   const button=document.createElement('button');button.type='button';button.className='life-btn';button.dataset.lifeJournal='';button.textContent='Schrijf in dagboek';h.append(button);today.prepend(h);
+   today.prepend(h);
   }
   const hero=today?.querySelector('.flow-hero');if(hero&&!hero.closest('.mg-fold'))fold([hero],'Gedachte voor vandaag');
   const tabs=$('#lifeApp .memento-task-tabs');
