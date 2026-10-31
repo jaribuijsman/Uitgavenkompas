@@ -16,6 +16,7 @@ const server=http.createServer((req,res)=>{
   await page.goto("http://127.0.0.1:"+server.address().port,{waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
   await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
+  await page.locator(".memento-day-quick>summary").click();
   const shortcut=page.locator(".memento-diary-shortcut");
   assert.equal(await shortcut.count(),1);
   assert.equal(await page.locator('[data-life-quick-kind="note"]').count(),1);
