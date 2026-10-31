@@ -330,15 +330,22 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-v3-card :is(button,summary):focus-visible,
 #lifeApp[data-life-view="today"] .memento-day-add-menu>summary:focus-visible,
 #lifeApp[data-life-view="today"] .memento-day-quick>summary:focus-visible{outline:2px solid #d3efd9;outline-offset:2px}
-@media(max-width:400px){
+@media(max-width:480px){
  #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
  #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
- #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{grid-template-columns:44px 47px minmax(0,1fr) auto;gap:4px;padding:8px 5px}
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{grid-column:2;grid-row:auto}
+ #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
+  grid-template-columns:44px minmax(0,1fr) auto;gap:3px 7px;padding:8px 5px;
+ }
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{grid-column:2;grid-row:1}
  #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
- #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{grid-column:3;grid-row:auto}
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions{grid-column:4;grid-row:auto}
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{grid-column:2;grid-row:2}
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions{grid-column:3;grid-row:1/3}
  #lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
- #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:1;grid-row:auto}
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:1;grid-row:1/3}
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title,
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;
+ }
 }
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}
