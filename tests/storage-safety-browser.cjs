@@ -97,6 +97,7 @@ async function addTransaction(page, description) {
     await until(c, () => JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n => n.attachments?.length));
     const binary = await c.evaluate(async () => { const all = await window.MementoKnowledgeStore.all(); return { count: all.length, text: await all[0].blob.text(), meta: all[0].id }; });
     assert.equal(binary.count, 1); assert(binary.text.startsWith("%PDF-1.4")); checks.push("Real IndexedDB attachment write uses the owning operation token");
+    await c.evaluate(()=>window.MementoFinanceValidation.validate(JSON.parse(localStorage.getItem("uitgavenkompas_v1"))));
     await navigate(c, "life", "backup"); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;
     const archive = fs.readFileSync(await download.path()); assert.equal(archive.readUInt32LE(0), 0x04034b50);
     const before = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
@@ -105,6 +106,24 @@ async function addTransaction(page, description) {
     await restoredNavigation; await until(c, () => window.MementoStorageGuard?.writable);
     const after = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     assert.deepEqual(after, before); checks.push("UI ZIP export/restore retains complete objects and existing attachment IDs");
+    // ZIP checksums prove archive integrity, not financial validity. Reject an
+    // intact archive with invalid records before confirmations or attachment writes.
+    await unlock(c);
+    const exactBefore=await c.evaluate(()=>Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)])));
+    const filesBefore=await c.evaluate(async()=>Promise.all((await window.MementoKnowledgeStore.all()).map(async r=>({id:r.id,hash:await window.MementoKnowledgeStore.sha256(r.blob)}))));
+    const malformed=structuredClone(after.finance);malformed.transactions[0].amount='12.34';
+    await navigate(c,'finance','settings');
+    await c.locator('#importBackupFile').setInputFiles({name:'invalid-finance.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(malformed))});
+    await c.locator('.toast.error').filter({hasText:'Ongeldige financiële gegevens'}).waitFor();
+    const ZIP=require('../assets/memento-backup.js'),parts=ZIP.unzip(archive);
+    parts.set('data/finance.json',new TextEncoder().encode(JSON.stringify(malformed)));
+    const invalidArchive=Buffer.from(await ZIP.zip([...parts].map(([name,bytes])=>({name,bytes}))).arrayBuffer());
+    await navigate(c,'life','backup');await require('./helpers/reveal.cjs')(c,'#lifeImportFile');
+    await c.locator('#lifeImportFile').setInputFiles({name:'invalid-finance.zip',mimeType:'application/zip',buffer:invalidArchive});
+    await c.waitForFunction(()=>document.getElementById('lifeMessage').textContent.includes('Ongeldige financiële gegevens'));
+    assert.deepEqual(await c.evaluate(()=>Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)]))),exactBefore);
+    assert.deepEqual(await c.evaluate(async()=>Promise.all((await window.MementoKnowledgeStore.all()).map(async r=>({id:r.id,hash:await window.MementoKnowledgeStore.sha256(r.blob)})))),filesBefore);
+    checks.push('Invalid JSON and checksum-valid ZIP retain exact storage, PIN and binary attachments');
     await c.evaluate(async () => { await navigator.serviceWorker.ready; }); await c.reload({ waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => navigator.serviceWorker.controller !== null);
     await context.setOffline(true); await c.reload({ waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => window.MementoStorageGuard?.writable);
     const historical = await c.evaluate(async () => { const r = await fetch("./uitgavenkompas-v20-pincode-vergrendeling-1.html", { redirect: "manual" }); return { type: r.type, status: r.status }; });

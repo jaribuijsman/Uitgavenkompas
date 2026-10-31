@@ -124,7 +124,7 @@ async function run(){
   const hash=await digest(content);
   const meta={id,noteId:"old-note",name:"bewaar.pdf",size:content.size,type:"application/pdf",hash,createdAt:"2026-10-26T00:00:00Z"};
   life.notes[0].attachments=[meta];
-  const finance={transactions:[{id:"t1",amount:123.45}],categories:[{name:"Overig"}],settings:{currency:"EUR"}};
+  const finance={transactions:[{id:"t1",amount:123.45,type:"expense",date:"2026-10-26"}],categories:[{name:"Overig"}],settings:{currency:"EUR"}};
   const fake={all:async()=>[{...meta,blob:content}],sha256:digest};
   const archive=await ZIP.createArchive({life,finance,extras:{UK_DASHBOARD_SCOPE:"personal"}},fake);
   const restored=await ZIP.prepareArchive(archive.blob,fake);

@@ -1,5 +1,5 @@
 /* Offline portable full Memento backup: ZIP STORE, no third-party API. */
-(function(root,factory){const api=factory();if(typeof module==="object"&&module.exports)module.exports=api;else root.MementoCompleteBackup=api;})(globalThis,()=>{
+(function(root,factory){const api=factory(typeof module==="object"&&module.exports?require("./memento-finance-validation.js"):root.MementoFinanceValidation);if(typeof module==="object"&&module.exports)module.exports=api;else root.MementoCompleteBackup=api;})(globalThis,(financeValidation)=>{
 "use strict";
 const enc=new TextEncoder(),dec=new TextDecoder("utf-8",{fatal:true}),encode=s=>enc.encode(s),decode=b=>dec.decode(b);
 const LIMIT=180*1024*1024;
@@ -45,7 +45,8 @@ function unzip(bytes){
 }
 const json=(map,name)=>{const bytes=map.get(name);if(!bytes)throw Error("Bestand ontbreekt: "+name);return JSON.parse(decode(bytes))};
 async function createArchive({life,finance,extras={}},store){
- if(!life||!Array.isArray(life.notes)||!finance||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error("Leven of Financiën ontbreekt: geen volledige back-up gemaakt");
+ if(!life||!Array.isArray(life.notes)||!finance)throw Error("Leven of Financiën ontbreekt: geen volledige back-up gemaakt");
+ if(!financeValidation)throw Error("Financiële controle ontbreekt. Vernieuw Memento.");financeValidation.validate(finance);
  const byId=new Map((await store.all()).map(x=>[x.id,x])),refs=new Map();
  for(const n of life.notes)for(const a of n.attachments||[])refs.set(a.id,a);
  for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)refs.set(c.coverFile.id,c.coverFile);
@@ -72,7 +73,8 @@ async function prepareArchive(file,store){
  const parts=unzip(new Uint8Array(await file.arrayBuffer())),manifest=json(parts,"manifest.json");
  if(manifest.format!=="memento-complete"||manifest.version!==2||!Array.isArray(manifest.files))throw Error("Onbekend back-upformaat");
  const life=json(parts,"data/life.json"),finance=json(parts,"data/finance.json"),extras=json(parts,"data/preferences.json");
- if(!life||!Array.isArray(life.notes)||!Array.isArray(life.tasks)||!finance||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error("Leven of Financiën ontbreekt");
+ if(!life||!Array.isArray(life.notes)||!Array.isArray(life.tasks)||!finance)throw Error("Leven of Financiën ontbreekt");
+ if(!financeValidation)throw Error("Financiële controle ontbreekt. Vernieuw Memento.");financeValidation.validate(finance);
  const files=[],ids=new Set();
  for(const f of manifest.files){
   if(!f||!/^[a-z0-9-]{8,120}$/i.test(f.id)||ids.has(f.id))throw Error("Ongeldige bijlagen");

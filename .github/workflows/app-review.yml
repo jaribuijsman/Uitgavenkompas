@@ -68,6 +68,7 @@ jobs:
           node --check sw.js
           node tests/memento-assistant-core.cjs
           node tests/storage-safety.cjs
+          node tests/finance-validation.cjs
           node tests/storage-lock-native.cjs
           node tests/knowledge-regression.cjs
           node tests/memento-regression.cjs

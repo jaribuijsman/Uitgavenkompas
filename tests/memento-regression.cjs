@@ -17,6 +17,7 @@ function resetStorageFixture(){
  storageFixture=StorageGuard.create({localStorage:sandbox.localStorage,isSecureContext:true,navigator:{locks:{request:(name,options,callback)=>callback({name,mode:'exclusive'})}}});
 }
 resetStorageFixture();sandbox.window.MementoStorageGuard=guardProxy;
+sandbox.window.MementoFinanceValidation=require("../assets/memento-finance-validation.js");
 const expose=`renderAll=()=>{};globalThis.testApp={get state(){return state},set state(v){state=v},get month(){return selectedMonth},set month(v){selectedMonth=v},loadState,emptyState,accountBalance,salaryPeriodSums,monthSums,budgetRecord,editableBudget,budgetExpenses,billDatesForMonth,billPayment,billOccurrences,planningAmounts,softDeleteFinance,restoreFinance,receiptMatchesTransaction,save,renderPlanning,renderBudgets,renderAccounts,renderReceipts,renderSettings,moneyCoachBuildData,moneyCoachDataPreview,moneyCoachBuildPrompt,toast,pinUnlock,pinCheckExpiry,pinRestoreRecentSession,getPinTimeoutMinutes,get pinTime(){return pinLastActivity},set pinTime(v){pinLastActivity=v},get pinUnlocked(){return pinUnlocked},loadDemo,exitDemo,saveResearch,loadResearch,get demo(){return demoStateBackup},set blocked(v){financeStorageBlocked=v}};`;
 vm.runInNewContext(first.replace(/\ninit\(\);\s*\n\}\)\(\);\s*$/,`\n${expose}\n})();`),sandbox);
 const app=sandbox.testApp;assert.ok(app,'test exports');

@@ -3,7 +3,7 @@
 // state/security/worker/inline-code changes, not cache version-only churn.
 const cp=require("node:child_process"),fs=require("node:fs");
 const FULL=["interface-layout","interface-feature","interface-acceptance","interface-visual","life-full","data-full"];
-const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|life-app|category-integrity)\.js$)/;
+const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
 function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
@@ -71,7 +71,7 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  }
  // Actual changes to the offline lifecycle and persistent data must be upgrade-tested.
  if(high&&application.some(p=>p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))
-  ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|finance-app|life-app)\.js$/.test(p)))needsUpgrade=true;
+  ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|finance-app|finance-validation|life-app)\.js$/.test(p)))needsUpgrade=true;
  if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade,files:paths};
  const shared=htmlStyleOnly||application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
