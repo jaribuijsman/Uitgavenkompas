@@ -457,6 +457,14 @@ function render(){
  else if(screen==="link")output=renderLink();
  else if(screen==="file")output=renderFile();
  host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+breadcrumbs()+output+"</div>";
+ // Handle list search on the current field, before any parent-level listeners
+ // can replace the input during bubbling. Native search clear also fires
+ // a non-bubbling "search" event in some browsers.
+ const listSearch=host.querySelector('[data-kc-input="search"]');
+ if(listSearch){
+  listSearch.addEventListener("input",onInput);
+  listSearch.addEventListener("search",onInput);
+ }
  ArtUI?.hydrate(host,S);
  host.classList.toggle("kc-focus-writing",focusWriting&&Boolean(editing?.journal));
  if(diaryDictating&&!diarySpeechEditor())stopDiaryDictation();
@@ -795,7 +803,7 @@ function onInput(event){
 
  if(field.dataset.kcInput==="central-search"){centralQuery=field.value;screen="search";const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="central-search"]');input?.focus();input?.setSelectionRange(cursor,cursor);return;}
  if(field.dataset.kcInput==="quick"){quickDraft=field.value;return;}
- if(field.dataset.kcInput==="search"){query=field.value;filtersExpanded=false;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
+ if(field.dataset.kcInput==="search"){if(!host?.contains(field))return;query=field.value;filtersExpanded=false;const cursor=field.selectionStart;render();const input=host.querySelector('[data-kc-input="search"]');if(input){input.focus();input.setSelectionRange(cursor,cursor);}return;}
  if(field.dataset.kcInput==="related-search"){linkQuery=field.value;render();host.querySelector('[data-kc-input="related-search"]')?.focus();return}
  if(colDraft&&ArtUI?.changed(field,host))return;
  if(field.dataset.kcCol&&colDraft){colDraft[field.dataset.kcCol]=field.value;colDraft.dirty=true;return;}
@@ -877,7 +885,7 @@ document.addEventListener("focusin",e=>{
 document.addEventListener("focusout",e=>{if(e.target?.id!=="kc-body")return;root.setTimeout(()=>{if(document.activeElement!==e.target){diaryKeyboardBase=0;updateDiaryKeyboard();}},0);});
 root.visualViewport?.addEventListener("resize",updateDiaryKeyboard);
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
-document.addEventListener("input",e=>{if(host?.contains(e.target))onInput(e);});
+document.addEventListener("input",e=>{if(host?.contains(e.target)&&e.target.dataset.kcInput!=="search")onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
 root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
 })(window);

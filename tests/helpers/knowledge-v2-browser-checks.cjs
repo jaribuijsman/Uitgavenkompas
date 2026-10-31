@@ -16,6 +16,18 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('.kc-section-head summary').first().click();await page.locator('[data-kc=new-collection]').click();await page.locator('#kc-col-name').fill('Mijn leesplank met een lange persoonlijke verzamelingsnaam');await page.locator('[data-kc=choose-icon][data-id=camera]').click();await page.locator('#kc-col-view').selectOption('gallery');await shot(page,'collection-editor');await page.locator('[data-kc=save-collection]').click();
  let s=await life();const custom=s.knowledge.collections.find(c=>c.name.startsWith('Mijn leesplank'));assert(custom&&custom.icon==='camera'&&custom.parentId===null&&custom.view==='gallery');
  await page.locator('.kc-collection-actions summary').click();await page.locator('[data-kc=new-sub]').click();await saveCollection('Aantekeningen');s=await life();const child=s.knowledge.collections.find(c=>c.name==='Aantekeningen');assert.equal(child.parentId,custom.id);await shot(page,'empty-subcollection');
+ // The browser's native clear control may emit a non-bubbling search event.
+ // This must refresh the filtered list without a second document-level input.
+ await page.locator('[data-kc-input=search]').fill('does-not-exist-in-collection');
+ assert.equal(await page.getByText('Geen resultaten',{exact:true}).count(),1);
+ await page.evaluate(()=>{
+  const input=document.querySelector('[data-kc-input="search"]');
+  input.value='';
+  input.dispatchEvent(new Event('search',{bubbles:false}));
+ });
+ assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'');
+ assert.equal(await page.getByText('Hier staan nog geen notities',{exact:true}).count(),1);
+ checks.push('Native non-bubbling search clear restores the original empty collection');
  if(width<=430){
   await page.locator('.kc-filter-drawer summary').click();
   const filterWidth=await page.locator('.kc-filter-drawer .kc-filterline>label').evaluateAll(labels=>labels.map(el=>{
