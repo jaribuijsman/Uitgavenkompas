@@ -4,7 +4,7 @@ const {planFor,versionOnlyHtml,workerCacheOnly,FULL}=require("./ci-plan.cjs");
 const htmlA='<link rel="stylesheet" href="./assets/memento-layout.css?v=old">\n<script src="./assets/memento.js?v=old"></script>';
 const htmlB='<link rel="stylesheet" href="./assets/memento-layout.css?v=new">\n<script src="./assets/memento.js?v=new"></script>';
 const swA='const CACHE = "old";\nconst CORE = ["./assets/old.css?v=old"];\nself.addEventListener("fetch",()=>{});\n';
-const swB='const CACHE = "new";\nconst CORE = ["./assets/new.css?v=new"];\nself.addEventListener("fetch",()=>{});\n';
+const swB='const CACHE = "new";\nconst CORE = ["./assets/old.css?v=new"];\nself.addEventListener("fetch",()=>{});\n';
 function read(snapshot){return(p,when)=>snapshot[p]?.[when]??null}
 let count=0;
 function check(title,fn){fn();count++;console.log("PASS "+title)}
@@ -30,6 +30,12 @@ check("cache URL changes do not masquerade as a rewrite",()=>{
  assert(versionOnlyHtml(htmlA,htmlB));assert(workerCacheOnly(swA,swB));
  const a=planFor(["index.html","sw.js","assets/memento-knowledge.css"],read({"index.html":{before:htmlA,after:htmlB},"sw.js":{before:swA,after:swB}}));
  assert.equal(a.tier,"medium");assert.equal(a.upgrade,false);assert(a.groups.includes("life-knowledge"));
+});
+check("adding precache entries requires full offline review",()=>{
+ const modified=swB.replace('["./assets/old.css?v=new"]','["./assets/old.css?v=new","./assets/extra.js?v=new"]');
+ assert(!workerCacheOnly(swA,modified));
+ const a=planFor(["sw.js"],read({"sw.js":{before:swA,after:modified}}));
+ assert.equal(a.tier,"high");assert.equal(a.upgrade,true);
 });
 check("changes to inline scripts remain high risk",()=>{
  const a=planFor(["index.html"],read({"index.html":{before:htmlA+'<script>save()</script>',after:htmlB+'<script>erase()</script>'}}));
