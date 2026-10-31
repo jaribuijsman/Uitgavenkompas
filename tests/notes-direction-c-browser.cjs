@@ -73,7 +73,11 @@ async function fixture(){
    await page.locator('[data-kc-input=search]').fill('Fictief');
    await page.locator('.kc-item').first().click();await page.locator('[data-kc=back]').click();assert.equal(await page.locator('.kc-item').count(),1);
    assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
-   await page.locator('[data-kc-input=search]').fill('');assert.equal(await page.locator('.kc-item').count(),3);
+   await page.locator('[data-kc-input=search]').fill('');
+   // Popstate and list rendering can settle after the input event. Poll the
+   // actual rendered, cleared search; keep the original strict result count.
+   await page.waitForFunction(() => document.querySelector('[data-kc-input="search"]')?.value === '' && document.querySelectorAll('.kc-item').length === 3, null, {timeout:5000});
+   assert.equal(await page.locator('.kc-item').count(),3);
    await page.locator('[data-kc-input=search]').fill('bestaat-niet');await page.waitForTimeout(250);
    await page.locator('[data-kc=back]').click();
    assert.match(await page.locator('.kc-count').innerText(),/^5 notities.*3 subverzamelingen/);
