@@ -43,6 +43,12 @@ const server=http.createServer((req,res)=>{
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'No horizontal overflow at '+width);
     if(width===393){
       await page.screenshot({path:'/tmp/memento-global-search-393.png',animations:'disabled'});
+      await field.fill('a');
+      await page.locator('#mgsDropdown [data-mgs-more]').waitFor({state:'visible'});
+      await page.locator('#mgsDropdown [data-mgs-more]').click();
+      assert(await page.locator('#mgsDropdown .mgs-section').count()>1,'Expanded grouped results remain visible after focus returns');
+      await field.fill('Garage');
+      await page.waitForFunction(()=>document.querySelector('.mgs-section-label')?.textContent?.includes('Garage') && [...document.querySelectorAll('#mgsDropdown [data-mgs-result]')].some(el=>el.textContent.includes('Garage remblokken checken')));
       await page.locator('#mgsDropdown [data-mgs-filter="finance"]').click();
       assert.equal(await page.locator('#mgsDropdown [data-mgs-result]').filter({hasText:'Garage remblokken checken'}).count(),0,'Finance filter excludes tasks');
       await page.locator('#mgsDropdown [data-mgs-filter="all"]').click();
