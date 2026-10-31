@@ -83,7 +83,9 @@ async function fixture(){
    },detailHistoryIndex,{timeout:5000});
    assert.equal(await page.locator('.kc-item').count(),1);
    assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
-   await page.locator('[data-kc-input=search]').fill('');
+   // Use real keyboard input after history navigation; the original result-count assertion remains strict.
+   await page.locator('[data-kc-input=search]').press('ControlOrMeta+A');
+   await page.locator('[data-kc-input=search]').press('Backspace');
    // Popstate and list rendering can settle after the input event. Poll the
    // actual rendered, cleared search; keep the original strict result count.
        try{
