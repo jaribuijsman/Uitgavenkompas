@@ -29,6 +29,7 @@ function planFor(paths,read=()=>null,forceFull=false){
  let high=forceFull,needsUpgrade=false;
  for(const p of application){
   if(HIGH.test(p)){high=true;continue}
+  if(p==="tests/recovery-upgrade-browser.cjs"){high=true;needsUpgrade=true;continue}
   if(p==="index.html"&&!versionOnlyHtml(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
   if(p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
  }
@@ -38,7 +39,12 @@ function planFor(paths,read=()=>null,forceFull=false){
  if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade,files:paths};
  const shared=application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
- const groups=new Set(["interface-smoke"]);
+ const onlyTests=application.every(p=>p.startsWith("tests/"));
+ const groups=new Set(onlyTests?[]:["interface-smoke"]);
+ for(const p of application){
+  const match=p.match(/^tests\/([\w-]+-browser)\.cjs$/);
+  if(match)groups.add("test-"+match[1]);
+ }
  if(application.some(p=>/knowledge|note|journal|cover/i.test(p)))groups.add("life-knowledge");
  if(application.some(p=>/fitness|quickfit/i.test(p)))groups.add("life-fitness");
  if(application.some(p=>/assistant|dictation/i.test(p)&&p.endsWith(".js")))groups.add("life-assistant");
