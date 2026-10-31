@@ -84,6 +84,12 @@ async function fixture(){
    assert.equal(await page.locator('.kc-item').count(),1);
    assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
    // Use real keyboard input after history navigation; the original result-count assertion remains strict.
+   await page.evaluate(()=>{
+    window.__kcClearEvents=[];
+    for(const type of ['input','search','change'])document.addEventListener(type,e=>{
+     if(e.target?.matches?.('[data-kc-input="search"]'))window.__kcClearEvents.push({type,value:e.target.value,attached:document.contains(e.target)});
+    },true);
+   });
    await page.locator('[data-kc-input=search]').press('ControlOrMeta+A');
    await page.locator('[data-kc-input=search]').press('Backspace');
    // Popstate and list rendering can settle after the input event. Poll the
@@ -96,7 +102,7 @@ async function fixture(){
       const life=JSON.parse(localStorage.getItem('compass_life_preview_v1')||'{}');
       const collection='kc2-projecten-onderzoek-dossiers';
       const matches=window.MementoKnowledgeCore?.search(life,{collectionId:collection,query:'',status:'active'})||[];
-      return {input:input?.value??null,items:document.querySelectorAll('.kc-item').length,summary:document.querySelector('.kc-count')?.textContent||null,header:document.querySelector('.kc-header h2')?.textContent||null,tag:filter('[data-kc-change="tag"]'),kind:filter('[data-kc-change="kind"]'),sort:filter('[data-kc-change="sort"]'),coreMatches:matches.length,notes:life.notes?.length,route:history.state?.mementoNotes||null};
+      return {input:input?.value??null,items:document.querySelectorAll('.kc-item').length,summary:document.querySelector('.kc-count')?.textContent||null,header:document.querySelector('.kc-header h2')?.textContent||null,tag:filter('[data-kc-change="tag"]'),kind:filter('[data-kc-change="kind"]'),sort:filter('[data-kc-change="sort"]'),coreMatches:matches.length,notes:life.notes?.length,route:history.state?.mementoNotes||null,events:window.__kcClearEvents||[],active:document.activeElement?.outerHTML?.slice(0,180),matches:[...document.querySelectorAll('[data-kc-input="search"]')].map(x=>({value:x.value,connected:x.isConnected}))};
      });
      console.error('KC_SEARCH_CLEAR_DIAGNOSTIC '+JSON.stringify({width,...state}));
      throw error;
