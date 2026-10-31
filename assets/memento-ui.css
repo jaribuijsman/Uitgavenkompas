@@ -299,6 +299,12 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
  background:none;border:0;box-shadow:none;cursor:pointer;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{cursor:default}
+/* Long mobile titles remain available through the existing task detail button.
+   Bound the preview to three lines so attached note/action icons do not elongate cards. */
+#lifeApp[data-life-view="today"] .life-overdue .life-task.memento-v3-card .life-task-title,
+#lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card .life-task-title{
+ max-height:calc(1.36em * 3);overflow:hidden;
+}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta{display:block;margin:0;font-size:12px;line-height:1.4;color:#bed2c2}
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta>span{margin-right:6px}
