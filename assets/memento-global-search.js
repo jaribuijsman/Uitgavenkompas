@@ -49,7 +49,9 @@
  }
  function open(){
    if(!canShow())return;
-   opened=true;expanded=false;selected=-1;render();
+   // Regaining input focus after clicking a filter or "show all" must not collapse results.
+   if(!opened){expanded=false;selected=-1;}
+   opened=true;render();
  }
  function close(){
    opened=false;selected=-1;render();
