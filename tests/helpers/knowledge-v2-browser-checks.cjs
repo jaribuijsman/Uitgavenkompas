@@ -16,6 +16,19 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('.kc-section-head summary').first().click();await page.locator('[data-kc=new-collection]').click();await page.locator('#kc-col-name').fill('Mijn leesplank met een lange persoonlijke verzamelingsnaam');await page.locator('[data-kc=choose-icon][data-id=camera]').click();await page.locator('#kc-col-view').selectOption('gallery');await shot(page,'collection-editor');await page.locator('[data-kc=save-collection]').click();
  let s=await life();const custom=s.knowledge.collections.find(c=>c.name.startsWith('Mijn leesplank'));assert(custom&&custom.icon==='camera'&&custom.parentId===null&&custom.view==='gallery');
  await page.locator('.kc-collection-actions summary').click();await page.locator('[data-kc=new-sub]').click();await saveCollection('Aantekeningen');s=await life();const child=s.knowledge.collections.find(c=>c.name==='Aantekeningen');assert.equal(child.parentId,custom.id);await shot(page,'empty-subcollection');
+ if(width<=430){
+  await page.locator('.kc-filter-drawer summary').click();
+  const filterWidth=await page.locator('.kc-filter-drawer .kc-filterline>label').evaluateAll(labels=>labels.map(el=>{
+   const r=el.getBoundingClientRect();return {width:r.width,top:r.top,right:r.right};
+  }));
+  assert.equal(filterWidth.length,3,'Type, tag and sorting remain present');
+  assert(filterWidth[0].width>=120&&filterWidth[1].width>=120,'Mobile tag and type filters have usable widths');
+  assert(filterWidth[2].top>filterWidth[0].top&&filterWidth[2].width>=240,'Sorting spans its own mobile row');
+  assert(filterWidth.every(x=>x.right<=width+1),'No mobile filter extends beyond viewport');
+  await shot(page,'mobile-filters-open');
+  await page.locator('.kc-filter-drawer summary').click();
+  checks.push('Mobile Kenniscentrum filters have readable touch widths at '+width+'px');
+ }
  await settings();await page.locator('#kc-col-parent').selectOption('kc2-huis-wonen');await page.locator('[data-kc=choose-icon][data-id=leaf]').click();await saveCollection('Nieuwe naam');s=await life();assert.equal(s.knowledge.collections.find(c=>c.id===child.id).parentId,'kc2-huis-wonen');assert.equal(s.knowledge.collections.find(c=>c.id===child.id).icon,'leaf');
  // Cancel leaves the original name intact.
  await settings();await page.locator('#kc-col-name').fill('Niet bewaren');await page.locator('[data-kc=cancel-collection]').click();assert.equal((await life()).knowledge.collections.find(c=>c.id===child.id).name,'Nieuwe naam');checks.push('Create/edit/icon/view/move/cancel retain collection identity');

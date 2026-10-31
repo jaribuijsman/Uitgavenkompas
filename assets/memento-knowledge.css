@@ -40,6 +40,11 @@
 #lifeApp[data-life-view="notes"] .kc-app input::placeholder,#lifeApp[data-life-view="notes"] .kc-app textarea::placeholder{color:#9aaf9e}
 #lifeApp[data-life-view="notes"] .kc-filterline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 #lifeApp[data-life-view="notes"] .kc-filterline select{font-size:12px!important}
+/* At phone widths three equally narrow selects truncate tag and sort labels. */
+@media(max-width:430px){
+#lifeApp[data-life-view="notes"] .kc-filter-drawer .kc-filterline{grid-template-columns:repeat(2,minmax(0,1fr))}
+#lifeApp[data-life-view="notes"] .kc-filter-drawer .kc-filterline>label:last-child{grid-column:1/-1}
+}
 #lifeApp[data-life-view="notes"] .kc-mode-switch{display:flex;gap:6px;justify-content:flex-start}
 #lifeApp[data-life-view="notes"] .kc-mode-switch .kc-btn{min-height:44px;padding:8px 10px}
 #lifeApp[data-life-view="notes"] .kc-count,#lifeApp[data-life-view="notes"] .kc-muted{font-size:12px;color:#a7c3ae;line-height:1.6}
