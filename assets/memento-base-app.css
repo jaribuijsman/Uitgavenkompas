@@ -502,7 +502,7 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeApp .life-task-title{font-size:14px;line-height:1.4;min-height:26px;color:#eff6f0;padding:3px 0;letter-spacing:0}
 #lifeApp .life-task-meta{font-size:11px;line-height:1.5;margin-top:3px;gap:2px 9px;color:#a9b9ae}
 #lifeApp .life-task-menu{position:relative;align-self:center}
-#lifeApp .life-task-menu>summary{list-style:none;text-align:center;width:32px;min-height:44px;display:grid;place-items:center;font-size:23px;color:#acbfb1;cursor:pointer;border-radius:8px}
+#lifeApp .life-task-menu>summary{list-style:none;text-align:center;display:grid;place-items:center;font-size:23px;color:#acbfb1;cursor:pointer;border-radius:8px}
 #lifeApp .life-task-menu>summary::-webkit-details-marker{display:none}
 #lifeApp .life-task-menu[open]>summary{background:#2a4031;color:#d9f9e4}
 #lifeApp .life-task-menu[open]{z-index:12}
