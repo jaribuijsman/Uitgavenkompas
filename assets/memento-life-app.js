@@ -454,7 +454,7 @@ function taskRow(t){
  if(inDay){
   const dateLabel=t.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):'—';
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+t.title)+'">⋮</summary><div class="life-task-actions">'+
-   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-complete="'+esc(t.id)+'">'+(finished?'Heropenen':'Afronden')+'</button>':'')+actions+
+   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-menu-complete="'+esc(t.id)+'">'+(finished?'Heropenen':'Afronden')+'</button>':'')+actions+
    (!t.deletedAt?'<button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+'</div></details>';
   return '<article class="life-task memento-unified-event memento-unified-task memento-v3-card'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
    '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
@@ -500,11 +500,19 @@ function renderTasks(){
  if(taskTab==='trash')renderLibrary();
 }
 function dutyBadge(iso){const C=window.MementoFitnessCore;if(!C?.duty)return '';const d=C.duty(iso);return '<span class="memento-duty-badge" data-duty-code="'+d.code+'" aria-label="'+esc('Ploegendienst: '+d.time)+'">'+esc(d.time)+'</span>';}
+let dayTrackObserver=null;
+function syncDayHeight(){
+ const track=$('lifeDayTrack'),panel=root.querySelectorAll('.life-day-column')[daySlide];
+ if(!track||!panel?.getBoundingClientRect)return;
+ const height=Math.ceil(panel.getBoundingClientRect().height)+'px';
+ if(track.style.height!==height)track.style.height=height;
+}
 function syncDayCarousel(restorePosition=false){
  const track=$('lifeDayTrack');if(!track)return;
  daySlide=Math.max(0,Math.min(2,daySlide));
  root.querySelectorAll('[data-life-day-slide]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.lifeDaySlide)===daySlide)));
  const selected=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay;
+ syncDayHeight();
  if(selected&&$('mementoDaySelectedDate'))$('mementoDaySelectedDate').textContent=fmt(selected);
  if(restorePosition){
   track.scrollLeft=daySlide*track.clientWidth;
@@ -535,11 +543,14 @@ function renderToday(){
  }).join('');
  const tabs=labels.map((label,i)=>'<button type="button" class="life-day-tab" data-life-day-slide="'+i+'" aria-pressed="'+(daySlide===i)+'" aria-controls="lifeDayTrack">'+label+'</button>').join('');
  content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+
-  '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+fmt(dayKeys[daySlide])+'</span><details class="memento-day-add-menu"><summary>＋ Toevoegen</summary><div class="memento-day-add-actions"><button type="button" data-memento-new-task>Taak</button><button type="button" data-memento-new-event="'+dayKeys[daySlide]+'" data-memento-day-new-event>Afspraak</button><button type="button" data-memento-quick-open>Snelle notitie</button><button type="button" data-life-journal>Dagboek</button></div></details></div>'+
+  '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+fmt(dayKeys[daySlide])+'</span><details class="memento-day-add-menu"><summary><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Toevoegen</summary><div class="memento-day-add-actions"><button type="button" data-memento-new-task>Taak</button><button type="button" data-memento-new-event="'+dayKeys[daySlide]+'" data-memento-day-new-event>Afspraak</button><button type="button" data-memento-quick-open>Snelle notitie</button><button type="button" data-life-journal>Dagboek</button></div></details></div>'+
   '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
   '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div>'+
   '<details class="memento-day-quick"><summary>Snelle invoer (taak of notitie)</summary>'+quickForm()+'</details></div>';
  window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
+ // Panel height changes with completion disclosures, font loading and viewport width.
+ // Observe only these three panels; disconnect whenever the view is rendered again.
+ if(typeof ResizeObserver==='function'){dayTrackObserver=new ResizeObserver(syncDayHeight);root.querySelectorAll('.life-day-column').forEach(p=>dayTrackObserver.observe(p));}
 }
 
 const shoppingListOf=g=>g.list==='purchases'?'purchases':'groceries';
@@ -795,6 +806,7 @@ function refreshBackupStatus(){const el=$('lifeBackupStatus');if(el)el.textConte
 function rememberExport(){let ok=true;try{localStorage.setItem('memento_last_backup_v1',new Date().toISOString());}catch{ok=false;}refreshBackupStatus();return ok;}
 function renderBackup(){content.innerHTML='<div class="life-grid"><section class="life-panel"><h2>Volledige Memento-back-up</h2><p id="lifeBackupStatus" class="memento-backup-status" role="status">'+esc(backupStatusText())+'</p><p>Leven, Financiën en alle originele notitiebijlagen in één ZIP-bestand. De PIN wordt niet meegenomen. Het ZIP-bestand is niet versleuteld: bewaar het op een veilige plek.</p><button type="button" class="life-btn life-btn-primary" id="lifeExportBackup">↓ Volledige ZIP downloaden</button><p class="life-footnote">Je browser bepaalt de opslaglocatie, meestal Downloads. Controleer het ZIP-bestand en bewaar zelf een kopie buiten je telefoon. De oudere JSON-export bevat geen PDF’s of foto’s.</p><button type="button" class="life-btn" id="lifeExportLegacyBackup">Oude JSON-export (zonder bijlagen)</button></section><section class="life-panel"><h2>Herstellen</h2><p>Herstel een volledige ZIP met documenten, of een oudere JSON-back-up.</p><input type="file" id="lifeImportFile" accept=".zip,.json,application/zip,application/json" aria-label="Memento-back-up kiezen"><label class="life-checkbox-label"><input type="checkbox" id="lifeRestoreFinance">Bij oude JSON ook Financiën herstellen</label><p class="life-footnote">Een ZIP herstelt na bevestiging altijd Leven én Financiën. Een oudere JSON heeft geen bijlagen.</p></section></div><section class="life-panel memento-pin-settings memento-life-security" aria-label="Beveiliging"><h2>Handmatig vergrendelen</h2><p data-memento-pin-status role="status">Handmatige vergrendeling beschikbaar</p><p>Je ziet bij het openen het dagportaal. Alleen als je zelf vergrendelt, vraagt Memento je bestaande pincode.</p><button class="life-btn life-btn-primary" type="button" data-memento-pin-lock-now>Vergrendel Memento</button><p class="life-footnote">Deze vergrendeling vervangt geen versleuteling van je gegevens.</p></section><section class="life-panel"><h2>Opslag & privacy</h2><p>De appgegevens worden lokaal bewaard en zijn niet door Memento versleuteld.</p><p>Het weer voor Beverwijk wordt via Open-Meteo opgehaald. Zonder internet blijven de laatst opgehaalde gegevens zichtbaar met datum en status.</p><p>Je gegevens worden in deze browser bewaard en niet automatisch tussen apparaten gesynchroniseerd. Bewaar regelmatig een back-up buiten je telefoon. Bij het wissen van browsergegevens kun je appgegevens verliezen.</p><p>Gebruik je een ander apparaat, een andere browser of een los HTML-bestand? Neem je gegevens mee via een back-up.</p><div class="life-card-actions"><button type="button" class="life-btn" id="lifeStorageStatus">Controleer opslagruimte</button><button type="button" class="life-btn" id="lifeRequestPersistentStorage">Vraag blijvende apparaatopslag aan</button><button type="button" class="life-btn" id="lifeRestorePrevious">Vorige opgeslagen Leven-versie terugzetten</button></div><p class="life-footnote">Blijvende opslag verkleint het risico op automatisch opruimen, maar vervangt geen ZIP-back-up.</p></section><section class="life-panel" aria-label="Prullenbak definitief leegmaken"><h2>Prullenbak definitief leegmaken</h2><p>Wis uitsluitend items die al in de prullenbak staan, zowel bij Leven als Financiën. Actieve transacties, notities en andere gegevens blijven behouden.</p><button type="button" class="life-btn life-btn-danger" id="lifeOpenPurgeTrash">Bekijk wat definitief verdwijnt</button><p class="life-footnote">Je ziet eerst aantallen en moet de verwijdering bevestigen. Bestaande lokale herstelkopieën en gedownloade back-ups blijven behouden.</p></section>'}
 function render(){
+ dayTrackObserver?.disconnect();dayTrackObserver=null;
  renderNav();const label=views.find(x=>x[0]===view)[2];$('lifeTitle').textContent=label;$('lifeCrumb').textContent='Leven / '+label;
  const descriptions={};
  $('lifeSubtitle').textContent=descriptions[view]||'';$('lifeSubtitle').hidden=!descriptions[view];root.dataset.lifeView=view;const add=$('lifeAdd');add.hidden=['agenda','backup','today','groceries','fitness','notes'].includes(view);add.textContent=view==='groceries'?'＋ Product':view==='wishes'?'＋ Aankoopwens':view==='notes'?'＋ Notitie':'＋ Nieuwe taak';
@@ -997,6 +1009,7 @@ root.addEventListener('click',e=>{
  if(d.lifeTemplateUse){const t=state.templates.find(x=>x.id===d.lifeTemplateUse);if(t){const exists=state.tasks.some(x=>!x.deletedAt&&!x.archived&&!x.done&&(x.templateId===t.id||x.title.toLowerCase()===t.title.toLowerCase()));if(exists&&!confirm('Er staat al een actieve taak met deze naam. Toch een nieuwe taak inplannen?'))return;editTask(null,clone(t))}return}
  if(d.lifeTemplateEdit){editTask(d.lifeTemplateEdit,null,true);return}
  if(d.lifeTemplateDelete||d.lifeTemplateRestore){const t=state.templates.find(x=>x.id===(d.lifeTemplateDelete||d.lifeTemplateRestore));mutate(()=>{t.deletedAt=d.lifeTemplateDelete?new Date().toISOString():''},d.lifeTemplateDelete?'Sjabloon naar de prullenbak verplaatst.':'Sjabloon teruggezet.',true);return}
+ if(d.lifeMenuComplete){completeTask(d.lifeMenuComplete);return;}
  if(d.lifeView){setView(d.lifeView);return}if(d.lifeDetail){detail(d.lifeDetail);return}if(d.lifeComplete){completeTask(d.lifeComplete);return}
  if(d.lifeFocus){const t=state.tasks.find(x=>x.id===d.lifeFocus);mutate(()=>{t.focusDate=t.focusDate===today()?'':today()},'Dagselectie bijgewerkt.');return}
  if(d.lifeStar){const t=state.tasks.find(x=>x.id===d.lifeStar);mutate(()=>{t.priority=!t.priority});return}
@@ -1017,7 +1030,7 @@ root.addEventListener('click',e=>{
  if(b.id==='lifeOpenPurgeTrash'){openPermanentTrashDialog();return}if(b.id==='lifeExportBackup'){exportBackup();return}if(b.id==='lifeExportLegacyBackup'){exportLegacyBackup();return}if(b.id==='lifeExportIcs'){exportICS();return}
  if(b.id==='lifeRestorePrevious'){restorePreviousLife();return}
 });
-root.addEventListener('scroll',e=>{if(e.target.id!=='lifeDayTrack')return;const track=e.target;const index=Math.max(0,Math.min(2,Math.round(track.scrollLeft/Math.max(1,track.clientWidth))));if(daySlide!==index){daySlide=index;syncDayCarousel()}},true);
+root.addEventListener('scroll',e=>{if(e.target.id!=='lifeDayTrack')return;const track=e.target;const index=Math.max(0,Math.min(2,Math.round(track.scrollLeft/Math.max(1,track.clientWidth))));if(daySlide!==index){closeLifePopovers();daySlide=index;syncDayCarousel()}},true);
 root.addEventListener('keydown',e=>{if(e.target.id==='lifeDayTrack'&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();showDaySlide(daySlide+(e.key==='ArrowRight'?1:-1))}});
 root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{

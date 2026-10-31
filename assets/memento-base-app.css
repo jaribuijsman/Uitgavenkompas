@@ -635,7 +635,7 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeApp[data-life-view="today"] .life-day-tab{box-sizing:border-box;min-width:0;min-height:44px;padding:9px 5px;border:1px solid transparent;border-radius:12px;background:transparent;color:#c7ddcd;font:inherit;font-size:clamp(12px,3.5vw,15px);font-weight:650;cursor:pointer;white-space:nowrap}
 #lifeApp[data-life-view="today"] .life-day-tab[aria-pressed="true"]{background:#bdd3c2;border-color:#cfe2d2;color:#142b1d}
 #lifeApp[data-life-view="today"] .life-day-tab:focus-visible,#lifeApp[data-life-view="today"] .life-day-track:focus-visible{outline:2px solid #e0f3c4;outline-offset:2px}
-#lifeApp[data-life-view="today"] .life-day-track{display:flex;gap:0;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#lifeApp[data-life-view="today"] .life-day-track{display:flex;align-items:flex-start;gap:0;width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #lifeApp[data-life-view="today"] .life-day-track::-webkit-scrollbar{display:none}
 #lifeApp[data-life-view="today"] .life-day-track>.life-day-column{box-sizing:border-box;flex:0 0 100%;width:100%;min-width:0;margin:0;padding-top:4px;scroll-snap-align:start;scroll-snap-stop:always}
 #lifeApp[data-life-view="today"] .life-day-track>.life-day-column .life-day-heading{margin-top:0}
@@ -651,7 +651,9 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeDialog .memento-appt-times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 #lifeDialog .memento-appt-section{margin-top:8px;padding-top:13px;border-top:1px solid #426750;color:#b5cbbd;font-size:11px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
 #lifeDialog .memento-appt-check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:500;cursor:pointer}
-#lifeDialog .memento-appt-check input[type=checkbox]{box-sizing:border-box;flex:0 0 23px;width:23px;height:23px;min-width:23px;min-height:23px;margin:0;padding:0;accent-color:#c4dcc7}
+#lifeDialog .memento-appt-check input[type=checkbox]{box-sizing:border-box;appearance:none;display:grid;place-items:center;flex:0 0 23px;width:23px;height:23px;min-width:23px;min-height:23px;margin:0;padding:0;border:1.5px solid #b6cfba;border-radius:5px;background:transparent;cursor:pointer}
+#lifeDialog .memento-appt-check input[type=checkbox]:checked{background:#c4dcc7;border-color:#c4dcc7}
+#lifeDialog .memento-appt-check input[type=checkbox]:checked:after{content:'✓';font:800 16px/1 system-ui;color:#183528}
 #lifeDialog .memento-appointment-v2 input:disabled{opacity:.5}
 #lifeDialog .memento-appt-note-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #lifeDialog .memento-appt-note-tools{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}

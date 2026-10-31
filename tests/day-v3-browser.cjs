@@ -55,7 +55,11 @@ const reports=[];
    for(const selector of ['.memento-event-complete','.memento-v3-menu>summary','.memento-day-note>summary']){
     const b=await event.locator(selector).boundingBox();assert(b.width>=44&&b.height>=44,'Touch target '+selector);
    }
-   if(count===43){await page.locator('[data-life-day="2026-10-31"] .life-task').last().scrollIntoViewIfNeeded();await contained('43-tasks');continue;}
+   if(count===43){
+    await page.locator('[data-life-day="2026-10-31"] .life-task').last().scrollIntoViewIfNeeded();await contained('43-tasks');
+    await page.locator('[data-life-day-slide="1"]').click();await page.waitForFunction(()=>document.querySelector('#lifeDayTrack').getBoundingClientRect().height<500);
+    await contained('short-day-after-43-tasks');continue;
+   }
    await event.locator('.memento-v3-menu>summary').click();
    await page.waitForFunction(()=>!!document.querySelector('#lifeDayTrack.mg-menu-ancestor'));
    await contained('appointment-menu-open');await shot('menu');
@@ -96,13 +100,16 @@ const reports=[];
    const saved=await stored(),updated=saved.life.appointments.find(a=>a.id==='v3-event');
    assert.equal(updated.time,'12:15');assert.equal(updated.notes,notes.trim());assert.equal(saved.finance,original.finance);
    for(const key of ['tasks','notes','googleAppointments','appointmentChecks'])assert.deepEqual(saved.life[key],original.life[key],key+' preserved');
-   await event.locator('.memento-day-note>summary').click();await contained('note-open');await shot('note');
+   await event.locator('.memento-day-note>summary').click();
+   await page.waitForFunction(()=>{const p=document.querySelector('.memento-day-note[open]>.memento-day-note-content');return p?.style.top&&p.getBoundingClientRect().top>=0&&p.getBoundingClientRect().bottom<=innerHeight;});
+   await page.waitForFunction(()=>!document.querySelector('#lifeMessage').textContent);
+   await contained('note-open');await shot('note');
    const nb=await event.locator('.memento-day-note-content').boundingBox();assert(nb.x>=0&&nb.x+nb.width<=width+1);
    const hit=await event.locator('.memento-day-note-content').evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+10,r.y+10));});assert(hit,'Note preview must not be clipped by its carousel');
    await page.keyboard.press('Escape');
    const taskCard=page.locator('[data-life-day="2026-10-31"] .life-task').first();await taskCard.locator('.memento-v3-menu>summary').click();await contained('task-menu-open');
-   await page.locator('[data-life-day-slide="1"]').click();await page.waitForFunction(()=>{const t=document.querySelector('#lifeDayTrack');return Math.abs(t.scrollLeft-t.clientWidth)<2});
-   assert.equal(await page.locator('.life-task-menu[open]').count(),0);await contained('after-menu-and-swipe');await shot('tomorrow');
+   await page.locator('#lifeDayTrack').evaluate(el=>el.scrollTo({left:el.clientWidth,behavior:'instant'}));await page.waitForFunction(()=>{const t=document.querySelector('#lifeDayTrack');return Math.abs(t.scrollLeft-t.clientWidth)<2});
+   assert.equal(await page.locator('.life-task-menu[open]').count(),0);await contained('after-menu-and-swipe');await page.evaluate(()=>scrollTo(0,0));await shot('tomorrow');
    await page.locator('[data-life-day-slide="0"]').click();await page.waitForFunction(()=>document.querySelector('#lifeDayTrack').scrollLeft<2);
    await event.locator('.memento-event-complete').click();
    await page.locator('[data-life-day="2026-10-31"] .memento-day-completed>summary').click();
