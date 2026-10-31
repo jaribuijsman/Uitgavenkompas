@@ -200,13 +200,10 @@ body .memento-payment-details>summary {display:flex;align-items:center;min-heigh
 body #txTypeSegment[hidden] {display:none}
 body .memento-other-budgets {grid-column:1/-1;min-width:0}
 body .memento-other-budgets>summary {min-height:48px;display:flex;align-items:center;cursor:pointer;font-weight:700}
-#lifeApp .memento-duty-badge {display:inline-flex;align-items:center;margin:0;padding:4px 9px;border-radius:999px;background:rgba(12,43,30,.65);border:1px solid #88ac9466;color:#c5dfce;font-size:12px;font-weight:650;white-space:nowrap}
-#lifeApp .memento-day-caption:has(.memento-duty-badge){flex-wrap:wrap;gap:6px 8px}
 #lifeApp .memento-day-caption .memento-inline-add{margin-left:auto}
 /* Reserve room for both actions even with wider platform fallback fonts. */
 #lifeApp .memento-day-caption:has(.memento-calendar-connect) {column-gap:4px;letter-spacing:normal}
 #lifeApp .memento-day-caption:has(.memento-calendar-connect)>span {padding-inline:4px}
-#lifeApp .memento-day-caption:has(.memento-calendar-connect)>.memento-duty-badge {padding-inline:5px}
 #lifeApp .memento-calendar-connect {display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;min-width:44px;height:44px;min-height:44px;margin-left:auto;padding:0;border:1px solid var(--mg-line);border-radius:11px;cursor:pointer}
 #lifeApp .memento-calendar-connect svg {display:block;width:24px;height:24px}
 #lifeApp .memento-calendar-connect:focus-visible {outline:2px solid var(--mg-gold);outline-offset:2px}
@@ -267,15 +264,11 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-add-actions button:hover{background:#315440}
 #lifeApp[data-life-view="today"] .life-day-carousel{margin:0 0 14px}
 #lifeApp[data-life-view="today"] .life-day-tabs{margin-bottom:10px}
-#lifeApp[data-life-view="today"] .memento-day-quick{margin:12px 0 0;border-top:1px solid #385c45}
-#lifeApp[data-life-view="today"] .memento-day-quick>summary{min-height:44px;display:flex;align-items:center;color:#bdd5c3;cursor:pointer;font-size:13px}
-#lifeApp[data-life-view="today"] .memento-day-quick .memento-capture-card{margin:4px 0 10px}
 #lifeApp[data-life-view="today"] .memento-day-appointments{margin:0 0 14px}
 #lifeApp[data-life-view="today"] .memento-day-caption{display:flex;align-items:center;gap:8px;margin:4px 1px 9px;color:#d1e2d5;font-size:13px;font-weight:750;letter-spacing:.04em}
 #lifeApp[data-life-view="today"] .memento-day-caption strong{font-size:13px}
 #lifeApp[data-life-view="today"] .memento-day-caption>span{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 7px;border-radius:14px;background:#2a4a37;border:1px solid #54765d;color:#e9f5e9;font-size:13px;box-sizing:border-box}
 #lifeApp[data-life-view="today"] .memento-day-caption .memento-inline-add{display:none}
-#lifeApp[data-life-view="today"] .memento-day-caption .memento-duty-badge{margin-left:auto}
 #lifeApp[data-life-view="today"] .memento-day-task-label{margin:15px 1px 10px}
 #lifeApp[data-life-view="today"] .life-day-empty{padding:9px 2px 12px;font-size:13px;line-height:1.4}
 #lifeApp[data-life-view="today"] .memento-unified-list,
@@ -337,7 +330,6 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-completed .memento-unified-list{margin-top:8px}
 #lifeApp[data-life-view="today"] .memento-v3-card :is(button,summary):focus-visible,
 #lifeApp[data-life-view="today"] .memento-day-add-menu>summary:focus-visible,
-#lifeApp[data-life-view="today"] .memento-day-quick>summary:focus-visible{outline:2px solid #d3efd9;outline-offset:2px}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time,
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body,
