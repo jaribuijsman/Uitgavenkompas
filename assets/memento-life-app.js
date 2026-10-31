@@ -955,7 +955,7 @@ async function importBackup(file,includeFinance){
   data=JSON.parse(await file.text());if(data.format!=='compass-life-backup'||data.version!==1)throw Error('Kies een back-up van deze Leven-versie.');
   if(data.lifeState&&data.lifeState.fitness===undefined&&state.fitness)data.lifeState.fitness=clone(state.fitness);
   validate(data.lifeState);window.MementoKnowledgeCore?.validate(clone(data.lifeState));
-  if(includeFinance&&(!data.financeState||!Array.isArray(data.financeState.transactions)||!Array.isArray(data.financeState.categories)))throw Error('Deze back-up bevat geen geldige financiële gegevens.');
+  if(includeFinance){if(!window.MementoFinanceValidation)throw Error('Financiële controle ontbreekt. Vernieuw Memento.');window.MementoFinanceValidation.validate(data.financeState);}
   if(!confirm('De huidige Leven-gegevens vervangen door '+data.lifeState.tasks.length+' taken uit deze back-up?'+(includeFinance?' Ook de financiële gegevens worden vervangen.':' Je financiële gegevens blijven behouden.')))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');token=storageGuard.beginOperation();
   const changes={life:JSON.stringify(data.lifeState)};if(includeFinance)changes.finance=JSON.stringify(data.financeState);

@@ -29,7 +29,7 @@ async function tab(storage = new Map(), manager = locks(), options = {}) {
     navigator: { locks: options.supported === false ? undefined : manager }, isSecureContext: options.secure !== false,
     location: { protocol: "https:", reload() { s.reloaded = true; } }, setTimeout: () => 1, clearTimeout() {}, queueMicrotask() {}, MutationObserver: class { observe() {} },
     confirm: () => true, addEventListener(t, fn) { (listeners[t] ||= []).push(fn); }, scrollTo() {}, matchMedia: () => ({ matches: false }),
-    MementoKnowledgeCore: K, MementoFitnessCore: F, MementoTrashCore: Trash, MementoCompleteBackup: { ...ZIP }, CompassFlow: { home: () => "", mount() {} } };
+    MementoFinanceValidation: require("../../assets/memento-finance-validation.js"), MementoKnowledgeCore: K, MementoFitnessCore: F, MementoTrashCore: Trash, MementoCompleteBackup: { ...ZIP }, CompassFlow: { home: () => "", mount() {} } };
   s.window = s; s.get = get; s.storage = storage; s.listeners = listeners; s.MementoStorageGuard = Guard.create(s);
   await s.MementoStorageGuard.ready; vm.createContext(s);
   const first = fs.readFileSync(path.join(root, "assets/memento-finance-app.js"), "utf8");

@@ -30,7 +30,7 @@ check("finance code touching calculations forces full coverage",()=>{
 });
 
 check("extracted Finance and Life applications always retain offline data safety",()=>{
- for(const file of ["assets/memento-finance-app.js","assets/memento-life-app.js"]){
+ for(const file of ["assets/memento-finance-app.js","assets/memento-life-app.js","assets/memento-finance-validation.js"]){
   const a=planFor([file]);
   assert.equal(a.tier,"high",file);
   assert.deepEqual(a.groups,FULL,file);
