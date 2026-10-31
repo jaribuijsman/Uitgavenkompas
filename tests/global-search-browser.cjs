@@ -62,7 +62,7 @@ const server=http.createServer((req,res)=>{
       await page.locator('#mgsDropdown [data-mgs-result]').filter({hasText:'Garage De Hout – dynamo'}).click();
       await page.waitForFunction(()=>document.body.dataset.compassArea==='finance');
       await page.locator('#modalBackdrop.open').waitFor();
-      assert.match(await page.locator('#modalContent').innerText(),/Garage De Hout/);
+      assert.equal(await page.locator('#txDescription').inputValue(),'Garage De Hout – dynamo','Selected transaction opens in its existing editor');
     }
     assert.deepEqual(errors,[],'No runtime errors: '+width);
     await context.close();
