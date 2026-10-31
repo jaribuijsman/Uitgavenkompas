@@ -99,7 +99,7 @@ async function checkbox(page,selector){
    await nav(page,'agenda');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
    const boxes=await page.locator('.memento-unified-event').first().evaluate(n=>[...n.children].map(c=>c.getBoundingClientRect().toJSON()));assert(boxes[0].right<=boxes[1].left+1,'Appointment hitbox stays in its grid column');
    await page.locator('.memento-event-complete').first().click();assert((await stored()).appointments.some(a=>a.done));
-   await nav(page,'today');const completed=page.locator('.memento-completed-appointments .memento-event-complete');await reveal(page,completed);await completed.click();await nav(page,'agenda');
+   await nav(page,'today');const completed=page.locator('.memento-day-completed .memento-event-complete');await reveal(page,completed);await completed.click();await nav(page,'agenda');
    await page.locator('.memento-edit-event').first().click();await page.locator('#lifeDialog').waitFor({state:'visible'});await page.keyboard.press('Escape');assert.equal(await page.locator('#lifeDialog').isVisible(),false);
    assert(await page.locator('.memento-agenda-month-layout').isVisible());await targets(page,'button.memento-cal-day');await page.screenshot({path:path.join(out,width+'-agenda-month.jpg'),type:'jpeg',animations:'disabled'});
    const appointments=(await stored()).appointments;assert.equal(appointments.length,before.appointments.length);for(const a of before.appointments){const actual=appointments.find(x=>x.id===a.id);assert(actual&&actual.title===a.title&&actual.date===a.date);}
