@@ -64,7 +64,9 @@ assert(ksrc.includes("MementoIllustratedIcons?.forCollection(c)"),"Knowledge ico
 assert(ksrc.includes("MementoIllustratedIcons?.svg(key)"),"Knowledge picker not wired");
 assert(index.includes("memento-illustrative-icons.js?v=20261027-iconset-v2"),"Missing shared module");
 assert(index.includes("memento-illustrative-icons.css?v=20261027-iconset-v2"),"Missing CSS");
-assert(index.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
+const navigation=fs.readFileSync(path.join(__dirname,"../assets/memento-unified-nav.js"),"utf8");
+assert(index.includes('src="./assets/memento-unified-nav.js?v=20261031-extract-v1"'),"Unified navigation module not loaded");
+assert(navigation.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
 assert(index.includes("transactionArt(t)"),"Financial transactions not using icons");
 assert(index.includes("categoryArt(c.name)"),"Budgets not using icons");
 assert.match(sw,/const CACHE = "memento-pwa-v\d+-[^"\n]+"/,"Versioned app cache required");
