@@ -61,6 +61,7 @@ jobs:
           node tests/storage-lock-native.cjs
           node tests/knowledge-regression.cjs
           node tests/memento-regression.cjs
+          node tests/global-search-core.cjs
           if [ "${{ needs.plan.outputs.tier }}" = "high" ]; then
             node tests/app-review-core.cjs
             node tests/dictation-regression.cjs

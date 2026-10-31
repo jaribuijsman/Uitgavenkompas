@@ -1,0 +1,37 @@
+/* Scoped universal search; does not alter existing shared glass or form rules. */
+#lifeApp[data-life-view="today"] .mgs-host{position:relative;z-index:60;margin:12px 0 16px;isolation:isolate}
+#lifeApp .mgs-bar{min-height:58px;display:flex;align-items:center;gap:12px;padding:5px 11px 5px 18px;background:#102b20ed;border:1px solid #9ebfaa;border-radius:22px;box-shadow:0 0 0 2px #cee7d024,0 7px 22px #07130b45;color:#e7f4ea}
+#lifeApp .mgs-bar:focus-within{border-color:#cae8ce;box-shadow:0 0 0 3px #c5ebcb40,0 8px 25px #07130b65}
+#lifeApp .mgs-bar>svg{flex:none;width:23px;height:23px;color:#e4f6e7}
+#lifeApp #mgsInput{flex:1;min-width:0;width:100%;min-height:44px;padding:8px 0;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;color:#eef9f0!important;font:500 16px/1.4 Inter,system-ui,sans-serif!important;letter-spacing:0}
+#lifeApp #mgsInput::placeholder{color:#b0cbb8;opacity:1}
+#lifeApp #mgsInput::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+#lifeApp #mgsClear{min-width:44px;min-height:44px;border-radius:13px;border:1px solid #53735c;background:#254937;color:#e6f1e8;font-size:26px}
+#lifeApp #mgsClear[hidden],#lifeApp #mgsDropdown[hidden]{display:none!important}
+#lifeApp .mgs-dropdown{position:absolute;z-index:70;top:calc(100% + 7px);left:0;right:0;max-height:min(65dvh,600px);overflow-y:auto;overscroll-behavior:contain;padding:12px;background:#122e22f8;color:#ecf5ee;border:1px solid #81aa8e;border-radius:22px;box-shadow:0 18px 45px #03100bba,0 0 0 1px #cce4cd19;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#lifeApp .mgs-chips{display:flex;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:0 0 11px}
+#lifeApp .mgs-chips button{flex:none;min-height:44px;padding:9px 11px;border-radius:15px;border:1px solid #537460;background:#18392a;color:#e2f0e5;font-size:12px;font-weight:650;white-space:nowrap}
+#lifeApp .mgs-chips button[aria-pressed="true"]{background:#b9cebd;color:#122d1f;border-color:#d8e7d8}
+#lifeApp .mgs-chips button span{opacity:.75;font-size:11px;margin-left:2px}
+#lifeApp .mgs-section-label{padding:10px 5px;border-top:1px solid #496955;font-size:12px;color:#bcd5c2}
+#lifeApp .mgs-section-label strong{color:#e6f6e9}
+#lifeApp .mgs-list{display:grid;gap:3px}
+#lifeApp .mgs-result{display:flex;gap:10px;align-items:center;text-align:left;width:100%;min-height:64px;border:1px solid transparent;background:transparent;color:#eff9f1;border-radius:13px;padding:7px 6px}
+#lifeApp .mgs-result:hover,#lifeApp .mgs-result:focus-visible,#lifeApp .mgs-result[aria-selected="true"]{background:#244f36;border-color:#749d7b;outline:none}
+#lifeApp .mgs-icon{flex:0 0 42px;height:42px;display:grid;place-items:center;border-radius:12px;border:1px solid #5a8d677a;background:#2b4b36;color:#c7eacf;font-size:22px;font-weight:650}
+#lifeApp .mgs-result-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px;overflow:hidden}
+#lifeApp .mgs-result-copy strong{font-weight:700;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lifeApp .mgs-result-copy small{font-size:11px;line-height:1.35;color:#bcd1c1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lifeApp .mgs-chevron{font-size:25px;color:#bbd3bf;padding:0 5px}
+#lifeApp .mgs-section{padding-top:5px}
+#lifeApp .mgs-section h3{display:flex;gap:6px;align-items:center;font-size:12px;font-weight:750;color:#b7dcc2;margin:9px 5px 5px}
+#lifeApp .mgs-section h3 span{font-weight:500;color:#99b5a2}
+#lifeApp .mgs-more{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:47px;margin-top:10px;padding:10px 13px;background:#264a34;border:1px solid #709c79;border-radius:14px;color:#eaf9ee;font-size:13px;font-weight:700;text-align:left}
+#lifeApp .mgs-more span{font-size:19px}
+#lifeApp .mgs-empty{margin:8px 4px 16px;font-size:13px;line-height:1.5;color:#bcd0c0}
+@media(max-width:420px){
+ #lifeApp .mgs-bar{min-height:56px;padding-left:15px;border-radius:20px}
+ #lifeApp .mgs-dropdown{padding:9px;max-height:min(62dvh,540px);border-radius:18px}
+ #lifeApp .mgs-result-copy strong{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){#lifeApp .mgs-dropdown{scroll-behavior:auto}}

@@ -40,14 +40,14 @@ test('navigation modules stay ordered, synchronous and offline-cacheable',()=>{
 test('finance and life entrypoints load once in order and survive offline updates',()=>{
  const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
  const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),worker=fs.readFileSync(path.join(root,'sw.js'),'utf8');
- const urls=[
-  ['./assets/memento-finance-app.js?v=20261031-entrypoints-v1','<script src="./assets/memento-finance-app.js?v=20261031-entrypoints-v1"></script>','assets/memento-finance-app.js'],
-  ['./assets/memento-life-app.js?v=20261031-entrypoints-v1','<script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261031-entrypoints-v1"></script>','assets/memento-life-app.js']
- ];
+ const files=['assets/memento-finance-app.js','assets/memento-life-app.js'];
+ const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];
  const positions=[];
- for(const [url,tag,file] of urls){
-  assert.equal(html.split(tag).length-1,1,'Missing synchronous entrypoint '+file);
-  assert.equal(worker.split('"'+url+'"').length-1,1,'Missing offline asset '+file);
+ for(const file of files){
+  const matches=scripts.filter(m=>m[1].split('?')[0]==='./'+file);
+  assert.equal(matches.length,1,'Exactly one synchronous entrypoint '+file);
+  const url=matches[0][1],tag=matches[0][0];
+  assert.equal(worker.split('"'+url+'"').length-1,1,'Missing matching offline asset '+file);
   const source=fs.readFileSync(path.join(root,file),'utf8');
   new vm.Script(source,{filename:file});
   positions.push(html.indexOf(tag));
