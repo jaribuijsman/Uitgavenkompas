@@ -254,37 +254,104 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .life-overdue .life-task-menu>summary{width:44px;min-width:44px;height:44px;min-height:44px}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-overdue-chevron svg{transition:none}}
 
-/* Mijn dag: task cards share the appointment's four zones.
-   A task has a planned date, not an invented appointment time. The existing
-   native task menu remains the accessible right-hand 'Bewerk' control. */
-#lifeApp[data-life-view="today"] .life-list>.life-task.memento-unified-task{
- box-sizing:border-box;display:grid;grid-template-columns:44px 48px minmax(0,1fr) auto;
- align-items:center;gap:7px;padding:8px;min-height:0;
- background:#21392a;border:1px solid #4a6b54;border-radius:12px;box-shadow:none;
+/* Mijn dag V3 — one compact four-zone row for local/Google appointments and tasks.
+   All rules stay inside the day view. Storage, forms and other lists remain untouched. */
+#lifeApp[data-life-view="today"] .memento-day-v3-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;min-height:44px}
+#lifeApp[data-life-view="today"] #mementoDaySelectedDate{font-size:13px;color:#c4d6c7;font-weight:600}
+#lifeApp[data-life-view="today"] .memento-day-add-menu{position:relative;z-index:15;flex:0 0 auto}
+#lifeApp[data-life-view="today"] .memento-day-add-menu>summary{display:grid;place-items:center;box-sizing:border-box;min-height:44px;padding:9px 14px;border:1px solid #b4d8bf;border-radius:13px;list-style:none;background:#bdd9c5;color:#153524;font-size:14px;font-weight:700;cursor:pointer}
+#lifeApp[data-life-view="today"] .memento-day-add-menu>summary::-webkit-details-marker{display:none}
+#lifeApp[data-life-view="today"] .memento-day-add-actions{position:absolute;top:calc(100% + 6px);right:0;display:grid;width:190px;max-width:calc(100vw - 42px);padding:6px;gap:3px;border:1px solid #61816b;border-radius:13px;background:#1d392a;box-shadow:0 12px 30px #071b12b8;z-index:30}
+#lifeApp[data-life-view="today"] .memento-day-add-actions button{box-sizing:border-box;width:100%;min-height:44px;padding:9px 12px;border:0;border-radius:9px;background:transparent;color:#edf6ef;text-align:left;font:inherit;font-size:14px;cursor:pointer}
+#lifeApp[data-life-view="today"] .memento-day-add-actions button:hover{background:#315440}
+#lifeApp[data-life-view="today"] .life-day-carousel{margin:0 0 14px}
+#lifeApp[data-life-view="today"] .life-day-tabs{margin-bottom:10px}
+#lifeApp[data-life-view="today"] .memento-day-quick{margin:12px 0 0;border-top:1px solid #385c45}
+#lifeApp[data-life-view="today"] .memento-day-quick>summary{min-height:44px;display:flex;align-items:center;color:#bdd5c3;cursor:pointer;font-size:13px}
+#lifeApp[data-life-view="today"] .memento-day-quick .memento-capture-card{margin:4px 0 10px}
+#lifeApp[data-life-view="today"] .memento-day-appointments{margin:0 0 14px}
+#lifeApp[data-life-view="today"] .memento-day-caption{display:flex;align-items:center;gap:8px;margin:4px 1px 9px;color:#d1e2d5;font-size:13px;font-weight:750;letter-spacing:.04em}
+#lifeApp[data-life-view="today"] .memento-day-caption strong{font-size:13px}
+#lifeApp[data-life-view="today"] .memento-day-caption>span{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 7px;border-radius:14px;background:#2a4a37;border:1px solid #54765d;color:#e9f5e9;font-size:13px;box-sizing:border-box}
+#lifeApp[data-life-view="today"] .memento-day-caption .memento-inline-add{display:none}
+#lifeApp[data-life-view="today"] .memento-day-caption .memento-duty-badge{margin-left:auto}
+#lifeApp[data-life-view="today"] .memento-day-task-label{margin:15px 1px 10px}
+#lifeApp[data-life-view="today"] .life-day-empty{padding:9px 2px 12px;font-size:13px;line-height:1.4}
+#lifeApp[data-life-view="today"] .memento-unified-list,
+#lifeApp[data-life-view="today"] .life-day-column .life-list{gap:8px}
+#lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
+#lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
+#lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
+ box-sizing:border-box;position:relative;display:grid;grid-template-columns:44px 49px minmax(0,1fr) auto;
+ gap:6px;align-items:center;min-height:76px;padding:9px 7px 9px 9px;
+ background:#233f30;border:1px solid #55725b;border-radius:15px;box-shadow:none;overflow:visible;
 }
-#lifeApp[data-life-view="today"] .life-list>.life-task.memento-unified-task.life-task-late{border-left:3px solid #e69aa6}
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-body{min-width:0;grid-column:auto;grid-row:auto;flex-basis:auto}
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-title,
-#lifeApp[data-life-view="today"] .life-overdue .life-task.memento-unified-task .life-task-title{
- display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
- min-height:0;padding:0;font-size:14px;line-height:1.45;font-weight:650;
+#lifeApp[data-life-view="today"] .memento-v3-card::before{top:13px;bottom:13px;left:0;width:3px}
+#lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late{border-left:3px solid #e0a0a6}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{box-sizing:border-box;min-width:0;white-space:nowrap;color:#cee4d2;font-size:12px;line-height:1.3;font-weight:700}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:4px;grid-column:auto;grid-row:auto}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{
+ display:block;min-height:0;margin:0;padding:0;text-align:left;overflow-wrap:anywhere;white-space:normal;
+ color:#f0f6f0;font:inherit;font-size:14px;line-height:1.36;font-weight:700;
+ background:none;border:0;box-shadow:none;cursor:pointer;
 }
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-meta{margin-top:4px;gap:3px 8px;font-size:12px;line-height:1.45}
-#lifeApp[data-life-view="today"] .memento-unified-task .memento-unified-time{min-width:0;white-space:nowrap;font-size:12px;font-weight:650;line-height:1.5;color:#bdd3c4}
-#lifeApp[data-life-view="today"] .memento-unified-task .memento-event-actions{min-width:0;justify-self:end}
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-menu>summary.memento-edit-event{
- display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
- width:auto;min-width:64px;height:44px;min-height:44px;padding:7px 9px;
- font-size:13px;font-weight:600;line-height:1.4;list-style:none;
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{cursor:default}
+/* Long mobile titles remain available through the existing task detail button.
+   Bound the preview to three lines so attached note/action icons do not elongate cards. */
+#lifeApp[data-life-view="today"] .life-overdue .life-task.memento-v3-card .life-task-title,
+#lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card .life-task-title{
+ max-height:calc(1.36em * 3);overflow:hidden;
 }
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-menu>summary.memento-edit-event::-webkit-details-marker{display:none}
-#lifeApp[data-life-view="today"] .memento-unified-task .life-task-menu>summary.memento-edit-event:focus-visible{outline:3px solid #d4efdd;outline-offset:3px}
-@media(max-width:400px){
- #lifeApp[data-life-view="today"] .life-list>.life-task.memento-unified-task{
-  grid-template-columns:44px minmax(0,1fr) auto;gap:4px 10px;padding:12px;
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small,
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta{display:block;margin:0;font-size:12px;line-height:1.4;color:#bed2c2}
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta>span{margin-right:6px}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-event-original{color:#e9cc9d!important}
+#lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:auto;grid-row:auto;align-self:center;width:44px;min-width:44px;height:44px;min-height:44px}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions{display:flex;gap:0;align-items:center;justify-content:flex-end;grid-column:auto;grid-row:auto}
+#lifeApp[data-life-view="today"] .memento-v3-menu>summary,
+#lifeApp[data-life-view="today"] .memento-day-note>summary{
+ box-sizing:border-box;display:grid;place-items:center;min-width:44px;width:44px;min-height:44px;height:44px;
+ padding:0;border:0;border-radius:10px;list-style:none;background:transparent;color:#d0dfd2;cursor:pointer;font-size:24px;line-height:1;
+}
+#lifeApp[data-life-view="today"] .memento-v3-menu>summary::-webkit-details-marker,
+#lifeApp[data-life-view="today"] .memento-day-note>summary::-webkit-details-marker{display:none}
+#lifeApp[data-life-view="today"] .memento-v3-menu[open]>summary,#lifeApp[data-life-view="today"] .memento-day-note[open]>summary{background:#385744}
+#lifeApp[data-life-view="today"] .memento-day-note{position:relative;flex:none}
+#lifeApp[data-life-view="today"] .memento-day-note svg{display:block;width:20px;height:20px}
+#lifeApp[data-life-view="today"] .memento-day-note-content{position:absolute;right:-44px;top:calc(100% + 5px);z-index:30;box-sizing:border-box;width:min(280px,calc(100vw - 54px));max-height:55vh;overflow-y:auto;padding:13px;border:1px solid #64836d;border-radius:13px;background:#1c3729;color:#eef5ef;box-shadow:0 12px 30px #071b12b8}
+#lifeApp[data-life-view="today"] .memento-day-note-content strong{font-size:14px}
+#lifeApp[data-life-view="today"] .memento-day-note-content p{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+#lifeApp[data-life-view="today"] .memento-day-note-content button{display:block;min-height:44px;padding:8px 10px;border:1px solid #63876b;border-radius:9px;background:#2f5540;color:#f0f6ef;font-size:13px}
+#lifeApp[data-life-view="today"] .memento-day-completed{margin:16px 0 0;padding:0 0 12px;border-top:1px solid #45624d}
+#lifeApp[data-life-view="today"] .memento-day-completed[hidden]{display:none}
+#lifeApp[data-life-view="today"] .memento-day-completed>summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;list-style:none;color:#c5dccb;font-size:14px;font-weight:700}
+#lifeApp[data-life-view="today"] .memento-day-completed>summary::-webkit-details-marker{display:none}
+#lifeApp[data-life-view="today"] .memento-day-completed>summary span{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border:1px solid #57705d;border-radius:15px;background:#2c4b38;box-sizing:border-box}
+#lifeApp[data-life-view="today"] .memento-day-completed .life-list{margin-top:8px}
+#lifeApp[data-life-view="today"] .memento-day-completed .memento-unified-list{margin-top:8px}
+#lifeApp[data-life-view="today"] .memento-v3-card :is(button,summary):focus-visible,
+#lifeApp[data-life-view="today"] .memento-day-add-menu>summary:focus-visible,
+#lifeApp[data-life-view="today"] .memento-day-quick>summary:focus-visible{outline:2px solid #d3efd9;outline-offset:2px}
+@media(max-width:480px){
+ #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
+ #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
+ #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
+  grid-template-columns:44px minmax(0,1fr) auto;gap:3px 7px;padding:8px 5px;
  }
- #lifeApp[data-life-view="today"] .memento-unified-task .life-complete{grid-column:1;grid-row:1/3}
- #lifeApp[data-life-view="today"] .memento-unified-task .memento-unified-time{grid-column:2;grid-row:1}
- #lifeApp[data-life-view="today"] .memento-unified-task .life-task-body{grid-column:2;grid-row:2}
- #lifeApp[data-life-view="today"] .memento-unified-task .memento-event-actions{grid-column:3;grid-row:1/3}
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{grid-column:2;grid-row:1}
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{grid-column:2;grid-row:2}
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions{grid-column:3;grid-row:1/3}
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-complete{grid-column:1;grid-row:1/3}
+ #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title,
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
+ #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;
+ }
 }
+@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}

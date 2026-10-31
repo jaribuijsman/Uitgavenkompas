@@ -62,7 +62,7 @@ async function checkbox(page,selector){
    await nav(page,'groceries');
    const shopping=await page.locator('.shopping-row').first().evaluate(n=>({columns:getComputedStyle(n).gridTemplateColumns.split(' ').map(parseFloat),check:n.querySelector('.shopping-check').getBoundingClientRect().toJSON()}));
    assert.equal(shopping.columns[0],44,'Shopping keeps its original compact 44px column');assert(shopping.check.width>=44&&shopping.check.height>=44);row.shopping=shopping;
-   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
+   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-v3-menu>summary');await checkbox(page,'.memento-event-complete');
    const taskCard=page.locator('#lifeApp[data-life-view="today"] .life-overdue .memento-unified-task').first();
    assert.equal(await taskCard.count(),1,'Overdue task uses the same visual card structure as appointments');
    assert.equal(await taskCard.locator(':scope > .memento-unified-time').textContent(),'26 okt','Task date is shown instead of an invented clock time');
@@ -86,9 +86,9 @@ async function checkbox(page,selector){
    assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
    assert.equal(parity.taskSurface,parity.eventSurface,'Matching cards must have same card background');
    assert.equal(parity.taskRadius,parity.eventRadius,'Matching cards must have same corner radius');
-   assert.equal(parity.label,'Bewerk');
-   await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-edit-event');
-   await taskCard.locator('.memento-edit-event').click();
+   assert.equal(parity.label,'⋮');
+   await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-v3-menu>summary');
+   await taskCard.locator('.memento-v3-menu>summary').click();
    const menuActions=taskCard.locator('.life-task-menu[open] .life-task-actions');await menuActions.waitFor({state:'visible'});
    assert.equal(await menuActions.locator('[data-life-duplicate]').count(),1,'Duplicate action stays accessible');
    assert.equal(await menuActions.locator('[data-life-star]').count(),1,'Priority action stays accessible');
@@ -99,7 +99,7 @@ async function checkbox(page,selector){
    await nav(page,'agenda');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
    const boxes=await page.locator('.memento-unified-event').first().evaluate(n=>[...n.children].map(c=>c.getBoundingClientRect().toJSON()));assert(boxes[0].right<=boxes[1].left+1,'Appointment hitbox stays in its grid column');
    await page.locator('.memento-event-complete').first().click();assert((await stored()).appointments.some(a=>a.done));
-   await nav(page,'today');const completed=page.locator('.memento-completed-appointments .memento-event-complete');await reveal(page,completed);await completed.click();await nav(page,'agenda');
+   await nav(page,'today');const completed=page.locator('.memento-day-completed .memento-event-complete');await reveal(page,completed);await completed.click();await nav(page,'agenda');
    await page.locator('.memento-edit-event').first().click();await page.locator('#lifeDialog').waitFor({state:'visible'});await page.keyboard.press('Escape');assert.equal(await page.locator('#lifeDialog').isVisible(),false);
    assert(await page.locator('.memento-agenda-month-layout').isVisible());await targets(page,'button.memento-cal-day');await page.screenshot({path:path.join(out,width+'-agenda-month.jpg'),type:'jpeg',animations:'disabled'});
    const appointments=(await stored()).appointments;assert.equal(appointments.length,before.appointments.length);for(const a of before.appointments){const actual=appointments.find(x=>x.id===a.id);assert(actual&&actual.title===a.title&&actual.date===a.date);}
