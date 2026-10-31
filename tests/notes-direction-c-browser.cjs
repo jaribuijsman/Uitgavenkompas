@@ -71,7 +71,17 @@ async function fixture(){
    assert.equal(await page.getByText('Geen resultaten',{exact:true}).count(),1);await shot('no-results');
    await page.locator('.kc-empty [data-kc=clear-filters]').click();assert.equal(await page.locator('.kc-item').count(),3);
    await page.locator('[data-kc-input=search]').fill('Fictief');
-   await page.locator('.kc-item').first().click();await page.locator('[data-kc=back]').click();assert.equal(await page.locator('.kc-item').count(),1);
+   await page.locator('.kc-item').first().click();
+   const detailHistoryIndex=await page.evaluate(()=>history.state?.mementoNotes?.index);
+   assert.equal(typeof detailHistoryIndex,'number','Detail history entry must exist before navigating back');
+   await page.locator('[data-kc=back]').click();
+   // The app uses asynchronous history.go() for its return journey.
+   // The result count alone does not establish that popstate committed.
+   await page.waitForFunction(previousIndex=>{
+    const index=history.state?.mementoNotes?.index;
+    return typeof index==='number'&&index<previousIndex&&document.querySelector('.kc-header h2')?.textContent?.trim()==='Projectdossiers';
+   },detailHistoryIndex,{timeout:5000});
+   assert.equal(await page.locator('.kc-item').count(),1);
    assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
    await page.locator('[data-kc-input=search]').fill('');
    // Popstate and list rendering can settle after the input event. Poll the
