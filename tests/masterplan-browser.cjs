@@ -61,14 +61,14 @@ async function nav(page,area,view){
    await nav(page,'life','notes');await page.locator('[data-kc=home]').first().click();await page.locator('[data-kc=collection][data-id=kc2-levenspad]').first().click();await page.locator('[data-kc=collection][data-id=kc2-levenspad-dagboek]').click();
    assert.equal(await page.locator('.kc-diary-history [data-kc=journal-open]').count(),1);assert((await page.locator('.kc-diary-history').innerText()).includes('27'));await shot('journal-history');
    if(phase>=2){
-    await nav(page,'life','today');await shot('day');await page.locator('.memento-day-quick>summary').click();
+    await nav(page,'life','today');await shot('day');assert(await page.locator('#lifeQuickForm').isVisible());
     await page.locator('[data-life-quick-kind=note]').click();await page.locator('#lifeQuickTitle').fill('Een korte gedachte voor later.');await page.locator('#lifeQuickForm [type=submit]').click();
     const quick=(await life()).notes.find(n=>n.body==='Een korte gedachte voor later.');assert(quick);assert.equal(quick.collectionId,'inbox');
     await nav(page,'life','notes');await page.evaluate(id=>window.MementoKnowledge.showNote(id),quick.id);
     assert.equal(await page.locator('#kc-title').inputValue(),'');assert.equal(await page.locator('#kc-body').inputValue(),quick.body);
     await page.locator('#kc-body').fill('De gedachte direct aangepast.');await page.locator('#kc-collection').selectOption('kc2-huis-wonen-woning');await page.locator('[data-kc=save]').first().click();
     let q=(await life()).notes.find(n=>n.id===quick.id);assert.equal(q.body,'De gedachte direct aangepast.');assert.equal(q.collectionId,'kc2-huis-wonen-woning');assert.equal(q.id,quick.id);assert(q.revisions.length);await shot('direct-note');
-    await nav(page,'life','today');await page.locator('.memento-day-quick>summary').click();await page.locator('[data-life-quick-kind=task]').click();await page.locator('#lifeQuickTitle').fill('Directe taakdetailproef');await page.locator('#lifeQuickForm [type=submit]').click();
+    await nav(page,'life','today');assert(await page.locator('#lifeQuickForm').isVisible());await page.locator('[data-life-quick-kind=task]').click();await page.locator('#lifeQuickTitle').fill('Directe taakdetailproef');await page.locator('#lifeQuickForm [type=submit]').click();
     const task=(await life()).tasks.find(t=>t.title==='Directe taakdetailproef');assert(task);await page.locator('[data-life-detail="'+task.id+'"]').click();
     await page.locator('#lifeDetailDate').fill('2026-10-29');await page.locator('#lifeDetailStep').fill('Een eerste stap');await page.locator('#lifeTaskDetailForm [type=submit]').click();
     let t=(await life()).tasks.find(t=>t.id===task.id);assert.equal(t.date,'2026-10-29');assert.equal(t.steps.length,1);await shot('task-details');
@@ -121,7 +121,7 @@ async function nav(page,area,view){
     await nav(page,'finance','budgets');assert(await page.locator('#budgetList>.budget-item').count());assert.equal(await page.locator('.memento-other-budgets').getAttribute('open'),null);await page.locator('.memento-other-budgets>summary').click();assert(await page.locator('.memento-other-budgets [data-edit-budget]').count());await shot('budgets');
     await nav(page,'finance','planning');await page.locator('[data-bill-paid=energy]').first().click();await page.locator('#undoBillPayment').click();assert.equal((await finance()).transactions.filter(t=>t.billId==='energy').length,0);await nav(page,'finance','planning');await page.locator('[data-bill-paid=energy]').first().click();assert.equal(await page.locator('#txAmount').isVisible(),true);assert.equal(await page.locator('#txDate').isVisible(),true);assert.equal(await page.locator('#txAccount').isVisible(),true);assert.equal(await page.locator('#txDescription').isVisible(),false);await shot('known-payment');
     await page.evaluate(()=>{const submit=document.getElementById('txForm').onsubmit;submit({preventDefault(){}});submit({preventDefault(){}});});assert.equal((await finance()).transactions.filter(t=>t.billId==='energy').length,1);
-    await nav(page,'life','today');assert.equal(await page.locator('.memento-duty-badge').first().getAttribute('data-duty-code'),'O');
+    await nav(page,'life','today');assert.equal(await page.locator('.memento-duty-badge').count(),0);assert.equal(await page.evaluate(()=>window.MementoFitnessCore.duty('2026-10-28').code),'O');
     await nav(page,'life','agenda');assert(await page.locator('.memento-agenda-month-layout').isVisible());
     await page.locator('[data-memento-agenda-shift="1"]').click();
     const codes=await page.evaluate(()=>['2026-11-02','2026-11-03','2026-11-04','2027-01-01'].map(iso=>window.MementoFitnessCore.duty(iso).code));
