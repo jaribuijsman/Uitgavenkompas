@@ -8,7 +8,7 @@ const suitesByGroup={
  "interface-feature":["masterplan-browser","memento-start-browser","calendar-header-browser"],
  "interface-acceptance":["release-acceptance-browser"],
  "interface-visual":["glass-rendering-browser","visual-browser"],
- "life-full":["memento-category-browser","knowledge-v2-browser","knowledge-covers-browser","notes-direction-c-browser","journal-upgrade-browser","journal-selfcare-browser","memento-assistant-browser","illustrative-icons-browser","quickfit-browser","fitness-browser"],
+ "life-full":["global-search-browser","memento-category-browser","knowledge-v2-browser","knowledge-covers-browser","notes-direction-c-browser","journal-upgrade-browser","journal-selfcare-browser","memento-assistant-browser","illustrative-icons-browser","quickfit-browser","fitness-browser"],
  "data-full":["app-review-browser","storage-safety-browser","recovery-browser"],
  "interface-smoke":["visual-browser"],
  "interface-layout-smoke":["visual-layout-browser"],
