@@ -4,9 +4,9 @@ Geldt voor Codex, ChatGPT Work en andere agents in deze repository. De recentste
 
 ## Werkstroom: inspecteer → herstel → controleer → lever op
 
-1. Controleer **eenmalig** de actuele `main`-SHA en de relevante bestanden/handlers; lees de grote `index.html` alleen op gerichte regels. Kijk vóór nieuwe code of een bestaande helper of stijlregel het al oplost.
+1. Controleer **eenmalig** de actuele `main`-SHA en relevante bestanden/handlers; lees grote bestanden alleen op gerichte regels. Lees uitsluitend de toepasselijke passages uit projectbronnen; historische audits en alle projectdocumenten zijn géén verplichte dagelijkse preflight. Kijk vóór nieuwe code of een bestaande helper of stijlregel het al oplost.
 2. Kies **niveau 1, 2 of 3 op basis van werkelijk effect** (niet simpelweg omdat `index.html` of `sw.js` is aangeraakt). Maak één beperkte wijziging, met één duidelijke reden; geen parallelle herbouw van ongerelateerde schermen.
-3. Gebruik eerst de **kleinst mogelijke relevante regressie**. Hergebruik een geslaagde test als de bijbehorende code daarna niet is gewijzigd. Laat GitHub Actions automatisch de uiteindelijke risicodekking selecteren via `tests/ci-plan.cjs`.
+3. Maak bij goedgekeurde UI-ontwerpen vóór programmeren een microcontract van maximaal acht controleerbare criteria, inclusief bestaande editors en acties. Gebruik eerst de **kleinst mogelijke relevante regressie**. Hergebruik een geslaagde test als de bijbehorende code daarna niet is gewijzigd. Laat GitHub Actions automatisch de uiteindelijke risicodekking selecteren via `tests/ci-plan.cjs`.
 4. Corrigeer verouderde assertions/selectors **in dezelfde PR** wanneer code naar een ander bestand verhuist. Controleer nog steeds het daadwerkelijke gedrag; verlaag nooit verwachte resultaten en schakel geen falende tests uit.
 5. Rond zelfstandig af: diff controleren, branch/PR, relevante CI, gerichte reparatie bij falen, daarna merge alleen wanneer checks groen zijn én publicatie is geautoriseerd. Rapporteer SHA, status, tests en eventuele blokkade compact.
 
@@ -36,7 +36,7 @@ vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
 
 **3. Hoog — opslag/gegevens, beveiliging, financiële berekeningen, service-worker-lifecycle of grote inline JS/CSS-ingrepen**
 - Volledige toepasselijke GitHub-releasecontrole met regressie-, browser-, opslag- en veiligheidschecks.
-- De zes zware browsergroepen worden **parallel** uitgevoerd; de volledige dekking blijft gehandhaafd, maar geen aaneengesloten browserwachtrij.
+- De zes zware browsergroepen worden **parallel** uitgevoerd op de PR of op een niet-verifieerbare/directe `main`-wijziging; de volledige risicodekking blijft gehandhaafd.
 - Wanneer persistentie of service-workerlogica verandert: test de upgrade van de vorige `main`, behoud van originele data en binaire bijlagen, offline herstart, PIN en herstelpaden.
 - Visuele fixture op 360/393/412/1280 als breed systeemgedrag geraakt wordt. Bij brede taakwijzigingen 0/1/43 taken, lange tekst, filters, menu, afronden/heropenen, Mijn dag en Agenda.
 
@@ -46,6 +46,7 @@ vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
 - `tests/ci-plan.cjs`: kiest op basis van de **werkelijke file-inhoud/diff** passende risicoklasse en domeinen. `tests/ci-plan-regression.cjs` controleert de beslisregels.
 - `tests/ci-groups.cjs`: voert geselecteerde suites uit, registreert **tijd per suite** en voert de volledige dekking bij niveau 3 in parallelle shards uit.
 - De overige domeinworkflows zijn handmatig/gericht; start ze **niet nogmaals** als de centrale run dezelfde controles al uitvoert.
+- Een na merge volledig identieke Git-tree met een **bewezen groene PR-run voor exact die head** krijgt op `main` alleen een korte rooktest en cachecontractcontrole. `tests/ci-postmerge.cjs` verifieert Git-parents, tree en GitHub-PR/Actions-bewijs. Als verificatie ontbreekt of faalt, start het normale volledige risicoplan; directe pushes of `workflow_dispatch` slaan de veiligheidschecks nooit over.
 - Gebruik `workflow_dispatch` voor een bewuste volledige controle, niet als standaard bij kleine UI-wijzigingen.
 - Een groene PR-releasecheck is noodzakelijk; falende relevante tests niet overslaan, hernoemen of versoepelen. Flakiness eerst reproduceren en oplossen (echte toestand, gerichte wait, screenshots/foutlog), niet blind herhalen tot groen.
 
@@ -61,7 +62,7 @@ vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
 ## GitHub en efficiënt gebruik van Codex/Work
 
 - Niveau 1: directe `main`-wijziging uitsluitend bij aanwezige publicatieautorisatie en geldende branchregels. Niveau 2/3: aparte branch en PR; vergelijk vóór merge met de dan-actuele `main`.
-- Geen overbodige rondes code lezen, complete repository opnieuw inventariseren, tientallen screenshots maken of alle testgroepen handmatig herhalen. Laat CI de matrix één keer draaien en onderzoek bij rood de **specifieke falende test**.
+- Geen overbodige rondes code lezen, complete repository opnieuw inventariseren, tientallen screenshots maken of alle testgroepen handmatig herhalen. Push pas na de gerichte lokale controle, zodat verouderde CI-runs zo weinig mogelijk starten. Laat CI de matrix één keer draaien en onderzoek bij rood de **specifieke falende test**.
 - Bij browserwerk: Playwright 1.62.1 buiten de productierepository. De CI hergebruikt waar mogelijk de Chromium-downloadcache. Geen nieuw productie-npm-project.
 - Laat bij onvermijdelijke externe goedkeuring of rode releasecontrole de PR open en zeg **precies** wat blokkeert. Geen claim van afgeronde publicatie zolang GitHub dat niet bevestigt.
 - Eindrapport: wat gewijzigd, tests daadwerkelijk geslaagd/mislukt, PR/commit, productie- of conceptstatus en rollbackmogelijkheid. Geen generieke voortgangsteksten.

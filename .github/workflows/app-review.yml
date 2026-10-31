@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  pull-requests: read
 
 # Cancel only obsolete PR runs; keep deployments and main runs.
 concurrency:
@@ -30,10 +32,16 @@ jobs:
           fetch-depth: 2
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
+      - name: Verify unchanged, fully tested PR tree after merge
+        id: postmerge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tests/ci-postmerge.cjs
       - name: Choose coverage from changed files
         id: select
         env:
           MEMENTO_CI_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' }}
+          MEMENTO_CI_POSTMERGE_VERIFIED: ${{ steps.postmerge.outputs.verified }}
           MEMENTO_CI_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node tests/ci-plan.cjs
 
@@ -51,6 +59,8 @@ jobs:
           node --check tests/ci-plan.cjs
           node --check tests/ci-groups.cjs
           node tests/ci-plan-regression.cjs
+          node --check tests/ci-postmerge.cjs
+          node tests/ci-postmerge-regression.cjs
           node tests/service-worker-cache.cjs
           if [ "${{ needs.plan.outputs.tier }}" = "low" ]; then exit 0; fi
           node --check assets/memento-assistant.js

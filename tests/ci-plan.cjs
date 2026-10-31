@@ -23,9 +23,12 @@ function workerCacheOnly(before,after){
   return JSON.stringify(names(a))===JSON.stringify(names(b));
  }catch{return false}
 }
-function planFor(paths,read=()=>null,forceFull=false){
+function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  const application=[...new Set(paths)].filter(p=>p&&!/^docs\//.test(p)&&!["AGENTS.md","README.md"].includes(p));
  if(!application.length&&!forceFull)return {tier:"none",groups:[],upgrade:false,files:paths};
+ // Safe only after Git + GitHub API proof that this exact tree already passed PR CI.
+ // Never applied for manual force-full or unverifiable/direct pushes to main.
+ if(verifiedPostmerge&&!forceFull)return {tier:"low",groups:["interface-smoke"],upgrade:false,files:paths,postmerge:true};
  let high=forceFull,needsUpgrade=false;
  for(const p of application){
   if(HIGH.test(p)){high=true;continue}
@@ -75,7 +78,8 @@ function collect(){
  const read=(file,which)=>{
   try{return which==="before"?git(["show",base+":"+file]):fs.readFileSync(file,"utf8")}catch{return null}
  };
- return planFor(paths,read,process.env.MEMENTO_CI_FORCE_FULL==="true");
+ return planFor(paths,read,process.env.MEMENTO_CI_FORCE_FULL==="true",
+  process.env.MEMENTO_CI_POSTMERGE_VERIFIED==="true"&&process.env.GITHUB_EVENT_NAME==="push"&&process.env.GITHUB_REF==="refs/heads/main");
 }
 if(require.main===module){
  const plan=collect();
