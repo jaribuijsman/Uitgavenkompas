@@ -8,6 +8,38 @@ function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
 function versionOnlyHtml(before,after){return typeof before==="string"&&typeof after==="string"&&normalizeHtml(before)===normalizeHtml(after)}
+// Mask only the body of real HTML <style> elements. Skip scripts and comments:
+// text resembling a style tag inside JavaScript must never demote a code change.
+function maskInlineCss(html){
+ let pos=0,keptFrom=0,count=0,output="";
+ while(pos<html.length){
+  const at=html.indexOf("<",pos);
+  if(at<0)break;
+  if(html.startsWith("<!--",at)){
+   const end=html.indexOf("-->",at+4);
+   if(end<0)return null;
+   pos=end+3;continue;
+  }
+  const tag=/^<(script|style)\b[^>]*>/i.exec(html.slice(at));
+  if(!tag){pos=at+1;continue}
+  const type=tag[1].toLowerCase(),bodyStart=at+tag[0].length;
+  const close=new RegExp("<\\/\\s*"+type+"\\s*>","gi");
+  close.lastIndex=bodyStart;
+  const end=close.exec(html);
+  if(!end)return null;
+  if(type==="style"){
+   output+=html.slice(keptFrom,bodyStart)+"INLINE_CSS_"+count++;
+   keptFrom=end.index;
+  }
+  pos=close.lastIndex;
+ }
+ return {html:output+html.slice(keptFrom),count};
+}
+function styleOnlyHtml(before,after){
+ if(typeof before!=="string"||typeof after!=="string")return false;
+ const a=maskInlineCss(normalizeHtml(before)),b=maskInlineCss(normalizeHtml(after));
+ return !!a&&!!b&&a.count>0&&a.count===b.count&&a.html===b.html;
+}
 function normalizeWorker(s){
  return s.replace(/^const CACHE = [^\n]*\n/m,"const CACHE = VERSION;\n")
          .replace(/^const CORE = [^\n]*\n/m,"const CORE = VERSION;\n");
@@ -29,18 +61,19 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  // Safe only after Git + GitHub API proof that this exact tree already passed PR CI.
  // Never applied for manual force-full or unverifiable/direct pushes to main.
  if(verifiedPostmerge&&!forceFull)return {tier:"low",groups:["interface-smoke"],upgrade:false,files:paths,postmerge:true};
+ const htmlStyleOnly=application.includes("index.html")&&styleOnlyHtml(read("index.html","before"),read("index.html","after"));
  let high=forceFull,needsUpgrade=false;
  for(const p of application){
   if(HIGH.test(p)){high=true;continue}
   if(p==="tests/recovery-upgrade-browser.cjs"){high=true;needsUpgrade=true;continue}
-  if(p==="index.html"&&!versionOnlyHtml(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
+  if(p==="index.html"&&!versionOnlyHtml(read(p,"before"),read(p,"after"))&&!htmlStyleOnly){high=true;needsUpgrade=true}
   if(p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
  }
  // Actual changes to the offline lifecycle and persistent data must be upgrade-tested.
  if(high&&application.some(p=>p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))
   ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|finance-app|life-app)\.js$/.test(p)))needsUpgrade=true;
  if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade,files:paths};
- const shared=application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
+ const shared=htmlStyleOnly||application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
  const onlyTests=application.every(p=>p.startsWith("tests/"));
  const groups=new Set(onlyTests?[]:["interface-smoke"]);
@@ -87,5 +120,5 @@ if(require.main===module){
  console.log("MEMENTO_CI_PLAN "+JSON.stringify(plan));
  if(process.env.GITHUB_OUTPUT)fs.appendFileSync(process.env.GITHUB_OUTPUT,Object.entries(outputs).map(([k,v])=>k+"="+v).join("\n")+"\n");
 }
-module.exports={planFor,versionOnlyHtml,workerCacheOnly,FULL};
+module.exports={planFor,versionOnlyHtml,styleOnlyHtml,workerCacheOnly,FULL};
 

@@ -1,6 +1,6 @@
 "use strict";
 const assert=require("node:assert/strict");
-const {planFor,versionOnlyHtml,workerCacheOnly,FULL}=require("./ci-plan.cjs");
+const {planFor,versionOnlyHtml,styleOnlyHtml,workerCacheOnly,FULL}=require("./ci-plan.cjs");
 const htmlA='<link rel="stylesheet" href="./assets/memento-layout.css?v=old">\n<script src="./assets/memento.js?v=old"></script>';
 const htmlB='<link rel="stylesheet" href="./assets/memento-layout.css?v=new">\n<script src="./assets/memento.js?v=new"></script>';
 const swA='const CACHE = "old";\nconst CORE = ["./assets/old.css?v=old"];\nself.addEventListener("fetch",()=>{});\n';
@@ -57,6 +57,41 @@ check("adding precache entries requires full offline review",()=>{
  assert(!workerCacheOnly(swA,modified));
  const a=planFor(["sw.js"],read({"sw.js":{before:swA,after:modified}}));
  assert.equal(a.tier,"high");assert.equal(a.upgrade,true);
+});
+check("inline CSS and matching cache versions need visual checks, not storage upgrade",()=>{
+ const a='<style id="tasks">.task-menu{width:32px}</style><script>save()</script>'+htmlA;
+ const b='<style id="tasks">.task-menu{width:44px}</style><script>save()</script>'+htmlB;
+ assert(styleOnlyHtml(a,b));
+ const plan=planFor(["index.html","sw.js","assets/memento-base-app.css"],read({
+  "index.html":{before:a,after:b},"sw.js":{before:swA,after:swB}
+ }));
+ assert.equal(plan.tier,"medium");assert.equal(plan.upgrade,false);
+ assert(plan.groups.includes("interface-layout-smoke"));assert(plan.groups.includes("interface-day"));
+ assert(!plan.groups.includes("life-full"));assert(!plan.groups.includes("data-full"));
+});
+check("changing scripts, markup, or style structure cannot be called CSS-only",()=>{
+ const a='<style>.task{color:green}</style><script>save()</script>';
+ for(const changed of [
+  a.replace("save()","erase()"),
+  a.replace("<script>","<script type=\"module\">"),
+  a.replace("<style>","<style id=\"unsafe\">"),
+  a.replace("</style>","</style><input onfocus=\"erase()\">"),
+  '<script>save()</script>'
+ ]){
+  assert(!styleOnlyHtml(a,changed));
+  const plan=planFor(["index.html"],read({"index.html":{before:a,after:changed}}));
+  assert.equal(plan.tier,"high");assert.equal(plan.upgrade,true);
+ }
+});
+check("fake style markup in JavaScript cannot mask a script edit",()=>{
+ const a='<script>const x="<style>before</style>";</script><style>.task{color:green}</style>';
+ const b=a.replace("before</style>","after</style>");
+ assert(!styleOnlyHtml(a,b));
+ assert.equal(planFor(["index.html"],read({"index.html":{before:a,after:b}})).tier,"high");
+});
+check("unknown HTML baseline remains high risk",()=>{
+ const plan=planFor(["index.html"],read({}));
+ assert.equal(plan.tier,"high");assert.equal(plan.upgrade,true);
 });
 check("changes to inline scripts remain high risk",()=>{
  const a=planFor(["index.html"],read({"index.html":{before:htmlA+'<script>save()</script>',after:htmlB+'<script>erase()</script>'}}));
