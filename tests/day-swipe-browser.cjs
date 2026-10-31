@@ -33,7 +33,7 @@ fs.mkdirSync(out,{recursive:true});
    await page.goto('https://memento.test/');await require('./helpers/enter-app.cjs')(page);
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
    await page.locator('#mementoQuickNav [data-memento-dest="life:today"]').click();
-   const track=page.locator('#lifeDayTrack'),slides=track.locator('>.life-day-column');
+   const track=page.locator('#lifeDayTrack'),slides=track.locator(':scope > .life-day-column');
    assert.equal(await slides.count(),3);
    assert.equal(await page.locator('.life-day-tabs button').count(),3);
    assert.equal(await page.locator('#lifeContent .life-day-foot,#lifeContent .life-unplanned').count(),0);
