@@ -149,10 +149,20 @@ jobs:
           fetch-depth: 2
       - uses: actions/setup-node@v4
         with: {node-version: '24'}
+      - name: Cache upgrade Chromium binary
+        id: upgrade-chromium-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-1.62.1-v1
       - name: Install browser tooling
         run: |
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
-          "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          if [ "${{ steps.upgrade-chromium-cache.outputs.cache-hit }}" = "true" ]; then
+            "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install chromium
+          else
+            "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
+          fi
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
       - name: Preserve current data and attachments during the next upgrade
         env:

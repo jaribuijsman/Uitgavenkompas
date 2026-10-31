@@ -15,7 +15,7 @@ check("local CSS selects only a mobile smoke journey",()=>{
  const a=planFor(["assets/memento-dictation.css"]);assert.equal(a.tier,"low");assert.deepEqual(a.groups,["interface-smoke"]);assert.equal(a.upgrade,false);
 });
 check("shared CSS selects visual and layout checks, not all safety suites",()=>{
- const a=planFor(["assets/memento-glass.css"]);assert.equal(a.tier,"medium");assert(a.groups.includes("interface-layout-smoke"));assert(!a.groups.includes("data-full"));
+ const a=planFor(["assets/memento-glass.css"]);assert.equal(a.tier,"medium");assert(a.groups.includes("interface-layout-smoke"));assert(!a.groups.includes("interface-smoke"));assert(!a.groups.includes("data-full"));
 });
 check("day materials and menu decorators retain the V3 integration contract",()=>{
  for(const file of ["assets/memento-glass.css","assets/memento-glass.js","assets/memento-ui.css","assets/memento-base-app.css"]){
@@ -23,7 +23,7 @@ check("day materials and menu decorators retain the V3 integration contract",()=
  }
 });
 check("knowledge UI selects relevant life browser journeys",()=>{
- const a=planFor(["assets/memento-knowledge.css"]);assert(a.groups.includes("life-knowledge"));assert(!a.groups.includes("life-full"));
+ const a=planFor(["assets/memento-knowledge.css"]);assert(a.groups.includes("life-knowledge"));assert(!a.groups.includes("interface-smoke"));assert(!a.groups.includes("life-full"));
 });
 check("finance code touching calculations forces full coverage",()=>{
  const a=planFor(["assets/memento-review-core.js"]);assert.equal(a.tier,"high");assert.deepEqual(a.groups,FULL);
@@ -41,7 +41,7 @@ check("base stylesheet is shared UI, not a trivial isolated cosmetic patch",()=>
  const a=planFor(["assets/memento-base-app.css"]);
  assert.equal(a.tier,"medium");
  assert(a.groups.includes("interface-layout-smoke"));
- assert(a.groups.includes("interface-smoke"));
+ assert(!a.groups.includes("interface-smoke"));
  assert.equal(a.upgrade,false);
 });
 check("storage guard changes require full coverage and upgrade",()=>{
@@ -113,9 +113,23 @@ check("upgrade-browser changes retain full offline upgrade",()=>{
 check("CI and workflow changes run full coverage",()=>{
  assert.equal(planFor(["tests/ci-groups.cjs"]).tier,"high");
  assert.equal(planFor([".github/workflows/app-review.yml"]).tier,"high");
+ assert.equal(planFor(["tests/ci-postmerge.cjs"]).tier,"high");
+ assert.equal(planFor(["tests/ci-postmerge-regression.cjs"]).tier,"high");
 });
 check("manual full test request retains all browser suites",()=>{
  const a=planFor([],()=>null,true);assert.equal(a.tier,"high");assert.deepEqual(a.groups,FULL);
+});
+check("domain-specific CSS runs no redundant general smoke",()=>{
+ const p=planFor(["assets/memento-fitness.css"]);
+ assert.deepEqual(p.groups,["life-fitness"]);
+});
+check("existing UI interaction routes to its affected domain",()=>{
+ const p=planFor(["assets/memento-calendar-ui.js"]);
+ assert.equal(p.tier,"medium");assert.deepEqual(p.groups,["interface-calendar"]);
+});
+check("mixed Life entrypoint remains high until persistence is separated",()=>{
+ const p=planFor(["assets/memento-life-app.js"]);
+ assert.equal(p.tier,"high");assert.equal(p.upgrade,true);assert.deepEqual(p.groups,FULL);
 });
 console.log("CI_PLANNER_REGRESSION_PASS "+count+" cases");
 
