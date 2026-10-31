@@ -35,7 +35,8 @@ const server=http.createServer((req,res)=>{
     await field.waitFor({state:'visible'});
     assert((await field.boundingBox()).height>=44,'Search input touch area');
     await field.fill('Garage');
-    await page.locator('#mgsDropdown [data-mgs-result]').first().waitFor();
+    // Focus can show empty-query recents before the 90ms search debounce settles.
+    await page.waitForFunction(()=>document.querySelector('.mgs-section-label')?.textContent?.includes('Garage') && [...document.querySelectorAll('#mgsDropdown [data-mgs-result]')].some(el=>el.textContent.includes('Garage remblokken checken')));
     assert(await page.locator('#mgsDropdown').isVisible(),'Dropdown opens');
     assert(await page.locator('#mgsDropdown [data-mgs-result]').filter({hasText:'Garage remblokken checken'}).count()===1,'Task found');
     assert(await page.locator('#mgsDropdown [data-mgs-result]').filter({hasText:'Garage De Hout – dynamo'}).count()===1,'Transaction found');
