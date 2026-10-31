@@ -90,7 +90,7 @@
 #lifeApp[data-life-view="notes"] .kc-file-upload input{border:0!important;min-height:0!important;padding:6px 0!important;background:none!important;font-size:11px!important}
 #lifeApp[data-life-view="notes"] .kc-editor-actions{display:flex;flex-wrap:wrap;gap:8px}
 #lifeApp[data-life-view="notes"] .kc-recipe-fields{display:grid;gap:10px;padding:12px;border:1px solid #3a5b43;border-radius:12px}
-#lifeApp[data-life-view="notes"] .kc-save-state{font-size:11px;color:#bcdcc4}
+#lifeApp[data-life-view="notes"] .kc-save-state{font-size:11px}
 #lifeApp[data-life-view="notes"] .kc-link-choice,#lifeApp[data-life-view="notes"] .kc-version{width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;border:1px solid #435e4a;border-radius:11px;background:#1e3528;color:#eaf2e9;min-height:54px;padding:10px;margin:8px 0}
 #lifeApp[data-life-view="notes"] .kc-version small{display:block;color:#b0cbb6;font-size:11px}
 #lifeApp[data-life-view="notes"] .kc-pdf-frame{width:100%;height:calc(100dvh - 230px);min-height:220px;background:#ecede6;border:1px solid #44664d;border-radius:12px}
@@ -240,7 +240,7 @@
 #lifeApp[data-life-view="notes"] #kc-voice-status,#lifeApp[data-life-view="notes"] #kc-ai-status{font-size:11px;color:#c6dcc9;line-height:1.6;display:block;margin-top:8px}
 #lifeApp[data-life-view="notes"] .kc-diary-ai a.kc-btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;text-align:center}
 @media(max-width:390px){#lifeApp[data-life-view="notes"] .kc-diary-hero{height:88px}#lifeApp[data-life-view="notes"] .kc-diary-week{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-week>button{flex-basis:31px;height:44px}#lifeApp[data-life-view="notes"] .kc-diary-days{gap:3px}#lifeApp[data-life-view="notes"] .kc-diary-days>button{min-height:58px}#lifeApp[data-life-view="notes"] .kc-diary-days>button strong{font-size:13px}}
-@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-diary-health>summary b{transition:none}}
+
 
 
 /* Wide cover cards belong to the home roots; folder rows retain their stored artwork in the editor. */
