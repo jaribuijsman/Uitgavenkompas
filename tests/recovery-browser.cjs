@@ -62,7 +62,7 @@ async function checkbox(page,selector){
    await nav(page,'groceries');
    const shopping=await page.locator('.shopping-row').first().evaluate(n=>({columns:getComputedStyle(n).gridTemplateColumns.split(' ').map(parseFloat),check:n.querySelector('.shopping-check').getBoundingClientRect().toJSON()}));
    assert.equal(shopping.columns[0],44,'Shopping keeps its original compact 44px column');assert(shopping.check.width>=44&&shopping.check.height>=44);row.shopping=shopping;
-   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-edit-event');await checkbox(page,'.memento-event-complete');
+   await nav(page,'today');await targets(page,'.memento-event-complete,.memento-v3-menu>summary');await checkbox(page,'.memento-event-complete');
    const taskCard=page.locator('#lifeApp[data-life-view="today"] .life-overdue .memento-unified-task').first();
    assert.equal(await taskCard.count(),1,'Overdue task uses the same visual card structure as appointments');
    assert.equal(await taskCard.locator(':scope > .memento-unified-time').textContent(),'26 okt','Task date is shown instead of an invented clock time');
@@ -86,9 +86,9 @@ async function checkbox(page,selector){
    assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
    assert.equal(parity.taskSurface,parity.eventSurface,'Matching cards must have same card background');
    assert.equal(parity.taskRadius,parity.eventRadius,'Matching cards must have same corner radius');
-   assert.equal(parity.label,'Bewerk');
-   await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-edit-event');
-   await taskCard.locator('.memento-edit-event').click();
+   assert.equal(parity.label,'⋮');
+   await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-v3-menu>summary');
+   await taskCard.locator('.memento-v3-menu>summary').click();
    const menuActions=taskCard.locator('.life-task-menu[open] .life-task-actions');await menuActions.waitFor({state:'visible'});
    assert.equal(await menuActions.locator('[data-life-duplicate]').count(),1,'Duplicate action stays accessible');
    assert.equal(await menuActions.locator('[data-life-star]').count(),1,'Priority action stays accessible');
