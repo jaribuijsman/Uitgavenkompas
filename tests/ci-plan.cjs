@@ -21,13 +21,13 @@ function planFor(paths,read=()=>null,forceFull=false){
  let high=forceFull,needsUpgrade=false;
  for(const p of application){
   if(HIGH.test(p)){high=true;continue}
-  if(p==="index.html"&&!versionOnlyHtml(read(p,"before"),read(p,"after")))high=true;
+  if(p==="index.html"&&!versionOnlyHtml(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
   if(p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))){high=true;needsUpgrade=true}
  }
  // Actual changes to the offline lifecycle and persistent data must be upgrade-tested.
  if(high&&application.some(p=>p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))
   ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core)\.js$/.test(p)))needsUpgrade=true;
- if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade||forceFull,files:paths};
+ if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade,files:paths};
  const shared=application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
  const groups=new Set(["interface-smoke"]);
