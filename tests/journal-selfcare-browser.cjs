@@ -43,6 +43,7 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>{const life=JSON.parse(localStorage.getItem("compass_life_preview_v1")||"{}");return life.notes?.some(n=>n.body==="Dagboek zonder persoonlijke verzorging"&&!n.journal?.selfCare);});
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
+  await page.locator(".memento-day-quick>summary").click();
   await page.locator(".memento-diary-shortcut").click();
   await page.locator("#kc-body").waitFor();
   assert.equal(await page.locator(".kc-diary-selfcare").count(),0);
@@ -78,6 +79,7 @@ const server=http.createServer((req,res)=>{
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
   // De notitiemodule wordt pas gemount nadat de Leven-weergave is geopend.
+  await page.locator(".memento-day-quick>summary").click();
   await page.locator(".memento-diary-shortcut").click();
   await page.locator("#kc-body").waitFor();
   await page.evaluate(()=>window.MementoKnowledge.showJournal("2026-10-28"));
