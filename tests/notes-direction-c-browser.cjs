@@ -79,7 +79,7 @@ async function fixture(){
    // The result count alone does not establish that popstate committed.
    await page.waitForFunction(previousIndex=>{
     const index=history.state?.mementoNotes?.index;
-    return typeof index==='number'&&index<previousIndex&&document.querySelector('.kc-header h2')?.textContent?.includes('Dossiers');
+    return typeof index==='number'&&index<previousIndex&&document.querySelector('.kc-header h2')?.textContent?.trim()==='Projectdossiers';
    },detailHistoryIndex,{timeout:5000});
    assert.equal(await page.locator('.kc-item').count(),1);
    assert.equal(await page.locator('[data-kc-input=search]').inputValue(),'Fictief');
