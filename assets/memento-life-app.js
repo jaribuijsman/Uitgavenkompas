@@ -528,8 +528,8 @@ function renderToday(){
  content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+
   '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+fmt(dayKeys[daySlide])+'</span><details class="memento-day-add-menu"><summary>＋ Toevoegen</summary><div class="memento-day-add-actions"><button type="button" data-memento-new-task>Taak</button><button type="button" data-memento-new-event="'+dayKeys[daySlide]+'" data-memento-day-new-event>Afspraak</button><button type="button" data-memento-quick-open>Snelle notitie</button><button type="button" data-life-journal>Dagboek</button></div></details></div>'+
   '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
-  '<details class="memento-day-quick"><summary>Snelle invoer (taak of notitie)</summary>'+quickForm()+'</details>'+
-  '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div></div>';
+  '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div>'+
+  '<details class="memento-day-quick"><summary>Snelle invoer (taak of notitie)</summary>'+quickForm()+'</details></div>';
  window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
 }
 
