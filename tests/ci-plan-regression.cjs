@@ -25,6 +25,39 @@ check("day materials and menu decorators retain the V3 integration contract",()=
 check("knowledge UI selects relevant life browser journeys",()=>{
  const a=planFor(["assets/memento-knowledge.css"]);assert(a.groups.includes("life-knowledge"));assert(!a.groups.includes("interface-smoke"));assert(!a.groups.includes("life-full"));
 });
+check("global search assets and shared navigation select the existing search journey",()=>{
+ for(const file of ["assets/memento-global-search.js","assets/memento-global-search-core.js","assets/memento-global-search.css","assets/memento-unified-nav.js"]){
+  const p=planFor([file]);
+  assert.deepEqual(p.groups,["test-global-search-browser"],file);
+  assert.equal(p.tier,file.endsWith(".css")?"low":"medium",file);
+  assert.equal(p.upgrade,false,file);
+ }
+});
+check("search and navigation impact selection deduplicates source and browser-test paths",()=>{
+ const p=planFor(["assets/memento-global-search.js","assets/memento-global-search-core.js","assets/memento-global-search.css","assets/memento-unified-nav.js","tests/global-search-browser.cjs","assets/memento-global-search.js"]);
+ assert.equal(p.tier,"medium");assert.deepEqual(p.groups,["test-global-search-browser"]);assert.equal(p.upgrade,false);
+ const onlyTest=planFor(["tests/global-search-browser.cjs"]);
+ assert.deepEqual(onlyTest.groups,["test-global-search-browser"]);
+});
+check("unrelated assets and core-only tests do not select the search browser",()=>{
+ for(const file of ["assets/memento-start.js","assets/memento-fitness.css","assets/memento-tab-layout.js","tests/global-search-core.cjs","docs/global-search.md"]){
+  assert(!planFor([file]).groups.includes("test-global-search-browser"),file);
+ }
+ assert.deepEqual(planFor(["assets/memento-start.js"]).groups,["interface-start"]);
+ assert.deepEqual(planFor(["assets/memento-fitness.css"]).groups,["life-fitness"]);
+});
+check("search impact never adds a second copy to high-risk coverage or changes upgrade requirements",()=>{
+ for(const file of ["assets/memento-life-app.js","assets/memento-finance-app.js","assets/memento-storage-guard.js"]){
+  const p=planFor([file,"assets/memento-global-search.js","assets/memento-unified-nav.js","tests/global-search-browser.cjs"]);
+  assert.equal(p.tier,"high",file);assert.deepEqual(p.groups,FULL,file);assert.equal(p.upgrade,true,file);
+ }
+ const planner=planFor(["tests/ci-plan.cjs","assets/memento-global-search.js"]);
+ assert.equal(planner.tier,"high");assert.deepEqual(planner.groups,FULL);assert.equal(planner.upgrade,false);
+ const verified=planFor(["assets/memento-global-search.js","assets/memento-unified-nav.js"],()=>null,false,true);
+ assert.equal(verified.tier,"low");assert.deepEqual(verified.groups,["interface-smoke"]);assert.equal(verified.upgrade,false);
+ const forced=planFor(["assets/memento-global-search.js"],()=>null,true);
+ assert.equal(forced.tier,"high");assert.deepEqual(forced.groups,FULL);
+});
 check("finance code touching calculations forces full coverage",()=>{
  const a=planFor(["assets/memento-review-core.js"]);assert.equal(a.tier,"high");assert.deepEqual(a.groups,FULL);
 });
