@@ -15,6 +15,12 @@ Bij werk in deze repository: gebruik `AGENTS.md` als basis. Selecteer **alleen d
 
 Lees alleen benodigde skillbestanden (bij overlap maximaal de direct relevante); ga daarna direct verder met de bestaande risicogestuurde workflow. Skills vervangen de CI-gates, privacyregels of gebruikersopdracht niet. Als het bestand ontbreekt, meld dat en werk volgens `AGENTS.md`; maak geen nieuw duplicaat. Zoek vanaf de repositoryroot, niet vanuit een lege `/workspace`.
 
+## Samsung Galaxy A54 — snelle PWA-controle
+
+Memento wordt primair als geïnstalleerde Android-PWA gebruikt. Beoordeel relevante wijzigingen daarom op standalone-schermruimte, veilige marges bij Android-systeemnavigatie, bereikbare acties bij geopend toetsenbord en scroll/overlays. Browsertests simuleren dit slechts gedeeltelijk; claim geen fysiek toestelbewijs.
+
+**Efficiëntie is verplicht:** volg de bestaande CI-risiconiveaus; voeg géén algemene extra testmatrix, nieuwe frameworkinstallatie of verplichte fysieke toesteltest toe. Bij een lokale, laagrisico visuele wijziging volstaat de bestaande gerichte 393px-rooktest. Voeg uitsluitend bij concreet risico een extra breedte, korte viewport of keyboard/standalone-scenario toe. Hergebruik screenshots/artifacts en stop na bewezen passende checks. Voor nieuwe of aangepaste primaire mobiele bediening: streef naar een aanraakvlak van 48×48 CSS-px, met 44×44 px als bestaande minimale projectgrens; controleer de daadwerkelijke bediening en niet uitsluitend het pictogram. Bij echte toestelafwijkingen: een gerichte handmatige A54-check, niet standaard voor iedere kleine patch.
+
 ## Werkstroom: inspecteer → herstel → controleer → lever op
 
 1. Controleer **eenmalig** de actuele `main`-SHA en relevante bestanden/handlers; lees grote bestanden alleen op gerichte regels. Lees uitsluitend de toepasselijke passages uit projectbronnen; historische audits en alle projectdocumenten zijn géén verplichte dagelijkse preflight. Kijk vóór nieuwe code of een bestaande helper of stijlregel het al oplost.
