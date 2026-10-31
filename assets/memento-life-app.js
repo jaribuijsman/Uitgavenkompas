@@ -21,7 +21,7 @@ const repeats={none:'Niet herhalen',daily:'Dagelijks',weekly:'Wekelijks',monthly
 const categories=['Huishouden','Huis & klussen','Administratie','Persoonlijk','Samen','Gezondheid','Werk'];
 const rooms=['Keuken','Badkamer & toilet','Slaapkamer','Wasruimte','Hele huis'];
 const views=[['today','☀','Mijn dag'],['tasks','☑','Taken'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Notities'],['agenda','◷','Agenda'],['fitness','↗','Fitness'],['backup','⚙','Back-up & instellingen']];
-let quickKind='task',quickDate=null;
+let quickKind='task',quickDate=null,daySlide=0;
 const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
@@ -465,12 +465,40 @@ function renderTasks(){
  if(taskTab==='trash')renderLibrary();
 }
 function dutyBadge(iso){const C=window.MementoFitnessCore;if(!C?.duty)return '';const d=C.duty(iso);return '<span class="memento-duty-badge" data-duty-code="'+d.code+'" aria-label="'+esc('Ploegendienst: '+d.time)+'">'+esc(d.time)+'</span>';}
+function syncDayCarousel(restorePosition=false){
+ const track=$('lifeDayTrack');if(!track)return;
+ daySlide=Math.max(0,Math.min(2,daySlide));
+ root.querySelectorAll('[data-life-day-slide]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.lifeDaySlide)===daySlide)));
+ if(restorePosition){
+  track.scrollLeft=daySlide*track.clientWidth;
+  requestAnimationFrame(()=>{if(track.isConnected)track.scrollLeft=daySlide*track.clientWidth});
+ }
+}
+function showDaySlide(index){
+ daySlide=Math.max(0,Math.min(2,index));
+ const track=$('lifeDayTrack');if(!track)return;
+ syncDayCarousel();
+ track.scrollTo({left:daySlide*track.clientWidth,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+}
 function renderToday(){
  const now=today(),open=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done),overdue=open.filter(t=>t.date&&t.date<now).sort((a,b)=>a.date.localeCompare(b.date));
  const dayKeys=[0,1,2].map(n=>{const d=parseDate(now);d.setDate(d.getDate()+n);return formatISO(d)}),labels=['Vandaag','Morgen','Overmorgen'];
- const days=dayKeys.map((key,i)=>{const list=open.filter(t=>!(t.date&&t.date<now)&&(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));const panel='<section class="life-day-column" data-life-day="'+key+'"><div class="life-day-heading"><h2>'+labels[i]+'</h2>'+(i?'<span>'+fmt(key)+' · <span data-memento-total="'+key+'" data-tasks="'+list.length+'">'+list.length+' '+(list.length===1?'taak':'taken')+'</span></span>':'')+'</div><div class="memento-day-appointments" data-memento-date="'+key+'"></div><div class="memento-day-caption memento-day-task-label">Taken</div>'+(list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">'+'Geen taken gepland'+'</p>')+'</section>';return i?'<details class="memento-future-day"><summary>'+labels[i]+' · '+fmt(key)+'</summary>'+panel+'</details>':panel}).join('');
- const unplanned=open.filter(t=>!t.date&&t.focusDate!==now),completed=state.tasks.reduce((n,t)=>n+(t.deletedAt?0:t.history.filter(h=>h.date===now).length),0);
- content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+quickForm()+(overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Nog te doen — eerder gepland</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'')+'<div class="life-horizon">'+days+'</div><div class="life-day-foot">Vandaag '+completed+' '+(completed===1?'taak':'taken')+' afgerond.</div><details class="life-unplanned"><summary>Nog zonder planning ('+unplanned.length+')</summary><div class="life-list">'+(unplanned.length?unplanned.slice(0,5).map(taskRow).join(''):empty('Alles heeft een plek',''))+'</div><button type="button" class="life-btn life-btn-small" data-life-view="tasks">Alle taken bekijken →</button></details>';window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();
+ const overdueMarkup=overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Nog te doen — eerder gepland</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'';
+ const days=dayKeys.map((key,i)=>{
+  const list=open.filter(t=>!(t.date&&t.date<now)&&(t.focusDate===now?now:t.date)===key).sort((a,b)=>Number(b.priority)-Number(a.priority)||a.title.localeCompare(b.title,'nl'));
+  return '<section class="life-day-column" data-life-day="'+key+'" role="group" aria-label="'+labels[i]+' '+fmt(key)+'">'+
+   '<div class="life-day-heading"><h2>'+labels[i]+'</h2>'+(i?'<span>'+fmt(key)+' · <span data-memento-total="'+key+'" data-tasks="'+list.length+'">'+list.length+' '+(list.length===1?'taak':'taken')+'</span></span>':'')+'</div>'+
+   '<div class="memento-day-appointments" data-memento-date="'+key+'"></div>'+
+   (i===0?overdueMarkup:'')+
+   '<div class="memento-day-caption memento-day-task-label">Taken</div>'+
+   (list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<p class="life-day-empty">Geen taken gepland</p>')+
+   '</section>';
+ }).join('');
+ const tabs=labels.map((label,i)=>'<button type="button" class="life-day-tab" data-life-day-slide="'+i+'" aria-pressed="'+(daySlide===i)+'" aria-controls="lifeDayTrack">'+label+'</button>').join('');
+ content.innerHTML='<div id="mementoUniversalSearchHost"></div>'+quickForm()+
+  '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
+  '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div></div>';
+ window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
 }
 
 const shoppingListOf=g=>g.list==='purchases'?'purchases':'groceries';
@@ -897,6 +925,7 @@ function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
 root.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.lifeDaySlide!==undefined){showDaySlide(Number(d.lifeDaySlide));return}
  if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;render();return}
  if(d.shoppingAdd){addShoppingItem(d.shoppingAdd);return}
  if(d.shoppingFavorite){changeShoppingItem(d.shoppingFavorite,'favorite');return}
@@ -942,6 +971,8 @@ root.addEventListener('click',e=>{
  if(b.id==='lifeOpenPurgeTrash'){openPermanentTrashDialog();return}if(b.id==='lifeExportBackup'){exportBackup();return}if(b.id==='lifeExportLegacyBackup'){exportLegacyBackup();return}if(b.id==='lifeExportIcs'){exportICS();return}
  if(b.id==='lifeRestorePrevious'){restorePreviousLife();return}
 });
+root.addEventListener('scroll',e=>{if(e.target.id!=='lifeDayTrack')return;const track=e.target;const index=Math.max(0,Math.min(2,Math.round(track.scrollLeft/Math.max(1,track.clientWidth))));if(daySlide!==index){daySlide=index;syncDayCarousel()}},true);
+root.addEventListener('keydown',e=>{if(e.target.id==='lifeDayTrack'&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();showDaySlide(daySlide+(e.key==='ArrowRight'?1:-1))}});
 root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{
  const el=e.target;if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeNoteCategoryFilter'){noteCategoryFilter=el.value;noteOpenId='';noteCards();return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){setView(el.value);return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
