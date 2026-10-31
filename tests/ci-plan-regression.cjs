@@ -84,3 +84,12 @@ check("manual full test request retains all browser suites",()=>{
 });
 console.log("CI_PLANNER_REGRESSION_PASS "+count+" cases");
 
+
+// A proven identical PR tree needs one post-merge smoke; no evidence means full.
+{
+ const a=planFor(["assets/memento-life-app.js"],()=>null,false,true);
+ assert.equal(a.tier,"low");assert.deepEqual(a.groups,["interface-smoke"]);
+ assert.equal(a.upgrade,false);
+ assert.equal(planFor(["assets/memento-life-app.js"]).tier,"high");
+ assert.equal(planFor(["assets/memento-life-app.js"],()=>null,true,true).tier,"high");
+}
