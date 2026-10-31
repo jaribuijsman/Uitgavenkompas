@@ -34,15 +34,15 @@ const reports=[];
   const report=await measure();reports.push(report);
   await page.screenshot({path:path.join(out,phase,width+'-day.png'),fullPage:true,animations:'disabled'});
   await day.screenshot({path:path.join(out,phase,width+'-appointments.png'),animations:'disabled'});
-  assert(report.scrollWidth<=width+1);assert.equal(await header.locator('.memento-duty-badge').innerText(),'14:00–22:00');
+  assert(report.scrollWidth<=width+1);assert.equal(await header.locator('.memento-duty-badge').count(),0);assert.equal(await page.evaluate(()=>window.MementoFitnessCore.duty('2026-10-30').time),'14:00–22:00');
   if(phase==='after'){
    const icon=header.getByRole('button',{name:'Google-agenda opnieuw verbinden',exact:true});assert.equal(await icon.count(),1);
    assert.equal(await page.locator('[data-memento-gcal-connect]').count(),1);assert.equal(await day.locator('.memento-day-hint button').count(),0);
    assert(report.connect.width>=44&&report.connect.height>=44);
    assert.equal(report.header.height,44,'Header stays on one row with platform fonts');
-   assert(report.duty.right<=report.connect.x,'Duty and connection icon are nonoverlapping');
+   assert.equal(report.duty,null,'Shift badge is removed from the appointment header');
    assert(report.dayAdd.width>=44&&report.dayAdd.height>=44,'New add menu is touch accessible');
-   assert(report.duty.y>=report.header.y,'Connection icon remains inside header row');
+   assert(report.connect.y>=report.header.y,'Connection icon remains inside header row');
    const stored=()=>page.evaluate(()=>({life:JSON.parse(localStorage.getItem('compass_life_preview_v1')),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));
    const before=await stored();
    // Exercise the existing delegated handler and actual OAuth callback with a fake client.
