@@ -56,6 +56,7 @@ function planFor(paths,read=()=>null,forceFull=false){
  if(application.some(p=>/memento-start/i.test(p)))groups.add("interface-start");
  // Global material/style changes require a layout check, but not every domain suite.
  if(shared)groups.add("interface-layout-smoke");
+ if(application.some(p=>/^assets\/memento-(?:glass|ui|base-app)\.(?:css|js)$/.test(p)))groups.add("interface-day");
  return {tier:medium?"medium":"low",groups:[...groups],upgrade:false,files:paths};
 }
 function git(args){return cp.execFileSync("git",args,{encoding:"utf8",stdio:["ignore","pipe","pipe"]})}
@@ -83,3 +84,4 @@ if(require.main===module){
  if(process.env.GITHUB_OUTPUT)fs.appendFileSync(process.env.GITHUB_OUTPUT,Object.entries(outputs).map(([k,v])=>k+"="+v).join("\n")+"\n");
 }
 module.exports={planFor,versionOnlyHtml,workerCacheOnly,FULL};
+

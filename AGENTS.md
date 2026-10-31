@@ -10,6 +10,16 @@ Geldt voor Codex, ChatGPT Work en andere agents in deze repository. De recentste
 4. Corrigeer verouderde assertions/selectors **in dezelfde PR** wanneer code naar een ander bestand verhuist. Controleer nog steeds het daadwerkelijke gedrag; verlaag nooit verwachte resultaten en schakel geen falende tests uit.
 5. Rond zelfstandig af: diff controleren, branch/PR, relevante CI, gerichte reparatie bij falen, daarna merge alleen wanneer checks groen zijn én publicatie is geautoriseerd. Rapporteer SHA, status, tests en eventuele blokkade compact.
 
+Bij een goedgekeurd ontwerp: maak vóór implementatie een korte koppeling tussen
+elk afgesproken onderdeel, de gewijzigde code en het acceptatiebewijs. Een
+goedgekeurde editor hoort bij die scope; laat hem niet stilzwijgend buiten de PR.
+Vergelijk de echte app met het gekozen ontwerp, inclusief geopende menu's en
+dialogen. Controleer samengestelde routes na de interactie opnieuw op geometrie
+en overflow; alleen aantallen knoppen of `isVisible()` zijn geen layoutbewijs.
+Voor Mijn dag geldt [het V3/V2-contract](docs/mijn-dag-v3-acceptance.md) en de
+gerichte `day-v3-browser`-suite. Beoordeel de CI-screenshots op de exacte head
+vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
+
 ## Wat test je wanneer?
 
 **1. Laag — lokale CSS, tekst, iconen, documentatie**
@@ -55,3 +65,4 @@ Geldt voor Codex, ChatGPT Work en andere agents in deze repository. De recentste
 - Bij browserwerk: Playwright 1.62.1 buiten de productierepository. De CI hergebruikt waar mogelijk de Chromium-downloadcache. Geen nieuw productie-npm-project.
 - Laat bij onvermijdelijke externe goedkeuring of rode releasecontrole de PR open en zeg **precies** wat blokkeert. Geen claim van afgeronde publicatie zolang GitHub dat niet bevestigt.
 - Eindrapport: wat gewijzigd, tests daadwerkelijk geslaagd/mislukt, PR/commit, productie- of conceptstatus en rollbackmogelijkheid. Geen generieke voortgangsteksten.
+

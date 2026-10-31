@@ -119,6 +119,15 @@ jobs:
           path: /tmp/memento-*
           retention-days: 7
 
+      - name: Keep Mijn dag design evidence on success and failure
+        uses: actions/upload-artifact@v4
+        if: always() && (matrix.group == 'interface-feature' || matrix.group == 'interface-day' || matrix.group == 'test-day-v3-browser')
+        with:
+          name: memento-day-v3-${{ matrix.group }}
+          path: /tmp/memento-day-v3
+          if-no-files-found: error
+          retention-days: 7
+
   upgrade:
     needs: plan
     if: needs.plan.outputs.upgrade == 'true'
@@ -166,3 +175,4 @@ jobs:
           MEMENTO_GATE_RESULTS: ${{ toJSON(needs) }}
         run: |
           node -e 'const jobs=JSON.parse(process.env.MEMENTO_GATE_RESULTS);const failures=Object.entries(jobs).filter(([,j])=>!["success","skipped"].includes(j.result));if(jobs.plan.result!=="success"||failures.length){console.error("Memento CI blocked",JSON.stringify(failures));process.exit(1)}console.log("All selected Memento checks passed")'
+

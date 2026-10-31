@@ -102,13 +102,14 @@
  const menuAncestors=new Set();
  function releaseMenus(){
   const next=new Set();
-  for(const menu of document.querySelectorAll('#lifeApp .life-task-menu[open]')){
+  for(const menu of document.querySelectorAll('#lifeApp .life-task-menu[open],#lifeApp .memento-day-note[open],#lifeApp .memento-day-add-menu[open]')){
    for(let n=menu.parentElement;n&&n!==document.body;n=n.parentElement)next.add(n);
   }
   for(const n of menuAncestors)if(!next.has(n))n.classList.remove('mg-menu-ancestor');
   for(const n of next)n.classList.add('mg-menu-ancestor');
   menuAncestors.clear();for(const n of next)menuAncestors.add(n);
  }
- document.addEventListener('toggle',e=>{if(e.target.matches('.life-task-menu'))releaseMenus();},true);
+ document.addEventListener('toggle',e=>{if(e.target.matches('.life-task-menu,.memento-day-note,.memento-day-add-menu'))releaseMenus();},true);
  schedule();
 })();
+

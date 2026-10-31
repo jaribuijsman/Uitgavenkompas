@@ -370,7 +370,7 @@ body.pin-locked #compassAreaBar,body.pin-locked #lifeApp{visibility:hidden;point
 #lifeApp .life-quick-add input{min-width:0;width:100%;background:transparent!important;border:0!important;color:var(--life-text)!important;padding:7px 9px;box-shadow:none!important}
 #lifeApp .life-toolbar{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:0 0 18px}
 #lifeApp .life-toolbar>label{display:flex;flex-direction:column;gap:6px;min-width:130px;flex:1;font-size:10px;color:var(--life-muted)!important;font-weight:750}
-#lifeApp .life-toolbar input,#lifeApp .life-toolbar select,#lifeApp .life-mobile-select,#lifeApp .life-field input,#lifeApp .life-field select,#lifeApp .life-field textarea,#lifeDialog input,#lifeDialog select,#lifeDialog textarea{width:100%;min-width:0;background:#112618!important;color:var(--life-text)!important;border:1px solid #336744!important;border-radius:10px;padding:10px 11px;min-height:40px;font:inherit}
+#lifeApp .life-toolbar input,#lifeApp .life-toolbar select,#lifeApp .life-mobile-select,#lifeApp .life-field input,#lifeApp .life-field select,#lifeApp .life-field textarea,#lifeDialog input:not([type=checkbox]),#lifeDialog select,#lifeDialog textarea{width:100%;min-width:0;background:#112618!important;color:var(--life-text)!important;border:1px solid #336744!important;border-radius:10px;padding:10px 11px;min-height:40px;font:inherit}
 #lifeApp .life-toolbar input::placeholder,#lifeApp input::placeholder,#lifeDialog input::placeholder{color:#8ec29f!important}
 #lifeApp .life-segments button{padding:8px 12px;background:transparent;color:var(--life-muted);border:1px solid var(--life-border);border-radius:20px;font-size:11px;font-weight:700;min-height:35px}
 #lifeApp .life-list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 2px 10px;font-size:12px;font-weight:750;color:#d2f2dd}
@@ -640,3 +640,24 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeApp[data-life-view="today"] .life-day-track>.life-day-column{box-sizing:border-box;flex:0 0 100%;width:100%;min-width:0;margin:0;padding-top:4px;scroll-snap-align:start;scroll-snap-stop:always}
 #lifeApp[data-life-view="today"] .life-day-track>.life-day-column .life-day-heading{margin-top:0}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .life-day-track{scroll-behavior:auto}}
+
+
+/* Appointment editor V2. Existing IDs and persistence handlers are retained. */
+#lifeDialog .memento-appointment-v2 .life-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#lifeDialog .memento-appointment-v2 .wide{grid-column:1/-1}
+#lifeDialog .memento-appt-inline{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:start;gap:7px}
+#lifeDialog .memento-appointment-v2 .memento-dictate-btn{width:44px;height:44px;min-width:44px;margin:0;flex:none;padding:8px}
+#lifeDialog .memento-appt-inline .memento-dictate-status{grid-column:1/-1;margin:0}
+#lifeDialog .memento-appt-times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#lifeDialog .memento-appt-section{margin-top:8px;padding-top:13px;border-top:1px solid #426750;color:#b5cbbd;font-size:11px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+#lifeDialog .memento-appt-check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:500;cursor:pointer}
+#lifeDialog .memento-appt-check input[type=checkbox]{box-sizing:border-box;flex:0 0 23px;width:23px;height:23px;min-width:23px;min-height:23px;margin:0;padding:0;accent-color:#c4dcc7}
+#lifeDialog .memento-appointment-v2 input:disabled{opacity:.5}
+#lifeDialog .memento-appt-note-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#lifeDialog .memento-appt-note-tools{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+#lifeDialog .memento-appt-note-tools .memento-dictate-status{flex-basis:100%;margin:0}
+#lifeDialog .memento-appt-expand{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #668570;border-radius:12px;background:#294936;color:#e8f4e8;font-size:24px;cursor:pointer}
+#lifeDialog .memento-appt-note-expanded textarea{min-height:45dvh}
+#lifeDialog .memento-appt-manage>summary{min-height:44px;align-content:center;color:#b5cbbd;font-size:13px;cursor:pointer}
+#lifeDialog .memento-appt-manage .life-btn{margin-top:4px}
+#lifeDialog .memento-appt-error{margin:0;color:#ffbdc0;font-size:13px;line-height:1.5}

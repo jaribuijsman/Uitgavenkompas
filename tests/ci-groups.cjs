@@ -5,7 +5,7 @@ const fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=r
 const domain=process.argv[2],tier=process.argv[3]||"high";
 const suitesByGroup={
  "interface-layout":["layout-completion-browser","visual-layout-browser","patches-001-002-004-browser","day-swipe-browser"],
- "interface-feature":["masterplan-browser","memento-start-browser","calendar-header-browser"],
+ "interface-feature":["masterplan-browser","memento-start-browser","calendar-header-browser","day-v3-browser"],
  "interface-acceptance":["release-acceptance-browser"],
  "interface-visual":["glass-rendering-browser","visual-browser"],
  "life-full":["global-search-browser","memento-category-browser","knowledge-v2-browser","knowledge-covers-browser","notes-direction-c-browser","journal-upgrade-browser","journal-selfcare-browser","memento-assistant-browser","illustrative-icons-browser","quickfit-browser","fitness-browser"],
@@ -13,6 +13,7 @@ const suitesByGroup={
  "interface-smoke":["visual-browser"],
  "interface-layout-smoke":["visual-layout-browser"],
  "interface-calendar":["calendar-header-browser"],
+ "interface-day":["day-v3-browser"],
  "interface-start":["memento-start-browser"],
  "life-knowledge":["knowledge-v2-browser","notes-direction-c-browser"],
  "life-fitness":["quickfit-browser","fitness-browser"],
@@ -59,3 +60,4 @@ try{
 }finally{if(fixture)try{fs.unlinkSync(fixture)}catch{}}
 console.log("CI GROUP "+domain+" tier="+tier+" passed="+count+" failed="+failures.length);
 if(failures.length){console.error("FAILED SUITES:\n"+failures.join("\n"));process.exitCode=1}
+
