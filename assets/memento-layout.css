@@ -22,19 +22,17 @@ body #view-transactions .transaction-row{min-height:74px;border-radius:0!importa
 body #view-transactions .tx-amount{white-space:nowrap}
 body #view-transactions .tx-advanced-field{min-width:0}
 body #view-budgets #budgetStats{display:flex;flex-direction:column;gap:8px}
-body #view-budgets #budgetStats>.stat-card .stat-value{font-size:38px}
 body #view-budgets #budgetStats>.stat-card .stat-top{font-size:14px}
 body #view-budgets #budgetStats .ml-fold{margin:0}
 body #view-budgets #budgetStats .ml-fold .stat-card{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;padding:10px!important}
 body #view-budgets .two-col{grid-template-columns:1fr}
-body #view-budgets .budget-item{padding:12px 0;border-bottom:1px solid var(--mg-line)}
 body #view-budgets .report-highlight{font-size:12px}
 body #view-accounts .account-cards{grid-template-columns:1fr!important;gap:0;border:1px solid var(--mg-line);border-radius:21px;overflow:hidden;background:var(--mg-surface)}
 body #view-accounts .ml-account-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 12px;border:0!important;border-radius:0!important;border-bottom:1px solid var(--mg-line)!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none!important}
 body #view-accounts .ml-account-row:last-child{border-bottom:0!important}
 body #view-accounts .ml-account-row>.card-head{margin:0}
 body #view-accounts .ml-account-row>.card-head>.pill{display:none}
-body #view-accounts .ml-account-row>.balance-number{font-size:22px;margin:0;white-space:nowrap}
+body #view-accounts .ml-account-row>.balance-number{margin:0;white-space:nowrap}
 body #view-accounts .ml-account-row>.ml-fold{grid-column:1/-1;grid-row:4;margin:0}
 body #view-accounts .ml-account-row>[data-account-transactions]{min-height:44px;text-align:left}
 body #view-accounts .ml-account-check{font-size:12px}
@@ -76,7 +74,6 @@ body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font
  body[data-compass-area=finance] .app .topbar{height:48px!important;min-height:48px;padding:5px 15px!important;position:static!important}
  body[data-compass-area=finance] .app .topbar .month-select{padding:7px 9px;font-size:12px!important;min-height:38px!important}
  body #view-analysis .analysis-stats-grid .stat-value{font-size:23px}
- body #view-accounts .ml-account-row>.balance-number{font-size:20px}
  body #view-moneycoach .moneycoach-layout>.card,body #view-smartbuy .smartbuy-layout>.card{margin-bottom:12px}
 }
 
