@@ -1,71 +1,57 @@
-# Memento — technische cleanup-inventarisatie (31 oktober 2026)
+# Memento — complete cleanup: actuele voortgang en resterende risico's
 
-> Status: verkennende audit + één geïsoleerde correctie in concept-PR. **Geen claim dat de volledige applicatie al opgeschoond is.** Alleen de genoemde bevindingen zijn geverifieerd tegen de huidige GitHub-branch.
+**Laatst bijgewerkt:** 31 oktober 2026, na PR #22. **Status: gedeeltelijk afgerond, nog géén volledige cleanup.**
 
-## Uitgangspunt
+Repository: `jaribuijsman/Uitgavenkompas`. Gecontroleerde `main`-commit: `2536e07b106f6a3e5301e0babff98d5fa6077cab`.
 
-- Repository: `jaribuijsman/Uitgavenkompas`.
-- Gecontroleerde `main`-commit vóór deze PR: `54fee3f6739c63225aa6e834537bfd42260691cf`.
-- De bestaande app is local-first. Persoonlijke gegevens zitten primair in browseropslag; broncode-/testwijzigingen mogen keys, ids, opslagformaten, PIN, back-ups en herstelpaden niet onbedoeld veranderen.
-- Projectafspraken en testniveaus: `AGENTS.md`; centrale GitHub CI: `.github/workflows/app-review.yml`.
+## Wat aantoonbaar is uitgevoerd
 
-## Bevestigde bevindingen
+| PR | Onderdeel | Bevestigd resultaat |
+|---|---|---|
+| #15 | Kenniscentrum: archief/prullenbak | Zoek-, verzamelings-, type- en tagfilters worden ook in archief en prullenbak toegepast; regressietests toegevoegd |
+| #16 | Notitie-browsertest | Wacht op correcte renderstatus in plaats van direct na input te tellen; **intermitterende afwijking bestaat nog** |
+| #17 | Financiën-CSS | Vier overschreven financiële layoutdeclaraties verwijderd |
+| #18 | Navigatie | Ongewijzigde navigatie en tabbladlogica losgemaakt van `index.html`, met offline caching |
+| #19 | CI en `AGENTS.md` | Zes parallelle browsergroepen, inhoudsgerichte risicoselectie en minder onnodige tests |
+| #20 | Financiën/Leven | 226.110 en 132.652 tekens JavaScript **byte-identiek** uitgepakt naar `assets/memento-finance-app.js` en `assets/memento-life-app.js`; synchrone scriptvolgorde en PWA precache behouden |
+| #21 | CSS-baselaag | 110.649 tekens CSS **byte-identiek** verplaatst naar `assets/memento-base-app.css`; oorspronkelijke cascadepositie behouden |
+| #22 | Kenniscentrum-CSS | Vroeger overschreven kleurdeclaratie en eerste redundante reduced-motion-regel verwijderd; latere werkzame regels behouden |
 
-### 1. Archief- en prullenbakzoekfilters in Kenniscentrum (verholpen in deze PR)
+Elke genoemde PR is pas na een groene toepasselijke GitHub-releasecontrole naar `main` gemerged. De oorspronkelijke complete PR-tests van #20 en #21 bevatten ook een offline upgrade vanaf `main`. GitHub Pages bouwt en publiceert op afzonderlijke workflows.
 
-**Bestand:** `assets/memento-knowledge-core.js`, functie `search()`.
+**Resultaat codeorganisatie:** `index.html` vóór deze fase ~663.072 tekens; na #22 ~193.876 tekens: ruim **70% afname**. Dat is structurele verplaatsing van code, **geen bewijs** dat de onderliggende functies al vereenvoudigd of volledig vrij van duplicatie zijn.
 
-De `archive`- en `trash`-paden retourneerden direct een booleaanse statusmatch. Daardoor werden onderliggende query-, verzamelings-, type- en tagfilters bij die statussen nooit toegepast. De correctie behoudt de statusselectie en voert de overige filters daarna altijd uit. `tests/knowledge-regression.cjs` bevat nieuwe regressiedekking. De versieparameter in `index.html` en de precache in `sw.js` zijn gelijkgetrokken.
+## Wat nog openstaat — prioriteit
 
-### 2. Grote inline-monoliet
+### P0 — Intermitterende Kenniscentrum-zoekfout
 
-**Bestand:** `index.html`.
+`tests/notes-direction-c-browser.cjs` faalde op sommige CI-runs wanneer na terugnavigeren de lokale zoekopdracht wordt gewist. De verwachte 3 notities werden dan niet binnen 5 seconden gerenderd; andere runs slagen. De fout bestond al vóór PR #20 en is nog niet als een reproduceerbare appbug of test-race geklassificeerd. In PR #20 is alleen **diagnostiek bij een mislukking** toegevoegd: werkelijke inputwaarde, zichtbare lijst, filters, route en core-zoekresultaten worden dan gelogd. De verwachte uitkomst blijft 3.
 
-Op de gecontroleerde `main`:
-- circa 674.023 tekens, 4.295 regels;
-- 28 inline `<style>`-blokken, samen circa 210.620 tekens;
-- 13 inline `<script>`-blokken, samen circa 403.529 tekens;
-- daarnaast 25 externe scriptverwijzingen en 11 stylesheetverwijzingen.
+**Vervolg:** gerichte herhaling in een geïsoleerde fixture; bij een fout eerst de nieuwe diagnostiek analyseren, dan oorzaak oplossen. Niet blind timeouts verhogen, tests uitschakelen of verwachtingen verlagen.
 
-**Risico:** hoge cognitieve complexiteit, onverwachte CSS-cascade en moeilijker geïsoleerd testen. **Niet zonder gedragstests naar modules verplaatsen:** inline initialisatievolgorde, globals, service-worker-cache en opslag zijn onderling afhankelijk. Eerst eigenaren en runtimecontracten documenteren.
+### P1 — Echte CSS-conflicten en mobiele bedienbaarheid
 
-### 3. Overlappende CSS-regels
+Er zijn nog **27 inline styleblokken** in `index.html`, naast CSS-bestanden voor tokens, glas, layout, UI, Kenniscentrum, Fitness en Start. De historische selector-telling in de oorspronkelijke audit gaf meerdere herhalingen; herhaalde selectors binnen verschillende mediaqueries zijn niet automatisch een bug.
 
-Verkennende telling met een eenvoudige selector-parser (niet hetzelfde als aantoonbaar conflicterende cascade):
-- `assets/memento-ui.css`: 245 CSS-regels; 23 selectors meerdere keren; 38 `!important`;
-- `assets/memento-glass.css`: 155 regels; 8 selectors meerdere keren; 118 `!important`;
-- `assets/memento-layout.css`: 169 regels; 10 selectors meerdere keren; 108 `!important`;
-- `assets/memento-knowledge.css`: 376 regels; 28 selectors meerdere keren; 17 `!important`;
-- `assets/memento-start.css`: 114 regels; 19 selectors meerdere keren; 10 `!important`.
+Eerdere `knowledge-v2-browser`-diagnostiek toonde elementen die buiten hun deelcontainer kunnen vallen, ondanks een totale `document.scrollWidth` van 393 px. Ook zijn op bepaalde schermen bedieningsvlakken onder 44px gerapporteerd. Dit moet visueel op een echte viewport/screenshot worden beoordeeld. **Verwijder alleen bewezen overbodige regels en behoud de huidige stijl.**
 
-Deze telling omvat bewust herhaalde selectors in mediaqueries en is **geen bugtelling**. Verwijder alleen bewezen overbodige of conflicterende definities, na vergelijking van de uiteindelijke computed styles voor onder meer 360/393/412 px.
+### P1 — Vereenvoudig interne JS-implementatie
 
-### 4. Bestaande rode CI op `main` (nog niet verholpen)
+De twee uitgepakte applicatiescripts blijven zelf groot (Financiën ~226 KB, Leven ~133 KB). Hun functies, state en opslagcontracten zijn nog niet volledig opgesplitst in onafhankelijke, testbare domeinmodules. Kijk eerst welke bestaande `assets/*-core.js`-modules al verantwoordelijkheid bezitten. Vermijd nog een tweede implementatie van dezelfde berekening of state.
 
-De `main`-workflow van 30 oktober 2026, run `41135579986`, had:
-- `core`, `browser (interface)`, `browser (data)` en `upgrade`: geslaagd;
-- `browser (life)`: mislukt.
+**Aanpak per kleine PR:** afhankelijkheden expliciet maken, één zelfstandig stuk verplaatsen of duplicatie verwijderen, publieke API handhaven, gerichte test aanvullen en offline-upgrade alleen als die werkelijk geraakt wordt.
 
-In `tests/notes-direction-c-browser.cjs:76` ontstond een assertion `1 !== 3` direct na het leegmaken van het zoekveld. Dat is **nog geen bewezen appbug**: oorzaak kan een timing-/weergaveprobleem in de test of een werkelijke fout in de notitie-UI zijn. **Niet** de verwachting verlagen of de suite uitschakelen; reproduceer, meet de UI-state en herstel de oorzaak.
+### P2 — Functionele eindcontrole en ongebruikte code
 
-Daarnaast meldden de diagnoserapporten van `knowledge-v2-browser` enkele buiten de viewport vallende childcontrols en enkele kleine aanraakdoelen, terwijl `document.scrollWidth` binnen 393 px bleef. Hier is gerichte visuele diagnose nodig; niet op basis van dit log alle schermen als defect classificeren.
+Controleer per module de daadwerkelijke gebruikersroute: taken (verlopen/herhalen), afspraken, financiële overboekingen/categorieën, notities/zoekfuncties, fitness, back-up/ZIP, PIN en instellingen. Vergelijk waar mogelijk met huidige `main`; oude voorbeeldscreenshots of oude branches zijn geen bewijs. Verwijder code/assets pas na een volledige referentiezoektocht en controle van offline cache en oudere back-upformaten.
 
-## Gefaseerde vervolgvolgorde
+## Werkwijze bij vervolgopdracht
 
-1. **P0 — CI weer betrouwbaar groen.** Reproduceer de fout van `notes-direction-c-browser.cjs:76`, controleer search-state, filter-state en rendered lijst vóór/na `fill('')`; maak alleen gerichte reparaties met bewijs.
-2. **P1 — Concrete functionele bugs.** Eén domein per PR; voor elke bug eerst falende gerichte regressie, dan kleinste correctie. Extra aandacht voor taken/datumlogica, financiële categorieën/overboekingen, document- en back-upherstel, Android-formulieren.
-3. **P1 — CSS-eigenaarschap.** Definieer in bestaande bestanden één eigenaar voor tokens, glaslaag, layout en componentspecifieke stijl. Maak per getroffen selector de echte cascade en media-context inzichtelijk. Verwijder pas dan redundantie.
-4. **P2 — Grote `index.html` opdelen.** Begin met één aantoonbaar zelfstandige module zonder state-/opslagwijzigingen. Behoud oude publieke interface en volgorde, update `sw.js`, voer browser- en PWA-upgradetests uit.
-5. **P2 — Onderhoudbaarheid.** Verwijder pas na referentiecontrole ongebruikte code/assets en actualiseer documentatie/tests. Behoud backward compatibility van lokale gegevens en back-ups.
+1. Begin bij dan-actuele `main` en lees `AGENTS.md`. Herhaal niet steeds de volledige repository-inventarisatie.
+2. Prioriteit: herstel P0 (Kenniscentrum flake), daarna echte CSS-cascade/touch-problemen en vervolgens het intern vereenvoudigen van de grote Financiën-/Leven-scripts.
+3. **Eén afgebakend risico per PR.** Wijzig relevante bestaande tests in dezelfde PR; laat risicogestuurde CI automatisch kiezen.
+4. Bewaar de originele browseropslag, IDs, PIN, financiële rekenregels, attachments, ZIP/herstel en mobiele weergave. Test uitsluitend fictieve geïsoleerde fixtures.
+5. Merge uitsluitend na relevante groene tests en controleer de actuele `main` opnieuw. Geen onnodige dubbele testmatrices.
+6. Werk **ditzelfde rapport** na een grote cleanupstap bij, in plaats van steeds nieuwe auditdocumenten te stapelen.
 
-## Controles vóór enige merge
-
-- Vergelijk met dan-actuele `main`, bekijk alle diffhunks en beperk scope.
-- Volg `AGENTS.md` risiconiveau 1/2/3; `index.html`/`sw.js` zijn niveau 3.
-- Test data integrity, PIN, ZIP/back-up en offline upgrade wanneer deze paden worden geraakt.
-- Controleer actieve mobiele schermen en echte touchinteracties; browseremulatie is geen fysieke Android-test.
-- **Niet mergen bij een relevante rode test.** Een vooraf bestaande rode test apart verklaren én herstellen voordat het release-gate groen is.
-
-## Afbakening van dit rapport
-
-Dit is een geprioriteerde codebase-inventarisatie op basis van GitHub-structuur, kernbestanden en CI-logs, **geen volledige dynamische inspectie van iedere functie, branch of oude codevariant**. Geen persoonlijke gebruikersdata is geladen of gewijzigd. Na deze PR blijven meerdere cleanupfasen noodzakelijk.
+**Afbakening:** deze inventarisatie registreert wat is geverifieerd in GitHub-code, PR-diffs en CI-runs. Geen volledige dynamische inspectie van iedere functie of een fysieke Android-test is uitgevoerd; de complete cleanup is nog niet voltooid.
