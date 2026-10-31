@@ -1,7 +1,7 @@
 /* Transaction/category invariants including historical mismatches. */
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const C=require('../assets/memento-category-integrity.js');
-const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8')+'\n'+fs.readFileSync(path.join(__dirname,'..','assets/memento-finance-app.js'),'utf8');
 const cats=[{name:'Boodschappen',subcategories:['Supermarkt']},{name:'Vaste lasten',subcategories:['Wegenbelasting']},{name:'Huis & inrichting',subcategories:['Keuken & huishoudelijke spullen']}];
 const old={type:'expense',category:'Boodschappen',subcategory:'Wegenbelasting'};
 let passed=0;const check=(n,fn)=>{fn();passed++;console.log('PASS',n)};
