@@ -69,7 +69,7 @@ function validate(s){
  optional(s,'settings',(v,p)=>{
   record(v,p);
   for(const k of ['startBalance','monthlyIncomeTarget'])optional(v,k,number,p);
-  optional(v,'payday',(n,q)=>check(Number.isInteger(n)&&n>=1&&n<=31,q),p);
+  optional(v,'payday',(n,q)=>check(Number.isInteger(n)&&n>=1&&n<=31,q),p);optional(v,'periodModeDefault',(m,q)=>check(['salary','month'].includes(m),q),p);
   for(const k of ['accountOpening','actualBalances'])optional(v,k,(balances,q)=>{record(balances,q);for(const [a,n] of Object.entries(balances)){account(a,q+'.'+a);if(k==='actualBalances'&&n==='')continue;number(n,q+'.'+a);}},p);
   optional(v,'salaryPeriodStart',(d,q)=>{if(d!=='')date(d,q);},p);optional(v,'salaryPayDates',(a,q)=>{list(a,q);const months=new Set();a.forEach((d,i)=>{date(d,q+'['+i+']');check(!months.has(d.slice(0,7)),q);months.add(d.slice(0,7))})},p);
   optional(v,'salaryPeriods',(periods,q)=>{list(periods,q);periods.forEach((r,i)=>{const at=q+'['+i+']';totals(r,at);date(r.from,at+'.from');date(r.to,at+'.to');check(r.from<=r.to,at);});},p);
