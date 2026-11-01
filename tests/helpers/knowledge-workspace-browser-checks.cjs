@@ -21,7 +21,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('[data-kc=ws-locations]').click();await page.locator('[data-ws-location="'+root+'"]').check();await page.locator('[data-kc=ws-locations-save]').click();assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
  await page.locator('[data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
- await page.locator('.kc-local-tabs [data-kc=home]').click();await page.locator('[data-kc=ws-background]').click();
+ await page.locator('.kc-local-tabs [data-kc=home]').click();
+ await page.locator('.kc-compact-fold summary').filter({hasText:'Instellingen & back-up'}).click();
+ await page.locator('[data-kc=ws-background]').click();
  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aafkAAAAASUVORK5CYII=','base64');await page.locator('#kc-ws-background-file').setInputFiles({name:'achtergrond.png',mimeType:'image/png',buffer:png});
  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).knowledge.workspace.background?.file);await page.locator('[data-kc=ws-background-save]').click();assert.equal(await page.locator('.kc-workspace-bg').count(),1);
  await page.locator('[data-kc=ws-design]').first().click();await page.locator('[data-kc=ws-widget-add]').click();await page.locator('#kc-ws-widget-type').selectOption('image');await page.locator('#kc-ws-widget-consent').check();await page.locator('[data-kc=ws-widget-confirm]').click();
