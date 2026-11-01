@@ -1,0 +1,147 @@
+{
+  "format": "memento-template-catalog",
+  "version": 1,
+  "templates": [
+    {
+      "format": "memento-template",
+      "version": 1,
+      "template": {
+        "name": "Lege notitie",
+        "kind": "note",
+        "fields": [],
+        "document": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "text",
+              "text": "",
+              "id": "8edcda12-f063-461c-b4c0-cdb538770dfc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "format": "memento-template",
+      "version": 1,
+      "template": {
+        "name": "Recept",
+        "kind": "recipe",
+        "fields": [],
+        "document": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ingrediënten",
+              "id": "39a7ae8c-71d8-4b68-ac29-ebb8c9e1a010"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "ee9ed8c5-866f-4148-940c-2cad676aeca2"
+            },
+            {
+              "type": "heading",
+              "text": "Bereiding",
+              "id": "eced9039-1ce2-4713-8227-562ce3c3eecf"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "78962683-6f1e-42c8-95c9-6e0a5100ac57"
+            },
+            {
+              "type": "heading",
+              "text": "Bewaren",
+              "id": "14b90c19-c592-4fd2-a26a-8a2d009e3fb0"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "6e35c7b6-f961-4536-9b39-b823e26e1072"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "format": "memento-template",
+      "version": 1,
+      "template": {
+        "name": "Projectnotitie",
+        "kind": "note",
+        "fields": [],
+        "document": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Doel",
+              "id": "88790d02-0823-44f4-b479-9395c914c48f"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "7151cbd4-463e-4a32-8bb5-7fc219110145"
+            },
+            {
+              "type": "heading",
+              "text": "Aantekeningen",
+              "id": "d05f6054-5d63-4815-b9cd-ec4a7b286d40"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "45be1a90-cc69-41c5-8d5d-f242a897aeba"
+            },
+            {
+              "type": "heading",
+              "text": "Volgende stap",
+              "id": "01bd4217-90dd-4e37-9edc-a21a6270db62"
+            },
+            {
+              "type": "check",
+              "text": "",
+              "id": "b7c90a94-6faa-4f1c-aa5b-18fe676e18a4"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "format": "memento-template",
+      "version": 1,
+      "template": {
+        "name": "Reflectie",
+        "kind": "note",
+        "fields": [],
+        "document": {
+          "version": 1,
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Wat ging goed?",
+              "id": "32663f39-cad6-45b3-9737-2b8e41d2a53b"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "2b540bb4-2da5-4d29-a919-8162efda5ae5"
+            },
+            {
+              "type": "heading",
+              "text": "Wat wil ik onthouden?",
+              "id": "9a6bd4ac-f024-40ce-9d06-9e1425dc79db"
+            },
+            {
+              "type": "text",
+              "text": "",
+              "id": "9eb5aed3-cb87-46f0-8cf8-8d840ad28a72"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

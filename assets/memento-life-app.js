@@ -169,6 +169,7 @@ function validate(s){
  for(const t of s.templates){if(!['task','routine'].includes(t.kind)||!Object.hasOwn(repeats,t.repeat)||!Array.isArray(t.steps)||t.steps.some(x=>!x||typeof x.text!=='string'))throw Error('Ongeldig taaksjabloon.');if(t.deletedAt===undefined)t.deletedAt='';if(typeof t.deletedAt!=='string')throw Error('Ongeldige prullenbakstatus.');}
  for(const n of s.notes){if(n.deletedAt===undefined)n.deletedAt='';if(typeof n.deletedAt!=='string')throw Error('Ongeldige notitiestatus.');}
  for(const t of s.tasks){if(t.deletedAt===undefined)t.deletedAt='';if(typeof t.deletedAt!=='string')throw Error('Ongeldige prullenbakstatus van een taak.');if(!['task','routine'].includes(t.kind)||!Object.hasOwn(repeats,t.repeat)||!validDate(t.date||'')||!validDate(t.focusDate||'')||!validDate(t.lastDone||'')||!Array.isArray(t.steps)||!Array.isArray(t.history))throw Error('Controleer de taakdatums en herhalingen in deze back-up.');if(t.steps.some(x=>!x||typeof x.text!=='string'))throw Error('Ongeldige subtaken in de back-up.');if(t.history.some(h=>!h||typeof h.date!=='string'||!h.date||!validDate(h.date)))throw Error('Ongeldige uitvoeringsgeschiedenis in de back-up.')}
+ if(s.knowledge?.workspace){if(!window.MementoKnowledgeWorkspace)throw Error('Werkruimtecontrole ontbreekt');window.MementoKnowledgeWorkspace.validate(s);}
  return s;
 }
 try{const raw=localStorage.getItem(KEY);state=raw?validate(JSON.parse(raw)):clone(seed)}catch(e){state=clone(seed);blocked=true}
@@ -531,7 +532,7 @@ window.MementoAssistantBridge={
   try{
    const plan=C.prepare(state,proposal,selected);
    if(!plan.changes.length)throw Error('Geen wijzigingen geselecteerd.');
-   const next=validate(plan.next);window.MementoKnowledgeCore?.validate(next);
+   const next=validate(plan.next);window.MementoKnowledgeCore?.validate(next);window.MementoKnowledgeWorkspace?.validate(next);
    const history={format:'memento-life-assistant-undo',version:1,appliedAt:new Date().toISOString(),changes:plan.changes};
    storageGuard.commit({life:JSON.stringify(next)},{token,extra:{[MEMENTO_ASSISTANT_UNDO]:JSON.stringify(history)}});
    state=next;undo=null;render();status(plan.changes.length+' wijzigingen verwerkt. Aanpassen kan per item.');
@@ -544,7 +545,7 @@ window.MementoAssistantBridge={
   const C=window.MementoAssistantCore;
   const token=storageGuard.beginOperation();
   try{
-   const next=validate(C.reverse(state,data));window.MementoKnowledgeCore?.validate(next);
+   const next=validate(C.reverse(state,data));window.MementoKnowledgeCore?.validate(next);window.MementoKnowledgeWorkspace?.validate(next);
    storageGuard.commit({life:JSON.stringify(next)},{token,extra:{[MEMENTO_ASSISTANT_UNDO]:null}});
    state=next;undo=null;render();status(data.changes.length+' wijzigingen hersteld.');
    return data.changes.length;
@@ -1047,11 +1048,11 @@ async function performPermanentTrashPurge(){
   const plan=c.purge(clone(state),fb.read()),pending=pendingTrashFileIds();
   const fileIds=[...new Set([...pending,...plan.overview.attachmentIds])];
   if(fileIds.length&&!files)throw Error('Bestandsopslag is niet beschikbaar: er is niets gewist.');
-  validate(clone(plan.life));window.MementoKnowledgeCore?.validate(plan.life);
+  validate(clone(plan.life));window.MementoKnowledgeCore?.validate(plan.life);window.MementoKnowledgeWorkspace?.validate(plan.life);
   storageGuard.commit({finance:JSON.stringify(plan.finance),life:JSON.stringify(plan.life)},
    {token,backups:false,extra:fileIds.length?{[TRASH_PENDING_KEY]:JSON.stringify(fileIds)}:{}});
   state=plan.life;fb.acceptCommitted(token);committed=true;undo=null;
-  const warnings=[],referenced=new Set(state.notes.flatMap(n=>(n.attachments||[]).map(a=>a.id)));
+  const warnings=[],referenced=new Set(window.MementoKnowledgeWorkspace?[...window.MementoKnowledgeWorkspace.fileReferences(state).keys()]:state.notes.flatMap(n=>(n.attachments||[]).map(a=>a.id)));
   // Existing recovery copies are not erased as a side effect. Keep their files usable too.
   let unreadableRecovery=false;
   try{const raw=localStorage.getItem(RECOVERY);if(raw){const old=JSON.parse(raw);if(!Array.isArray(old.notes))throw Error();for(const n of old.notes)for(const a of n.attachments||[])referenced.add(a.id)}}
@@ -1208,7 +1209,7 @@ async function importCompleteBackup(file){
  try{
   status('ZIP en bijlagen controleren…');
   const parsed=await window.MementoCompleteBackup.prepareArchive(file,window.MementoKnowledgeStore);
-  const life=validate(clone(parsed.life));window.MementoKnowledgeCore?.validate(life);
+  const life=validate(clone(parsed.life));window.MementoKnowledgeCore?.validate(life);window.MementoKnowledgeWorkspace?.validate(life);
   if(!confirm('Volledige Memento-back-up herstellen van '+new Date(parsed.manifest.exportedAt).toLocaleString('nl-NL')+'? Dit vervangt Leven EN Financiën. '+life.notes.length+' notities en '+parsed.files.length+' bijlagen worden hersteld.'))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
   token=storageGuard.beginOperation();
@@ -1237,7 +1238,7 @@ async function importBackup(file,includeFinance){
  try{
   data=JSON.parse(await file.text());if(data.format!=='compass-life-backup'||data.version!==1)throw Error('Kies een back-up van deze Leven-versie.');
   if(data.lifeState&&data.lifeState.fitness===undefined&&state.fitness)data.lifeState.fitness=clone(state.fitness);
-  validate(data.lifeState);window.MementoKnowledgeCore?.validate(clone(data.lifeState));
+  validate(data.lifeState);window.MementoKnowledgeCore?.validate(clone(data.lifeState));window.MementoKnowledgeWorkspace?.validate(clone(data.lifeState));
   if(includeFinance){if(!window.MementoFinanceValidation)throw Error('Financiële controle ontbreekt. Vernieuw Memento.');window.MementoFinanceValidation.validate(data.financeState);}
   if(!confirm('De huidige Leven-gegevens vervangen door '+data.lifeState.tasks.length+' taken uit deze back-up?'+(includeFinance?' Ook de financiële gegevens worden vervangen.':' Je financiële gegevens blijven behouden.')))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');token=storageGuard.beginOperation();
@@ -1251,7 +1252,7 @@ async function importBackup(file,includeFinance){
 function restorePreviousLife(){
  try{
   const old=localStorage.getItem(RECOVERY);if(!old)throw Error('Er is nog geen vorige versie beschikbaar.');
-  const parsed=validate(JSON.parse(old));window.MementoKnowledgeCore?.validate(clone(parsed));if(!confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.'))return false;
+  const parsed=validate(JSON.parse(old));window.MementoKnowledgeCore?.validate(clone(parsed));window.MementoKnowledgeWorkspace?.validate(clone(parsed));if(!confirm('De vorige opgeslagen Leven-versie terugzetten? Je financiën blijven behouden.'))return false;
   if(!storageGuard)throw Error('Veilige opslag ontbreekt. Vernieuw Memento.');
   storageGuard.commit({life:JSON.stringify(parsed)});state=parsed;blocked=false;undo=null;savedStatus();render();status('Vorige Leven-versie teruggezet.');return true;
  }catch(e){status(e.message,false,true);return false}

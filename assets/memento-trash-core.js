@@ -18,6 +18,9 @@ function summary(life,finance){
    (isTrashed(n)?oldFiles:liveFiles).add(a.id);
   }
  }
+ for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)liveFiles.add(c.coverFile.id);
+ const w=life.knowledge?.workspace;if(w?.background?.file?.id)liveFiles.add(w.background.file.id);
+ for(const widgets of Object.values(w?.dashboards||{}))for(const item of widgets)if(item.image?.id)liveFiles.add(item.image.id);
  if(life.fitness!==undefined){
   if(!life.fitness||!Array.isArray(life.fitness.sessions))throw Error("De Fitness-geschiedenis kan niet veilig worden gelezen.");
   counts["Fitness-trainingen"]=life.fitness.sessions.filter(isTrashed).length;

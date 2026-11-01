@@ -44,12 +44,17 @@ function unzip(bytes){
  return result;
 }
 const json=(map,name)=>{const bytes=map.get(name);if(!bytes)throw Error("Bestand ontbreekt: "+name);return JSON.parse(decode(bytes))};
+function fileReferences(life){
+ const refs=new Map();for(const n of life.notes||[])for(const a of n.attachments||[])refs.set(a.id,a);
+ for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)refs.set(c.coverFile.id,c.coverFile);
+ const w=life.knowledge?.workspace;if(w?.background?.file?.id)refs.set(w.background.file.id,w.background.file);
+ for(const widgets of Object.values(w?.dashboards||{}))for(const item of widgets)if(item.image?.id)refs.set(item.image.id,item.image);
+ return refs;
+}
 async function createArchive({life,finance,extras={}},store){
  if(!life||!Array.isArray(life.notes)||!finance)throw Error("Leven of Financiën ontbreekt: geen volledige back-up gemaakt");
  if(!financeValidation)throw Error("Financiële controle ontbreekt. Vernieuw Memento.");financeValidation.validate(finance);
- const byId=new Map((await store.all()).map(x=>[x.id,x])),refs=new Map();
- for(const n of life.notes)for(const a of n.attachments||[])refs.set(a.id,a);
- for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)refs.set(c.coverFile.id,c.coverFile);
+ const byId=new Map((await store.all()).map(x=>[x.id,x])),refs=fileReferences(life);
  const entries=[
   {name:"data/life.json",bytes:encode(JSON.stringify(life))},
   {name:"data/finance.json",bytes:encode(JSON.stringify(finance))},
@@ -85,7 +90,7 @@ async function prepareArchive(file,store){
   files.push({...f,blob});
  }
  for(const n of life.notes)for(const a of n.attachments||[])if(!ids.has(a.id))throw Error("Een notitie verwijst naar een ontbrekende bijlage");
- for(const c of life.knowledge?.collections||[])if(c.coverFile?.id&&!ids.has(c.coverFile.id))throw Error('Een verzameling verwijst naar een ontbrekende afbeelding');
+ for(const [id] of fileReferences(life))if(!ids.has(id))throw Error('Een onderdeel verwijst naar een ontbrekende afbeelding');
  return {life,finance,extras,files,manifest};
 }
 function download(blob,name){
