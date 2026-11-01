@@ -1,0 +1,83 @@
+"use strict";
+/* Real Chromium touch smoke for default visibility and persisted ordering. */
+const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),http=require("node:http");
+const {chromium}=require("playwright");
+const {fixture}=require("./helpers/visual-fixture.cjs");
+const enterApp=require("./helpers/enter-app.cjs");
+const root=path.resolve(__dirname,".."),errors=[],checks=[],width=393;
+const server=http.createServer((req,res)=>{
+ const pathname=decodeURIComponent(new URL(req.url,"http://localhost").pathname);
+ if(pathname==="/__seed__"){res.end("<!doctype html><title>Isolated sortable fixture</title>");return}
+ const file=path.resolve(root,"."+(pathname==="/"?"/index.html":pathname));
+ if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return}
+ res.setHeader("Content-Type",({".html":"text/html",".js":"application/javascript",".css":"text/css",".json":"application/json",".png":"image/png",".webp":"image/webp",".svg":"image/svg+xml"})[path.extname(file)]||"application/octet-stream");
+ res.end(fs.readFileSync(file));
+});
+async function nav(page,view){await page.locator('[data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:'+view+'"]').click();}
+async function ids(page,selector){return page.locator(selector).evaluateAll(rows=>rows.map(row=>row.dataset.orderId));}
+async function touchDrag(page,selector){
+ const grip=page.locator(selector+" > .memento-sort-handle"),rows=page.locator(selector);
+ assert(await rows.count()>=2,selector+" must contain at least two items");
+ await grip.first().scrollIntoViewIfNeeded();
+ const first=await grip.first().boundingBox(),second=await rows.nth(1).boundingBox();
+ assert(first&&second,"Drag handle must be visible");
+ const start={x:first.x+first.width/2,y:first.y+first.height/2};
+ const target={x:start.x,y:second.y+second.height-4};
+ const hit=await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.closest(".memento-sort-handle")!==null,start);
+ assert(hit,"Touch target must not be covered by another element");
+ const session=await page.context().newCDPSession(page);
+ await session.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{...start,id:9}]});
+ await page.waitForTimeout(310);
+ for(let i=1;i<=10;i++){await session.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:start.x+(target.x-start.x)*i/10,y:start.y+(target.y-start.y)*i/10,id:9}]});await page.waitForTimeout(24);}
+ await page.waitForTimeout(90);
+ await session.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+ await session.detach();
+}
+(async()=>{let browser;
+ try{
+  await new Promise((ok,bad)=>{server.once("error",bad);server.listen(0,"127.0.0.1",ok)});
+  browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||undefined,args:["--no-sandbox","--disable-dev-shm-usage"]});
+  const context=await browser.newContext({viewport:{width,height:852},locale:"nl-NL",timezoneId:"Europe/Amsterdam",hasTouch:true,reducedMotion:"reduce"});
+  await context.route("https://**/*",route=>route.abort());
+  await context.addInitScript(()=>{const NativeDate=Date,fixed=Date.parse("2026-10-27T09:30:00+01:00");window.Date=class extends NativeDate{constructor(...args){super(...(args.length?args:[fixed]))}static now(){return fixed}}});
+  const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
+  const url="http://127.0.0.1:"+server.address().port,data=await fixture();
+  await page.goto(url+"/__seed__");
+  await page.evaluate(d=>{localStorage.setItem("compass_life_preview_v1",JSON.stringify(d.life));localStorage.setItem("uitgavenkompas_v1",JSON.stringify(d.finance));localStorage.setItem("uitgavenkompas_pin_config_v1",JSON.stringify(d.pin))},data);
+  await page.goto(url,{waitUntil:"domcontentloaded"});await enterApp(page);
+  await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
+  assert.equal(await page.evaluate(()=>typeof window.Sortable),"function");
+  assert.equal(await page.evaluate(()=>typeof window.MementoSortableUI?.mountAll),"function");
+  checks.push("Pinned local library and adapter loaded");
+  await nav(page,"tasks");
+  assert.equal(await page.locator("#lifeTaskSort").inputValue(),"manual","Tasks must be immediately draggable by default");
+  const taskSelector="#lifeTaskResults>.life-list>.life-task[data-order-id]";
+  assert(await page.locator(taskSelector+" > .memento-sort-handle").count()>=2,"Task drag grips are missing");
+  const before=await ids(page,taskSelector);
+  await touchDrag(page,taskSelector);
+  const after=await ids(page,taskSelector);
+  assert.notDeepEqual(after,before,"Real touch must change task DOM order");
+  const persisted=await page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")).tasks);
+  assert(persisted.some(t=>t.id===after[0]&&t.manualOrder===1),"Task order not persisted");
+  checks.push("Default tasks: visible 44px grips, trusted touch drag, persisted order");
+  await nav(page,"groceries");
+  assert.equal(await page.locator(".shopping-category").count(),0,"Default shopping list must be ungrouped to enable free ordering");
+  const groceries="#lifeGroceryResults>.shopping-rows>.shopping-row[data-order-id]";
+  assert(await page.locator(groceries+" > .memento-sort-handle").count()>=2,"Grocery drag handles are missing");
+  const gb=await ids(page,groceries);await touchDrag(page,groceries);const ga=await ids(page,groceries);assert.notDeepEqual(gb,ga,"Grocery touch reorder failed");
+  checks.push("Default groceries: ungrouped list and touch reorder");
+  await nav(page,"wishes");
+  assert(await page.locator("#lifeWishResults>.life-grid>.life-panel>.memento-sort-handle").count()>=2,"Wish drag handles absent");
+  checks.push("Wishes have visible grip controls");
+  await nav(page,"fitness");
+  assert(await page.locator("#mementoFitness .ft-cycle-sort > .ft-panel").count()>=2,"Fitness fixture must have >=2 cycle routines");
+  assert(await page.locator("#mementoFitness .ft-cycle-sort > .ft-panel > .memento-sort-handle").count()>=2,"Fitness cycle drag grips absent");
+  checks.push("Fitness cycle has draggable grip controls");
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
+  assert.equal(overflow,false,"Unexpected mobile horizontal overflow");
+  assert.deepEqual(errors,[]);
+  console.log("PASS sortable mobile smoke "+JSON.stringify({checks}));
+  await context.close();
+ }catch(e){console.error(e);console.log("SORTABLE_SMOKE "+JSON.stringify({checks,errors}));process.exitCode=1}
+ finally{await browser?.close();server.close()}
+})();
