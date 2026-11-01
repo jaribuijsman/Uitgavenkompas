@@ -1257,7 +1257,8 @@ function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
 root.addEventListener('click',e=>{
  const summary=e.target.closest('.memento-task-category>summary');
- if(summary&&root.contains(summary)){const section=summary.parentElement,id=section.dataset.taskGroup;if(section.open)collapsedTaskCategories.add(id);else collapsedTaskCategories.delete(id);}
+ const section=summary?.parentElement;
+ if(section?.matches?.('.memento-task-category')){const id=section.dataset.taskGroup;if(section.open)collapsedTaskCategories.add(id);else collapsedTaskCategories.delete(id);}
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
  if(d.lifeDaySlide!==undefined){showDaySlide(Number(d.lifeDaySlide));return}
  if(d.mementoNewTask!==undefined){const date=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();editTask();if($('lifeTaskDate'))$('lifeTaskDate').value=date;return}

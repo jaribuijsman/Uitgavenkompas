@@ -35,7 +35,7 @@ async function checkbox(page,selector){
   const fixture=structuredClone(data);fixture.life.tasks=Array.from({length:count},(_,i)=>({...task('recovery-'+i,i===0?'Een lange fictieve taak met meerdere woorden, subtaken en voldoende ruimte voor bediening zonder overlap':'Fictieve taak '+i),category:i===0?'Huishouden':'Persoonlijk',priority:i===0,date:i===0?'2026-10-26':'2026-10-27',steps:i===0?[{text:'Eerste stap',done:false}]:[]}));
   await page.goto(url+'/__seed__');await page.evaluate(d=>{localStorage.setItem('compass_life_preview_v1',JSON.stringify(d.life));localStorage.setItem('uitgavenkompas_v1',JSON.stringify(d.finance));},fixture);await page.goto(url);await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await nav(page,'tasks');
   const stored=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')));const before=await stored(),financeBefore=await page.evaluate(()=>localStorage.getItem('uitgavenkompas_v1'));
-  assert.equal(await page.locator('#lifeTaskResults .life-task').count(),count);assert.equal(await page.locator('.mg-task-overviews').getAttribute('open'),null);assert.equal(await page.locator('#lifeQuickTitle').isVisible(),false);
+  assert.equal(await page.locator('#lifeTaskResults .life-task').count(),count);assert.equal(await page.locator('.memento-task-overview-menu').getAttribute('open'),null);assert.equal(await page.locator('#lifeQuickTitle').isVisible(),false);
   assert.equal(await page.locator('[data-mg-save-task-filter]').isVisible(),false);assert.equal(await page.locator('#mgTaskFilterChips').isVisible(),false);
   const row={width,count};
   if(count){
