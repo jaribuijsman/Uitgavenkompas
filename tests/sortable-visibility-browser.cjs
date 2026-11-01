@@ -70,6 +70,7 @@ async function touchDrag(page,selector){
   assert(await page.locator("#lifeWishResults>.life-grid>.life-panel>.memento-sort-handle").count()>=2,"Wish drag handles absent");
   checks.push("Wishes have visible grip controls");
   await nav(page,"fitness");
+  await page.locator('#mementoFitness [data-fit="tab"][data-id="plan"]').click();
   assert(await page.locator("#mementoFitness .ft-cycle-sort > .ft-panel").count()>=2,"Fitness fixture must have >=2 cycle routines");
   assert(await page.locator("#mementoFitness .ft-cycle-sort > .ft-panel > .memento-sort-handle").count()>=2,"Fitness cycle drag grips absent");
   checks.push("Fitness cycle has draggable grip controls");
