@@ -73,7 +73,9 @@ async function touchDrag(page,selector){
   assert(await page.locator("#lifeGroceryResults .shopping-aisle").count()>=1,"Store mode must group grocery aisles");
   assert(await page.locator('#lifeGroceryResults .shopping-aisle input[data-life-bought]').count()>=2,"Store mode must retain the bought controls");
   const product=await page.locator('#lifeGroceryResults .shopping-aisle .shopping-row-title').first().textContent();
-  await page.locator('#lifeGroceryResults .shopping-aisle input[data-life-bought]').first().check();
+  const itemId=await page.locator('#lifeGroceryResults .shopping-aisle input[data-life-bought]').first().getAttribute('data-life-bought');
+  await page.locator('#lifeGroceryResults .shopping-aisle input[data-life-bought="'+itemId+'"]').click();
+  assert.equal(await page.locator('#lifeGroceryResults input[data-life-bought="'+itemId+'"]').count(),0,"Checked item disappears from My list");
   await page.locator('[data-shopping-section="saved"]').click();
   const libraryRow=page.locator('#lifeGroceryResults .shopping-row').filter({hasText:product}).first();
   assert(await libraryRow.isVisible(),"Checked item stays in Producten");
