@@ -660,7 +660,7 @@ function shoppingCategoryChoices(){
  return [...new Set([...standard,...custom])].map(x=>[x,x]).concat([['__new__','Nieuwe categorie…']]);
 }
 function paintShoppingCategoryPicker(){
- const box=$('shoppingNewCategory'),select=$('shoppingCategoryChoice');if(!box||!select)return;
+ const box=$('shoppingNewCategory'),select=$('shoppingCategoryChoice');if(!box||!select||!select.options)return;
  const title=groceryDraft.trim(),duplicate=shoppingItems().some(g=>!g.deletedAt&&shoppingKey(g.title)===shoppingKey(title));
  box.hidden=groceryList!=='groceries'||!title||duplicate||groceryTab==='trash';
  const chosen=groceryCategoryChoice||shoppingAisleOf({title,category:''});
