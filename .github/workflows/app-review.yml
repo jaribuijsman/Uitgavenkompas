@@ -66,6 +66,12 @@ jobs:
           node --check assets/memento-assistant.js
           node --check assets/memento-assistant-core.js
           node --check sw.js
+          node --check assets/memento-sortable-ui.js
+          node --check assets/memento-life-app.js
+          node --check assets/memento-knowledge.js
+          node --check assets/memento-knowledge-core.js
+          node --check assets/memento-fitness.js
+          node tests/sortable-order.cjs
           node tests/memento-assistant-core.cjs
           node tests/storage-safety.cjs
           node tests/finance-validation.cjs

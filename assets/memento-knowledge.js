@@ -127,10 +127,10 @@ function header(title,back=false,actions=""){
 }
 function itemRows(items,mode="list",{filtered=false,create=false}={}){
  if(!items.length)return '<div class="kc-empty"><strong>'+(filtered?'Geen resultaten':'Hier staan nog geen notities')+'</strong>'+(filtered?btn('Wis filters','clear-filters'):create?btn('+ Nieuwe notitie','new','',true):'')+'</div>';
- return '<div class="kc-item-list kc-'+esc(mode)+'">'+items.map(n=>{
+ return '<div class="kc-item-list kc-'+esc(mode)+'"'+(screen==='collection'&&sort==='manual'?' data-manual-sort="true"':'')+'>'+items.map(n=>{
   const type=C.typeOf(n);
-  return '<button type="button" class="kc-item" data-kc="open" data-id="'+esc(n.id)+'">'+
-   '<span class="kc-item-icon" aria-hidden="true">'+itemIcon(n)+'</span><span class="kc-item-main"><strong>'+esc(n.title)+'</strong><small>'+esc(n.body?.trim()===n.title.trim()?kindNames[type]:String(n.body||n.sourceUrl||kindNames[type]||"").slice(0,95)||kindNames[type])+'</small>'+
+  return '<button type="button" class="kc-item" data-kc="open" data-id="'+esc(n.id)+'" data-order-id="'+esc(n.id)+'"'+(screen==='collection'&&sort==='manual'?' aria-label="'+esc(n.title)+' · houd vast om te verslepen; Alt + pijltjes om te verplaatsen"':'')+'>'+
+   (screen==='collection'&&sort==='manual'?'<span class="memento-note-grip" aria-hidden="true">⠿</span>':'')+'<span class="kc-item-icon" aria-hidden="true">'+itemIcon(n)+'</span><span class="kc-item-main"><strong>'+esc(n.title)+'</strong><small>'+esc(n.body?.trim()===n.title.trim()?kindNames[type]:String(n.body||n.sourceUrl||kindNames[type]||"").slice(0,95)||kindNames[type])+'</small>'+
     '<span class="kc-item-tags">'+chips(n.tags)+(n.pinned?'<span class="kc-tag">Vastgezet</span>':"")+'</span></span>'+
    '<span class="kc-item-side">'+(n.updatedAt?readable(n.updatedAt):"")+'<span aria-hidden="true">›</span></span></button>';
  }).join("")+"</div>";
@@ -199,7 +199,7 @@ function breadcrumbs(){
 function currentItems(){
  const cid=screen==="collection"?collectionId:screen==="inbox"?"inbox":"";
  const status=screen==="trash"?"trash":screen==="archive"?"archive":screen==="pinned"?"pinned":"active";
- return C.search(read(),{collectionId:cid,query,kind:kindFilter,tag:tagFilter,status,sort});
+ return C.search(read(),{collectionId:cid,query,kind:kindFilter,tag:tagFilter,status,sort:sort==='manual'&&screen!=='collection'?'recent':sort});
 }
 function renderList(){
  const c=collections().find(x=>x.id===collectionId);
@@ -214,7 +214,7 @@ function renderList(){
  '<details id="kc-filter-drawer" class="kc-filter-drawer"'+(filtersExpanded?' open':'')+'><summary>Filters'+(kindFilter||tagFilter?' · actief':'')+'</summary><div class="kc-filters">'+
  '<div class="kc-filterline"><label>Type<select data-kc-change="kind"><option value="">Alles</option>'+Object.entries(kindNames).map(([v,n])=>'<option value="'+v+'"'+(kindFilter===v?" selected":"")+">"+n+"</option>").join("")+"</select></label>"+
  '<label>Tag<select data-kc-change="tag"><option value="">Alle tags</option>'+availableTags.map(v=>'<option value="'+esc(v)+'"'+(tagFilter===v?" selected":"")+">"+esc(v)+"</option>").join("")+"</select></label>"+
- '<label>Sortering<select data-kc-change="sort"><option value="recent"'+(sort==="recent"?" selected":"")+'>Recent</option><option value="title"'+(sort==="title"?" selected":"")+'>Titel</option><option value="old"'+(sort==="old"?" selected":"")+'>Oudste</option></select></label></div>'+
+ '<label>Sortering<select data-kc-change="sort"><option value="recent"'+(sort==="recent"?" selected":"")+'>Recent</option><option value="title"'+(sort==="title"?" selected":"")+'>Titel</option><option value="old"'+(sort==="old"?" selected":"")+'>Oudste</option>'+(screen==='collection'?'<option value="manual"'+(sort==='manual'?' selected':'')+'>Handmatig</option>':'')+'</select></label></div>'+
  '<div class="kc-mode-switch" role="group" aria-label="Weergave">'+btn("Lijst","mode","list",mode==="list")+btn("Galerij","mode","gallery",mode==="gallery")+btn("Tabel","mode","table",mode==="table")+'</div>'+btn('Wis filters','clear-filters')+'</div></details></div>';
  const summary=screen==='collection'?counts(collectionId)+' notities'+(subs.length?' · '+subs.length+' subverzamelingen':''):items.length+' notities';
  return header(title,true,tools)+
@@ -456,10 +456,27 @@ function render(){
  else if(screen==="versions")output=renderVersions();
  else if(screen==="link")output=renderLink();
  else if(screen==="file")output=renderFile();
+ root.MementoSortableUI?.clear(host);
  host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+breadcrumbs()+output+"</div>";
  // Handle list search on the current field, before any parent-level listeners
  // can replace the input during bubbling. Native search clear also fires
  // a non-bubbling "search" event in some browsers.
+ const sorter=root.MementoSortableUI;
+ if(sorter){
+  const setups=[];
+  if(screen==='sort'&&sortState){
+   setups.push({element:host.querySelector('.kc-sort-list'),itemSelector:'.kc-sort-row[data-sort-id]',idAttr:'data-sort-id',handleSelector:'.kc-drag-handle',injectHandle:false,onOrder:ids=>persistSort(ids)});
+  }
+  if(screen==='collection'&&sort==='manual'&&!query&&!kindFilter&&!tagFilter){
+   const currentIds=currentItems().map(n=>n.id);
+   setups.push({element:host.querySelector('.kc-item-list[data-manual-sort]'),itemSelector:'.kc-item[data-order-id]',handleSelector:'.kc-item',keyboardSelector:'.kc-item',injectHandle:false,onOrder:ids=>{
+    const visible=new Set(currentIds),ok=write(s=>sorter.rankByIds(s.notes.filter(n=>visible.has(n.id)),ids));
+    if(ok){notice='Notitievolgorde opgeslagen.';render();}
+    return ok;
+   }});
+  }
+  sorter.mountAll(host,setups);
+ }
  const listSearch=host.querySelector('[data-kc-input="search"]');
  if(listSearch){
   listSearch.addEventListener("input",onInput);
@@ -724,53 +741,8 @@ function kc2Action(op,id,el){
  }
  return false;
 }
-// The handle alone opts out of native touch scrolling. Other rows retain normal scrolling.
-let drag=null;
-function cancelDrag(){
- if(!drag)return;clearTimeout(drag.timer);cancelAnimationFrame(drag.frame);
- const handle=drag.handle,id=drag.pointerId;drag=null;
- try{if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);}catch{}
- if(screen==='sort'&&sortState){sortState.ids=children(sortState.parentId).map(c=>c.id);render();}
-}
-function placeDrag(){
- if(!drag?.active)return;
- const list=host.querySelector('.kc-sort-list'),row=host.querySelector('[data-sort-id="'+drag.id+'"]');if(!list||!row)return;
- const rows=[...list.children].filter(n=>n!==row);
- const before=rows.find(n=>{const r=n.getBoundingClientRect();return drag.y<r.top+r.height/2});
- if(before)list.insertBefore(row,before);else list.appendChild(row);
- sortState.ids=[...list.children].map(n=>n.dataset.sortId);
-}
-function scrollDrag(){
- if(!drag?.active)return;
- const top=(document.getElementById('compassAreaBar')?.getBoundingClientRect().bottom||0)+60;
- const bottom=document.getElementById('mementoQuickNav')?.getBoundingClientRect();const edge=bottom?.height?bottom.top-60:innerHeight-65;
- if(drag.y<top)window.scrollBy(0,-Math.min(14,(top-drag.y)/3+3));
- else if(drag.y>edge)window.scrollBy(0,Math.min(14,(drag.y-edge)/3+3));
- placeDrag();drag.frame=requestAnimationFrame(scrollDrag);
-}
-document.addEventListener('pointerdown',e=>{
- const handle=e.target.closest?.('[data-drag-id]');if(!handle||!host?.contains(handle)||screen!=='sort'||drag||e.button!==0||e.isPrimary===false)return;
- const state=drag={pointerId:e.pointerId,id:handle.dataset.dragId,handle,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,active:false,timer:0,frame:0};
- handle.setPointerCapture(e.pointerId);
- state.timer=setTimeout(()=>{if(drag!==state)return;state.active=true;handle.closest('.kc-sort-row').classList.add('kc-dragging');notify('Verplaatsen. Laat los om op te slaan.');scrollDrag();},300);
-});
-document.addEventListener('pointermove',e=>{
- if(!drag||e.pointerId!==drag.pointerId)return;
- drag.x=e.clientX;drag.y=e.clientY;
- if(!drag.active&&Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>10){cancelDrag();return;}
- if(drag.active){e.preventDefault();placeDrag();}
-},{passive:false});
-document.addEventListener('pointerup',e=>{
- if(!drag||drag.pointerId!==e.pointerId)return;
- const d=drag,list=host.querySelector('.kc-sort-list'),r=list?.getBoundingClientRect(),ids=[...sortState.ids];
- clearTimeout(d.timer);cancelAnimationFrame(d.frame);drag=null;
- try{d.handle.releasePointerCapture(e.pointerId);}catch{}
- const valid=d.active&&r&&e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=Math.max(0,r.top-25)&&e.clientY<=Math.min(innerHeight,r.bottom+25);
- if(valid)persistSort(ids);else{sortState.ids=children(sortState.parentId).map(c=>c.id);notice=d.active?'Verplaatsen geannuleerd. De volgorde is behouden.':'';render();}
-});
-document.addEventListener('pointercancel',e=>{if(drag?.pointerId===e.pointerId)cancelDrag();});
-document.addEventListener('lostpointercapture',()=>{if(drag)cancelDrag();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drag){e.preventDefault();cancelDrag();}});
+// SortableJS replaces the former pointer handler; Up/Down buttons still work.
+
 document.addEventListener('submit',e=>{
  if(!host?.contains(e.target))return;
  if(e.target.id==='kc-journal-date-form'){e.preventDefault();const picker=host.querySelector('#kc-journal-picker');if(picker.checkValidity())openJournal(picker.value);}

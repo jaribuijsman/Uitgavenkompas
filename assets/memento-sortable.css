@@ -1,0 +1,19 @@
+/* Scoped drag handles in Leven; finance layout remains unchanged. */
+#lifeApp .memento-sort-handle,#fitnessDialog .memento-sort-handle{box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;display:grid;place-items:center;cursor:grab;touch-action:none;border:0;border-radius:10px;background:transparent;color:#b9d5c1;font-size:23px;line-height:1;font-weight:700}
+#lifeApp .memento-sort-handle:focus-visible,#fitnessDialog .memento-sort-handle:focus-visible{outline:2px solid #dcefe0;outline-offset:2px}
+#lifeApp .memento-sort-chosen,#lifeApp .memento-sort-ghost,#fitnessDialog .memento-sort-chosen,#fitnessDialog .memento-sort-ghost{background:#294735!important;border-color:#a5ccb3!important}
+#lifeApp .life-task:has(>.memento-sort-handle),#lifeApp .shopping-row:has(>.memento-sort-handle){position:relative}
+#lifeApp .life-task>.memento-sort-handle,#lifeApp .shopping-row>.memento-sort-handle{position:absolute;right:50px;top:50%;transform:translateY(-50%);z-index:1}
+#lifeApp .life-task:has(>.memento-sort-handle) .life-task-body{padding-right:42px}
+#lifeApp .shopping-row:has(>.memento-sort-handle) .shopping-row-body{padding-right:36px}
+#lifeApp .shopping-row:has(.shopping-ai)>.memento-sort-handle{right:98px}
+#lifeApp .life-grid>.life-panel:has(>.memento-sort-handle){position:relative}
+#lifeApp .life-grid>.life-panel>.memento-sort-handle{position:absolute;right:8px;top:8px}
+#lifeApp .life-grid>.life-panel:has(>.memento-sort-handle)>.life-card-head{padding-right:44px}
+#lifeApp .memento-note-grip{display:inline-flex;align-items:center;padding:0 6px;color:#b9d5c1;font-size:20px}
+#lifeApp .kc-item-list[data-manual-sort] .kc-item{touch-action:pan-y}
+#fitnessDialog .ft-editor-list .ft-row{gap:6px;flex-wrap:wrap}
+#fitnessDialog .ft-editor-list .ft-row>.memento-sort-handle{margin-left:auto}
+#lifeApp #mementoFitness .ft-cycle-sort>.ft-panel{position:relative;padding-right:56px}
+#lifeApp #mementoFitness .ft-cycle-sort>.ft-panel>.memento-sort-handle{position:absolute;top:12px;right:8px}
+@media(prefers-reduced-motion:reduce){#lifeApp .memento-sort-ghost,#fitnessDialog .memento-sort-ghost{transition:none!important}}

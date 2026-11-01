@@ -151,7 +151,7 @@ function search(life,{collectionId="",query="",kind="",status="active",sort="rec
   if(kind&&typeOf(n)!==kind)return false;
   if(tag&&!(n.tags||[]).includes(tag))return false;
   return !q||[n.title,n.body,n.category,n.sourceUrl,n.journal?.date,n.journal?.mood,...(n.tags||[])].join(" ").toLocaleLowerCase("nl").includes(q);
- }).sort((a,b)=>sort==="title"?a.title.localeCompare(b.title,"nl"):sort==="old"?String(a.updatedAt||a.createdAt||"").localeCompare(String(b.updatedAt||b.createdAt||"")):Number(!!b.pinned)-Number(!!a.pinned)||String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||"")));
+ }).sort((a,b)=>sort==="manual"?(Number.isInteger(a.manualOrder)?a.manualOrder:Number.MAX_SAFE_INTEGER)-(Number.isInteger(b.manualOrder)?b.manualOrder:Number.MAX_SAFE_INTEGER)||a.title.localeCompare(b.title,"nl"):sort==="title"?a.title.localeCompare(b.title,"nl"):sort==="old"?String(a.updatedAt||a.createdAt||"").localeCompare(String(b.updatedAt||b.createdAt||"")):Number(!!b.pinned)-Number(!!a.pinned)||String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||"")));
 }
 
 function collectionCounts(life,id){

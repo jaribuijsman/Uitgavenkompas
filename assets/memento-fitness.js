@@ -83,8 +83,8 @@
     if (redraw) render();
     return true;
   }
-  function panel(title, body, actions = "") {
-    return `<section class="life-panel ft-panel"><div class="ft-heading"><h2>${title}</h2>${actions}</div>${body}</section>`;
+  function panel(title, body, actions = "", attributes = "") {
+    return `<section class="life-panel ft-panel"${attributes?" "+attributes:""}><div class="ft-heading"><h2>${title}</h2>${actions}</div>${body}</section>`;
   }
   function routineLabel(f, id) {
     return f.routines.find((r) => r.id === id)?.name || "Bewaarde training";
@@ -184,7 +184,7 @@
         '<div class="ft-actions">' + (r.exercises.length ? button("Start", "start", r.id, true) : '') +
           button("Bewerken", "routine-edit", r.id) +
           (inCycle ? (active.length > 1 ? button("Uit cyclus", "toggle-cycle", r.id) : '') +
-            button("Als volgende", "next", r.id) : button("In cyclus", "toggle-cycle", r.id)) + '</div>');
+            button("Als volgende", "next", r.id) : button("In cyclus", "toggle-cycle", r.id)) + '</div>', "", 'data-order-id="' + esc(r.id) + '"');
     return (
       '<div class="ft-actions ft-toolbar">' + button("＋ Schema", "routine-new", "", true) +
         button("Training plannen", "plan-new") + button("Voorkeuren", "profile") + '</div>' +
@@ -194,7 +194,7 @@
         '<div class="ft-actions">' + button("Voorgesteld schema toepassen", "apply-hypertrophy") + '</div>') +
       '<div class="ft-section-title"><h2>Actieve trainingscyclus</h2>' +
         '<p>De volgorde schuift alleen door wanneer je een training afrondt.</p></div>' +
-      (active.length ? active.map((r, i) => card(r, i, true)).join("") :
+      (active.length ? '<div class="ft-cycle-sort">' + active.map((r, i) => card(r, i, true)).join("") + '</div>' :
         panel("Geen actieve schema’s", '<p>Maak een schema of voeg je driedelige split toe.</p>')) +
       (remaining.length ? '<div class="ft-section-title"><h2>Andere schema’s</h2>' +
         '<p>Deze blijven bewaard en beïnvloeden je A/B/C-volgorde niet.</p></div>' +
@@ -451,6 +451,7 @@
   function render() {
     if (!host || !host.isConnected) return;
     const f = data();
+    window.MementoSortableUI?.clear(host);
     host.innerHTML = `<div id="mementoFitness" class="${showRir ? "ft-show-rir" : ""}"><nav class="ft-tabs" aria-label="Fitness">${[
       ["today", "Vandaag"],
       ["plan", "Schema"],
@@ -463,6 +464,17 @@
       .join(
         "",
       )}</nav><div id="ft-notice" hidden role="status"></div><button id="ft-retry" class="life-btn" data-fit="retry" hidden>Opnieuw opslaan</button>${f.active && tab !== "today" ? '<div class="ft-strip"><span>Training bezig: ' + esc(f.active.name) + "</span>" + button("Hervatten", "tab", "today") + "</div>" : ""}${tab === "today" ? today() : tab === "plan" ? plan() : progress()}<div class="ft-footer">Alleen op dit apparaat · opgenomen in je volledige Memento-back-up</div></div>`;
+    if(tab==="plan"&&window.MementoSortableUI){
+      const ui=window.MementoSortableUI;
+      ui.mountAll(host,[{element:host.querySelector(".ft-cycle-sort"),itemSelector:'.ft-panel[data-order-id]',onOrder:ids=>{
+        if(pending)return false;
+        return change(draft=>{
+          const ordered=ui.orderedByIds(C.rotation(draft),ids);
+          const visible=new Set(ordered.map(r=>r.id));
+          draft.routineCycle=[...ids,...draft.routineCycle.filter(id=>!visible.has(id))];
+        });
+      }}]);
+    }
     host.onclick = click;
     host.oninput = input;
     host.onfocusin=event=>{if(event.target.dataset.ex)lastExerciseId=event.target.dataset.ex;};
@@ -477,6 +489,7 @@
   function dialog(title, body, submitLabel = "Opslaan", form = "") {
     lastFocus = document.activeElement;
     const old = document.getElementById("fitnessDialog");
+    if(old)window.MementoSortableUI?.clear(old);
     old?.remove();
     const el = document.createElement("dialog");
     el.id = "fitnessDialog";
@@ -496,6 +509,25 @@
       }
     });
     el.showModal();
+    if(form==="routine"&&editingRoutine&&window.MementoSortableUI){
+      const ui=window.MementoSortableUI;
+      ui.mountAll(el,[{element:el.querySelector(".ft-editor-list"),itemSelector:'.ft-row[data-order-id]',onOrder:ids=>{
+        if(pending)return false;
+        const previous=data().routines.find(r=>r.id===editingRoutine);
+        const title=el.querySelector('[name="name"]')?.value,location=el.querySelector('[name="location"]')?.value;
+        const notes=el.querySelector('[name="notes"]')?.value;
+        if(!previous||title!==previous.name||location!==previous.location||notes!==(previous.notes||"")){
+          error("Sla wijzigingen in het schema eerst op voordat je oefeningen versleept.");
+          return false;
+        }
+        const ok=change(draft=>{
+          const r=draft.routines.find(r=>r.id===editingRoutine);
+          r.exercises=ui.orderedByIds(r.exercises,ids);
+        },false);
+        if(ok)routineForm(editingRoutine);
+        return ok;
+      }}]);
+    }
   }
   function close() {
     document.getElementById("fitnessDialog")?.close();
@@ -515,7 +547,7 @@
     editingRoutine = id || "";
     dialog(
       r ? "Schema bewerken" : "Nieuw schema",
-      `${field("Naam", "name", r?.name || "", "text", 'required maxlength="120"')}${field("Locatie / apparaatgroep", "location", r?.location || data().profile.location, "text", 'required maxlength="100"')}<label class="ft-field">Notities<textarea name="notes" maxlength="4000">${esc(r?.notes || "")}</textarea></label>${r ? `<div class="ft-editor-list">${r.exercises.map((e, i) => `<div class="ft-row"><div><strong>${esc(e.name)}</strong><small>${e.optional ? "Aanvullend" : "Basis"}${e.group ? " · groep " + esc(e.group) : ""}</small></div><div class="ft-actions">${button("↑", "exercise-up", e.id)}${button("Bewerk", "exercise-edit", e.id)}</div></div>`).join("")}</div>${button("＋ Oefening", "exercise-new", id)}<details class="ft-details"><summary>Beheer</summary>${button("Schema archiveren", "archive", id)}</details>` : ""}`,
+      `${field("Naam", "name", r?.name || "", "text", 'required maxlength="120"')}${field("Locatie / apparaatgroep", "location", r?.location || data().profile.location, "text", 'required maxlength="100"')}<label class="ft-field">Notities<textarea name="notes" maxlength="4000">${esc(r?.notes || "")}</textarea></label>${r ? `<div class="ft-editor-list">${r.exercises.map((e, i) => `<div class="ft-row" data-order-id="${esc(e.id)}"><div><strong>${esc(e.name)}</strong><small>${e.optional ? "Aanvullend" : "Basis"}${e.group ? " · groep " + esc(e.group) : ""}</small></div><div class="ft-actions">${button("↑", "exercise-up", e.id)}${button("Bewerk", "exercise-edit", e.id)}</div></div>`).join("")}</div>${button("＋ Oefening", "exercise-new", id)}<details class="ft-details"><summary>Beheer</summary>${button("Schema archiveren", "archive", id)}</details>` : ""}`,
       "Opslaan",
       "routine",
     );
