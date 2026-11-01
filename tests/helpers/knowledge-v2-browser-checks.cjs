@@ -61,7 +61,18 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const touch=width<=800?await context.newCDPSession(page):null;
  async function dragTo(x,y){
   const start={x:a.x+a.width/2,y:a.y+a.height/2};
-  if(touch){await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...start,id:1}]});await page.waitForTimeout(360);await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y,id:1}]});await page.waitForTimeout(100);await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+  if(touch){
+    await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...start,id:1}]});
+    await page.waitForTimeout(360);
+    // A human gesture moves through intermediate coordinates. SortableJS starts
+    // touch fallback on movement and reorders on subsequent movement events.
+    for(let step=1;step<=10;step++){
+      await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:start.x+(x-start.x)*step/10,y:start.y+(y-start.y)*step/10,id:1}]});
+      await page.waitForTimeout(25);
+    }
+    await page.waitForTimeout(100);
+    await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+   }
   else{await page.mouse.move(start.x,start.y);await page.mouse.down();await page.waitForTimeout(360);await page.mouse.move(x,y,{steps:5});await page.waitForTimeout(100);await page.mouse.up();}
  }
  await dragTo(a.x+a.width/2,b.y+b.height-8);await page.waitForTimeout(80);sorted=rootIds(await life());assert.notDeepEqual(sorted,ids);assert.equal(sorted[2],ids[0]);await shot(page,'order-drag');checks.push(touch?'Trusted Chromium touch drag saved sibling order':'Mouse hold-and-drag saved sibling order');
@@ -77,7 +88,14 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const longBefore=(await life()).knowledge.collections.filter(c=>c.parentId==='kc2-levenspad').sort((a,b)=>a.order-b.order).map(c=>c.id);
  await page.locator('.kc-drag-handle').first().scrollIntoViewIfNeeded();const handle=await page.locator('.kc-drag-handle').first().boundingBox(),startScroll=await page.evaluate(()=>scrollY),endY=(await page.locator('#mementoQuickNav').isVisible())?page.viewportSize().height-115:page.viewportSize().height-35;
  const edgeTouch=width<=800?await context.newCDPSession(page):null;
- if(edgeTouch){await edgeTouch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:handle.x+22,y:handle.y+22,id:4}]});await page.waitForTimeout(360);await edgeTouch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:handle.x+22,y:endY,id:4}]});}
+  if(edgeTouch){
+    await edgeTouch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:handle.x+22,y:handle.y+22,id:4}]});
+    await page.waitForTimeout(360);
+    for(let step=1;step<=12;step++){
+      await edgeTouch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:handle.x+22,y:handle.y+22+(endY-handle.y-22)*step/12,id:4}]});
+      await page.waitForTimeout(25);
+    }
+   }
  else{await page.mouse.move(handle.x+22,handle.y+22);await page.mouse.down();await page.waitForTimeout(360);await page.mouse.move(handle.x+22,endY,{steps:8});}
  await page.waitForFunction(y=>scrollY>y+30,startScroll,{timeout:3000});
  if(edgeTouch){await edgeTouch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await edgeTouch.detach();}else await page.mouse.up();

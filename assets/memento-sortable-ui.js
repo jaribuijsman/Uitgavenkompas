@@ -28,8 +28,23 @@
     e.preventDefault();e.stopPropagation();before=order.slice();[order[pos],order[other]]=[order[other],order[pos]];commit(order);
    };
    el.addEventListener("keydown",onKey);
-   const sortable=new root.Sortable(el,{draggable:selector,handle,sort:true,animation:150,delay:180,delayOnTouchOnly:true,touchStartThreshold:4,chosenClass:"memento-sort-chosen",ghostClass:"memento-sort-ghost",
-    onStart(){before=ids();},onEnd(){const after=ids();if(after.join("\u0000")===before.join("\u0000"))return;if(!commit(after))sortable.sort(before);}
+   const sortable=new root.Sortable(el,{
+    draggable:selector,handle,sort:true,animation:150,
+    delay:180,delayOnTouchOnly:true,touchStartThreshold:4,
+    forceFallback:true,fallbackOnBody:true,fallbackTolerance:2,
+    scroll:true,scrollSensitivity:80,scrollSpeed:14,bubbleScroll:true,
+    chosenClass:"memento-sort-chosen",ghostClass:"memento-sort-ghost",
+    onStart(){before=ids();},
+    onEnd(evt){
+      const after=ids();
+      if(after.join("\u0000")===before.join("\u0000"))return;
+      const original=evt.originalEvent||{},point=original.changedTouches?.[0]||original.touches?.[0]||original;
+      const bounds=el.getBoundingClientRect();
+      const outside=Number.isFinite(point.clientX)&&Number.isFinite(point.clientY)
+        &&(point.clientX<bounds.left-25||point.clientX>bounds.right+25
+          ||point.clientY<Math.max(0,bounds.top-25)||point.clientY>Math.min(root.innerHeight,bounds.bottom+25));
+      if(outside||!commit(after)){if(el.isConnected)sortable.sort(before);}
+    }
    });
    instances.set(el,{sortable,onKey});
   }
