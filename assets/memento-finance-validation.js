@@ -62,6 +62,7 @@ function validate(s){
   }
  },'financiën');
  optional(s,'budgets',amounts,'financiën');optional(s,'totalBudget',(v,p)=>number(v,p,0),'financiën');
+ optional(s,'salaryBudgets',(months,p)=>{record(months,p);for(const [m,scopes] of Object.entries(months)){month(m,p);record(scopes,p+'.'+m);for(const [scope,b] of Object.entries(scopes)){check(['all','personalBundle',...accounts].includes(scope),p+'.'+m);record(b,p);optional(b,'total',(v,q)=>number(v,q,0),p);optional(b,'categories',amounts,p);}}},'financiën');
  optional(s,'budgetMonths',(months,p)=>{record(months,p);for(const [m,scopes] of Object.entries(months)){month(m,p);record(scopes,p+'.'+m);for(const [scope,b] of Object.entries(scopes)){check(['all','personalBundle',...accounts].includes(scope),p+'.'+m);record(b,p);optional(b,'total',(v,q)=>number(v,q,0),p);optional(b,'categories',amounts,p);}}},'financiën');
  function totals(v,p){record(v,p);for(const k of ['income','expense','net'])optional(v,k,number,p);optional(v,'count',(n,q)=>check(Number.isInteger(n)&&n>=0,q),p);optional(v,'byAccount',(a,q)=>{record(a,q);for(const [key,t] of Object.entries(a)){account(key,q);totals(t,q+'.'+key);}},p);}
  optional(s,'monthClosures',(v,p)=>{record(v,p);for(const [m,r] of Object.entries(v)){month(m,p);totals(r,p+'.'+m);optional(r,'signature',text,p);optional(r,'closedAt',text,p);}},'financiën');
@@ -70,7 +71,7 @@ function validate(s){
   for(const k of ['startBalance','monthlyIncomeTarget'])optional(v,k,number,p);
   optional(v,'payday',(n,q)=>check(Number.isInteger(n)&&n>=1&&n<=31,q),p);
   for(const k of ['accountOpening','actualBalances'])optional(v,k,(balances,q)=>{record(balances,q);for(const [a,n] of Object.entries(balances)){account(a,q+'.'+a);if(k==='actualBalances'&&n==='')continue;number(n,q+'.'+a);}},p);
-  optional(v,'salaryPeriodStart',(d,q)=>{if(d!=='')date(d,q);},p);
+  optional(v,'salaryPeriodStart',(d,q)=>{if(d!=='')date(d,q);},p);optional(v,'salaryPayDates',(a,q)=>{list(a,q);const months=new Set();a.forEach((d,i)=>{date(d,q+'['+i+']');check(!months.has(d.slice(0,7)),q);months.add(d.slice(0,7))})},p);
   optional(v,'salaryPeriods',(periods,q)=>{list(periods,q);periods.forEach((r,i)=>{const at=q+'['+i+']';totals(r,at);date(r.from,at+'.from');date(r.to,at+'.to');check(r.from<=r.to,at);});},p);
   optional(v,'balanceCheckedAt',(a,q)=>{record(a,q);for(const [key,d] of Object.entries(a)){account(key,q);text(d,q+'.'+key);}},p);
  },'financiën');
