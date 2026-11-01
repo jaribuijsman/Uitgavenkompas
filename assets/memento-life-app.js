@@ -27,6 +27,7 @@ const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeat
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title','manual'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
 
 let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false,groceryMode='compact',grocerySortOpen=false,groceryCategoryChoice='';
+const collapsedTaskCategories=new Set();
 let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',noteOpenId='',noteCategoryFilter='all',templateTab='active',wishTab='active',wishFilter='all',taskSort='manual',search='',taskScope='all',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
 function repeatLabel(t){return t.repeat==='custom'?'Iedere '+t.repeatDays+' '+(t.repeatDays===1?'dag':'dagen'):(repeats[t.repeat]||'Niet herhalen')}
 function templateOf(t){return {...reusablePlanning(t),id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
@@ -642,8 +643,9 @@ function activateLifeSortables(){
  if(view==='tasks'){
   if(taskTab==='open'&&taskSort==='manual'&&!search&&[taskScope,categoryFilter,roomFilter,repeatFilter].every(v=>v==='all')){
    root.querySelectorAll('#lifeTaskResults .life-list[data-task-category]').forEach(list=>{
-    const records=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&(t.category||'Persoonlijk')===list.dataset.taskCategory);
-    add(list,'.life-task[data-order-id]',ids=>rank(records,ids));
+    const ids=[...list.children].filter(el=>el.matches('.life-task[data-order-id]')).map(el=>el.dataset.orderId);
+    const records=state.tasks.filter(t=>ids.includes(t.id));
+    add(list,'.life-task[data-order-id]',order=>rank(records,order));
    });
   }
   if(taskTab==='saved'&&!search&&[taskScope,categoryFilter,roomFilter,repeatFilter].every(v=>v==='all')){
@@ -679,8 +681,17 @@ function renderTasks(){
  let list=state.tasks.filter(taskMatches).filter(t=>taskTab==='trash'?t.deletedAt:!t.deletedAt&&(taskTab==='archived'?t.archived:!t.archived&&(taskTab==='done'?t.done||t.lastDone:t.done!==true)));
  list.sort((a,b)=>taskSort==='manual'?compareManual(a,b,(x,y)=>Number(y.priority)-Number(x.priority)||(x.date||'9999').localeCompare(y.date||'9999')||x.title.localeCompare(y.title,'nl')):taskSort==='title'?a.title.localeCompare(b.title,'nl'):taskSort==='date'?(a.date||'9999').localeCompare(b.date||'9999')||Number(b.priority)-Number(a.priority):Number(b.priority)-Number(a.priority)||(a.date||'9999').localeCompare(b.date||'9999')||a.title.localeCompare(b.title,'nl'));
  const head='<div class="life-list-head"><span>'+({open:'Open',done:'Afgerond',archived:'Archief',trash:'Prullenbak'}[taskTab])+'</span><small>'+list.length+' '+(list.length===1?'taak':'taken')+'</small></div>';
- const groupNames=[...categories,...new Set(list.map(t=>t.category||'Persoonlijk').filter(c=>!categories.includes(c)))];
- const body=list.length?groupNames.map(category=>{const tasks=list.filter(t=>(t.category||'Persoonlijk')===category);return tasks.length?'<section class="memento-task-category"><h3>'+esc(category)+' <small>('+tasks.length+')</small></h3><div class="life-list" data-task-category="'+esc(category)+'">'+tasks.map(taskRow).join('')+'</div></section>':''}).join(''):'<div class="life-list">'+empty(taskTab==='trash'?'Geen verwijderde taken':'Geen taken in deze selectie',taskTab==='trash'?'Verwijderde taken blijven hier herstelbaar.':'Pas de filters aan of voeg een taak toe.')+'</div>';
+ // Virtual priority section: no data migration and no duplicate task cards.
+ const priorityTasks=taskTab==='open'?list.filter(t=>Boolean(t.priority)):[];
+ const remaining=list.filter(t=>taskTab!=='open'||!t.priority);
+ const groupNames=[...categories,...new Set(remaining.map(t=>t.category||'Persoonlijk').filter(c=>!categories.includes(c)))];
+ const groups=[...(priorityTasks.length?[['__important__','Belangrijk',priorityTasks]]:[]),
+  ...groupNames.map(category=>[category,category,remaining.filter(t=>(t.category||'Persoonlijk')===category)])].filter(g=>g[2].length);
+ const body=list.length?groups.map(([id,label,tasks])=>
+  '<details class="memento-task-category'+(id==='__important__'?' memento-task-category-priority':'')+'" data-task-group="'+esc(id)+'"'+(collapsedTaskCategories.has(id)?'':' open')+'>'+
+  '<summary><span>'+(id==='__important__'?'★ ':'')+esc(label)+'</span><small>'+tasks.length+'</small><span class="memento-task-category-caret" aria-hidden="true">⌄</span></summary>'+
+  '<div class="life-list" data-task-category="'+esc(id)+'">'+tasks.map(taskRow).join('')+'</div></details>'
+ ).join(''):'<div class="life-list">'+empty(taskTab==='trash'?'Geen verwijderde taken':'Geen taken in deze selectie',taskTab==='trash'?'Verwijderde taken blijven hier herstelbaar.':'Pas de filters aan of voeg een taak toe.')+'</div>';
  const legacy=taskTab==='trash'?'<details class="memento-disclosure memento-saved-trash"><summary>Verwijderde bewaarde taken ('+state.templates.filter(t=>t.deletedAt).length+')</summary><div id="lifeTemplateResults"></div></details>':'';
  host.innerHTML=head+body+legacy;
  if(taskTab==='trash')renderLibrary();
@@ -1077,8 +1088,13 @@ function render(){
  if(view==='today'){renderToday();window.MementoGlobalSearch?.mount();return}
  if(view==='tasks'){
   content.innerHTML=(taskTab==='saved'||taskTab==='trash'?'':quickForm())+toolbar()+
-   '<div class="life-segments memento-task-tabs" aria-label="Takenoverzicht">'+
-   [['open','Open'],['done','Afgerond'],['archived','Archief'],['saved','Bewaard'],['trash','Prullenbak']].map(([id,label])=>'<button type="button" data-life-task-tab="'+id+'" aria-pressed="'+(taskTab===id)+'">'+label+'</button>').join('')+
+   '<div class="life-segments memento-task-tabs" role="group" aria-label="Takenoverzicht">'+
+   [['open','Open'],['done','Afgerond']].map(([id,label])=>'<button type="button" data-life-task-tab="'+id+'" aria-pressed="'+(taskTab===id)+'">'+label+'</button>').join('')+
+   '<details class="memento-task-overview-menu"><summary aria-label="Andere taakoverzichten">'+
+   ({archived:'Archief',saved:'Bewaard',trash:'Prullenbak'}[taskTab]||'Overzichten')+
+   ' <span aria-hidden="true">⌄</span></summary><div class="memento-task-overview-items" role="group" aria-label="Andere taakoverzichten">'+
+   [['archived','Archief'],['saved','Bewaarde taken'],['trash','Prullenbak']].map(([id,label])=>'<button type="button" data-life-task-tab="'+id+'" aria-pressed="'+(taskTab===id)+'">'+label+'</button>').join('')+
+   '</div></details>'+
    '</div><div id="lifeTaskResults"></div>';
   renderTasks();return;
  }
@@ -1240,6 +1256,9 @@ function restorePreviousLife(){
 function exportICS(){const clean=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');const items=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&t.date),stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+Z$/,'Z');let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Compass//Leven//NL','CALSCALE:GREGORIAN'];items.forEach(t=>{const end=parseDate(t.date);end.setDate(end.getDate()+1);lines.push('BEGIN:VEVENT','UID:'+clean(t.id)+'-'+t.date+'@compass.local','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+t.date.replace(/-/g,''),'DTEND;VALUE=DATE:'+formatISO(end).replace(/-/g,''),'SUMMARY:'+clean(t.title),'DESCRIPTION:'+clean(t.notes),'END:VEVENT')});lines.push('END:VCALENDAR');const encoder=new TextEncoder(),fold=line=>{let out='',len=0;for(const c of line){const n=encoder.encode(c).length;if(len+n>73){out+='\r\n ';len=1}out+=c;len+=n}return out};download('compass-taken-'+today()+'.ics',lines.map(fold).join('\r\n')+'\r\n','text/calendar;charset=utf-8');status('Agenda-bestand gedownload. Dit is een eenmalige export.')}
 document.querySelectorAll('#compassAreaBar [data-compass-area]').forEach(b=>b.addEventListener('click',()=>setArea(b.dataset.compassArea)));
 root.addEventListener('click',e=>{
+ const summary=e.target.closest('.memento-task-category>summary');
+ const section=summary?.parentElement;
+ if(section?.matches?.('.memento-task-category')){const id=section.dataset.taskGroup;if(section.open)collapsedTaskCategories.add(id);else collapsedTaskCategories.delete(id);}
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
  if(d.lifeDaySlide!==undefined){showDaySlide(Number(d.lifeDaySlide));return}
  if(d.mementoNewTask!==undefined){const date=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();editTask();if($('lifeTaskDate'))$('lifeTaskDate').value=date;return}
@@ -1368,6 +1387,7 @@ window.addEventListener('focus',()=>{refreshDay();scheduleDayRefresh()});
 // never leave an open background menu or a released carousel behind.
 function closeLifePopovers(except=null){root.querySelectorAll('.life-task-menu[open],.memento-day-note[open],.memento-day-add-menu[open]').forEach(m=>{if(m!==except)m.open=false;});}
 document.addEventListener('click',e=>{root.querySelectorAll('.life-task-menu[open],.memento-day-note[open],.memento-day-add-menu[open]').forEach(m=>{if(!m.contains(e.target))m.open=false;});});
+document.addEventListener('click',e=>{const menu=root.querySelector('.memento-task-overview-menu[open]');if(menu&&!menu.contains(e.target))menu.open=false;});
 root.addEventListener('toggle',e=>{if(e.target.id==='shoppingBought'&&e.target.isConnected)groceryBoughtOpen=e.target.open;if(e.target.open&&e.target.matches('.life-task-menu,.memento-day-note,.memento-day-add-menu'))closeLifePopovers(e.target);},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLifePopovers();});
 scheduleDayRefresh();

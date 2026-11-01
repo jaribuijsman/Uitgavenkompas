@@ -31,16 +31,10 @@
    today.prepend(h);
   }
   const hero=today?.querySelector('.flow-hero');if(hero&&!hero.closest('.mg-fold'))fold([hero],'Gedachte voor vandaag');
-  const tabs=$('#lifeApp .memento-task-tabs');
   const tasks=$('#lifeApp[data-life-view=tasks] #lifeContent');
   if(tasks){
    const capture=tasks.querySelector('.memento-capture-card');
    if(capture&&!capture.closest('.mg-fold'))fold([capture],'Snelle invoer · taak, notitie of dagboek');
-  }
-  if(tabs&&!tabs.dataset.mgReady){
-   tabs.dataset.mgReady='1';const rest=[...tabs.children].filter(b=>!['open','done'].includes(b.dataset.lifeTaskTab));
-   const selected=rest.find(b=>b.getAttribute('aria-pressed')==='true');
-   const d=fold(rest,selected?.textContent||'Overzichten');if(d){d.classList.add('mg-task-overviews');tabs.append(d);}
   }
   for(const card of document.querySelectorAll('#lifeWishResults .life-panel')){if(card.dataset.mgWish)continue;card.dataset.mgWish='1';card.classList.add('mg-wish-card');const actions=card.querySelector('.life-card-actions');if(actions){const manage=[...actions.querySelectorAll('[data-life-wish-edit],[data-life-wish-delete]')];const d=fold(manage,'Beheer');if(d)actions.append(d);}const ps=[...card.querySelectorAll(':scope>p')].filter(p=>!p.textContent.startsWith('Budget:'));if(ps.length)fold(ps,'Notitie');}
   // Context and chips expose the real native financial filters; clicking clears that control.
