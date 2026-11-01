@@ -18,7 +18,9 @@ async function ids(page,selector){return page.locator(selector).evaluateAll(rows
 async function touchDrag(page,selector){
  const grip=page.locator(selector+" > .memento-sort-handle"),rows=page.locator(selector);
  assert(await rows.count()>=2,selector+" must contain at least two items");
- await grip.first().scrollIntoViewIfNeeded();
+ // Category headings can put the second row below the viewport. Center the
+ // real drag source so both the source and drop target are reachable.
+ await rows.first().evaluate(row=>row.scrollIntoView({block:"center"}));
  const first=await grip.first().boundingBox(),second=await rows.nth(1).boundingBox();
  assert(first&&second,"Drag handle must be visible");
  const start={x:first.x+first.width/2,y:first.y+first.height/2};
@@ -54,7 +56,7 @@ async function touchDrag(page,selector){
   checks.push("Pinned local library and adapter loaded");
   await nav(page,"tasks");
   assert.equal(await page.locator("#lifeTaskSort").inputValue(),"manual","Tasks must be immediately draggable by default");
-  const taskSelector="#lifeTaskResults>.life-list>.life-task[data-order-id]";
+  const taskSelector='#lifeTaskResults .life-list[data-task-category="Persoonlijk"]>.life-task[data-order-id]';
   assert(await page.locator(taskSelector+" > .memento-sort-handle").count()>=2,"Task drag grips are missing");
   const before=await ids(page,taskSelector);
   await touchDrag(page,taskSelector);

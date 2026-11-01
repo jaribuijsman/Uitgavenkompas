@@ -29,8 +29,123 @@ function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','hous
 let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false,groceryMode='compact',grocerySortOpen=false,groceryCategoryChoice='';
 let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',noteOpenId='',noteCategoryFilter='all',templateTab='active',wishTab='active',wishFilter='all',taskSort='manual',search='',taskScope='all',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
 function repeatLabel(t){return t.repeat==='custom'?'Iedere '+t.repeatDays+' '+(t.repeatDays===1?'dag':'dagen'):(repeats[t.repeat]||'Niet herhalen')}
-function templateOf(t){return {id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
+function templateOf(t){return {...reusablePlanning(t),id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
 function storeTemplate(t){const copy=templateOf(t),existing=state.templates.find(x=>!x.deletedAt&&x.sourceTaskId&&x.sourceTaskId===t.id);if(existing){copy.id=existing.id;state.templates[state.templates.indexOf(existing)]=copy}else state.templates.push(copy)}
+// Optional task metadata stays in the existing Life document and guarded writes.
+function validateTaskPlanning(t,template=false){
+ const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
+ const identifier=x=>typeof x==='string'&&x.length>0&&x.length<=200;
+ const seconds=x=>Number.isFinite(x)&&x>=0&&x<=86400;
+ if(t.planning!==undefined){const p=t.planning;if(!object(p)||p.schemaVersion!==1||(p.estimateMinutes!=null&&(!Number.isInteger(p.estimateMinutes)||p.estimateMinutes<1||p.estimateMinutes>1440)))throw Error('Ongeldige geschatte taakduur.');}
+ if(t.timing===undefined)return;
+ const v=t.timing;if(template||!object(v)||v.schemaVersion!==1||!identifier(v.occurrenceId)||!Array.isArray(v.measurements))throw Error('Ongeldige taakmetingen.');
+ const ids=new Set();
+ for(const m of v.measurements){if(!object(m)||!identifier(m.id)||ids.has(m.id)||m.taskId!==t.id||!identifier(m.occurrenceId)||m.source!=='timer'||!seconds(m.activeSeconds)||typeof m.confirmedAt!=='string'||!Number.isFinite(Date.parse(m.confirmedAt))||m.needsReview!==false)throw Error('Ongeldige bevestigde tijdmeting.');ids.add(m.id);}
+ if(v.session!=null){const s=v.session;if(!object(s)||!identifier(s.id)||ids.has(s.id)||s.occurrenceId!==v.occurrenceId||!['running','paused','needsReview','stopped'].includes(s.status)||!seconds(s.activeSeconds))throw Error('Ongeldige lopende tijdmeting.');}
+}
+function reusablePlanning(t){return t.planning?{planning:clone(t.planning)}:{}}
+let taskClock=null,taskClockTick=null;
+function watchTaskClock(){
+ clearTimeout(taskClockTick);if(!taskClock)return;
+ taskClockTick=setTimeout(()=>{const c=taskClock;if(!c)return;const elapsed=(performance.now()-c.started)/1000,wall=(Date.now()-c.wall)/1000;
+  if(elapsed<0||elapsed>5||Math.abs(wall-elapsed)>2){timerCheckpoint('needsReview');return}
+  c.base=Math.min(86400,c.base+elapsed);c.started=performance.now();c.wall=Date.now();
+  const label=$('lifeTaskTimer')?.querySelector('p');if(label)label.textContent='Timer loopt · '+Math.floor(c.base/60)+' min '+Math.floor(c.base%60)+' sec actief';
+  watchTaskClock();
+ },1000);
+}
+function timerTask(){return state.tasks.find(t=>t.timing?.session)}
+function timerCommit(fn){const before=clone(state);try{fn();for(const t of state.tasks)validateTaskPlanning(t);if(!save()){state=before;return false}undo=null;return true}catch(e){state=before;status(e.message,false,true);return false}}
+function timerCheckpoint(nextStatus){
+ const t=timerTask();if(!t)return true;
+ const s=t.timing.session,c=taskClock;
+ let active=s.activeSeconds,review=false;
+ if(s.status==='running'){
+  if(c?.id===s.id){active=c.base;const elapsed=(performance.now()-c.started)/1000,wall=(Date.now()-c.wall)/1000;review=elapsed<0||elapsed>5||Math.abs(wall-elapsed)>2;if(!review)active=Math.min(86400,c.base+elapsed);}
+  else review=true;
+ }
+ const ok=timerCommit(()=>{s.activeSeconds=active;s.status=review?'needsReview':nextStatus});
+ // Never resume a clock after a failed lifecycle write. The stored running
+ // checkpoint remains recoverable, and requires review on the next interaction.
+ taskClock=null;
+ if(ok)paintTaskTimer();return ok;
+}
+function taskTimerMarkup(t){
+ if(!t?.id)return '<p class="life-footnote">Sla de taak op om optioneel tijd te meten.</p>';
+ return '<details class="memento-task-timer"><summary>Tijd meten (optioneel)</summary><div id="lifeTaskTimer" aria-live="polite"></div></details>';
+}
+function paintTaskTimer(){
+ const host=$('lifeTaskTimer');if(!host||modal?.mode!=='task')return;
+ const t=state.tasks.find(t=>t.id===modal.id);if(!t)return;
+ const s=t.timing?.session,last=t.timing?.measurements.at(-1);
+ const button=(action,text)=>'<button type="button" class="life-btn" data-task-timer="'+action+'">'+text+'</button>';
+ if(!s){host.innerHTML=(last?'<p>Gemeten: '+Math.round(last.activeSeconds/60*100)/100+' min</p>':'')+button('start',last?'Opnieuw meten':'Start meting');return}
+ const live=s.status==='running'&&taskClock?.id===s.id;
+ const review=s.status==='needsReview'||(s.status==='running'&&!live);
+ host.innerHTML='<p>'+esc(review?'Controle nodig':live?'Timer loopt':s.status==='paused'?'Gepauzeerd':'Meting gestopt')+' · '+Math.floor(s.activeSeconds/60)+' min '+Math.floor(s.activeSeconds%60)+' sec vastgelegd</p>'+
+ (live?button('pause','Pauzeren'):(s.status==='paused'?button('resume','Hervatten'):''))+
+ (live||s.status==='paused'?button('stop','Stoppen'):'')+
+ (!live&&s.status!=='paused'?'<label class="life-form-field">Actieve minuten controleren<input id="lifeMeasuredMinutes" type="number" min="0" max="1440" step="0.01" value="'+(Math.round(s.activeSeconds/60*100)/100)+'"></label>'+button('confirm','Meting bevestigen'):'')+
+ button('discard','Meting verwerpen');
+}
+function taskTimerAction(action){
+ if(modal?.mode!=='task')return;
+ const t=state.tasks.find(t=>t.id===modal.id&&!t.deletedAt&&!t.archived&&!t.done);
+ if(!t){status('Open een actieve, opgeslagen taak om tijd te meten.',false,true);return}
+ const s=t.timing?.session;
+ if(action==='start'){
+  if(timerTask()){status('Er is al een meting. Open die taak en bevestig of verwerp de meting.',false,true);return}
+  if(timerCommit(()=>{t.timing||={schemaVersion:1,occurrenceId:uid(),measurements:[]};t.timing.session={id:uid(),occurrenceId:t.timing.occurrenceId,status:'running',activeSeconds:0}}))taskClock={id:t.timing.session.id,base:0,started:performance.now(),wall:Date.now()};
+ }else if(!s)return;
+ else if(action==='pause'||action==='stop'){timerCheckpoint(action==='pause'?'paused':'stopped');return}
+ else if(action==='resume'){
+  if(s.status!=='paused')return;
+  if(timerCommit(()=>{s.status='running'}))taskClock={id:s.id,base:s.activeSeconds,started:performance.now(),wall:Date.now()};
+ }else if(action==='discard'){
+  if(!confirm('Deze onbevestigde meting verwerpen?'))return;
+  if(timerCommit(()=>{delete t.timing.session}))taskClock=null;
+ }else if(action==='confirm'){
+  if(s.status==='running'&&taskClock)return;
+  const minutes=Number($('lifeMeasuredMinutes')?.value);
+  if(!$('lifeMeasuredMinutes')?.value||!Number.isFinite(minutes)||minutes<0||minutes>1440){status('Controleer de actieve minuten (0–1440).',false,true);return}
+  if(timerCommit(()=>{t.timing.measurements.push({id:s.id,taskId:t.id,occurrenceId:s.occurrenceId,source:'timer',activeSeconds:Math.round(minutes*60),confirmedAt:new Date().toISOString(),needsReview:false});delete t.timing.session})){
+   taskClock=null;
+   const estimate=Math.max(1,Math.ceil(minutes));
+   if(confirm(minutes+' min gemeten — gebruiken als geschatte duur ('+estimate+' min)? De schatting wordt bewaard met Opslaan.')){$('lifeTaskEstimate').value=estimate;modal.estimateSource='measurement';$('lifeEstimateSource').textContent='Gebaseerd op één meting';}
+  }else return; // Keep the corrected minutes and editor draft after a failed save.
+ }
+ watchTaskClock();paintTaskTimer();
+}
+function reviewTaskTimer(){const t=timerTask();if(t?.timing.session.status==='running')timerCheckpoint('needsReview')}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)reviewTaskTimer()});
+document.addEventListener('freeze',reviewTaskTimer);
+window.addEventListener('pagehide',reviewTaskTimer);
+// Wait for the existing viewport helper to resize the scroll body before
+// exposing a focused task field above the fixed editor actions.
+function revealTaskEditorField(){
+ const field=document.activeElement;if(!field?.closest?.('#lifeTaskForm'))return;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  const body=field.closest('.life-dialog-body');if(!body||!field.isConnected)return;
+  const input=field.getBoundingClientRect(),bounds=body.getBoundingClientRect();
+  if(input.bottom>bounds.bottom-12)body.scrollTop+=input.bottom-bounds.bottom+12;
+  else if(input.top<bounds.top+12)body.scrollTop+=input.top-bounds.top-12;
+ }));
+}
+dialog.addEventListener('focusin',revealTaskEditorField);
+window.addEventListener('resize',revealTaskEditorField);
+window.visualViewport?.addEventListener('resize',revealTaskEditorField);
+
+function syncTaskSteps(){
+ if(!modal?.steps||!$('lifeTaskSteps'))return;
+ const remaining=modal.steps.slice();
+ modal.steps=$('lifeTaskSteps').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(text=>{const i=remaining.findIndex(s=>s.text===text);return i<0?{text,done:false}:remaining.splice(i,1)[0]});
+ paintTaskSteps();
+}
+function paintTaskSteps(){
+ const host=$('lifeTaskStepOrder');if(!host||!modal?.steps)return;
+ host.innerHTML=modal.steps.map((s,i)=>'<div class="memento-step-order"><label><input type="checkbox" data-task-step-check="'+i+'"'+(s.done?' checked':'')+'><span>'+esc(s.text)+'</span></label><button type="button" class="life-btn" data-task-step-move="'+i+'" data-direction="-1" aria-label="Stap '+(i+1)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" class="life-btn" data-task-step-move="'+i+'" data-direction="1" aria-label="Stap '+(i+1)+' omlaag"'+(i===modal.steps.length-1?' disabled':'')+'>↓</button></div>').join('');
+}
+
 function validate(s){
  if(s?.uiPreferences!==undefined)window.MementoReviewCore.validFilters(s.uiPreferences);
  if(s&&window.MementoFitnessCore){if(s.fitness===undefined)s.fitness=window.MementoFitnessCore.empty();window.MementoFitnessCore.validate(s.fitness);}
@@ -48,6 +163,8 @@ function validate(s){
   if(a.done===undefined)a.done=false;if(a.completedAt===undefined)a.completedAt='';if(typeof a.done!=='boolean'||typeof a.completedAt!=='string')throw Error('Ongeldige afspraakstatus.');appointmentIds.add(a.id);
  }
  for(const t of [...s.tasks,...s.templates]){if(t.repeatDays===undefined)t.repeatDays=4;if(!Number.isInteger(t.repeatDays)||t.repeatDays<1||t.repeatDays>3650)throw Error('Het herhaalinterval moet een heel getal van 1 tot en met 3650 dagen zijn.');}
+ for(const t of [...s.tasks,...s.templates])validateTaskPlanning(t,s.templates.includes(t));
+ if(s.tasks.filter(t=>t.timing?.session).length>1)throw Error('Er mag maar één onbevestigde tijdmeting zijn.');
  for(const t of s.templates){if(!['task','routine'].includes(t.kind)||!Object.hasOwn(repeats,t.repeat)||!Array.isArray(t.steps)||t.steps.some(x=>!x||typeof x.text!=='string'))throw Error('Ongeldig taaksjabloon.');if(t.deletedAt===undefined)t.deletedAt='';if(typeof t.deletedAt!=='string')throw Error('Ongeldige prullenbakstatus.');}
  for(const n of s.notes){if(n.deletedAt===undefined)n.deletedAt='';if(typeof n.deletedAt!=='string')throw Error('Ongeldige notitiestatus.');}
  for(const t of s.tasks){if(t.deletedAt===undefined)t.deletedAt='';if(typeof t.deletedAt!=='string')throw Error('Ongeldige prullenbakstatus van een taak.');if(!['task','routine'].includes(t.kind)||!Object.hasOwn(repeats,t.repeat)||!validDate(t.date||'')||!validDate(t.focusDate||'')||!validDate(t.lastDone||'')||!Array.isArray(t.steps)||!Array.isArray(t.history))throw Error('Controleer de taakdatums en herhalingen in deze back-up.');if(t.steps.some(x=>!x||typeof x.text!=='string'))throw Error('Ongeldige subtaken in de back-up.');if(t.history.some(h=>!h||typeof h.date!=='string'||!h.date||!validDate(h.date)))throw Error('Ongeldige uitvoeringsgeschiedenis in de back-up.')}
@@ -62,6 +179,7 @@ function save(token){
  if(blocked){status('De opgeslagen gegevens konden niet worden gelezen. Herstel eerst een back-up; de bestaande opslag is behouden.',false,true);return false}
  try{
   if(!storageGuard)throw Error('Veilige opslag is niet geladen. Vernieuw Memento.');
+  for(const t of [...state.tasks,...state.templates])validateTaskPlanning(t,state.templates.includes(t));
   storageGuard.commit({life:JSON.stringify(state)},{token});savedStatus();return true;
  }catch(e){
   $('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Opslaan mislukt';$('lifeSaveStatus').dataset.error='true';
@@ -112,7 +230,7 @@ function toolbar(){
  '<label>Categorie<select id="lifeCategoryFilter">'+option([['all','Alle categorieën'],...categories.map(x=>[x,x])],categoryFilter)+'</select></label>'+
  '<label>Ruimte<select id="lifeRoomFilter">'+option([['all','Alle ruimtes'],...rooms.map(x=>[x,x])],roomFilter)+'</select></label>'+
  '<label>Herhaling<select id="lifeRepeatFilter">'+option([['all','Alle herhalingen'],...Object.entries(repeats)],repeatFilter)+'</select></label>'+
- '<label class="memento-task-sort">Sorteren<select id="lifeTaskSort">'+option([['priority','Prioriteit en datum'],['date','Plandatum'],['title','Naam'],['manual','Handmatig verslepen']],taskSort)+'</select></label><div id="mgTaskFilterPresets" class="mg-filter-chips" role="group" aria-label="Bewaarde taakselecties"></div></div></details></div>';
+ '<label class="memento-task-sort">Sorteren<select id="lifeTaskSort">'+option([['priority','Prioriteit en datum'],['date','Plandatum'],['title','Naam'],['manual','Handmatig verslepen']],taskSort)+'</select><small>Kies Handmatig verslepen en sleep ⠿ binnen een categorie. Verslepen werkt zonder actieve zoekfilters.</small></label><div id="mgTaskFilterPresets" class="mg-filter-chips" role="group" aria-label="Bewaarde taakselecties"></div></div></details></div>';
 }
 function segments(entries,current,attr){return '<div class="life-segments" role="group" aria-label="Weergave">'+entries.map(([id,title])=>'<button type="button" '+attr+'="'+id+'" aria-pressed="'+(current===id)+'">'+title+'</button>').join('')+'</div>'}
 /* Memento unified appointments: local Life storage, never modify Google calendars. */
@@ -470,6 +588,7 @@ function taskRow(t){
  if(late&&t.date&&!inDay)meta.push(esc(fmt(t.date)));
  if(late)meta.push('<span class="life-late-text">'+esc(late)+'</span>');
  else if(t.date&&!inDay)meta.push(fmt(t.date));
+ if(!inDay&&t.planning?.estimateMinutes)meta.push(t.planning.estimateMinutes+' min geschat');
  if(t.steps?.length)meta.push(t.steps.filter(x=>x.done).length+' van '+t.steps.length+' stappen');
  if(t.priority)meta.push('<span class="life-priority-label">★ Belangrijk</span>');
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
@@ -522,8 +641,10 @@ function activateLifeSortables(){
  });
  if(view==='tasks'){
   if(taskTab==='open'&&taskSort==='manual'&&!search&&[taskScope,categoryFilter,roomFilter,repeatFilter].every(v=>v==='all')){
-   const records=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done);
-   add(root.querySelector('#lifeTaskResults>.life-list'),'.life-task[data-order-id]',ids=>rank(records,ids));
+   root.querySelectorAll('#lifeTaskResults .life-list[data-task-category]').forEach(list=>{
+    const records=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&(t.category||'Persoonlijk')===list.dataset.taskCategory);
+    add(list,'.life-task[data-order-id]',ids=>rank(records,ids));
+   });
   }
   if(taskTab==='saved'&&!search&&[taskScope,categoryFilter,roomFilter,repeatFilter].every(v=>v==='all')){
    const records=state.templates.filter(t=>!t.deletedAt);
@@ -557,8 +678,9 @@ function renderTasks(){
  }
  let list=state.tasks.filter(taskMatches).filter(t=>taskTab==='trash'?t.deletedAt:!t.deletedAt&&(taskTab==='archived'?t.archived:!t.archived&&(taskTab==='done'?t.done||t.lastDone:t.done!==true)));
  list.sort((a,b)=>taskSort==='manual'?compareManual(a,b,(x,y)=>Number(y.priority)-Number(x.priority)||(x.date||'9999').localeCompare(y.date||'9999')||x.title.localeCompare(y.title,'nl')):taskSort==='title'?a.title.localeCompare(b.title,'nl'):taskSort==='date'?(a.date||'9999').localeCompare(b.date||'9999')||Number(b.priority)-Number(a.priority):Number(b.priority)-Number(a.priority)||(a.date||'9999').localeCompare(b.date||'9999')||a.title.localeCompare(b.title,'nl'));
- const head='<div class="life-list-head"><span>'+({open:'Open',done:'Afgerond',archived:'Archief',trash:'Prullenbak'}[taskTab])+'</span><small>'+list.length+' '+(list.length===1?'taak':'taken')+'</small></div>'+(taskTab==='open'&&taskSort==='manual'&&list.length>1?'<p class="memento-sort-guide">Houd ⠿ even vast en sleep een taak omhoog of omlaag. Sorteren werkt zonder actieve zoekfilters.</p>':'');
- const body=list.length?'<div class="life-list">'+list.map(taskRow).join('')+'</div>':'<div class="life-list">'+empty(taskTab==='trash'?'Geen verwijderde taken':'Geen taken in deze selectie',taskTab==='trash'?'Verwijderde taken blijven hier herstelbaar.':'Pas de filters aan of voeg een taak toe.')+'</div>';
+ const head='<div class="life-list-head"><span>'+({open:'Open',done:'Afgerond',archived:'Archief',trash:'Prullenbak'}[taskTab])+'</span><small>'+list.length+' '+(list.length===1?'taak':'taken')+'</small></div>';
+ const groupNames=[...categories,...new Set(list.map(t=>t.category||'Persoonlijk').filter(c=>!categories.includes(c)))];
+ const body=list.length?groupNames.map(category=>{const tasks=list.filter(t=>(t.category||'Persoonlijk')===category);return tasks.length?'<section class="memento-task-category"><h3>'+esc(category)+' <small>('+tasks.length+')</small></h3><div class="life-list" data-task-category="'+esc(category)+'">'+tasks.map(taskRow).join('')+'</div></section>':''}).join(''):'<div class="life-list">'+empty(taskTab==='trash'?'Geen verwijderde taken':'Geen taken in deze selectie',taskTab==='trash'?'Verwijderde taken blijven hier herstelbaar.':'Pas de filters aan of voeg een taak toe.')+'</div>';
  const legacy=taskTab==='trash'?'<details class="memento-disclosure memento-saved-trash"><summary>Verwijderde bewaarde taken ('+state.templates.filter(t=>t.deletedAt).length+')</summary><div id="lifeTemplateResults"></div></details>':'';
  host.innerHTML=head+body+legacy;
  if(taskTab==='trash')renderLibrary();
@@ -987,7 +1109,7 @@ function render(){
  if(view==='agenda')renderAgenda();if(view==='backup'){renderBackup();window.MementoAssistant?.mount(content,window.MementoAssistantBridge)}
 }
 function showDialog(title,description,body,footer){previousFocus=document.activeElement?.closest?.(".life-task-menu,.memento-day-note,.memento-day-add-menu")?.querySelector("summary")||document.activeElement;closeLifePopovers();$('lifeDialogPanel').innerHTML='<div class="life-dialog-head"><div><h2 id="lifeDialogTitle">'+esc(title)+'</h2><p class="life-dialog-description">'+esc(description)+'</p></div><button type="button" class="life-close" data-life-close aria-label="Sluiten">×</button></div><div class="life-dialog-body">'+body+'</div><div class="life-dialog-footer">'+footer+'</div>';dialog.hidden=false;dialog.classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{$('lifeDialogPanel').querySelector('input,textarea,select,button')?.focus()},20)}
-function closeDialog(){if(!dialog.classList.contains('open'))return;dialog.hidden=true;dialog.classList.remove('open');document.body.style.overflow='';modal=null;if(previousFocus?.isConnected)previousFocus.focus()}
+function closeDialog(){if(!dialog.classList.contains('open'))return true;if(timerTask()?.timing.session.status==='running'&&!timerCheckpoint('needsReview'))return false;dialog.hidden=true;dialog.classList.remove('open');document.body.style.overflow='';modal=null;if(previousFocus?.isConnected)previousFocus.focus();return true}
 function detail(id){
  const t=state.tasks.find(x=>x.id===id);if(!t)return;modal={mode:'detail',id};
  const disabled=t.deletedAt?' disabled':'';
@@ -1002,10 +1124,10 @@ function detail(id){
  '<button type="button" class="life-btn" data-life-close>Sluiten</button>'+(t.deletedAt?'<button type="button" class="life-btn" data-life-task-restore="'+esc(id)+'">Terugzetten</button>':'<button type="button" class="life-btn" data-life-detail-complete="'+esc(id)+'">'+(t.done?'Weer openen':'Afronden')+'</button><button type="button" class="life-btn" data-life-edit="'+esc(id)+'">Alle eigenschappen</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>'));
 }
 
-function editTask(id=null,fromTemplate=null,asTemplate=false){const old=(asTemplate?state.templates:state.tasks).find(t=>t.id===id),t=old||fromTemplate||{title:'',kind:'task',category:'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date:'',notes:'',steps:[],priority:false};modal={mode:asTemplate?'template':'task',id,fromTemplate:fromTemplate?.id||null};
+function editTask(id=null,fromTemplate=null,asTemplate=false){const old=(asTemplate?state.templates:state.tasks).find(t=>t.id===id),t=old||fromTemplate||{title:'',kind:'task',category:'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date:'',notes:'',steps:[],priority:false};modal={mode:asTemplate?'template':'task',id,fromTemplate:fromTemplate?.id||null,steps:clone(t.steps||[]),estimateSource:t.planning?.estimateSource||'manual'};
  const field=(label,control,wide=false)=>'<div class="life-form-field'+(wide?' wide':'')+'">'+label+control+'</div>';
- const body='<form id="lifeTaskForm"><div class="life-form-grid">'+field('<label for="lifeTaskTitle">Omschrijving *</label>','<input id="lifeTaskTitle" required maxlength="180" value="'+esc(t.title)+'">'+(window.MementoDictation?.button?.("lifeTaskTitle")||"")+'',true)+field('<label for="lifeTaskKind">Soort</label>','<select id="lifeTaskKind">'+option([['task','Eenmalige taak'],['routine','Schoonmaakroutine']],t.kind)+'</select>')+field('<label for="lifeTaskCategory">Categorie</label>','<select id="lifeTaskCategory">'+option(categories.map(x=>[x,x]),t.category)+'</select>')+field('<label for="lifeTaskDate">Plandatum (optioneel)</label>','<input id="lifeTaskDate" type="date" value="'+esc(t.date||'')+'">')+field('<label for="lifeTaskRepeat">Herhaling na afronden</label>','<select id="lifeTaskRepeat">'+option(Object.entries(repeats),t.repeat)+'</select><small>Het interval gaat in op de dag dat je de taak afvinkt.</small>')+'<div class="life-form-field" id="lifeRepeatDaysField"'+(t.repeat==='custom'?'':' hidden')+'><label for="lifeTaskRepeatDays">Aantal dagen tussen afrondingen</label><input id="lifeTaskRepeatDays" type="number" min="1" max="3650" step="1" value="'+esc(t.repeatDays||4)+'"'+(t.repeat==='custom'?' required':'')+'><small>Bij 4 dagen: vandaag gedaan → vier dagen later opnieuw aan de beurt.</small></div>'+field('<label for="lifeTaskRoom">Ruimte</label>','<select id="lifeTaskRoom">'+option(rooms.map(x=>[x,x]),t.room||'Hele huis')+'</select>')+field('<label for="lifeTaskPriority">Aandacht</label>','<select id="lifeTaskPriority">'+option([['normal','Normaal'],['high','Belangrijk']],t.priority?'high':'normal')+'</select>')+field('<label for="lifeTaskNotes">Notitie</label>','<textarea id="lifeTaskNotes" rows="3" maxlength="5000">'+esc(t.notes)+'</textarea>'+(window.MementoDictation?.button?.("lifeTaskNotes")||"")+'',true)+field('<label for="lifeTaskSteps">Kleine stappen — één per regel</label>','<textarea id="lifeTaskSteps" rows="3" maxlength="3000" placeholder="Bijvoorbeeld: spullen klaarleggen">'+esc(t.steps.map(x=>x.text).join('\n'))+'</textarea>',true)+'</div></form>';
- showDialog(asTemplate?(old?'Bewaarde taak bewerken':'Een taak bewaren'):(old?'Taak bewerken':'Een taak toevoegen'),'Alleen de omschrijving is verplicht. Jij bepaalt de planning.',body,(old&&!asTemplate?'<button type="button" class="life-btn life-btn-danger" data-life-archive="'+esc(id)+'">'+(old.archived?'Terugzetten':'Naar archief')+'</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeTaskForm">'+(asTemplate?'Bewaarde taak opslaan':'Opslaan')+'</button>');if(asTemplate)$('lifeTaskDate').closest('.life-form-field').hidden=true;
+ const body='<form id="lifeTaskForm"><div class="life-form-grid">'+field('<label for="lifeTaskTitle">Omschrijving *</label>','<input id="lifeTaskTitle" required maxlength="180" value="'+esc(t.title)+'">'+(window.MementoDictation?.button?.("lifeTaskTitle")||"")+'',true)+field('<label for="lifeTaskKind">Soort</label>','<select id="lifeTaskKind">'+option([['task','Eenmalige taak'],['routine','Schoonmaakroutine']],t.kind)+'</select>')+field('<label for="lifeTaskCategory">Categorie</label>','<select id="lifeTaskCategory">'+option(categories.map(x=>[x,x]),t.category)+'</select>')+field('<label for="lifeTaskDate">Plandatum (optioneel)</label>','<input id="lifeTaskDate" type="date" value="'+esc(t.date||'')+'">')+field('<label for="lifeTaskRepeat">Herhaling na afronden</label>','<select id="lifeTaskRepeat">'+option(Object.entries(repeats),t.repeat)+'</select><small>Het interval gaat in op de dag dat je de taak afvinkt.</small>')+'<div class="life-form-field" id="lifeRepeatDaysField"'+(t.repeat==='custom'?'':' hidden')+'><label for="lifeTaskRepeatDays">Aantal dagen tussen afrondingen</label><input id="lifeTaskRepeatDays" type="number" min="1" max="3650" step="1" value="'+esc(t.repeatDays||4)+'"'+(t.repeat==='custom'?' required':'')+'><small>Bij 4 dagen: vandaag gedaan → vier dagen later opnieuw aan de beurt.</small></div>'+field('<label for="lifeTaskRoom">Ruimte</label>','<select id="lifeTaskRoom">'+option(rooms.map(x=>[x,x]),t.room||'Hele huis')+'</select>')+field('<label for="lifeTaskPriority">Aandacht</label>','<select id="lifeTaskPriority">'+option([['normal','Normaal'],['high','Belangrijk']],t.priority?'high':'normal')+'</select>')+field('<label for="lifeTaskEstimate">Geschatte actieve tijd (minuten, optioneel)</label>','<input id="lifeTaskEstimate" type="number" min="1" max="1440" step="1" value="'+esc(t.planning?.estimateMinutes??'')+'"><small id="lifeEstimateSource">'+(t.planning?.estimateSource==='measurement'?'Gebaseerd op één meting':t.planning?.estimateMinutes?'Zelf ingesteld':'Onbekend')+'</small>',true)+field('<label for="lifeTaskNotes">Notitie</label>','<textarea id="lifeTaskNotes" rows="3" maxlength="5000">'+esc(t.notes)+'</textarea>'+(window.MementoDictation?.button?.("lifeTaskNotes")||"")+'',true)+field('<label for="lifeTaskSteps">Kleine stappen — één per regel</label>','<textarea id="lifeTaskSteps" rows="3" maxlength="3000" placeholder="Bijvoorbeeld: spullen klaarleggen">'+esc(t.steps.map(x=>x.text).join('\n'))+'</textarea><div id="lifeTaskStepOrder"></div>',true)+(asTemplate?'':field('',taskTimerMarkup(old),true))+'</div></form>';
+ showDialog(asTemplate?(old?'Bewaarde taak bewerken':'Een taak bewaren'):(old?'Taak bewerken':'Een taak toevoegen'),'Alleen de omschrijving is verplicht. Jij bepaalt de planning.',body,(old&&!asTemplate?'<button type="button" class="life-btn life-btn-danger" data-life-archive="'+esc(id)+'">'+(old.archived?'Terugzetten':'Naar archief')+'</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeTaskForm">'+(asTemplate?'Bewaarde taak opslaan':'Opslaan')+'</button>');if(asTemplate)$('lifeTaskDate').closest('.life-form-field').hidden=true;paintTaskSteps();paintTaskTimer();
 }
 function editGrocery(id=null){
  const g=state.groceries.find(x=>x.id===id)||{title:'',quantity:'',category:'Overig',notes:'',list:groceryList,favorite:false,needed:groceryTab==='list',budget:''};modal={mode:'grocery',id};
@@ -1030,15 +1152,15 @@ function duplicateTask(id){
   const copy={...clone(source),id:uid(),title:(source.title.slice(0,172)+' (kopie)').slice(0,180),
    done:false,archived:false,deletedAt:'',lastDone:'',date:'',focusDate:'',history:[],
    steps:(source.steps||[]).map(step=>({...step,done:false}))};
-  delete copy.templateId;delete copy.sourceTaskId;
+  delete copy.templateId;delete copy.sourceTaskId;delete copy.timing;
   state.tasks.unshift(copy);
  },'Taak gedupliceerd. Plan de kopie wanneer je wilt.',true);
 }
-function removeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt)return false;return mutate(()=>{t.deletedAt=new Date().toISOString()},'Taak naar prullenbak.',true)}
+function removeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt)return false;if(t.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return false}return mutate(()=>{t.deletedAt=new Date().toISOString()},'Taak naar prullenbak.',true)}
 function restoreTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||!t.deletedAt)return false;return mutate(()=>{t.deletedAt=''},t.archived?'Taak teruggezet in het archief.':t.done?'Taak teruggezet bij Afgerond.':'Taak teruggezet.',true)}
 function removeNote(id){const n=state.notes.find(x=>x.id===id);if(!n)return false;return mutate(()=>{n.deletedAt=new Date().toISOString()},'Notitie naar de prullenbak verplaatst.',true)}
 function editNote(id=null){const n=state.notes.find(x=>x.id===id)||{title:'',body:'',category:'Persoonlijk'};modal={mode:'note',id};showDialog(id?'Notitie bewerken':'Notitie toevoegen','Een lijstje, gedachte of stukje informatie bewaren.','<form id="lifeNoteForm"><div class="life-form-grid"><div class="life-form-field wide"><label for="lifeNoteTitle">Titel *</label><input id="lifeNoteTitle" required maxlength="180" value="'+esc(n.title)+'"></div><div class="life-form-field wide"><label for="lifeNoteCategory">Onderwerp</label><input id="lifeNoteCategory" maxlength="80" value="'+esc(n.category)+'"></div><div class="life-form-field wide"><label><input type="checkbox" id="lifeNoteChecklist" '+(n.isChecklist?'checked':'')+'> Toon als afvinklijst (één regel per item)</label><label for="lifeNoteBody">Inhoud</label><textarea id="lifeNoteBody" rows="9" maxlength="20000">'+esc(n.body)+'</textarea></div></div></form>',(id?'<button type="button" class="life-btn life-btn-danger" data-life-note-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeNoteForm">Opslaan</button>')}
-function completeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt||t.archived)return;const ok=mutate(()=>{if(t.done){t.done=false;return}t.lastDone=today();t.history.push({date:today(),at:new Date().toISOString()});t.focusDate='';t.steps.forEach(x=>x.done=false);if(t.kind==='routine'&&t.repeat!=='none'){t.date=nextDate(today(),t.repeat,t.repeatDays);t.done=false}else{t.done=true}},t.done?'Taak heropend.':t.kind==='routine'&&t.repeat!=='none'?'Afgerond. Volgende datum ingesteld.':'Taak afgerond.',true);if(ok)window.MementoFeedback?.success([...root.querySelectorAll('[data-life-complete]')].find(b=>b.dataset.lifeComplete===id)||$('lifeMessage'));return ok;}
+function completeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt||t.archived)return;if(t.timing?.session){status('Bevestig of verwerp eerst de tijdmeting in de taakeditor.',false,true);return false}const ok=mutate(()=>{if(t.done){t.done=false;return}t.lastDone=today();t.history.push({date:today(),at:new Date().toISOString(),...(t.timing?{occurrenceId:t.timing.occurrenceId}:{})});if(t.timing)t.timing.occurrenceId=uid();t.focusDate='';t.steps.forEach(x=>x.done=false);if(t.kind==='routine'&&t.repeat!=='none'){t.date=nextDate(today(),t.repeat,t.repeatDays);t.done=false}else{t.done=true}},t.done?'Taak heropend.':t.kind==='routine'&&t.repeat!=='none'?'Afgerond. Volgende datum ingesteld.':'Taak afgerond.',true);if(ok)window.MementoFeedback?.success([...root.querySelectorAll('[data-life-complete]')].find(b=>b.dataset.lifeComplete===id)||$('lifeMessage'));return ok;}
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 function exportLegacyBackup(){try{if(blocked||!storageGuard)throw Error('De gegevens zijn niet beschikbaar voor een veilige back-up.');storageGuard.assertCurrent()}catch(e){status(e.message,false,true);return}let finance=null;try{finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null')}catch{status('De financiële opslag kon niet worden gelezen. De back-up is niet gemaakt.',false,true);return}download('compass-leven-financien-'+today()+'.json',JSON.stringify({format:'compass-life-backup',version:1,exportedAt:new Date().toISOString(),lifeState:state,financeState:finance},null,2),'application/json');const dated=rememberExport();status('Oude JSON-export klaargezet, zonder bijlagen.'+(dated?'':' Exportdatum kon niet worden bewaard.'))}
 async function exportBackup(){
@@ -1184,6 +1306,8 @@ root.addEventListener('change',e=>{
 });
 root.addEventListener('submit',e=>{if(e.target.id==='lifeShoppingForm'){e.preventDefault();addShoppingItem();return}if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.taskTimer){taskTimerAction(b.dataset.taskTimer);return}
+ if(b.dataset.taskStepMove!==undefined&&modal?.steps){const i=Number(b.dataset.taskStepMove),j=i+Number(b.dataset.direction);if(j>=0&&j<modal.steps.length){[modal.steps[i],modal.steps[j]]=[modal.steps[j],modal.steps[i]];$('lifeTaskSteps').value=modal.steps.map(s=>s.text).join('\n');paintTaskSteps();dialog.querySelector('[data-task-step-move="'+j+'"][data-direction="'+b.dataset.direction+'"]')?.focus()}return}
  if(b.dataset.mementoAiMode&&modal?.mode==='note-ai'){
   modal.aiMode=b.dataset.mementoAiMode;
   const note=state.notes.find(n=>n.id===modal.id&&!n.deletedAt);
@@ -1208,8 +1332,9 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
  if(entry&&confirm('Afspraak ‘'+entry.title+'’ verwijderen uit Memento?')){
   if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==id)},'Lokale afspraak verwijderd.',true)){closeDialog();window.MementoGoogleCalendar?.refreshAgenda?.()}
  }return;
- }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
-dialog.addEventListener('change',e=>{if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
+ }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(t?.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return}if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
+dialog.addEventListener('input',e=>{if(e.target.id==='lifeTaskSteps')syncTaskSteps();if(e.target.id==='lifeTaskEstimate'&&modal){modal.estimateSource='manual';$('lifeEstimateSource').textContent='Zelf ingesteld'}});
+dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
  if(e.target.id==='mgSavedTaskFilterForm'){e.preventDefault();const name=$('mgTaskFilterName').value.trim();if(!name)return;if((state.uiPreferences?.taskFilters||[]).length>=12){status('Je kunt maximaal 12 selecties bewaren.',false,true);return;}const filters=taskFilterSnapshot();if(mutate(()=>{state.uiPreferences||={};state.uiPreferences.taskFilters||=[];state.uiPreferences.taskFilters.push({id:uid(),name,filters});},'Selectie bewaard.'))closeDialog();return;}
@@ -1217,10 +1342,15 @@ dialog.addEventListener('submit',e=>{
  if(mode==='permanent-purge'){performPermanentTrashPurge();return}
  if(mode==='memento-appointment'){saveAppointment(id);return}
  if(mode==='task'||mode==='template'){
+  if(mode==='task'&&state.tasks.find(t=>t.id===id)?.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return}
+  const estimateRaw=$('lifeTaskEstimate').value,estimate=estimateRaw===''?null:Number(estimateRaw);
+  if(estimate!==null&&(!Number.isInteger(estimate)||estimate<1||estimate>1440)){status('Kies een geheel aantal minuten tussen 1 en 1440, of laat de duur leeg.',false,true);return}
+  syncTaskSteps();
   const title=$('lifeTaskTitle').value.trim(),date=mode==='template'?'':$('lifeTaskDate').value,repeat=$('lifeTaskRepeat').value,repeatDays=Number($('lifeTaskRepeatDays').value);if(repeat==='custom'&&(!Number.isInteger(repeatDays)||repeatDays<1||repeatDays>3650)){status('Kies een heel aantal dagen tussen 1 en 3650.',false,true);return}if(!title||!validDate(date)){status('Controleer de omschrijving en datum.',false,true);return}
-  const old=(mode==='template'?state.templates:state.tasks).find(x=>x.id===id),template=state.templates.find(x=>x.id===fromTemplate),oldSteps=old?.steps||[],steps=$('lifeTaskSteps').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(text=>({...oldSteps.find(x=>x.text===text),text,done:oldSteps.find(x=>x.text===text)?.done||false}));
+  const old=(mode==='template'?state.templates:state.tasks).find(x=>x.id===id),template=state.templates.find(x=>x.id===fromTemplate),steps=clone(modal.steps);
   const updated={...(old||{id:uid(),done:false,archived:false,deletedAt:'',lastDone:'',history:[],focusDate:'',sourceUrl:'',sourceLabel:'Zelf toegevoegd'}),title,kind:repeat!=='none'?'routine':$('lifeTaskKind').value,category:$('lifeTaskCategory').value,room:$('lifeTaskRoom').value,repeat,repeatDays:Number.isInteger(repeatDays)&&repeatDays>0&&repeatDays<=3650?repeatDays:4,date,priority:$('lifeTaskPriority').value==='high',notes:$('lifeTaskNotes').value.trim(),steps};
-  if(mode==='template'){if(!old)templateTab='active';const saved={...templateOf(updated),id:old?.id||updated.id,sourceTaskId:old?.sourceTaskId||'',deletedAt:''};if(mutate(()=>{if(old)state.templates[state.templates.findIndex(x=>x.id===id)]=saved;else state.templates.push(saved)},'Taak bewaard in je bibliotheek.'))closeDialog();return}if(old&&repeat!=='none'){const changed=old.repeat!==repeat||(repeat==='custom'&&old.repeatDays!==updated.repeatDays);if(old.done)updated.done=false;if(old.lastDone&&(old.done||changed)&&date===(old.date||''))updated.date=nextDate(old.lastDone,repeat,updated.repeatDays)}if(!old){taskTab='open';taskScope='all';roomFilter='all';repeatFilter='all';categoryFilter='all';search='';}if(template){updated.sourceUrl=template.sourceUrl||'';updated.sourceLabel='Takenbibliotheek';updated.templateId=template.id}if(mutate(()=>{if(old)state.tasks[state.tasks.findIndex(x=>x.id===id)]=updated;else {state.tasks.push(updated);trackConversion(updated,'task')}},'Taak opgeslagen.'))closeDialog();return;
+  if(old?.planning||template?.planning||estimate!==null)updated.planning={...(old?.planning||template?.planning||{}),schemaVersion:1,estimateMinutes:estimate,estimateSource:modal.estimateSource};
+  if(mode==='template'){if(!old)templateTab='active';const saved={...(old||{}),...templateOf(updated),id:old?.id||updated.id,sourceTaskId:old?.sourceTaskId||'',deletedAt:''};if(mutate(()=>{if(old)state.templates[state.templates.findIndex(x=>x.id===id)]=saved;else state.templates.push(saved)},'Taak bewaard in je bibliotheek.'))closeDialog();return}if(old&&repeat!=='none'){const changed=old.repeat!==repeat||(repeat==='custom'&&old.repeatDays!==updated.repeatDays);if(old.done)updated.done=false;if(old.lastDone&&(old.done||changed)&&date===(old.date||''))updated.date=nextDate(old.lastDone,repeat,updated.repeatDays)}if(!old){taskTab='open';taskScope='all';roomFilter='all';repeatFilter='all';categoryFilter='all';search='';}if(template){updated.sourceUrl=template.sourceUrl||'';updated.sourceLabel='Takenbibliotheek';updated.templateId=template.id}if(mutate(()=>{if(old)state.tasks[state.tasks.findIndex(x=>x.id===id)]=updated;else {state.tasks.push(updated);trackConversion(updated,'task')}},'Taak opgeslagen.'))closeDialog();return;
  }
  if(mode==='grocery'){saveShoppingProduct(id);return}
  if(mode==='wish'){const title=$('lifeWishTitle').value.trim(),url=$('lifeWishUrl').value.trim();if(!title)return;if(url&&!safeLink(url)){status('Gebruik een geldige http- of https-link.',false,true);return}const old=state.wishes.find(x=>x.id===id),obj={...(old||{id:uid(),sourceUrl:''}),title,url,notes:$('lifeWishNotes').value.trim(),budget:Math.max(0,Number($('lifeWishBudget').value)||0),status:$('lifeWishStatus').value};if(mutate(()=>{if(old)state.wishes[state.wishes.findIndex(x=>x.id===id)]=obj;else {state.wishes.push(obj);trackConversion(obj,'wish')}},'Aankoopwens opgeslagen.'))closeDialog();return}

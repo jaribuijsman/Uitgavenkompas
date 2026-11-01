@@ -25,6 +25,11 @@ async function seed(page,data,url){
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});const url='http://127.0.0.1:'+server.address().port;
   browser=await chromium.launch({executablePath:process.env.BROWSER_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage']});
   const data=await require('./helpers/visual-fixture.cjs').fixture();data.life.notes.find(n=>n.id==='visual-note').body+='\n\n'+('Bewaarde achtergrond. '.repeat(100))+'JourneyInhoudUniek midden in de inhoud.';
+  // The previous main must preserve these optional fields as well. The exact
+  // Life JSON, attachments and PIN are compared again after the offline upgrade.
+  const timedTask=data.life.tasks.find(t=>t.id==='kitchen');
+  timedTask.planning={schemaVersion:1,estimateMinutes:12};
+  timedTask.timing={schemaVersion:1,occurrenceId:'upgrade-current',measurements:[{id:'upgrade-measurement',taskId:timedTask.id,occurrenceId:'upgrade-previous',source:'timer',activeSeconds:720,confirmedAt:'2026-10-27T10:00:00.000Z',needsReview:false}],session:{id:'upgrade-review',occurrenceId:'upgrade-current',status:'needsReview',activeSeconds:30}};
   async function context(){const c=await browser.newContext({viewport:{width:393,height:852},hasTouch:true,reducedMotion:'reduce',locale:'nl-NL',timezoneId:'Europe/Amsterdam'});await c.route('https://**/*',r=>r.abort());await c.addInitScript(()=>{const D=Date,t=Date.parse('2026-10-28T12:00:00+01:00');window.Date=class extends D{constructor(...a){super(...(a.length?a:[t]));}static now(){return t;}};});return c;}
   // Same origin and profile, real service workers and IndexedDB; source switches only on the local test server.
   source=baseline;const ctx=await context(),page=await ctx.newPage();page.on('dialog',d=>d.accept());await seed(page,data,url);

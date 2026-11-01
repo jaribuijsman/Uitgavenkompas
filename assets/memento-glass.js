@@ -8,7 +8,8 @@
   if(form.dataset.mgReady)return;form.dataset.mgReady='1';
   const grid=form.querySelector('.form-grid,.life-form-grid');
   if(form.id==='lifeTaskForm'&&grid){
-   for(const id of ['lifeTaskTitle','lifeTaskDate','lifeTaskSteps']){const n=field(form,id);if(n)grid.append(n);}
+   for(const id of ['lifeTaskTitle','lifeTaskDate','lifeTaskEstimate','lifeTaskSteps']){const n=field(form,id);if(n)grid.append(n);}
+   const timer=form.querySelector('.memento-task-timer')?.closest('.life-form-field');if(timer)grid.append(timer);
    const nodes=['lifeTaskKind','lifeTaskCategory','lifeTaskRepeat','lifeTaskRepeatDays','lifeTaskRoom','lifeTaskPriority','lifeTaskNotes'].map(id=>field(form,id));
    const summary=['lifeTaskKind','lifeTaskCategory','lifeTaskRoom'].map(id=>form.querySelector('#'+id)?.selectedOptions[0]?.textContent).filter(Boolean).join(' · ');
    const d=fold(nodes,'Eigenschappen · '+summary);if(d){d.dataset.mgTaskProperties='1';d.classList.add('wide');grid.append(d);}

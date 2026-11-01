@@ -118,6 +118,18 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
 #lifeDialog .life-dialog-head {flex:none;padding:14px 16px;margin:0;border-bottom:1px solid var(--m-line)}
 #lifeDialog .life-dialog-body {min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px}
 #lifeDialog .life-dialog-footer {flex:none;margin:0;padding:12px 16px;gap:8px;border-top:1px solid var(--m-line);background:var(--m-surface)}
+#lifeApp[data-life-view="tasks"] .memento-task-category {margin:12px 0 0;min-width:0}
+#lifeApp[data-life-view="tasks"] .memento-task-category h3 {margin:8px 0;font-size:15px;line-height:1.4}
+#lifeApp[data-life-view="tasks"] .memento-task-category h3 small {font-weight:400}
+#lifeDialog .memento-step-order {display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px;align-items:center;margin-top:6px}
+#lifeDialog .memento-step-order label {display:flex;align-items:center;gap:8px;min-height:44px;min-width:0;font-size:14px;overflow-wrap:anywhere}
+#lifeDialog .memento-step-order input {flex:none;width:22px;height:22px}
+#lifeDialog .memento-step-order button {min-width:44px;min-height:44px;padding:4px}
+#lifeDialog .memento-task-timer {min-width:0}
+#lifeDialog .memento-task-timer summary {display:flex;align-items:center;min-height:44px;cursor:pointer;font-size:14px}
+#lifeDialog #lifeTaskTimer {display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+#lifeDialog #lifeTaskTimer p,#lifeDialog #lifeTaskTimer label {flex-basis:100%;margin:0;overflow-wrap:anywhere}
+#lifeDialog #lifeTaskTimer button {min-height:44px}
 #lifeApp[data-life-view="backup"] .life-panel {padding:16px}
 #lifeApp[data-life-view="backup"] .life-panel p {font-size:13px;line-height:1.7;max-width:68ch}
 #lifeApp[data-life-view="backup"] label:has(>input[type=checkbox]) {display:flex;align-items:center;justify-content:flex-start;gap:10px;min-height:44px;font-size:13px;line-height:1.5}
