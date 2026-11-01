@@ -1187,7 +1187,10 @@ async function exportBackup(){
  try{
   if(blocked||!storageGuard)throw Error('De gegevens zijn niet beschikbaar voor een veilige volledige back-up.');
   token=storageGuard.beginOperation();
-  const finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null');
+  // A new Finance installation may not have saved its first transaction.
+  // Export the validated in-memory empty state without inventing a salary date.
+  const financeRaw=localStorage.getItem(FINANCE_KEY);
+  const finance=financeRaw===null?window.MementoFinanceTrashBridge?.read?.():JSON.parse(financeRaw);
   if(!finance||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error('Financiën zijn niet leesbaar. Er is geen onvolledige back-up gemaakt.');
   const extras={};
   for(const key of ['UK_DASHBOARD_PERIOD_MODE','UK_DASHBOARD_SCOPE']){const val=localStorage.getItem(key);if(val!==null)extras[key]=val;}
