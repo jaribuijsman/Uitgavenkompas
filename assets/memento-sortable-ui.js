@@ -62,7 +62,7 @@
    }
    const sortable=new root.Sortable(el,{
     draggable:selector,handle,sort:true,animation:150,
-    delay:180,delayOnTouchOnly:true,touchStartThreshold:4,
+    delay:0,delayOnTouchOnly:false,touchStartThreshold:4,
     forceFallback:true,fallbackOnBody:true,fallbackTolerance:2,
     scroll:false,
     chosenClass:"memento-sort-chosen",ghostClass:"memento-sort-ghost",
