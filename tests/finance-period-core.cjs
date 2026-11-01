@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),p=require('../assets/memento-finance-period-core.js');
+const dates=['2026-09-25','2026-10-24','2026-11-25'],r=p.range({mode:'salary',key:'2026-10',payday:25,dates,today:'2026-11-01'});
+assert.equal(r.start,'2026-10-24');assert.equal(r.end,'2026-11-24');assert.equal(r.observedEnd,'2026-11-01');assert.equal(r.status,'confirmed');
+assert.equal(p.range({mode:'salary',key:'2026-09',payday:25,dates,today:'2026-11-01'}).end,'2026-10-23');
+assert.equal(p.currentSalaryKey({payday:25,dates,today:'2026-11-01'}),'2026-10');
+assert.equal(p.range({mode:'salary',key:'2027-02',payday:31,dates:[],today:'2027-02-20'}).start,'2027-02-28');
+assert.equal(p.range({mode:'salary',key:'2026-10',payday:25,dates:[],today:'2026-11-01'}).status,'provisional');
+assert.equal(p.range({mode:'month',key:'2026-10',today:'2026-11-01'}).end,'2026-10-31');
+assert.equal(p.valid('2026-02-30'),false);
+console.log('salary period core: PASS');
