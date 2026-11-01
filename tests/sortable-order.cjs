@@ -1,0 +1,11 @@
+"use strict";
+const assert=require("node:assert/strict"),s=require("../assets/memento-sortable-ui.js");
+const a=[{id:"a",notes:"bewaar"},{id:"b",notes:"ook"},{id:"c",notes:"houden"}];
+assert.equal(s.sameMembers(["a","b"],["b","a"]),true);
+assert.equal(s.sameMembers(["a","b"],["a","a"]),false);
+assert.equal(s.sameMembers(["a","b"],["a","x"]),false);
+assert.throws(()=>s.rankByIds(a,["a","b","b"]),/gewijzigd/i);
+assert.throws(()=>s.rankByIds(a,["a","b"]),/gewijzigd/i);
+assert.deepEqual(s.orderedByIds(a,["c","a","b"]).map(x=>x.id),["c","a","b"]);
+s.rankByIds(a,["c","a","b"]);assert.deepEqual(a.map(x=>x.manualOrder),[2,3,1]);assert.equal(a[0].notes,"bewaar");
+console.log("Sortable volgordecontract geslaagd");
