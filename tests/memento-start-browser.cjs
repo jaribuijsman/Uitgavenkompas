@@ -67,7 +67,9 @@ const server=http.createServer((req,res)=>{
    }
    if(width===393){
     await page.setViewportSize({width,height:772});
+    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
     await page.locator('[data-ms-create="note"]').click();
+    await page.waitForFunction(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1'))?.knowledge?.workspace?.version===2);
     await page.locator('#kc-capture').waitFor({state:'visible'});
     await page.evaluate(()=>window.MementoStart.showWelcome());
     const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')}));
