@@ -82,8 +82,11 @@ async function addTransaction(page, description) {
     assert.equal(await b.evaluate(()=>window.MementoStorageGuard.writable),false);
     await b.locator("#lifeDialog [data-life-close]").first().click();
     checks.push("Stale purge is rejected before touching active tasks");
-    await navigate(b, "life", "notes"); await b.locator('[data-kc="new"]').first().click(); await b.locator("#kc-title").fill("Notitieconcept B"); await b.locator("#kc-body").fill("Invoer blijft bewaard"); await b.locator('[data-kc="save"]').click();
-    assert.equal(await b.locator("#kc-body").inputValue(), "Invoer blijft bewaard"); assert(await b.evaluate(() => window.MementoKnowledge.hasPending()));
+    await navigate(b, "life", "notes"); await b.locator('[data-kc="new"]').first().click(); await b.locator("#kc-title").fill("Notitieconcept B"); // A stale read-only tab may still be showing V1: it must preserve the draft in either editor.
+    const readOnlyV2=await b.locator("[data-ws-block]").count()>0;
+    const draftField=readOnlyV2?b.locator("[data-ws-block]").first():b.locator("#kc-body");
+    await draftField.fill("Invoer blijft bewaard"); await b.locator('[data-kc="save"]').first().click();
+    assert.equal(readOnlyV2?await draftField.innerText():await draftField.inputValue(), "Invoer blijft bewaard"); assert(await b.evaluate(() => window.MementoKnowledge.hasPending()));
     checks.push("Read-only note editor retains failed autosave/manual-save draft");
     // A real storage fault on a writable page must keep the DOM input for retry.
     await a.evaluate(() => { window.originalSetItem = Storage.prototype.setItem; Storage.prototype.setItem = function (key, value) { if (key === "compass_life_preview_v1") throw Error("Quota fixture"); return window.originalSetItem.call(this, key, value); }; });
@@ -92,10 +95,10 @@ async function addTransaction(page, description) {
     await a.evaluate(() => { Storage.prototype.setItem = window.originalSetItem; }); await a.locator("#lifeQuickForm button[type=submit]").click();
     checks.push("Writable-tab quota failure preserves input and retry saves it");
     await a.close(); await b.close(); const c = await context.newPage(); await c.goto(url, { waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => window.MementoStorageGuard?.writable);
-    await navigate(c, "life", "notes"); await c.locator('[data-kc="new"]').first().click(); await c.locator("#kc-title").fill("Fictieve PDF"); await c.locator("#kc-body").fill("Bijlagefixture");
+    await navigate(c, "life", "notes"); await c.locator('[data-kc="new"]').first().click(); await c.locator("#kc-title").fill("Fictieve PDF"); await c.locator("[data-ws-block]").first().fill("Bijlagefixture");
     await c.locator("#kc-file-input").setInputFiles({ name: "fictief.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\nFictieve integriteitsbytes\n%%EOF") });
     await until(c, () => JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n => n.attachments?.length));
-    const binary = await c.evaluate(async () => { const all = await window.MementoKnowledgeStore.all(); return { count: all.length, text: await all[0].blob.text(), meta: all[0].id }; });
+    const binary = await c.evaluate(async () => { const all = (await window.MementoKnowledgeStore.all()).filter(r => r.noteId !== "kc-system-snapshot"); const attached=all.find(r=>r.name==="fictief.pdf"); return { count: all.length, text: attached?await attached.blob.text():"", meta: attached?.id }; });
     assert.equal(binary.count, 1); assert(binary.text.startsWith("%PDF-1.4")); checks.push("Real IndexedDB attachment write uses the owning operation token");
     await c.evaluate(()=>window.MementoFinanceValidation.validate(JSON.parse(localStorage.getItem("uitgavenkompas_v1"))));
     await navigate(c, "life", "backup"); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;

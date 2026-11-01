@@ -71,8 +71,10 @@ function makeNote(input,life){
 function updateNote(life,id,changes){
  ensure(life);const n=life.notes.find(x=>x.id===id);if(!n||n.deletedAt)throw Error("Notitie niet beschikbaar");
  const now=timestamp(),before=clone(n);
- const accepted=["title","body","kind","collectionId","tags","sourceUrl","recipe","pinned","archived","links","attachments","journal"];
+ const accepted=["title","body","kind","collectionId","tags","sourceUrl","recipe","pinned","archived","links","attachments","journal","collectionIds","document","properties"];
  for(const key of accepted)if(Object.prototype.hasOwnProperty.call(changes,key))n[key]=clone(changes[key]);
+ if(changes.collectionId!==undefined&&changes.collectionId!==before.collectionId&&!Object.hasOwn(changes,'collectionIds'))n.collectionIds=[changes.collectionId,...memberships(life,before).filter(id=>id!==before.collectionId&&id!==changes.collectionId)];
+ if(n.collectionIds&&!n.collectionIds.includes(n.collectionId))n.collectionIds.unshift(n.collectionId);
  if(n.collectionId!==undefined)n.category=collectionName(life,n.collectionId);
  if(n.kind==="checklist"){n.isChecklist=true;if(before.body!==n.body||!Array.isArray(n.items))n.items=reconcileItems(before,n.body);}
  else n.isChecklist=false;
@@ -80,7 +82,7 @@ function updateNote(life,id,changes){
  // Autosave coalesces nearby edits; keep a useful older snapshot without filling Life storage.
  const last=n.revisions.at(-1);
  if(!last||Date.now()-Date.parse(last.savedAt||"")>5*60*1000||before.kind!==n.kind){
-  n.revisions.push({revision:Number(before.revision)||1,savedAt:before.updatedAt||before.createdAt||now,title:before.title,body:before.body,kind:typeOf(before),collectionId:collectionOf(life,before),tags:clone(before.tags||[]),recipe:clone(before.recipe||null),items:clone(before.items||null),...(before.journal?{journal:clone(before.journal)}:{})});
+  n.revisions.push({revision:Number(before.revision)||1,savedAt:before.updatedAt||before.createdAt||now,title:before.title,body:before.body,kind:typeOf(before),...(before.document?{document:clone(before.document)}:{}),collectionId:collectionOf(life,before),tags:clone(before.tags||[]),recipe:clone(before.recipe||null),items:clone(before.items||null),...(before.journal?{journal:clone(before.journal)}:{})});
  }
  n.revision=(Number(before.revision)||1)+1;n.updatedAt=now;
  validateNote(life,n);
@@ -89,10 +91,12 @@ function updateNote(life,id,changes){
 function restoreRevision(life,id,index){
  const n=life.notes.find(x=>x.id===id),rev=n?.revisions?.[index];
  if(!rev)throw Error("Versie niet gevonden");
- const changed=updateNote(life,id,{title:rev.title,body:rev.body,kind:rev.kind,collectionId:rev.collectionId||"inbox",tags:rev.tags||[],...(rev.recipe?{recipe:rev.recipe}:{}),...(rev.journal?{journal:rev.journal}:{})});
- if(Array.isArray(rev.items)){changed.items=clone(rev.items);changed.isChecklist=rev.kind==="checklist";}
- return changed;
+ // Content-only restore: current recipe, diary data, attachments, tags and locations survive.
+ return updateNote(life,id,{title:rev.title,body:rev.body,document:rev.document||null});
 }
+function memberships(life,n){return Array.isArray(n.collectionIds)?n.collectionIds:[collectionOf(life,n)];}
+function descendants(life,id){const out=new Set([id]);for(let i=0;i<life.knowledge.collections.length;i++)for(const c of life.knowledge.collections)if(out.has(c.parentId))out.add(c.id);return out;}
+function activeCollection(life,id){if(id==='inbox')return true;const seen=new Set();while(id){if(seen.has(id))return false;seen.add(id);const c=life.knowledge.collections.find(c=>c.id===id);if(!c||c.archived)return false;id=c.parentId;}return true;}
 function touch(life,n){n.revision=(Number(n.revision)||0)+1;n.updatedAt=timestamp();life.knowledge.updatedAt=n.updatedAt;}
 function toggleItem(life,id,itemId){
  const n=life.notes.find(x=>x.id===id);if(!n||n.deletedAt)throw Error("Notitie niet gevonden");
@@ -116,6 +120,13 @@ function renameCollection(life,id,name){
  for(const note of moved){note.category=clean;note.collectionId=id;}
  return c;
 }
+function validateDocument(doc){
+ if(!doc||doc.version!==1||!Array.isArray(doc.blocks)||doc.blocks.length>1000)throw Error('Ongeldig visueel document');
+ for(const b of doc.blocks){if(!b||!['text','heading','quote','check','image','pdf'].includes(b.type)||typeof b.id!=='string'||typeof b.text!=='string'||b.text.length>20000)throw Error('Ongeldig inhoudsblok');if(b.fileId!==undefined&&typeof b.fileId!=='string')throw Error('Ongeldige bestandsverwijzing');if(b.marks!==undefined&&(!Array.isArray(b.marks)||b.marks.some(m=>!['bold','italic'].includes(m))))throw Error('Ongeldige tekstopmaak');}
+ if(new Set(doc.blocks.map(b=>b.id)).size!==doc.blocks.length)throw Error('Dubbele blok-ID');
+ if(documentText(doc).length>20000)throw Error('Maximaal 20.000 tekens per notitie');
+}
+function documentText(doc){return doc.blocks.map(b=>b.text).join('\n\n');}
 function validateNote(life,n,checkDuplicates=true){
  if(!n||!n.id||typeof n.title!=="string"||n.title.length>180||!n.title.trim()||typeof n.body!=="string"||n.body.length>20000)throw Error("Ongeldige kennisnotitie");
  if(n.kind!==undefined&&!validKind.has(n.kind))throw Error("Onbekend itemtype");
@@ -123,6 +134,8 @@ function validateNote(life,n,checkDuplicates=true){
  for(const key of ["tags","attachments","links","revisions"]){if(n[key]!==undefined&&!Array.isArray(n[key]))throw Error("Ongeldige notitievelden");}
  if(n.tags&&(!n.tags.every(t=>typeof t==="string"&&t.length<=60)||n.tags.length>30))throw Error("Ongeldige tags");
  if(n.attachments&&(n.attachments.length>50||n.attachments.some(a=>!a||typeof a.id!=="string"||typeof a.name!=="string"||a.name.length>200||!Number.isFinite(a.size)||a.size<0)))throw Error("Ongeldige bijlage");
+ if(n.collectionIds!==undefined&&(!Array.isArray(n.collectionIds)||!n.collectionIds.length||new Set(n.collectionIds).size!==n.collectionIds.length||!n.collectionIds.includes(n.collectionId)||n.collectionIds.some(id=>id!=='inbox'&&!life.knowledge.collections.some(c=>c.id===id))))throw Error('Ongeldige mapkoppelingen');
+ if(n.document!==undefined&&n.document!==null)validateDocument(n.document);
  if(n.journal!==undefined)validateJournal(life,n,checkDuplicates);
  if(n.revisions&&n.revisions.length>12)throw Error("Te veel versies");
  if(n.links&&n.links.some(l=>!l||typeof l.kind!=="string"||typeof l.id!=="string"))throw Error("Ongeldige koppeling");
@@ -132,7 +145,7 @@ function validate(life){
  const k=ensure(life),ids=new Set();
  validateHierarchy(life);
  for(const c of k.collections){if(typeof c.id!=="string"||!c.id||c.id==="inbox"||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
- const dates=new Set();for(const n of life.notes){validateNote(life,n,false);if(n.journal&&!n.deletedAt){if(dates.has(n.journal.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');dates.add(n.journal.date);}}
+ const noteIds=new Set();const dates=new Set();for(const n of life.notes){if(noteIds.has(n.id))throw Error('Dubbele notitie-ID');noteIds.add(n.id);validateNote(life,n,false);if(n.journal&&!n.deletedAt){if(dates.has(n.journal.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');dates.add(n.journal.date);}}
  return true;
 }
 function search(life,{collectionId="",query="",kind="",status="active",sort="recent",tag=""}={}){
@@ -147,10 +160,10 @@ function search(life,{collectionId="",query="",kind="",status="active",sort="rec
    else if(n.archived)return false;
    if(status==="pinned"&&!n.pinned)return false;
   }
-  if(collectionId&&collectionOf(life,n)!==collectionId)return false;
+  if(collectionId&&!memberships(life,n).includes(collectionId))return false;
   if(kind&&typeOf(n)!==kind)return false;
   if(tag&&!(n.tags||[]).includes(tag))return false;
-  return !q||[n.title,n.body,n.category,n.sourceUrl,n.journal?.date,n.journal?.mood,...(n.tags||[])].join(" ").toLocaleLowerCase("nl").includes(q);
+  return !q||[n.title,n.body,...memberships(life,n).map(id=>collectionPath(life,id)),n.category,n.sourceUrl,n.journal?.date,n.journal?.mood,...(n.tags||[])].join(" ").toLocaleLowerCase("nl").includes(q);
  }).sort((a,b)=>sort==="manual"?(Number.isInteger(a.manualOrder)?a.manualOrder:Number.MAX_SAFE_INTEGER)-(Number.isInteger(b.manualOrder)?b.manualOrder:Number.MAX_SAFE_INTEGER)||a.title.localeCompare(b.title,"nl"):sort==="title"?a.title.localeCompare(b.title,"nl"):sort==="old"?String(a.updatedAt||a.createdAt||"").localeCompare(String(b.updatedAt||b.createdAt||"")):Number(!!b.pinned)-Number(!!a.pinned)||String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||"")));
 }
 
@@ -158,16 +171,16 @@ function collectionCounts(life,id){
  const k=ensure(life),scope=new Set([id]);let changed=true;
  while(changed){changed=false;for(const c of k.collections)if(!c.archived&&scope.has(c.parentId)&&!scope.has(c.id)){scope.add(c.id);changed=true;}}
  const active=life.notes.filter(n=>!n.deletedAt&&!n.archived);
- return {direct:active.filter(n=>collectionOf(life,n)===id).length,total:active.filter(n=>scope.has(collectionOf(life,n))).length};
+ return {direct:active.filter(n=>memberships(life,n).includes(id)).length,total:active.filter(n=>memberships(life,n).some(id=>scope.has(id))).length};
 }
-function collectionPath(life,id){const c=life.knowledge?.collections.find(c=>c.id===id);return c?(c.parentId?collectionName(life,c.parentId)+' / ':'')+c.name:'Inbox';}
+function collectionPath(life,id){const names=[],seen=new Set();while(id&&id!=='inbox'&&!seen.has(id)){seen.add(id);const c=life.knowledge?.collections.find(c=>c.id===id);if(!c)break;names.unshift(c.name);id=c.parentId;}return names.join(' / ')||'Inbox';}
 function centralSearch(life,{query='',type='',collectionId='',status='active'}={}){
  const q=nameKey(query),excerpt=text=>{text=String(text||'');const at=nameKey(text).indexOf(q),start=Math.max(0,at-45);return (start?'…':'')+text.slice(start,start+170)+(text.length>start+170?'…':'');};
  const rows=[];
  if(type!=='task')for(const n of life.notes){
   if(n.deletedAt||status==='done'||(status==='archive'&&!n.archived)||(status==='active'&&n.archived))continue;
-  const cid=collectionOf(life,n);if(collectionId&&cid!==collectionId)continue;
-  const text=[n.title,n.body,...(n.tags||[])].join(' ');if(q&&!nameKey(text).includes(q))continue;
+  const cid=collectionOf(life,n);if(collectionId&&!memberships(life,n).includes(collectionId))continue;
+  const text=[n.title,n.body,...memberships(life,n).map(id=>collectionPath(life,id)),...(n.tags||[])].join(' ');if(q&&!nameKey(text).includes(q))continue;
   rows.push({id:n.id,type:'note',title:n.title,context:collectionPath(life,cid)+(n.archived?' · Archief':''),snippet:excerpt(n.body),status:n.archived?'archived':'active'});
  }
  if(type!=='note'&&!collectionId)for(const t of life.tasks||[]){
@@ -207,7 +220,8 @@ function validateHierarchy(life){
  for(const c of k.collections){
   if(c.parentId!==undefined&&c.parentId!==null){
    const parent=k.collections.find(p=>p.id===c.parentId);
-   if(!parent||parent===c||parent.parentId)throw Error('Ongeldige bovenliggende verzameling');
+   if(!parent||parent===c)throw Error('Ongeldige bovenliggende verzameling');
+   const visited=new Set([c.id]);let current=parent,depth=1;while(current){if(visited.has(current.id)||++depth>3)throw Error('Maximaal drie mapniveaus; kringverwijzingen zijn niet toegestaan');visited.add(current.id);current=current.parentId?k.collections.find(p=>p.id===current.parentId):null;}
   }
   if(c.parentId!==undefined&&!iconIds.has(c.icon))throw Error('Ongeldig pictogram');
   if(c.order!==undefined&&(!Number.isSafeInteger(c.order)||c.order<0))throw Error('Ongeldige volgorde');
@@ -228,8 +242,8 @@ function saveCollection(life,input){
  if(!name||name.length>80)throw Error('Geef een naam van maximaal 80 tekens');
  if(!iconIds.has(input.icon)||!['list','gallery','table'].includes(input.view))throw Error('Ongeldig pictogram of weergave');
  const parent=parentId?k.collections.find(c=>c.id===parentId&&!c.archived):null;
- if(parentId&&(!parent||parent.parentId||parentId===input.id))throw Error('Kies een geldige hoofdverzameling');
- if(parentId&&old&&k.collections.some(c=>c.parentId===old.id))throw Error('Een hoofdverzameling met kinderen kan niet onder een andere verzameling');
+ if(parentId&&(!parent||parentId===input.id||old&&descendants(life,old.id).has(parentId)))throw Error('Kies een geldige bovenliggende map');
+ const preview=clone(life);const pc=old?preview.knowledge.collections.find(c=>c.id===old.id):{id:'new-map-validation',name,icon:input.icon,view:input.view};if(!old)preview.knowledge.collections.push(pc);pc.parentId=parentId;validateHierarchy(preview);
  if(k.collections.some(c=>c.id!==input.id&&(c.parentId||null)===parentId&&nameKey(c.name)===nameKey(name)))throw Error('Naam bestaat al onder deze verzameling');
  const c=old||defaultCollection([uid(),name,input.icon,input.view]);
  // Bind legacy name-only notes before a rename; links and note IDs remain intact.
@@ -351,5 +365,5 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });

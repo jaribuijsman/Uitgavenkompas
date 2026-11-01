@@ -41,6 +41,12 @@ const server=http.createServer((req,res)=>{
     localStorage.setItem('uitgavenkompas_v1',JSON.stringify(data.finance));
     localStorage.setItem('compass_life_preview_v1',JSON.stringify(data.life));
    },fixture);
+   // The portal fixture contains a PDF attachment. Populate its IndexedDB bytes
+   // before opening Memento so V2's fail-closed migration can verify the hashes.
+   await page.evaluate(async files=>{
+    const db=await new Promise((ok,bad)=>{const r=indexedDB.open('memento_knowledge_files_v1',1);r.onupgradeneeded=()=>{const st=r.result.createObjectStore('files',{keyPath:'id'});st.createIndex('noteId','noteId',{unique:false})};r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)});
+    await new Promise((ok,bad)=>{const tx=db.transaction('files','readwrite');tx.oncomplete=ok;tx.onerror=()=>bad(tx.error);for(const {base64,...meta} of files)tx.objectStore('files').put({...meta,blob:new Blob([Uint8Array.from(atob(base64),c=>c.charCodeAt(0))],{type:meta.type})})});db.close();
+   },fixture.files);
    await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
    await page.locator('#mementoStart').waitFor({state:'visible'});
@@ -67,8 +73,10 @@ const server=http.createServer((req,res)=>{
    }
    if(width===393){
     await page.setViewportSize({width,height:772});
+    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
     await page.locator('[data-ms-create="note"]').click();
-    await page.locator('#kc-quick-text').waitFor({state:'visible'});
+    await page.waitForFunction(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1'))?.knowledge?.workspace?.version===2);
+    await page.locator('#kc-capture').waitFor({state:'visible'});
     await page.evaluate(()=>window.MementoStart.showWelcome());
     const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')}));
     await page.locator('[data-ms-create="task"]').click();
@@ -77,10 +85,9 @@ const server=http.createServer((req,res)=>{
     await page.locator('[data-life-close]').first().click();
     await page.evaluate(()=>window.MementoStart.showWelcome());
     await page.locator('[data-ms-create="note"]').click();
-    await page.locator('#kc-quick-text').waitFor({state:'visible'});
-    assert.equal(await page.locator('[data-kc="quick-save"]').count(),1);
-    assert.equal(await page.locator('[data-kc="quick-expand"]').count(),1);
-    assert.equal(await page.locator('#kc-quick-mic').count(),1);
+    await page.locator('#kc-capture').waitFor({state:'visible'});
+    // V2 capture is an inline form, not the removed V1 quick textarea controls.
+    assert.equal(await page.locator('#kc-capture-form button[type="submit"]').count(),1);
     await page.evaluate(()=>window.MementoStart.showWelcome());
     await page.locator('[data-ms-create="transaction"]').click();
     await page.locator('#txForm').waitFor({state:'visible'});

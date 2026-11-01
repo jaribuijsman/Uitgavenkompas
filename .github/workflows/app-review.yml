@@ -77,6 +77,7 @@ jobs:
           node tests/finance-validation.cjs
           node tests/finance-period-core.cjs
           node tests/storage-lock-native.cjs
+          node tests/knowledge-workspace-core.cjs
           node tests/knowledge-regression.cjs
           node tests/memento-regression.cjs
           node tests/taken-v4-core.cjs
