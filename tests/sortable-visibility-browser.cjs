@@ -93,7 +93,7 @@ async function touchDrag(page,selector){
   assert(await page.locator('#shoppingNewCategory').isVisible(),"New item exposes a category selector");
   await page.locator('#shoppingCategoryChoice').selectOption('Huisdieren');
   await page.locator('#lifeShoppingForm button[type="submit"]').click();
-  await page.locator('[data-shopping-section="saved"]').click();
+  assert.equal(await page.locator('[data-shopping-section="saved"]').getAttribute('aria-pressed'),"true","Adding in Producten should stay in Producten");
   assert(await page.locator('#lifeGroceryResults .shopping-aisle').filter({hasText:'Huisdieren'}).filter({hasText:'Testartikel categorie'}).count()>=1,"Chosen category persists in Producten");
   checks.push("New products can be assigned a category in the quick-add flow");
   await nav(page,"wishes");

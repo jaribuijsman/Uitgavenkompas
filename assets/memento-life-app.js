@@ -656,7 +656,7 @@ function shoppingAisleOf(g){
 }
 function shoppingCategoryChoices(){
  const standard=shoppingAisles.map(([label])=>label);
- const custom=state.groceries.filter(g=>!g.deletedAt&&shoppingListOf(g)==='groceries').map(g=>String(g.category||'').trim()).filter(x=>x&&!standard.includes(x));
+ const custom=state.groceries.filter(g=>!g.deletedAt).map(g=>String(g.category||'').trim()).filter(x=>x&&!standard.includes(x));
  return [...new Set([...standard,...custom])].map(x=>[x,x]).concat([['__new__','Nieuwe categorie…']]);
 }
 function paintShoppingCategoryPicker(){
@@ -742,10 +742,10 @@ function addShoppingItem(id=null){
  const chosen=$('shoppingCategoryChoice')?.value||groceryCategoryChoice;
  const category=chosen==='__new__'?$('shoppingCustomCategory')?.value.trim():chosen||shoppingAisleOf({title:raw,category:''});
  if(!existing&&chosen==='__new__'&&!category){status('Vul een naam voor de categorie in.',false,true);return false}
- const draft=groceryDraft,tab=groceryTab;groceryDraft='';groceryTab='list';
+ const draft=groceryDraft,tab=groceryTab,addToList=Boolean(id||existing||groceryTab==='list'||groceryList==='purchases');groceryDraft='';groceryTab=addToList?'list':'saved';
  const ok=mutate(()=>{if(existing){existing.needed=true;existing.bought=false}
-  else state.groceries.push({id:uid(),title:raw.slice(0,180),quantity:'',category:groceryList==='groceries'?category:'Overig',notes:'',list:groceryList,favorite:false,needed:true,bought:false,deletedAt:'',sourceUrl:''});
- },'Op je lijst gezet.',true);
+  else state.groceries.push({id:uid(),title:raw.slice(0,180),quantity:'',category:groceryList==='groceries'?category:'Overig',notes:'',list:groceryList,favorite:false,needed:addToList,bought:false,deletedAt:'',sourceUrl:''});
+ },addToList?'Op je lijst gezet.':'Product bewaard.',true);
  if(!ok){groceryDraft=draft;groceryTab=tab;renderShopping()}else groceryCategoryChoice='';
  $('lifeShoppingInput')?.focus();return ok;
 }
