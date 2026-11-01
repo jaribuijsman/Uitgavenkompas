@@ -10,7 +10,9 @@
 #lifeApp .life-grid>.life-panel:has(>.memento-sort-handle){position:relative}
 #lifeApp .life-grid>.life-panel>.memento-sort-handle{position:absolute;right:8px;top:8px}
 #lifeApp .life-grid>.life-panel:has(>.memento-sort-handle)>.life-card-head{padding-right:44px}
-#lifeApp .memento-note-grip{display:inline-flex;align-items:center;padding:0 6px;color:#b9d5c1;font-size:20px}
+#lifeApp .memento-note-grip{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;min-width:44px;min-height:44px;padding:0;color:#b9d5c1;font-size:22px;touch-action:none;cursor:grab}
+#lifeApp .memento-sort-guide{margin:4px 0 10px;color:#c1d8c7;font-size:13px;line-height:1.4}
+#lifeApp .memento-sort-guide[hidden]{display:none!important}
 #lifeApp .kc-item-list[data-manual-sort] .kc-item{touch-action:pan-y}
 #fitnessDialog .ft-editor-list .ft-row{gap:6px;flex-wrap:wrap}
 #fitnessDialog .ft-editor-list .ft-row>.memento-sort-handle{margin-left:auto}

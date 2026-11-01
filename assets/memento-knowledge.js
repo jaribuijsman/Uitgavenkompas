@@ -469,7 +469,7 @@ function render(){
   }
   if(screen==='collection'&&sort==='manual'&&!query&&!kindFilter&&!tagFilter){
    const currentIds=currentItems().map(n=>n.id);
-   setups.push({element:host.querySelector('.kc-item-list[data-manual-sort]'),itemSelector:'.kc-item[data-order-id]',handleSelector:'.kc-item',keyboardSelector:'.kc-item',injectHandle:false,onOrder:ids=>{
+   setups.push({element:host.querySelector('.kc-item-list[data-manual-sort]'),itemSelector:'.kc-item[data-order-id]',handleSelector:'.memento-note-grip',keyboardSelector:'.kc-item',injectHandle:false,onOrder:ids=>{
     const visible=new Set(currentIds),ok=write(s=>sorter.rankByIds(s.notes.filter(n=>visible.has(n.id)),ids));
     if(ok){notice='Notitievolgorde opgeslagen.';render();}
     return ok;
