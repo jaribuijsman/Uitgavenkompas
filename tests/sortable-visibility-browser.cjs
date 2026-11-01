@@ -25,7 +25,7 @@ async function touchDrag(page,selector){
  const target={x:start.x,y:second.y+second.height-4};
  const hit=await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.closest(".memento-sort-handle")!==null,start);
  assert(hit,"Touch target must not be covered by another element");
- const options=await page.locator(selector).first().evaluate(row=>window.Sortable.get(row)?.options);
+ const options=await page.locator(selector).first().evaluate(row=>window.Sortable.get(row.parentElement)?.options);
  assert(options&&options.delay===0,"Touch drag must activate immediately, with no hold delay");
  const session=await page.context().newCDPSession(page);
  await session.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{...start,id:9}]});
