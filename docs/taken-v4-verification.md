@@ -40,6 +40,7 @@ kan worden afgerond, gearchiveerd of verwijderd.
 | `node tests/ci-plan-regression.cjs` | 28 plannercontroles geslaagd |
 | `node tests/service-worker-cache.cjs` | Cache-/offlinecontract geslaagd |
 | `node tests/sortable-visibility-browser.cjs` | Werkelijke Chromium-touch, volgordeopslag en aangrenzende Leven-bediening geslaagd |
+| `node tests/recovery-browser.cjs` | Bestaande mobiele hoogtegrens, menu's, afronden/heropenen, filters en herstelroute geslaagd na gerichte layoutcorrectie |
 | `node tests/taken-v4-browser.cjs` | Nieuwe editorroute, categorieën, zoeken, dubbele stapteksten/status, schatting instellen/wissen, timer pauze/hervat/stop, meerdere sessies, toestemming weigeren, freeze/herstart, quotafout/retry, JSON-herstel/ongeldige import, ZIP inclusief binaire bijlage, vierdaagse herhaling, undo en duplicaat geslaagd |
 
 Browsercommando's gebruikten `NODE_PATH=/workspace/memento-tooling/node_modules`;
@@ -58,8 +59,9 @@ Nieuwe stapbediening heeft minimaal 44px tikdoelen. Gecontroleerd met 0, 1 en
 
 Voor/na met dezelfde geïsoleerde fixture is opgeslagen in
 `/tmp/memento-taken-v4/{before,after}`, inclusief screenshots en `geometry.json`.
-De eerste taak begint bij 393px op y=444 vóór en y=475 na groepering: de
-categorieheading voegt circa 31px toe; de eerste taak blijft volledig zichtbaar.
+De eerste taak begint bij 393px op y=444 vóór en y=429 na groepering.
+De sorteeruitleg staat nu bij Sorteren binnen Filters, zodat de categorieheading
+de lijst niet omlaag duwt. De eerste taak blijft volledig zichtbaar.
 Screenshots van lijst, menu, editor en timercontrole zijn visueel bekeken.
 CI bewaart nieuwe screenshots als artifact `memento-taken-v4-life-full`.
 
@@ -68,6 +70,9 @@ coreveiligheidschecks en de echte offline upgrade van voorgaande main uit.
 De upgradefixture controleert nu ook schatting, bevestigde meting en een
 onbevestigde sessie, naast ongewijzigde Life/financiële/PIN-data en binaire bijlagen.
 Deze CI wordt niet handmatig met een tweede volledige matrix gedupliceerd.
+De eerste centrale run vond een overschrijding van de bestaande y<452-grens in
+`recovery-browser`. De bovenstaande correctie behoudt die assertion ongewijzigd;
+de falende suite en de nieuwe Taken-route zijn lokaal opnieuw geslaagd.
 
 ## Afwijkingen en grenzen
 
