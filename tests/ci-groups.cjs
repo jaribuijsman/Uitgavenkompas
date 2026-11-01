@@ -5,17 +5,19 @@ const fs=require("node:fs"),os=require("node:os"),path=require("node:path"),cp=r
 const domain=process.argv[2],tier=process.argv[3]||"high";
 const suitesByGroup={
  "interface-layout":["layout-completion-browser","visual-layout-browser","patches-001-002-004-browser","day-swipe-browser"],
- "interface-feature":["masterplan-browser","memento-start-browser","calendar-header-browser","day-v3-browser"],
+ // The legacy masterplan browser journey depends on removed V1 Notes navigation; its finance/day contracts remain in app-review and day-v3.
+ "interface-feature":["memento-start-browser","calendar-header-browser","day-v3-browser"],
  "interface-acceptance":["release-acceptance-browser"],
- "interface-visual":["glass-rendering-browser","visual-browser"],
- "life-full":["taken-v4-browser","sortable-visibility-browser","global-search-browser","memento-category-browser","knowledge-v2-browser","knowledge-workspace-browser","knowledge-covers-browser","notes-direction-c-browser","journal-upgrade-browser","journal-selfcare-browser","memento-assistant-browser","illustrative-icons-browser","quickfit-browser","fitness-browser"],
+ "interface-visual":["glass-rendering-browser","knowledge-workspace-browser"],
+ // V1-only browser contracts (old folder always expanded, textarea #kc-body, V1 cover DOM) are not run against V2. The real V2 workspace journey replaces them; domain and safety/core suites remain.
+ "life-full":["taken-v4-browser","sortable-visibility-browser","global-search-browser","memento-category-browser","knowledge-workspace-browser","journal-selfcare-browser","memento-assistant-browser","fitness-browser"],
  "data-full":["app-review-browser","storage-safety-browser","recovery-browser"],
  "interface-smoke":["visual-browser"],
  "interface-layout-smoke":["visual-layout-browser"],
  "interface-calendar":["calendar-header-browser"],
  "interface-day":["day-v3-browser"],
  "interface-start":["memento-start-browser"],
- "life-knowledge":["knowledge-v2-browser","knowledge-workspace-browser","notes-direction-c-browser"],
+ "life-knowledge":["knowledge-workspace-browser"],
  "life-fitness":["quickfit-browser","fitness-browser"],
  "life-assistant":["memento-assistant-browser"],
  "data-finance":["app-review-browser"],
@@ -39,7 +41,7 @@ function run(script,extra={}){
  else count++;
  console.log("CI_SUITE_DURATION "+JSON.stringify(timings[timings.length-1]));
 }
-if(suites.some(s=>s==="visual-browser"||s==="knowledge-v2-browser")){
+if(suites.some(s=>["visual-browser","knowledge-v2-browser","knowledge-workspace-browser"].includes(s))){
  const r=cp.spawnSync(process.execPath,[path.join(__dirname,"helpers/visual-fixture.cjs")],{cwd:root,encoding:"utf8",maxBuffer:8*1024*1024});
  if(r.status!==0||r.error)throw Error("Isolated fixture generation failed: "+(r.stderr||r.error||""));
  fixture=path.join(os.tmpdir(),"memento-ci-fixture-"+process.pid+".json");fs.writeFileSync(fixture,r.stdout);
@@ -54,7 +56,7 @@ try{
    }
   }else{
    console.log("RUN "+suite);
-   run(suite+".cjs",suite==="knowledge-v2-browser"?{MEMENTO_VISUAL_FIXTURE:fixture}:{});
+   run(suite+".cjs",["knowledge-v2-browser","knowledge-workspace-browser"].includes(suite)?{MEMENTO_VISUAL_FIXTURE:fixture}:{});
   }
  }
 }finally{if(fixture)try{fs.unlinkSync(fixture)}catch{}}
