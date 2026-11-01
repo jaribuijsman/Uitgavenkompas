@@ -152,7 +152,9 @@ body #view-planning .goal-card{padding:14px!important}
 body #lifeApp.mg-menu-ancestor,body #lifeApp .mg-menu-ancestor{backdrop-filter:none!important;filter:none!important;transform:none!important;isolation:auto!important;will-change:auto!important;animation:none!important;opacity:1!important}
 
 /* Taken: primary navigation, floating overview menu, and collapsible groups. */
-body #lifeApp .memento-task-tabs{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.35fr)!important;gap:6px;flex-wrap:nowrap;position:relative;z-index:15;overflow:visible}
+body #lifeApp .memento-task-tabs{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.35fr)!important;gap:6px;flex-wrap:nowrap;position:relative;z-index:auto;overflow:visible}
+body #lifeApp .memento-task-tabs:has(.memento-task-overview-menu[open]){z-index:20}
+body #lifeApp[data-life-view=tasks] .memento-task-category:has(.life-task-menu[open]){position:relative;z-index:30}
 body #lifeApp .memento-task-tabs>button,body #lifeApp .memento-task-overview-menu>summary{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:48px;box-sizing:border-box;padding:9px 6px;font-size:13px;font-weight:700;border-radius:12px;border:1px solid #456b51;background:#1e3326;color:#e2f0e4;cursor:pointer}
 body #lifeApp .memento-task-overview-menu{min-width:0;position:relative}
 body #lifeApp .memento-task-overview-menu>summary{list-style:none;white-space:nowrap}
