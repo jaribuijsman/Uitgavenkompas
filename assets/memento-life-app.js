@@ -26,7 +26,7 @@ const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title','manual'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
 
-let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false;
+let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false,groceryMode='compact',grocerySortOpen=false;
 let blocked=false,state,view='today',area='life',taskTab='open',groceryTab='list',noteTab='active',noteOpenId='',noteCategoryFilter='all',templateTab='active',wishTab='active',wishFilter='all',taskSort='manual',search='',taskScope='all',roomFilter='all',repeatFilter='all',categoryFilter='all',undo=null,messageTimer=null,previousFocus=null,modal=null;
 function repeatLabel(t){return t.repeat==='custom'?'Iedere '+t.repeatDays+' '+(t.repeatDays===1?'dag':'dagen'):(repeats[t.repeat]||'Niet herhalen')}
 function templateOf(t){return {id:uid(),title:t.title,kind:t.kind,category:t.category,room:t.room||'Hele huis',repeat:t.repeat,repeatDays:t.repeatDays||4,priority:Boolean(t.priority),notes:t.notes||'',steps:(t.steps||[]).map(s=>({text:s.text,done:false})),sourceUrl:t.sourceUrl||'',sourceTaskId:t.id||'',deletedAt:''}}
@@ -530,7 +530,7 @@ function activateLifeSortables(){
    add(root.querySelector('#lifeTemplateResults>.life-grid'),'.life-panel[data-order-id]',ids=>rank(records,ids));
   }
  }
- if(view==='groceries'&&groceryTab!=='trash'&&!groceryDraft){
+ if(view==='groceries'&&grocerySortOpen&&groceryTab!=='trash'&&!(groceryTab==='list'&&groceryMode==='shop')&&!groceryDraft){
   const visibleIds=[...root.querySelectorAll('#lifeGroceryResults .shopping-row[data-order-id]')].filter(el=>!el.closest('.shopping-bought')).map(el=>el.dataset.orderId);
   const records=state.groceries.filter(g=>visibleIds.includes(g.id));
   root.querySelectorAll('#lifeGroceryResults .shopping-rows').forEach(list=>{
@@ -623,16 +623,48 @@ const shoppingName=list=>list==='purchases'?'Aankopen':'Boodschappen';
 const shoppingKey=title=>String(title||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('nl-NL');
 const shoppingItems=()=>state.groceries.filter(g=>shoppingListOf(g)===groceryList);
 const shoppingMatches=g=>!groceryDraft||[g.title,g.quantity,g.category,g.notes].join(' ').toLocaleLowerCase('nl-NL').includes(groceryDraft.toLocaleLowerCase('nl-NL'));
+// Display-only supermarket route: a product's stored category is never changed.
+const shoppingAisles=[
+ ['Groente & fruit',/groente|fruit|aardappel|tomaat|komkommer|paprika|wortel|uien?\b|knoflook|sla\b|banaan|appel|peer\b|citroen|limoen|champignon|spinazie|courgette/],
+ ['Brood & bakkerij',/brood|bakkerij|bolletj|croissant|stokbrood|gebak|bagel/],
+ ['Vlees, vis & vega',/vlees|kip(filet)?|gehakt|vis\b|zalm|tonijn|garnal|vegetar|vegan|tofu|tempeh|worst|spek/],
+ ['Zuivel & eieren',/zuivel|melk\b|yoghurt|kwark|kaas\b|parmeza|boursin|feta|eieren|ei\b|room\b|boter|skyr/],
+ ['Ontbijt & beleg',/ontbijt|cruesli|muesli|havermout|cornflake|cracker|beschuit|pindakaas|jam\b|hagelslag|beleg/],
+ ['Pasta, rijst & wereldkeuken',/pasta|spaghetti|macaroni|lasagne|rijst\b|noedel|couscous|quinoa|tortilla|wrap|mie\b|wereldkeuken|maaltijd/],
+ ['Conserven & houdbaar',/conserven|bonen|linzen|blik\b|tomatenpuree|passata|bloem\b|meel\b|suiker|houdbaar|soep\b/],
+ ['Kruiden, sauzen & olie',/kruiden|specerij|peper\b|zout\b|saus|ketchup|mosterd|mayonaise|olijfolie|olie\b|balsamico|azijn|dressing|bouillon/],
+ ['Snacks & zoet',/snack|chips|noot|noten|chocolade|koek|snoep|drop\b|popcorn/],
+ ['Dranken',/drank|water\b|frisdrank|cola\b|sap\b|koffie|thee\b|limonade/],
+ ['Huishouden & schoonmaak',/huishoud|schoonmaak|wasmiddel|wasverzachter|afwas|vaatwas|toiletpapier|keukenrol|vuilniszak|reiniger|spons/],
+ ['Verzorging & drogisterij',/verzorg|drogist|shampoo|tandpasta|deodorant|zeep\b|douchegel|scheermes|vitamine/],
+ ['Huisdieren',/huisdier|katten|kattenbak|kattengrit|kattenbrok|honden|dierenvoer|brokjes/],
+ ['Overig',/$^/],
+ ['Diepvries',/diepvries|bevroren|diepgevroren|ijs\b|friet\b|pizza diepvries/]
+];
+const shoppingNormal=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('nl-NL');
+function shoppingAisleOf(g){
+ const cat=shoppingNormal(g.category),title=shoppingNormal(g.title);
+ if(cat&&!/^(overig|hoofdingredient|ingredient(en)?|additieven|algemeen)$/.test(cat)){
+  const match=shoppingAisles.find(([label,pattern])=>label!=='Overig'&&pattern.test(cat));
+  if(match)return match[0];
+ }
+ const match=shoppingAisles.find(([label,pattern])=>label!=='Overig'&&pattern.test(title));
+ return match?match[0]:'Overig';
+}
 const shoppingIcon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7L12 3Z"/><path d="m20 2 .6 1.4L22 4l-1.4.6L20 6l-.6-1.4L18 4l1.4-.6L20 2Z"/></svg>';
 function shoppingItemRow(g,mode='list'){
  const trash=mode==='trash',active=Boolean(g.needed&&!g.bought),bought=mode==='bought';
- const title=esc(g.title),id=esc(g.id),target=shoppingListOf(g)==='purchases'?'groceries':'purchases';
- const action=trash?'<button type="button" class="shopping-icon-button" data-life-grocery-restore="'+id+'" aria-label="'+esc('Terugzetten: '+g.title)+'" title="Terugzetten">↶</button>':mode==='list'||bought?'<label class="shopping-check" title="'+(bought?'Weer nodig':'Gekocht')+'"><input type="checkbox" data-life-bought="'+id+'" aria-label="'+esc((bought?'Weer nodig: ':'Gekocht: ')+g.title)+'"'+(bought?' checked':'')+'><span aria-hidden="true"></span></label>':'<button type="button" class="shopping-icon-button" data-shopping-add="'+id+'" aria-label="'+esc((active?'Staat op je lijst: ':'Op mijn lijst: ')+g.title)+'"'+(active?' disabled':'')+'>'+(active?'✓':'+')+'</button>';
+ const title=esc(g.title),id=esc(g.id),target=shoppingListOf(g)==='purchases'?'groceries':'purchases',showNotes=mode==='shop'||shoppingListOf(g)==='purchases';
+ const action=trash?'<button type="button" class="shopping-icon-button" data-life-grocery-restore="'+id+'" aria-label="'+esc('Terugzetten: '+g.title)+'" title="Terugzetten">↶</button>':mode==='list'||mode==='shop'||bought?'<label class="shopping-check" title="'+(bought?'Weer nodig':'Gekocht')+'"><input type="checkbox" data-life-bought="'+id+'" aria-label="'+esc((bought?'Weer nodig: ':'Gekocht: ')+g.title)+'"'+(bought?' checked':'')+'><span aria-hidden="true"></span></label>':'<button type="button" class="shopping-icon-button" data-shopping-add="'+id+'" aria-label="'+esc((active?'Staat op je lijst: ':'Op mijn lijst: ')+g.title)+'"'+(active?' disabled':'')+'>'+(active?'✓':'+')+'</button>';
  const menu=trash?'':'<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+g.title)+'">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-edit="'+id+'">Bewerken</button><button type="button" data-shopping-favorite="'+id+'">'+(g.favorite?'Uit favorieten halen':'Favoriet maken')+'</button>'+(g.needed?'<button type="button" data-life-needed="'+id+'">Van deze lijst halen</button>':'')+'<button type="button" data-shopping-move="'+id+'">Naar '+shoppingName(target)+'</button><button type="button" class="life-task-delete" data-life-grocery-delete="'+id+'">Verwijderen</button></div></details>';
- return '<article data-order-id="'+id+'" class="shopping-row'+(bought?' shopping-row-bought':'')+'">'+action+'<div class="shopping-row-body">'+(trash?'<span class="shopping-row-title">'+title+'</span>':'<button type="button" class="shopping-row-title" data-life-grocery-edit="'+id+'">'+title+'</button>')+(g.quantity?'<small>'+esc(g.quantity)+'</small>':'')+(shoppingListOf(g)==='purchases'&&g.budget?'<small class="ml-purchase-budget">Budget € '+esc(g.budget)+'</small>':'')+(shoppingListOf(g)==='purchases'?'<small class="shopping-row-note">'+(g.researchSummary?'Uitkomst bewaard':g.researchId?'Onderzoeksdossier':'Nog geen onderzoek')+'</small>':'')+(g.notes?'<small class="shopping-row-note">'+esc(g.notes)+'</small>':'')+'</div>'+(!trash&&shoppingListOf(g)==='purchases'?'<button type="button" class="shopping-icon-button shopping-ai" data-shopping-research="'+id+'" aria-label="'+esc('Onderzoek '+g.title+' met Slim Kopen')+'" title="Slim Kopen">'+shoppingIcon+'</button>':'')+menu+'</article>';
+ return '<article data-order-id="'+id+'" class="shopping-row'+(bought?' shopping-row-bought':'')+'">'+action+'<div class="shopping-row-body">'+(trash?'<span class="shopping-row-title">'+title+'</span>':'<button type="button" class="shopping-row-title" data-life-grocery-edit="'+id+'">'+title+'</button>')+(g.quantity?'<small class="shopping-row-quantity">'+esc(g.quantity)+'</small>':'')+(shoppingListOf(g)==='purchases'&&g.budget?'<small class="ml-purchase-budget">Budget € '+esc(g.budget)+'</small>':'')+(shoppingListOf(g)==='purchases'?'<small class="shopping-row-note">'+(g.researchSummary?'Uitkomst bewaard':g.researchId?'Onderzoeksdossier':'Nog geen onderzoek')+'</small>':'')+(showNotes&&g.notes&&!shoppingNormal(g.notes).startsWith('bewaard product uit notion')?'<small class="shopping-row-note">'+esc(g.notes)+'</small>':'')+'</div>'+(!trash&&shoppingListOf(g)==='purchases'?'<button type="button" class="shopping-icon-button shopping-ai" data-shopping-research="'+id+'" aria-label="'+esc('Onderzoek '+g.title+' met Slim Kopen')+'" title="Slim Kopen">'+shoppingIcon+'</button>':'')+menu+'</article>';
 }
 function shoppingRows(items,mode){
- if(!groceryGrouped||mode==='bought'||mode==='trash')return '<div class="shopping-rows">'+items.map(g=>shoppingItemRow(g,mode)).join('')+'</div>';
+ if(mode==='shop'){
+  const aisles=shoppingAisles.map(([label])=>({label,items:items.filter(g=>shoppingAisleOf(g)===label)})).filter(group=>group.items.length);
+  return '<p class="shopping-route-note">Gebruikelijke loopvolgorde; de indeling verschilt per winkel.</p>'+aisles.map((group,index)=>'<section class="shopping-category shopping-aisle"><h3><span class="shopping-aisle-number">'+(index+1)+'</span><span>'+esc(group.label)+'</span><small>'+group.items.length+'</small></h3><div class="shopping-rows">'+group.items.map(g=>shoppingItemRow(g,'shop')).join('')+'</div></section>').join('');
+ }
+ if(!groceryGrouped||mode==='bought'||mode==='trash'||mode==='list')return '<div class="shopping-rows">'+items.map(g=>shoppingItemRow(g,mode)).join('')+'</div>';
  const groups=[...new Set(items.map(g=>g.category||'Overig'))];
  return groups.map(group=>'<section class="shopping-category"><h3>'+esc(group)+'</h3><div class="shopping-rows">'+items.filter(g=>(g.category||'Overig')===group).map(g=>shoppingItemRow(g,mode)).join('')+'</div></section>').join('');
 }
@@ -648,10 +680,10 @@ function renderGroceries(){
  const count=all.filter(g=>!g.deletedAt&&g.needed&&!g.bought).length;
  const counter=$('shoppingCount');if(counter){counter.textContent=count+' nog nodig';counter.hidden=groceryTab!=='list'}
  const shortcut=$('shoppingFavorites');if(shortcut)shortcut.innerHTML=groceryTab==='list'&&!groceryDraft&&favorites.length?'<div class="shopping-quick-favorites" aria-label="Snel toevoegen uit favorieten">'+favorites.map(g=>'<button type="button" data-shopping-add="'+esc(g.id)+'">＋ '+esc(g.title)+'</button>').join('')+'</div>':'';
- const guide=$('shoppingSortGuide');if(guide)guide.hidden=Boolean(groceryDraft)||groceryTab==='trash';
+ const guide=$('shoppingSortGuide');if(guide)guide.hidden=!grocerySortOpen||Boolean(groceryDraft)||groceryTab==='trash'||(groceryTab==='list'&&groceryMode==='shop');
  const results=$('lifeGroceryResults');if(!results)return;
  if(groceryTab==='list'){
-  results.innerHTML=(list.length?shoppingRows(list,'list'):empty(groceryDraft?'Geen producten gevonden':bought.length?'Alles afgevinkt':'Je lijst is leeg',groceryDraft?'Probeer een andere zoekterm of voeg een nieuw product toe.':''))+(bought.length?'<details class="shopping-bought" id="shoppingBought"'+(groceryBoughtOpen?' open':'')+'><summary>Gekocht ('+bought.length+')</summary><div class="shopping-bought-content">'+shoppingRows(bought,'bought')+'<button type="button" class="shopping-clean" id="lifeClearBought">Gekochte producten opruimen</button></div></details>':'');
+  results.innerHTML=(list.length?shoppingRows(list,groceryList==='groceries'&&groceryMode==='shop'?'shop':'list'):empty(groceryDraft?'Geen producten gevonden':bought.length?'Alles afgevinkt':'Je lijst is leeg',groceryDraft?'Probeer een andere zoekterm of voeg een nieuw product toe.':''))+(bought.length?'<details class="shopping-bought" id="shoppingBought"'+(groceryBoughtOpen?' open':'')+'><summary>Gekocht ('+bought.length+')</summary><div class="shopping-bought-content">'+shoppingRows(bought,'bought')+'<button type="button" class="shopping-clean" id="lifeClearBought">Gekochte producten opruimen</button></div></details>':'');
  }else{
   const items=groceryTab==='favorites'?visible.filter(g=>g.favorite):visible;
   results.innerHTML='<div class="shopping-section-head"><h2>'+({favorites:'Favorieten',saved:'Alle producten',trash:'Prullenbak'}[groceryTab])+'</h2><span>'+items.length+' '+(items.length===1?'product':'producten')+'</span></div>'+(items.length?shoppingRows(items,groceryTab):empty(groceryTab==='favorites'?'Nog geen favorieten':groceryTab==='trash'?'De prullenbak is leeg':'Geen producten gevonden',groceryTab==='favorites'?'Maak een product favoriet via het menu ⋮.':''));
@@ -661,11 +693,23 @@ function renderGroceries(){
 }
 function renderShopping(){
  $('lifeTitle').textContent=shoppingName(groceryList);
+ const section=groceryList==='purchases'?'purchases':groceryTab==='list'?'list':'saved';
+ const isList=groceryList==='groceries'&&groceryTab==='list';
+ const isLibrary=groceryList==='groceries'&&['saved','favorites'].includes(groceryTab);
+ const nav=(value,label)=>'<button type="button" data-shopping-section="'+value+'" aria-pressed="'+(section===value)+'">'+label+'</button>';
  content.innerHTML='<section class="shopping-app" aria-label="'+shoppingName(groceryList)+'">'+
- '<div class="shopping-list-switch" role="group" aria-label="Kies je lijst"><button type="button" data-shopping-list="groceries" aria-pressed="'+(groceryList==='groceries')+'">Boodschappen</button><button type="button" data-shopping-list="purchases" aria-pressed="'+(groceryList==='purchases')+'">Aankopen</button></div>'+
- '<div class="shopping-viewbar"><div class="shopping-view-tabs" role="group" aria-label="Weergave"><button type="button" data-life-grocery-tab="list" aria-pressed="'+(groceryTab==='list')+'">Mijn lijst</button><button type="button" data-life-grocery-tab="favorites" aria-pressed="'+(groceryTab==='favorites')+'">Favorieten</button></div><details class="life-task-menu shopping-list-menu"><summary aria-label="Lijstopties">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-tab="saved">Alle producten</button><button type="button" data-life-grocery-tab="trash">Prullenbak</button><button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button><button type="button" data-shopping-new="true">Product met details toevoegen</button></div></details></div>'+
+ '<div class="shopping-primary-head"><div class="shopping-primary-nav" role="group" aria-label="Boodschappenonderdelen">'+nav('list','Mijn lijst')+nav('saved','Producten')+nav('purchases','Aankopen')+'</div>'+
+ '<details class="life-task-menu shopping-list-menu"><summary aria-label="Boodschappenopties">⋮</summary><div class="life-task-actions">'+
+ (groceryList==='purchases'?'<button type="button" data-life-grocery-tab="saved">Bewaarde aankopen</button>':'')+
+ '<button type="button" data-life-grocery-tab="trash">Prullenbak</button>'+
+ (!isList&&groceryTab!=='trash'?'<button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button>':'')+
+ (groceryTab!=='trash'&&!(isList&&groceryMode==='shop')?'<button type="button" data-shopping-sort="true" aria-pressed="'+grocerySortOpen+'">'+(grocerySortOpen?'Sorteren stoppen':'Handmatig sorteren')+'</button>':'')+
+ '<button type="button" data-shopping-new="true">Product met details toevoegen</button></div></details></div>'+
+ '<div class="shopping-library-filters"'+(isLibrary?'':' hidden')+' role="group" aria-label="Producten filteren"><button type="button" data-life-grocery-tab="saved" aria-pressed="'+(groceryTab==='saved')+'">Alle producten</button><button type="button" data-life-grocery-tab="favorites" aria-pressed="'+(groceryTab==='favorites')+'">Favorieten</button></div>'+
  '<form id="lifeShoppingForm" class="shopping-add"><input id="lifeShoppingInput" type="text" maxlength="180" autocomplete="off" enterkeyhint="done" aria-label="Zoek of voeg een product toe" placeholder="Zoek of voeg toe…" value="'+esc(groceryDraft)+'"><button type="submit" aria-label="Product toevoegen" title="Product toevoegen">＋</button></form>'+
- '<div id="shoppingSuggestions" aria-live="polite"></div><div id="shoppingFavorites"></div><p id="shoppingCount" class="shopping-count" aria-live="polite"></p><p class="memento-sort-guide" id="shoppingSortGuide">Houd ⠿ even vast om producten te verslepen. Bij groeperen kun je alleen binnen dezelfde categorie sorteren.</p><div id="lifeGroceryResults"></div></section>';
+ '<div id="shoppingSuggestions" aria-live="polite"></div><div id="shoppingFavorites"></div>'+
+ '<div class="shopping-modebar"'+(isList?'':' hidden')+'><p id="shoppingCount" class="shopping-count" aria-live="polite"></p><div class="shopping-mode-switch" role="group" aria-label="Boodschappenweergave"><button type="button" data-shopping-mode="compact" aria-pressed="'+(groceryMode==='compact')+'">Compact</button><button type="button" data-shopping-mode="shop" aria-pressed="'+(groceryMode==='shop')+'">Winkelmodus</button></div></div>'+
+ '<p class="memento-sort-guide" id="shoppingSortGuide" hidden>Houd ⠿ vast om te sorteren; binnen categorieën blijft de volgorde gescheiden.</p><div id="lifeGroceryResults"></div></section>';
  renderGroceries();
 }
 function addShoppingItem(id=null){
@@ -1052,7 +1096,10 @@ root.addEventListener('click',e=>{
  if(d.mementoDayNewEvent!==undefined){b.dataset.mementoNewEvent=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();}
  if(d.mementoDeleteDayEvent){const event=localAppointments().find(x=>x.id===d.mementoDeleteDayEvent);if(event&&confirm('Afspraak ‘'+event.title+'’ verwijderen uit Memento?')){if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==event.id)},'Lokale afspraak verwijderd.',true))window.MementoGoogleCalendar?.refreshAgenda?.();}return}
  if(d.lifeSourceNote){if(setView('notes'))window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
- if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;render();return}
+ if(d.shoppingSection){groceryList=d.shoppingSection==='purchases'?'purchases':'groceries';groceryTab=d.shoppingSection==='saved'?'saved':'list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
+ if(d.shoppingMode){if(groceryList==='groceries'&&groceryTab==='list'){groceryMode=d.shoppingMode==='shop'?'shop':'compact';grocerySortOpen=false;render()}return}
+ if(d.shoppingSort){grocerySortOpen=!grocerySortOpen;render();return}
+ if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
  if(d.shoppingAdd){addShoppingItem(d.shoppingAdd);return}
  if(d.shoppingFavorite){changeShoppingItem(d.shoppingFavorite,'favorite');return}
  if(d.shoppingMove){changeShoppingItem(d.shoppingMove,'move');return}
