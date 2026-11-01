@@ -98,7 +98,7 @@ async function addTransaction(page, description) {
     await navigate(c, "life", "notes"); await c.locator('[data-kc="new"]').first().click(); await c.locator("#kc-title").fill("Fictieve PDF"); await c.locator("[data-ws-block]").first().fill("Bijlagefixture");
     await c.locator("#kc-file-input").setInputFiles({ name: "fictief.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\nFictieve integriteitsbytes\n%%EOF") });
     await until(c, () => JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n => n.attachments?.length));
-    const binary = await c.evaluate(async () => { const all = await window.MementoKnowledgeStore.all(); return { count: all.length, text: await all[0].blob.text(), meta: all[0].id }; });
+    const binary = await c.evaluate(async () => { const all = (await window.MementoKnowledgeStore.all()).filter(r => r.noteId !== "kc-system-snapshot"); const attached=all.find(r=>r.name==="fictief.pdf"); return { count: all.length, text: attached?await attached.blob.text():"", meta: attached?.id }; });
     assert.equal(binary.count, 1); assert(binary.text.startsWith("%PDF-1.4")); checks.push("Real IndexedDB attachment write uses the owning operation token");
     await c.evaluate(()=>window.MementoFinanceValidation.validate(JSON.parse(localStorage.getItem("uitgavenkompas_v1"))));
     await navigate(c, "life", "backup"); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;
