@@ -68,7 +68,7 @@ const server=http.createServer((req,res)=>{
    if(width===393){
     await page.setViewportSize({width,height:772});
     await page.locator('[data-ms-create="note"]').click();
-    await page.locator('#kc-quick-text').waitFor({state:'visible'});
+    await page.locator('#kc-capture').waitFor({state:'visible'});
     await page.evaluate(()=>window.MementoStart.showWelcome());
     const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')}));
     await page.locator('[data-ms-create="task"]').click();
@@ -77,10 +77,9 @@ const server=http.createServer((req,res)=>{
     await page.locator('[data-life-close]').first().click();
     await page.evaluate(()=>window.MementoStart.showWelcome());
     await page.locator('[data-ms-create="note"]').click();
-    await page.locator('#kc-quick-text').waitFor({state:'visible'});
-    assert.equal(await page.locator('[data-kc="quick-save"]').count(),1);
-    assert.equal(await page.locator('[data-kc="quick-expand"]').count(),1);
-    assert.equal(await page.locator('#kc-quick-mic').count(),1);
+    await page.locator('#kc-capture').waitFor({state:'visible'});
+    // V2 capture is an inline form, not the removed V1 quick textarea controls.
+    assert.equal(await page.locator('#kc-capture-form button[type="submit"]').count(),1);
     await page.evaluate(()=>window.MementoStart.showWelcome());
     await page.locator('[data-ms-create="transaction"]').click();
     await page.locator('#txForm').waitFor({state:'visible'});
