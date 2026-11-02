@@ -33,8 +33,8 @@
 
 | ID | Werkpakket | Prioriteit | Technisch risico (vooraf) | Status | PR / bewijs |
 |---|---|---|---|---|---|
-| G0 | PR #73/#74 consolideren en roadmap corrigeren | P0 | Laag, documentatie | IN UITVOERING — gereed voor mergebeoordeling | Canoniek: [PR #74](https://github.com/jaribuijsman/Uitgavenkompas/pull/74); #73 vervalt; merge nog OPEN |
-| G1 | Centrale CI-status ook voor documentatie-PR's beschikbaar maken | P0 | Hoog, workflow/planner | OPEN — na G0 | Huidige PR-paths sluiten docs uit; geen groen CI-bewijs voor G0 |
+| G0 | PR #73/#74 consolideren en roadmap corrigeren | P0 | Laag, documentatie | GESLAAGD (documentatie) | Canoniek: [PR #74](https://github.com/jaribuijsman/Uitgavenkompas/pull/74); #73 gesloten; merge `1b5de33824a41fa56109ea46b7469870e4297185` |
+| G1 | Centrale CI-status ook voor documentatie-PR's beschikbaar maken | P0 | Hoog, workflow/planner | IN UITVOERING | Docs-PR-trigger en fail-closed releasegate; finale CI nog OPEN |
 | G2 | `main` effectief beschermen | P0 | GitHub-beheerinstellingen | OPEN — na G1 | Opnieuw gelezen bij G0: `protected: false`, rulesets `[]`; protection-endpoint niet vastgesteld |
 | F0-A | Afwijking na PR #66 vaststellen en herstellen | P0 | Hoog als `memento-life-app.js` geraakt wordt | GESLAAGD | [PR #67](https://github.com/jaribuijsman/Uitgavenkompas/pull/67) · merge `e638d94e7759a5ada5113e1cf714f1e6cbb6b14b` · [PR-head-run 41453028522](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41453028522) · [beelden](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41453028522/artifacts/13146400500) |
 | F1-A | `AGENTS.md` en efficiencyregels consolideren | P1 | Laag, documentatie | GESLAAGD | [PR #69](https://github.com/jaribuijsman/Uitgavenkompas/pull/69) · merge `99b78c04183cbf012b050a8bf61c99bb7382094b` · [PR-head CI 41456245800](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41456245800) |
@@ -287,7 +287,7 @@ Rapporteer PR-link, SHA, geslaagde/niet geverifieerde tests, gegevensveiligheid,
 visuele status, resterende afwijkingen en deploymentstatus.
 ```
 
-**Eerstvolgende poort:** G0 opleveren in de canonieke PR #74 en stoppen vóór merge voor expliciete mergeautorisatie. Daarna G1 vanaf opnieuw gecontroleerde `main`; F0-A niet opnieuw uitvoeren.
+**Uitvoeringsautorisatie:** gebruiker heeft na G0 expliciet toestemming gegeven voor alle handelingen binnen dit werkplan, inclusief afzonderlijk gecontroleerde merges en GitHub-beheer. Niet opnieuw om routinebevestiging vragen. Tests, gegevensbehoud en waarheidsgetrouwe bewijsstatus blijven vereist. G0 is gemerged; G1 volgt vanaf opnieuw gecontroleerde `main`.
 
 ## 4. Uitvoerlog — na iedere PR aanvullen, niet vooruit invullen
 
@@ -334,3 +334,5 @@ visuele status, resterende afwijkingen en deploymentstatus.
 **F4-A-beoordeling:** uitsluitend de bron-/testroute-inventaris is beschikbaar; F4-A blijft **IN UITVOERING**; individuele nieuwe visuele bevindingen, vermeend overbodige controls, echte A54 en 393px browserinspectie voor alle 18 views zijn **NIET GEVERIFIEERD**. **Geen verwijder-/samenvoegopdracht verleend** en geen F4-B-productiewijziging toegestaan zonder een afzonderlijk goedgekeurd voorstel. Volg eerst de uitvoervolgorde hierboven: na G0/G1–G2 de echte F4-A-browseraudit, daarna F3-B1 en de op referenties gebaseerde vervolgstappen.
 
 **Kleine eerste F4-B-kandidaat (nog niet goedgekeurd):** inspecteer uitsluitend het Kenniscentrum-tabblad **Mappen** op 393px met een ingeklapte en uitgeklapte map. Vergelijk een door de gebruiker goedgekeurd compact ontwerp met `.kc-local-tabs`, `.kc-tree-children` en de bestaande mapuitklaphandler. Acceptatie: tabvolgorde/labels en alle map-ID's behouden, 44×44 hitbox, geen horizontale overflow, dezelfde mapuitklap-/terugkeerroute, voor/na-screenshot exact dezelfde fixture. Zonder ontwerpgoedkeuring **geen UI-wijziging**.
+
+| 2026-11-02 | G1 | Basis `1b5de33824a41fa56109ea46b7469870e4297185`; branch `ci/g1-required-release-gate` | Docs-only PR-trigger zonder browsermatrix; gate eist exact geselecteerde success/skipped-resultaten; positieve/negatieve planner-, postmerge- en gatefixtures | Geen app-/opslagwijziging; volledige high-risk PR-gate vereist wegens workflow/planner | PR-head-CI en merge nog OPEN. G0 gemerged met expliciete gebruikersautorisatie; voor G0 bestond geen docs-CI-trigger. Rollback: revert G1; vóór terugdraaien eerst vereiste check/ruleset afstemmen zodat docs-PR niet permanent pending blijft. |
