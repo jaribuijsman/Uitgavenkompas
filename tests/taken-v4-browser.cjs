@@ -101,7 +101,12 @@ async function life(page){return page.evaluate(k=>JSON.parse(localStorage.getIte
  await page.locator('[data-life-complete="v4-routine"]').click();task=await getTask();assert.equal(task.date,'2026-11-05');assert.equal(task.id,'v4-routine');assert.equal(task.done,false);assert.equal(task.history.length,2);assert.equal(task.history[0].legacy,true);assert.equal(task.history[1].occurrenceId,oldOccurrence);assert.notEqual(task.timing.occurrenceId,oldOccurrence);assert(task.steps.every(s=>!s.done));assert.deepEqual(task.timing.measurements[0],measured[0]);assert.equal(task.planning.estimateMinutes,3);
  // Undo restores the exact original occurrence, including its confirmed sessions.
  await page.locator('[data-life-action="undo"]').click();assert.equal((await getTask()).timing.occurrenceId,oldOccurrence);
- await openEditor(page);await page.locator('#lifeTaskEstimate').fill('');await page.locator('[form="lifeTaskForm"]').click();assert.equal((await getTask()).planning.estimateMinutes,null);
+ await openEditor(page);await page.locator('#lifeTaskEstimate').fill('');await page.locator('[form="lifeTaskForm"]').click();
+ // Wait for the real submit/guarded-save outcome before reading localStorage.
+ // Input dispatch alone does not establish that the write completed.
+ await page.locator('#lifeDialog').waitFor({state:'hidden',timeout:3000});
+ await page.waitForFunction(k=>JSON.parse(localStorage.getItem(k)).tasks.find(t=>t.id==='v4-routine')?.planning?.estimateMinutes===null,key,{timeout:3000});
+ assert.equal((await getTask()).planning.estimateMinutes,null);
  // Duplicate uses a new task ID and carries no personal timing.
  await page.locator('[data-order-id="v4-routine"] .life-task-menu summary').click();await page.locator('[data-life-duplicate="v4-routine"]').click();const copy=(await life(page)).tasks.find(t=>t.title.endsWith('(kopie)'));assert(copy);assert.equal(copy.timing,undefined);assert.deepEqual(copy.history,[]);
  // Existing day route still uses existing dates and task rows, without duration.
