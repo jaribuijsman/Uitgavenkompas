@@ -46,6 +46,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(diagnostic.pinLocked,false,JSON.stringify(diagnostic));
    // The glass layer intentionally folds administration cards. Open the real summary,
    // rather than expecting private controls to be exposed by default.
+   await page.locator("#mementoSettingsLife [data-ms-target=assistant]").click();
    const assistant=page.locator('#mementoAssistant');
    const unfold=async()=>{
     await page.waitForFunction(()=>Boolean(document.querySelector('#mementoAssistant')?.closest('details.mg-fold')));

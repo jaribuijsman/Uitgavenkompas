@@ -89,7 +89,7 @@
     tabs(receipt,'receipts',[['input','Invoer',[input]],['check','Controleren',[intro]],['link','Koppelen',[bundle,head,list]]],input);
    }
   });}
-  const settings=$('#view-settings');if(settings)once(settings,'mlSettings',()=>{const b=document.createElement('button');b.type='button';b.className='btn primary';b.textContent='Volledige back-up en herstel';b.addEventListener('click',()=>window.MementoLife?.openBackup?.());const card=document.createElement('section');card.className='card ml-backup-link';const h=document.createElement('h2');h.textContent='Back-up & herstel';card.append(h,b);$('.page-head',settings)?.after(card);});
+  // Central settings navigation owns the back-up entry; avoid a second card.
  }
  function life(){
   const app=$('#lifeApp'),view=app?.dataset.lifeView,host=$('#lifeContent');if(!app||!host)return;
