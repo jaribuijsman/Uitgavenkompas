@@ -1610,7 +1610,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 <style id="memento-compact-capture-20261102">
 /* Quick capture A: one visible composer, three kinds, compact options below. */
 #lifeApp .memento-capture-card{
- display:grid;grid-template-columns:minmax(0,1fr) 48px 48px;gap:8px;
+ display:grid;grid-template-columns:minmax(0,1fr);gap:8px;
  align-items:center;min-width:0;border-radius:20px;
  border:1px solid #698976;background:linear-gradient(145deg,#1e4936f5,#123b2df5);
  box-shadow:0 7px 24px #06241b56;
@@ -1629,23 +1629,23 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
  background:#bdd3c2;color:#14261a;border-color:#bdd3c2;
 }
 #lifeApp .memento-capture-card input#lifeQuickTitle{
- grid-column:1;grid-row:2;min-width:0;min-height:48px;
+ grid-column:1;grid-row:1;min-width:0;min-height:48px;
  padding:10px 11px;font-size:16px;line-height:1.3;border-radius:12px;
 }
-#lifeApp .memento-capture-card .memento-capture-toolbar{display:contents}
+#lifeApp .memento-capture-card .memento-capture-toolbar{display:grid;grid-column:1;grid-row:2;grid-template-columns:minmax(0,1fr) 48px 48px;grid-template-rows:48px 44px;gap:8px;align-items:center;min-width:0;width:100%}
 #lifeApp .memento-capture-card .memento-voice-btn{
- grid-column:2;grid-row:2;display:grid;place-items:center;
+ grid-column:2;grid-row:1;display:grid;place-items:center;
  width:48px;min-width:48px;height:48px;margin:0;border:0;
  border-radius:12px;background:#214b38;color:#e7f2e9;
 }
 #lifeApp .memento-capture-card .memento-capture-submit{
- grid-column:3;grid-row:2;display:grid;place-items:center;
+ grid-column:3;grid-row:1;display:grid;place-items:center;
  width:48px;min-width:48px;height:48px;min-height:48px;
  margin:0;padding:11px;border-radius:12px;
 }
 #lifeApp .memento-capture-card .memento-capture-submit svg{width:22px;height:22px;display:block}
 #lifeApp .memento-capture-card .memento-capture-date{
- grid-column:1;grid-row:3;justify-self:start;max-width:100%;min-width:0;
+ grid-column:1;grid-row:2;justify-self:start;max-width:100%;min-width:0;
  min-height:44px;padding:7px 9px;gap:6px;border:1px solid #70957c;
  background:#244a39;border-radius:12px;font-size:13px;
 }
@@ -1654,7 +1654,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .memento-capture-card button.memento-capture-date{font:inherit;font-size:13px;cursor:pointer}
 #lifeApp .memento-capture-card input#lifeQuickDate[type="hidden"]{display:none}
 #lifeApp .memento-capture-card .memento-capture-inbox{
- grid-column:1;grid-row:3;min-width:0;display:flex;align-items:center;
+ grid-column:1;grid-row:2;min-width:0;display:flex;align-items:center;
  gap:6px;font-size:13px;color:#d9ebde;white-space:nowrap;overflow:hidden;
 }
 #lifeApp .memento-capture-card .memento-capture-inbox svg{
@@ -1662,14 +1662,14 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 }
 #lifeApp .memento-capture-card #lifeQuickCollectionLabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #lifeApp .memento-capture-card .memento-capture-options{
- grid-column:2/4;grid-row:3;justify-self:end;display:flex;align-items:center;
+ grid-column:2/4;grid-row:2;justify-self:end;display:flex;align-items:center;
  gap:4px;min-width:76px;min-height:44px;padding:7px 8px;
  border:0;background:transparent;color:#d6e9d9;font-size:13px;
  font-weight:700;border-radius:10px;cursor:pointer;
 }
 #lifeApp .memento-capture-card .memento-capture-options span{font-size:21px;line-height:1}
 #lifeApp .memento-capture-card .memento-voice-message{
- grid-column:1/-1;grid-row:4;margin:0;font-size:12px;
+ grid-column:1/-1;grid-row:3;margin:0;font-size:12px;
 }
 #lifeApp .memento-capture-card [hidden]{display:none!important}
 #lifeApp .memento-capture-card button:focus-visible,
