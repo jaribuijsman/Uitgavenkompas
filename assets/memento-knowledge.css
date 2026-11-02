@@ -478,7 +478,7 @@
 
 /* Knowledge editor: approved prototype parity (SHA-256 8fe95983...), scoped to non-journal editor.
    Single owner for editor visuals: no cascading V3 override appendix. */
-#lifeApp[data-life-view="notes"] .kc-app:has(.kc-v3-prototype-editor){background:linear-gradient(180deg,#082b20c9 0%,#06281ed9 55%,#061e19ed 100%);border-radius:0 0 16px 16px}
+#lifeApp[data-life-view="notes"] .kc-app:has(.kc-v3-prototype-editor){margin-top:-18px;background:linear-gradient(180deg,#082b20c9 0%,#06281ed9 55%,#061e19ed 100%);border-radius:0 0 16px 16px}
 #lifeApp[data-life-view="notes"] .kc-v3-prototype-editor{--kp-panel:#14382bf2;--kp-field:#102d24;--kp-stroke:#9cc09548;--kp-text:#f0f6e7;--kp-muted:#afc8b6;--kp-sage:#c5dfc3;padding:0 0 calc(100px + env(safe-area-inset-bottom,0px));color:var(--kp-text);font-size:15px;line-height:1.45;min-width:0}
 #lifeApp[data-life-view="notes"] .kc-v3-eyebrow{margin:10px 2px 9px;color:#c5d7c4;font-size:12px;display:flex;align-items:center;gap:5px;min-height:22px}
 #lifeApp[data-life-view="notes"] .kc-v3-eyebrow strong{color:#edf4e9;font-weight:650}
