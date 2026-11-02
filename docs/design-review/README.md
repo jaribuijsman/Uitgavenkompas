@@ -1,5 +1,7 @@
 # Memento — mobiele verfijning
 
+> **Historisch vergelijkingsdossier.** De onderstaande browser-, sandbox- en implementatieclaims zijn tijdsopnames, geen actuele omgevingscontrole of appbrede ontwerpgoedkeuring. Zie [de productrouter](../product/README.md) voor bronstatus en [de technische roadmap](../TECHNISCHE_ROADMAP.md) voor actueel taakbewijs. De versievaste goedgekeurde KC-referentie en eerdere beelden blijven behouden.
+
 Dit is een visuele en ergonomische wijziging op `design/memento-mobile-refinement`, vanaf `main` op `f77a8d20b65def564dd86a1ab59592c34b4ab889`. Er is niets naar `main` gemerged of op de productiesite gepubliceerd.
 
 Alle nieuwe screenshots bevatten uitsluitend fictieve testgegevens uit `tests/helpers/visual-fixture.cjs`, in een lege lokale browsercontext op de GitHub Actions-runner. Er is geen verbinding met de persoonlijke Memento-opslag. Externe HTTPS-verzoeken zijn tijdens de browserproeven geblokkeerd.
