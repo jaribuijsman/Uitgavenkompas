@@ -17,7 +17,7 @@ const sample=()=>{
 };
 const cloned=o=>JSON.parse(JSON.stringify(o));
 check("unmodified reference and app editor fixture passes",()=>parity.assertEditor(sample(),sample(),"middle"));
-check("a changed fictional body fails",()=>{const a=sample();a.body="Other content";assert.throws(()=>parity.assertEditor(sample(),a,"middle"),/same fictional body/);});
+check("a changed fictional body fails",()=>{const a=sample();a.body="Other content";assert.throws(()=>parity.assertEditor(sample(),a,"middle"),/Same fictional body/);});
 check("80px smaller writing card fails the release comparison",()=>{const a=sample();a.writing.width-=80;assert.throws(()=>parity.assertEditor(sample(),a,"middle"),/VISUEEL AFGEKEURD/);});
 check("swapped editor panels fail hierarchy",()=>{const a=sample();a.organization.top=900;assert.throws(()=>parity.assertEditor(sample(),a,"middle"),/hierarchy/);});
 check("missing real controls fail",()=>{const a=sample();a.save=null;assert.throws(()=>parity.assertEditor(sample(),a,"middle"),/Missing/);});
