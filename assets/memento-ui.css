@@ -30,7 +30,6 @@
 #lifeApp .life-task-menu>summary {width:44px;min-width:44px;min-height:44px}
 #lifeApp .memento-capture-card {gap:6px;padding:10px;margin:10px 0 16px;border-radius:var(--m-radius)}
 #lifeApp .memento-capture-card .memento-capture-kinds button {min-height:44px;font-weight:600}
-#lifeApp .memento-capture-card .memento-capture-date {grid-column:1/-1;justify-self:end;min-width:112px;width:auto;max-width:calc(100% - 150px)}
 #lifeApp .memento-task-sort {margin:6px 0;max-width:none}
 #lifeApp .memento-task-sort select,#lifeApp .life-toolbar input,#lifeApp .life-toolbar select {min-height:44px}
 #lifeApp[data-life-view="today"] .life-page-head {display:flex}
