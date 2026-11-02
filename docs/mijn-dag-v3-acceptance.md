@@ -5,8 +5,10 @@ zelfstandige ontwerpvoorbeelden gelden niet als bewijs van werkende productie.
 
 | Onderdeel | Vereist resultaat |
 | --- | --- |
-| Kaart | Vier kolommen: checkbox, tijd/datum, inhoud, driepuntjes. Ook op 360 px. |
-| Notitie | Klein goud pictogram bij de inhoud; volledige tekst bereikbaar zonder overflow. |
+| Afspraakkaart | Tijd, flexibele titel, acties op één rij: optioneel notitie-icoon → afvinken → driepuntjes. Geen aparte notitieregel; alle acties minimaal 44×44 px, ook op 360 px. |
+| Takenkaart | Bestaande vier kolommen: checkbox, tijd/datum, inhoud, driepuntjes. |
+| Afspraakgroepen | Gepland eerst, daarna Nog open met aantal en oorspronkelijke datum. Lege groepen verborgen; bestaande chronologische volgorde binnen iedere groep behouden. |
+| Notitie | Bij afspraken tussen titel en afvinken; bij taken bestaande positie. Volledige tekst bereikbaar zonder overflow. |
 | Dagkeuze | Eén dag per scherm; menu/notitie openen verandert scrollbegrenzing of positie niet. |
 | V2-editor | Titel met echte microfoon op één rij; tijden naast elkaar; checkbox 23 px in 44 px label. |
 | Beheer | Verwijderen onder Meer opties, met bevestiging en bestaande undo. Footer: Annuleren en Opslaan. |
@@ -26,3 +28,12 @@ die echt op een toestel is gecontroleerd. Bevestig na merge de geladen productie
 assetversies; een Pages-build alleen bewijst geen juiste weergave.
 
 Deze controles verkleinen de kans op herhaling; zij garanderen geen foutloze app.
+
+## Compacte afspraakkaarten — 2 november 2026
+
+Gebruiker heeft dit ontwerp goedgekeurd en expliciet gevraagd alleen een PR te
+maken. Browser-/Android-controle en beoordeling van CI-artifacts blijven bij de
+gebruiker; deze uitvoering claimt geen visuele goedkeuring en doet geen merge.
+Alleen de afspraakpresentatie in Mijn dag wijzigt. Agenda, taken, editors,
+opslagvelden en afvinkhandlers blijven behouden. Controleer ook alleen oude
+open afspraken, gemengde groepen, geen notitie, hele dag, lange titels en afronden/heropenen.

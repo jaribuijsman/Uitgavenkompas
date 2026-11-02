@@ -438,16 +438,17 @@ function renderUnifiedAppointmentItem(e,source,options={}){
 
  if(options.dayCard){
   const titleControl=local?'<button type="button" class="memento-v3-title" data-memento-edit-event="'+esc(e.id)+'">'+esc(title)+'</button>':'<strong>'+esc(title)+'</strong>';
-  const meta=[carried?'Oorspr. '+fmt(date)+' · nog open':'',e.location||'',label,done?'Afgerond':''].filter(Boolean);
+  const meta=[carried?fmt(date)+(done?'':' · nog open'):'',e.location||'',label,done?'Afgerond':''].filter(Boolean);
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+title)+'">⋮</summary><div class="life-task-actions">'+
    (local?'<button type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerken</button>':'')+
    '<button type="button" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'">'+(done?'Heropenen':'Afronden')+'</button>'+
    (local?'<button type="button" class="life-task-delete" data-memento-delete-day-event="'+esc(e.id)+'">Verwijderen</button>':googleLink?'<a href="'+esc(e.htmlLink)+'" target="_blank" rel="noopener noreferrer">Open in Google Agenda</a>':'')+
    '</div></details>';
-  return '<article class="memento-unified-event memento-v3-card'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
+  return '<article class="memento-unified-event memento-v3-card memento-appointment-card'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
+   '<span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info">'+titleControl+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+'</div>'+
+   '<div class="memento-event-actions">'+(local?dayNoteControl(e,title):'')+
    '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
-   '<span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info">'+titleControl+'<div class="memento-v3-bottom">'+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+(local?dayNoteControl(e,title):'')+'</div></div>'+
-   '<div class="memento-event-actions">'+menu+'</div></article>';
+   menu+'</div></article>';
  }
  return '<div class="memento-unified-event'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
  '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
@@ -462,8 +463,10 @@ function paintTodayAppointments(){
   const render=e=>renderUnifiedAppointmentItem(e.x,e.source,{carried:e.carried,dayCard:true});
   const connectLabel=status.connected||status.previous?'Google-agenda opnieuw verbinden':'Google-agenda verbinden';
   const connect=iso===today()?'<button class="memento-calendar-connect" data-memento-gcal-connect="true" type="button" aria-label="'+connectLabel+'" title="'+connectLabel+'"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#fff" d="M12 12h24v24H12z"/><path fill="#4285f4" d="M36 12H12v24H5V8a3 3 0 0 1 3-3h28z"/><path fill="#1967d2" d="M36 5h4a3 3 0 0 1 3 3v4h-7z"/><path fill="#fbbc04" d="M36 12h7v24h-7z"/><path fill="#34a853" d="M36 36v7H12v-7z"/><path fill="#188038" d="M5 36h7v7H8a3 3 0 0 1-3-3z"/><path fill="#ea4335" d="M36 36v7l7-7z"/><path fill="#4285f4" d="M18.6 29.8c-1.8 0-3.2-.9-3.8-2.4l1.8-.8c.4.9 1 1.3 2 1.3 1.1 0 1.8-.6 1.8-1.5s-.8-1.5-2-1.5h-1v-1.8h1c1 0 1.7-.5 1.7-1.4s-.6-1.4-1.6-1.4c-.9 0-1.5.4-1.8 1.2l-1.8-.8c.6-1.5 1.9-2.3 3.6-2.3 2.2 0 3.7 1.3 3.7 3.2 0 1.1-.6 1.9-1.5 2.4 1.1.5 1.8 1.4 1.8 2.6 0 1.9-1.6 3.2-3.9 3.2zm9.1-.2v-8.4l-2 1.4-1-1.6 3.4-2.4h1.7v11z"/></svg></button>':'';
+  const planned=open.filter(e=>!e.carried),carried=open.filter(e=>e.carried);
+  const group=(rows,label,kind)=>rows.length?'<section class="memento-appointment-group memento-appointment-group--'+kind+'" aria-label="'+label+'"><h3>'+label+(kind==='carried'?' · '+rows.length:'')+'</h3><div class="memento-unified-list">'+rows.map(render).join('')+'</div></section>':'';
   const hint=status.loading?'Google-afspraken laden…':(!open.length?'Geen open afspraken gepland':'');
-  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+connect+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+(open.length?'<div class="memento-unified-list">'+open.map(render).join('')+'</div>':'')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
+  el.innerHTML='<div class="memento-day-caption"><strong>Afspraken</strong><span>'+open.length+'</span>'+connect+'<button class="memento-inline-add" type="button" data-memento-new-event="'+iso+'">＋ Afspraak</button></div>'+group(planned,'Gepland','planned')+group(carried,'Nog open','carried')+(hint&&hint.trim()?'<p class="memento-day-hint">'+hint+'</p>':'');
   const completeHost=root.querySelector('[data-memento-completed-appointments="'+iso+'"]');
   if(completeHost){
    completeHost.innerHTML=done.length?'<div class="memento-unified-list">'+done.map(render).join('')+'</div>':'';
