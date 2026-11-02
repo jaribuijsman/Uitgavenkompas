@@ -59,6 +59,7 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('[data-kc=editor-block-options]').click();
  await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
+ await page.locator('.kc-v3-editor-head [data-kc=back]').click();
  await page.locator('.kc-local-tabs [data-kc=home]').click();
  await page.locator('.kc-compact-fold summary').filter({hasText:'Instellingen & back-up'}).click();
  await page.locator('[data-kc=ws-background]').click();
