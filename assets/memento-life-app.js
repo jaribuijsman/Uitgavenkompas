@@ -701,6 +701,8 @@ function syncQuickForm(){
  $('lifeQuickDate').setAttribute('aria-label','Datum voor '+(quickKind==='appointment'?'Afspraak':'Taak'));
  $('lifeQuickInbox').hidden=!note;
  $('lifeQuickDateLabel').textContent=quickDateLabel(quickDate===null?today():quickDate);
+ // The native field and the optional date in Opties must never diverge.
+ $('lifeQuickDate').value=quickDate===null?today():quickDate;
  $('lifeQuickCollectionLabel').textContent=quickCollectionLabel();
  const submit=root.querySelector('.memento-capture-submit'),action=quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen';
  submit.setAttribute('aria-label',action);submit.title=action;
