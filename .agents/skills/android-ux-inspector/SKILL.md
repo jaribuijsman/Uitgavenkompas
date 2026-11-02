@@ -27,7 +27,7 @@ Gebruik bij werk in Memento de [Android-PWA UX-standaard](../../../docs/android-
 
 ## Gate voor echt mobiel schermbewijs
 
-Begin bij een concrete bestaande appstaat en reconstrueer de gebruikerroute tot de afwijkende scrollpositie (top, midden, einde), na actie en bij geopend menu. Een screenshot van alleen de eerste viewport bewijst geen geldige sticky header of bereikbare laatste actie. Gebruik bij gewijzigde editors `tests/helpers/mobile-visual-contract.cjs` en de bestaande domeinjourney; controleer dat de test de gewijzigde editor daadwerkelijk opent, niet slechts de tab. Bij visueel werk: vergelijk geslaagde CI-artifacts voor de exacte PR-head met het overeengekomen prototype; afwezig bewijs = NIET GEVERIFIEERD, ook bij groene CI. Houd de extra scenario's gericht.
+Begin bij een concrete bestaande appstaat en reconstrueer de gebruikerroute tot de afwijkende scrollpositie (top, midden, einde), na actie en bij geopend menu. Een screenshot van alleen de eerste viewport bewijst geen geldige sticky header of bereikbare laatste actie. Gebruik bij gewijzigde editors de bestaande domeinjourney en, **indien aanwezig op de huidige branch**, `tests/helpers/mobile-visual-contract.cjs`; controleer dat de test de gewijzigde editor daadwerkelijk opent, niet slechts de tab. Bij visueel werk: vergelijk geslaagde CI-artifacts voor de exacte PR-head met het overeengekomen prototype; afwezig bewijs = NIET GEVERIFIEERD, ook bij groene CI. Houd de extra scenario's gericht.
 
 ## Boundaries
 - Never change production data, run destructive storage resets or hide an existing test failure.
