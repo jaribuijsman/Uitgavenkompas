@@ -516,10 +516,13 @@ async function copyMementoNoteAI(){
 
 function noteFromQuick(raw,collectionId='inbox'){
  const body=String(raw||'').trim();if(!body)return false;
- if(!window.MementoKnowledgeCore?.makeNote){status('De notitiemodule is niet geladen. Er is niets opgeslagen.',false,true);return false}
+ const core=window.MementoKnowledgeCore;
+ if(!core?.makeNote&&collectionId!=='inbox'){status('De notitiemodule is niet geladen. Er is niets opgeslagen.',false,true);return false}
+ const title=body.split(/[\r\n]/)[0].trim().slice(0,84);
  noteTab='active';noteCategoryFilter='all';
- return mutate(()=>state.notes.unshift(window.MementoKnowledgeCore.makeNote({body,collectionId},state)),
-  'Notitie opgeslagen in '+(collectionId==='inbox'?'Inbox':quickCollectionLabel())+'.');
+ return mutate(()=>state.notes.unshift(core?.makeNote?core.makeNote({body,collectionId},state):{
+  id:uid(),title,body,category:'Inbox',createdAt:new Date().toISOString(),deletedAt:'',sourceUrl:''
+ }), 'Notitie opgeslagen in '+(collectionId==='inbox'?'Inbox':quickCollectionLabel())+'.');
 }
 function googleEventDay(e,iso){
  const start=e.start?.date||e.start?.dateTime;if(!start)return false;
