@@ -1,0 +1,195 @@
+{
+  "base": "5a8b4a34fd88a64c8bdbb88efd0df4fbe519ee8f",
+  "differential_cases": 192,
+  "exact_text": true,
+  "immutable_inputs": true,
+  "images": [
+    {
+      "name": "412-finance-dashboard.jpg",
+      "pixels_equal": true,
+      "before_sha256": "ad6422d4090e9e9b732bd225d8322b598b0c7709284499ac8f3e8d524826d9c6",
+      "after_sha256": "ad6422d4090e9e9b732bd225d8322b598b0c7709284499ac8f3e8d524826d9c6"
+    },
+    {
+      "name": "393-finance-moneycoach.jpg",
+      "pixels_equal": true,
+      "before_sha256": "87a118b8cdf94f2f86a7dfd6a8265109d2943528fd6ccf4fc5392089cf2f7d75",
+      "after_sha256": "87a118b8cdf94f2f86a7dfd6a8265109d2943528fd6ccf4fc5392089cf2f7d75"
+    },
+    {
+      "name": "360-finance-budgets.jpg",
+      "pixels_equal": true,
+      "before_sha256": "315e97329089f0b2a46831d359fb4fe8c1466d9971b6bb193e9c514be9b3bbbc",
+      "after_sha256": "315e97329089f0b2a46831d359fb4fe8c1466d9971b6bb193e9c514be9b3bbbc"
+    },
+    {
+      "name": "393-finance-dashboard.jpg",
+      "pixels_equal": true,
+      "before_sha256": "c737a7989458e2fd78db048e35e0425cf2e2806c1f3d654929b30f6c7fb3db03",
+      "after_sha256": "c737a7989458e2fd78db048e35e0425cf2e2806c1f3d654929b30f6c7fb3db03"
+    },
+    {
+      "name": "360-finance-analysis.jpg",
+      "pixels_equal": true,
+      "before_sha256": "de298238e89a32dddc9dce0e0883dc728525e485e03c318d0e05a6828951c1a4",
+      "after_sha256": "de298238e89a32dddc9dce0e0883dc728525e485e03c318d0e05a6828951c1a4"
+    },
+    {
+      "name": "412-finance-budgets.jpg",
+      "pixels_equal": true,
+      "before_sha256": "3d2b80ffc9330524203832b80a1a7af69ddc9948310b4f27882ad5a39f72b9a3",
+      "after_sha256": "3d2b80ffc9330524203832b80a1a7af69ddc9948310b4f27882ad5a39f72b9a3"
+    },
+    {
+      "name": "360-finance-dashboard.jpg",
+      "pixels_equal": true,
+      "before_sha256": "eeebc15e1a3fb46eeb899cda20808aac90f01b337077bd63078803e34761aee8",
+      "after_sha256": "eeebc15e1a3fb46eeb899cda20808aac90f01b337077bd63078803e34761aee8"
+    },
+    {
+      "name": "393-finance-smartbuy.jpg",
+      "pixels_equal": true,
+      "before_sha256": "faa25daaf87bc6392b8cd424b2fc5cf7130a8c99a81ca3e9a822b8f080ec6b74",
+      "after_sha256": "faa25daaf87bc6392b8cd424b2fc5cf7130a8c99a81ca3e9a822b8f080ec6b74"
+    },
+    {
+      "name": "393-finance-receipts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "7e67036cf220cf7cbe871797c9105a0a52ec860e0f65b5904e0d0bd0ac938376",
+      "after_sha256": "7e67036cf220cf7cbe871797c9105a0a52ec860e0f65b5904e0d0bd0ac938376"
+    },
+    {
+      "name": "412-finance-settings.jpg",
+      "pixels_equal": true,
+      "before_sha256": "aefbaed90172787489bb7ac0909ba643f5f2708b8d41261228246216838a70e9",
+      "after_sha256": "aefbaed90172787489bb7ac0909ba643f5f2708b8d41261228246216838a70e9"
+    },
+    {
+      "name": "360-finance-moneycoach.jpg",
+      "pixels_equal": true,
+      "before_sha256": "753495acb452b5ade5ecbaec2b170278f175241dfd3f4f3887b73f911f714e25",
+      "after_sha256": "753495acb452b5ade5ecbaec2b170278f175241dfd3f4f3887b73f911f714e25"
+    },
+    {
+      "name": "412-finance-receipts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "032173398530395a3088c4722ac65335ff0a8871f5aa6712c1330c795de7e7de",
+      "after_sha256": "032173398530395a3088c4722ac65335ff0a8871f5aa6712c1330c795de7e7de"
+    },
+    {
+      "name": "360-finance-accounts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "171a7f4f9b08c8198a95183431854a6b98ba4cc1a09ef92edb1808d9e0064aea",
+      "after_sha256": "171a7f4f9b08c8198a95183431854a6b98ba4cc1a09ef92edb1808d9e0064aea"
+    },
+    {
+      "name": "393-finance-planning.jpg",
+      "pixels_equal": true,
+      "before_sha256": "3b538da2f365f668d1dad7866a953d7900a769754d5b3f7bb68eb08d66a44148",
+      "after_sha256": "3b538da2f365f668d1dad7866a953d7900a769754d5b3f7bb68eb08d66a44148"
+    },
+    {
+      "name": "360-finance-settings.jpg",
+      "pixels_equal": true,
+      "before_sha256": "f4b2dc672f8d42662acb4b747173d25036f58da83ac31807198bcd54cfbd5e07",
+      "after_sha256": "f4b2dc672f8d42662acb4b747173d25036f58da83ac31807198bcd54cfbd5e07"
+    },
+    {
+      "name": "393-finance-transactions.jpg",
+      "pixels_equal": true,
+      "before_sha256": "e81e0a86fcc88fe858b7cd07d5863ef2435b0dae88ea985e098ab7c6c6e0fe1e",
+      "after_sha256": "e81e0a86fcc88fe858b7cd07d5863ef2435b0dae88ea985e098ab7c6c6e0fe1e"
+    },
+    {
+      "name": "412-finance-accounts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "26d2b4724bc7b9f691861eff7ba974d5ac7da35aa297f4d7c86e537eddb16bba",
+      "after_sha256": "26d2b4724bc7b9f691861eff7ba974d5ac7da35aa297f4d7c86e537eddb16bba"
+    },
+    {
+      "name": "360-finance-transactions.jpg",
+      "pixels_equal": true,
+      "before_sha256": "52f4ac3127c1f76efadb45cf16871f9121d32944fbe7bfe7f1112a555855bbf0",
+      "after_sha256": "52f4ac3127c1f76efadb45cf16871f9121d32944fbe7bfe7f1112a555855bbf0"
+    },
+    {
+      "name": "393-finance-analysis.jpg",
+      "pixels_equal": true,
+      "before_sha256": "4af7dd46de30a21c692605dacbf0c9f0b6ab6db00affadcfb6d49ddbc913d463",
+      "after_sha256": "4af7dd46de30a21c692605dacbf0c9f0b6ab6db00affadcfb6d49ddbc913d463"
+    },
+    {
+      "name": "412-finance-transactions.jpg",
+      "pixels_equal": true,
+      "before_sha256": "171748dfefd759828af39cc258c4e917baa159a30c25a73428110e589871708e",
+      "after_sha256": "171748dfefd759828af39cc258c4e917baa159a30c25a73428110e589871708e"
+    },
+    {
+      "name": "393-finance-budgets.jpg",
+      "pixels_equal": true,
+      "before_sha256": "04adf4969b559e52ea29c846bf2abec7e9966ab91d045e1251518931849847c7",
+      "after_sha256": "04adf4969b559e52ea29c846bf2abec7e9966ab91d045e1251518931849847c7"
+    },
+    {
+      "name": "393-finance-settings.jpg",
+      "pixels_equal": true,
+      "before_sha256": "c80c6eb3896bc2c478b1a64738eef1594283c30a3b5fec474ef13a40dadc530c",
+      "after_sha256": "c80c6eb3896bc2c478b1a64738eef1594283c30a3b5fec474ef13a40dadc530c"
+    },
+    {
+      "name": "360-finance-receipts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "0ad666779973f4d38c3a2d9205099f036c7009e3b926642cf44030b378c1e479",
+      "after_sha256": "0ad666779973f4d38c3a2d9205099f036c7009e3b926642cf44030b378c1e479"
+    },
+    {
+      "name": "360-finance-smartbuy.jpg",
+      "pixels_equal": true,
+      "before_sha256": "000380b67ca5e86f1079a1a1f14d83cc2988735b38c07076e6eca5e5eb9f5a5e",
+      "after_sha256": "000380b67ca5e86f1079a1a1f14d83cc2988735b38c07076e6eca5e5eb9f5a5e"
+    },
+    {
+      "name": "412-finance-moneycoach.jpg",
+      "pixels_equal": true,
+      "before_sha256": "f6d36600ebcc91c9bf86abef7a72a73e51a92d8e26770581292ff060da844b79",
+      "after_sha256": "f6d36600ebcc91c9bf86abef7a72a73e51a92d8e26770581292ff060da844b79"
+    },
+    {
+      "name": "412-finance-smartbuy.jpg",
+      "pixels_equal": true,
+      "before_sha256": "d9c777ae65e9fa3a95cb3940369cdabfe177e2539c85eec91aba82ab08d6b294",
+      "after_sha256": "d9c777ae65e9fa3a95cb3940369cdabfe177e2539c85eec91aba82ab08d6b294"
+    },
+    {
+      "name": "393-finance-accounts.jpg",
+      "pixels_equal": true,
+      "before_sha256": "4ad0e923eafb9523f318d1ded81d7dc84203c603b3259bf1ea80a4bab48bdbcd",
+      "after_sha256": "4ad0e923eafb9523f318d1ded81d7dc84203c603b3259bf1ea80a4bab48bdbcd"
+    },
+    {
+      "name": "360-finance-planning.jpg",
+      "pixels_equal": true,
+      "before_sha256": "2997aa08806e8d6865ddb2199e498c8341a5709a12036692d67877f167ae7053",
+      "after_sha256": "2997aa08806e8d6865ddb2199e498c8341a5709a12036692d67877f167ae7053"
+    },
+    {
+      "name": "412-finance-analysis.jpg",
+      "pixels_equal": true,
+      "before_sha256": "e29de4516da8c9d8a1e5a4277e1b6fe7dc99d0f763a2eee1ae690cfbd99ab7e8",
+      "after_sha256": "e29de4516da8c9d8a1e5a4277e1b6fe7dc99d0f763a2eee1ae690cfbd99ab7e8"
+    },
+    {
+      "name": "412-finance-planning.jpg",
+      "pixels_equal": true,
+      "before_sha256": "68616785baaf0306e70fffcc683a601de808ddef34f5ddf75fc1b9085728d5ac",
+      "after_sha256": "68616785baaf0306e70fffcc683a601de808ddef34f5ddf75fc1b9085728d5ac"
+    }
+  ],
+  "finance_app_bytes_before": 226189,
+  "finance_app_bytes_after": 226043,
+  "new_asset_sha256": "2a704e1a67769a2d35c1b0bb99356b3237d85754525b3c4180dc602c84ca6963",
+  "period_core_sha256": "1eb84217fb72405cc4de9df56570c445bf13b99c7767a5cc40445c41f774a614",
+  "storage_contract": "unchanged",
+  "risk": "high; six browser groups and upgrade",
+  "physical_A54": "NIET GEVERIFIEERD"
+}
