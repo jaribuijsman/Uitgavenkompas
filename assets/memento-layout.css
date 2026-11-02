@@ -73,7 +73,7 @@ body #mementoMenuGrid .ml-menu-label{grid-column:1/-1;color:var(--mg-muted);font
 @media(max-width:700px){
  /* Finance header: one calm, raised material bar; no expensive live blur. */
  body[data-compass-area=finance] .app .topbar{
-  height:auto!important;min-height:68px!important;position:relative!important;
+  height:auto!important;min-height:68px!important;position:relative!important;top:0!important;
   margin:8px 12px 0;padding:8px!important;gap:8px;
   border:1px solid #577560!important;border-radius:20px;
   background:linear-gradient(155deg,#294638,#152b21)!important;

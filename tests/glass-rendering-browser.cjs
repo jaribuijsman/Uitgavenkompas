@@ -47,7 +47,20 @@ async function inspect(page,screen,width,report){
   if(width<800){await page.locator('[data-memento-menu=open]').click();await inspect(page,'navigation-open',width,report);await page.locator('#mementoMenuClose').first().click();}
   await nav(page,'finance','dashboard');await page.locator('#m9-accounts').click();await inspect(page,'account-sheet-open',width,report);await page.locator('.m9-sheet-head [data-m9-close]').click();
   await nav(page,'finance','analysis');await page.locator('.analysis-tab').nth(1).click();await inspect(page,'analysis-second-tab',width,report);
-  await nav(page,'finance','transactions');await page.locator('#addTransaction').click();await inspect(page,'transaction-dialog',width,report);await page.locator('#txDescription').focus();await page.keyboard.press('Escape');await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
+  await nav(page,'finance','transactions');
+  const hit=await page.evaluate(()=>{
+    const rect=id=>{const el=document.querySelector(id);if(!el)return null;const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,top:r.top,bottom:r.bottom};};
+    const r=rect('#addTransaction'),x=r.x+r.width/2,y=r.y+r.height/2,h=document.elementFromPoint(x,y);
+    return {scrollY,htmlScrollBehavior:getComputedStyle(document.documentElement).scrollBehavior,button:r,header:rect('.app .topbar'),headerPosition:getComputedStyle(document.querySelector('.app .topbar')).position,content:rect('.app .content'),view:rect('#view-transactions'),pageHead:rect('#view-transactions .tx-page-head'),mainHeader:rect('#compassAreaBar'),pointTarget:h?.id||h?.outerHTML?.slice(0,150)||null};
+  });
+  console.log('FINANCE_NAV_HIT_TEST '+JSON.stringify(hit));
+  if(width<700){
+    assert.equal(hit.headerPosition,'relative','Finance header should be in normal flow on compact mobile');
+    assert(hit.header.bottom<=hit.content.top+1,'Finance topbar overlaps mobile content: '+JSON.stringify(hit));
+    assert(hit.button.top>=hit.header.bottom+6,'Add transaction action overlaps mobile topbar: '+JSON.stringify(hit));
+  }
+  assert.equal(hit.pointTarget,'addTransaction','Add transaction is not topmost clickable target: '+JSON.stringify(hit));
+  await page.locator('#addTransaction').click();await inspect(page,'transaction-dialog',width,report);await page.locator('#txDescription').focus();await page.keyboard.press('Escape');await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
   await nav(page,'life','tasks');await page.locator('#lifeAdd').click();await inspect(page,'task-dialog',width,report);await page.locator('#lifeTaskTitle').focus();await page.keyboard.press('Escape');await page.locator('#lifeDialog').waitFor({state:'hidden'});
   const last=page.locator('.life-task').last();await last.scrollIntoViewIfNeeded();assert(await last.isVisible());await page.evaluate(()=>scrollTo(0,0));
   assert.deepEqual(await stored(),before,'Read-only rendering and scrolling preserve Life/Finance/PIN');await ctx.close();console.log('PASS glass rendering '+width);
