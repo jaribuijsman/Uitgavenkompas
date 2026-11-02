@@ -249,6 +249,7 @@ const server = http.createServer((req, res) => {
     checks.push("Retrying failed dialog save does not duplicate records");
 
     await page.evaluate(() => window.MementoLife.openBackup());
+    await page.locator("#mementoSettingsLife [data-ms-target=backup]").click();
     const dl = page.waitForEvent("download");
     await page.locator("#lifeExportBackup").click();
     const download = await dl;

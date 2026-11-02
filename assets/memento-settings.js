@@ -1,6 +1,7 @@
 /* Memento settings navigation: presentation only. Existing controls keep their original event handlers. */
 (()=>{'use strict';
  const $=(s,r=document)=>r.querySelector(s);
+ const selected={life:null,finance:null};
  const pages=['appearance','personal','assistant','backup','privacy','trash','life','finance'];
  const labels={appearance:'Weergave',personal:'Persoonlijke instellingen',assistant:'Memento-assistent',backup:'Back-up en herstel',privacy:'Privacy en beveiliging',trash:'Prullenbak',life:'Leven',finance:'Financiën'};
  const descriptions={appearance:'Achtergrond en vormgeving',personal:'Voorkeuren en standaardwaarden',assistant:'Gegevens analyseren en organiseren',backup:'Volledige Memento-back-up',privacy:'Vergrendeling en lokale opslag',trash:'Verwijderde gegevens beheren',life:'Taken, agenda en notities',finance:'Categorieën en financiële voorkeuren'};
@@ -15,15 +16,15 @@
   finance:'<rect x="3" y="6" width="18" height="15" rx="3"/><path d="M3 10h18M7 3h10"/>'
  };
  const svg=id=>'<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+symbols[id]+'</svg>';
- function section(title,ids){
-  return '<section class="ms-group" aria-label="'+title+'"><h2>'+title+'</h2><div class="ms-list">'+ids.map(id=>'<button type="button" class="ms-row" data-ms-target="'+id+'" aria-controls="ms-'+id+'"><span class="ms-icon">'+svg(id)+'</span><span class="ms-copy"><strong>'+labels[id]+'</strong><small>'+descriptions[id]+'</small></span><span class="ms-chevron" aria-hidden="true">›</span></button>').join('')+'</div></section>';
+ function section(title,ids,area){
+  return '<section class="ms-group" aria-label="'+title+'"><h2>'+title+'</h2><div class="ms-list">'+ids.map(id=>'<button type="button" class="ms-row" data-ms-target="'+id+'" aria-controls="ms-'+area+'-'+id+'"><span class="ms-icon">'+svg(id)+'</span><span class="ms-copy"><strong>'+labels[id]+'</strong><small>'+descriptions[id]+'</small></span><span class="ms-chevron" aria-hidden="true">›</span></button>').join('')+'</div></section>';
  }
  function create(area,host){
   const shell=document.createElement('section');shell.className='ms-shell';shell.id='mementoSettings'+(area==='life'?'Life':'Finance');shell.dataset.msArea=area;
   shell.innerHTML='<div class="ms-home"><header class="ms-heading"><p class="ms-eyebrow">MEMENTO</p><h1>Instellingen</h1><p>Beheer Memento op één plek.</p></header>'+
-   section('Algemeen',['appearance','personal','assistant'])+section('Gegevens en veiligheid',['backup','privacy','trash'])+section('Onderdelen',['life','finance'])+
+   section('Algemeen',['appearance','personal','assistant'],area)+section('Gegevens en veiligheid',['backup','privacy','trash'],area)+section('Onderdelen',['life','finance'],area)+
    '<p class="ms-footnote">Bewaar een volledige back-up buiten je telefoon. Lokale browsergegevens kunnen verdwijnen.</p></div>'+
-   pages.map(id=>'<section class="ms-page" data-ms-page="'+id+'" id="ms-'+id+'" aria-label="'+labels[id]+'" hidden><header class="ms-detail-head"><button type="button" class="ms-back" data-ms-back aria-label="Terug naar instellingen"><span aria-hidden="true">‹</span> Terug</button><h2 tabindex="-1">'+labels[id]+'</h2></header><div class="ms-page-body"></div></section>').join('');
+   pages.map(id=>'<section class="ms-page" data-ms-page="'+id+'" id="ms-'+area+'-'+id+'" aria-label="'+labels[id]+'" hidden><header class="ms-detail-head"><button type="button" class="ms-back" data-ms-back aria-label="Terug naar instellingen"><span aria-hidden="true">‹</span> Terug</button><h2 tabindex="-1">'+labels[id]+'</h2></header><div class="ms-page-body"></div></section>').join('');
   const body=id=>$('.ms-page[data-ms-page="'+id+'"] .ms-page-body',shell);
   const message=(id,title,text)=>{const node=document.createElement('div');node.className='ms-info';node.innerHTML='<strong>'+title+'</strong><p>'+text+'</p>';body(id).append(node);};
   message('appearance','Bos-thema','Memento gebruikt momenteel de bestaande bosachtergrond. De instellingenlijsten zijn bewust rustiger en beter leesbaar gemaakt. Andere app-thema’s zijn nog niet beschikbaar.');
@@ -54,6 +55,7 @@
   return {shell,body};
  }
  function openPage(shell,id){
+  selected[shell.dataset.msArea]=id||null;
   const home=$('.ms-home',shell);home.hidden=!!id;
   shell.querySelectorAll('.ms-page').forEach(p=>p.hidden=p.dataset.msPage!==id);
   if(id){$('.ms-page[data-ms-page="'+id+'"] h2',shell)?.focus({preventScroll:true});}
@@ -84,7 +86,7 @@
  function mountLife(){
   const app=$('#lifeApp'),host=$('#lifeContent');
   if(!app||app.dataset.lifeView!=='backup'||!host||host.querySelector(':scope > .ms-shell')||!$('#mementoAssistant',host)||!$('#lifeExportBackup',host))return;
-  const {body}=create('life',host);
+  const {shell,body}=create('life',host);
   const panel=id=>$('#'+id,host)?.closest('.life-panel');
   move(panel('lifeExportBackup'),body('backup'));
   move(panel('lifeImportFile'),body('backup'));
@@ -93,6 +95,7 @@
   move(panel('lifeStorageStatus'),body('privacy'));
   move(panel('lifeOpenPurgeTrash'),body('trash'));
   host.querySelector('.life-grid:empty')?.remove();
+  if(selected.life)openPage(shell,selected.life);
  }
  function refreshFinanceTrash(){
   const shell=$('#mementoSettingsFinance'),trash=$('#mementoFinanceTrash');
