@@ -1,5 +1,6 @@
-name: Memento masterplan acceptance
-# Manual specialist suites; automated checks are consolidated in app-review.yml.
+name: Memento historical upgrade and masterplan acceptance
+# Manual only. Current PR/full-run safety is handled by app-review.yml.
+# Original V1 journeys remain in tests/ as historical references, not runnable acceptance.
 on:
   workflow_dispatch:
 permissions:
@@ -7,7 +8,7 @@ permissions:
 jobs:
   acceptance:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,27 +30,35 @@ jobs:
           node tests/trash-regression.cjs
           node tests/pin-disabled-regression.cjs
           node tests/illustrative-icons-core.cjs
-      - name: Browser tooling outside production source
+      - name: Isolated Chromium outside production source
         run: |
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
-      - name: Transaction category browser regression at 360, 393 and 412 pixels
-        run: node tests/memento-category-browser.cjs
-      - name: Mobile masterplan scenarios at 360, 393 and 412 pixels
-        run: node tests/masterplan-browser.cjs
-      - name: Immutable original main for comparison and real PWA upgrade
+      - name: Modern Masterplan journeys (tasks, diary, knowledge, finance, day)
         run: |
-          git fetch --depth=1 origin 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9
+          node tests/ci-groups.cjs life-knowledge high
+          node tests/taken-v4-browser.cjs
+          node tests/day-v3-browser.cjs
+          node tests/memento-category-browser.cjs
+          node tests/app-review-browser.cjs
+      - name: Immutable last pre-F0 PWA baseline (v119)
+        run: |
+          BASE=248a5dd811b90b293aebda134e67c32338563e86
+          git fetch --depth=1 origin "$BASE"
           mkdir -p "$RUNNER_TEMP/memento-baseline"
-          git archive 52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9 | tar -x -C "$RUNNER_TEMP/memento-baseline"
-          echo "MEMENTO_BASELINE_ROOT=$RUNNER_TEMP/memento-baseline" >> "$GITHUB_ENV"
-      - name: Compare five actual journeys and upgrade old PWA with existing data
-        run: node tests/masterplan-journeys.cjs
+          git archive "$BASE" | tar -x -C "$RUNNER_TEMP/memento-baseline"
+          echo "MEMENTO_RECOVERY_BASELINE_ROOT=$RUNNER_TEMP/memento-baseline" >> "$GITHUB_ENV"
+          echo "MEMENTO_RECOVERY_BASELINE_SHA=$BASE" >> "$GITHUB_ENV"
+      - name: Real worker and offline upgrade, preserving IDs, PIN, finances and binary attachments
+        run: node tests/recovery-upgrade-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: masterplan-mobile-evidence
+          name: masterplan-current-and-upgrade-evidence
           path: |
-            /tmp/memento-master
-            /tmp/memento-journeys
+            /tmp/memento-workspace-visual/after
+            /tmp/memento-taken-v4/after
+            /tmp/memento-recovery-upgrade
+          if-no-files-found: warn
+          retention-days: 7
