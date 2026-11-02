@@ -5,6 +5,9 @@ description: Maintain Memento visual consistency and prevent conflicting CSS and
 
 # Workflow
 
+**Standaard:** [Memento Android-PWA UX-standaard](../../../docs/android-pwa-ux-standaard.md), toegepast op alle tabbladen en schermvarianten. Gebruik Android Developers voor UX-principes en het Memento-designsysteem voor de concrete stijl. Behoud bekende interfacebesluiten; bij onzekerheid in een ontwerp niet stilzwijgend eigen keuzes in productie implementeren.
+
+
 1. Read AGENTS.md and inspect existing token, base, glass, layout and UI CSS, plus owning JS before writing rules.
 2. Identify existing reusable component and cascade owner; prefer consolidation to additional override layers or `!important`.
 3. State visual invariants and affected states (default, expanded, error, loading, disabled, dark theme as applicable).
