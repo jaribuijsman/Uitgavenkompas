@@ -59,6 +59,7 @@ jobs:
           node --check tests/ci-plan.cjs
           node --check tests/ci-groups.cjs
           node tests/ci-plan-regression.cjs
+          node tests/knowledge-prototype-parity-regression.cjs
           node --check tests/ci-postmerge.cjs
           node tests/ci-postmerge-regression.cjs
           node tests/service-worker-cache.cjs
@@ -131,6 +132,7 @@ jobs:
       - name: Run relevant actual browser journeys
         env:
           MEMENTO_CI_TIER: ${{ needs.plan.outputs.tier }}
+          MEMENTO_PROTOTYPE_PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tests/ci-groups.cjs '${{ matrix.group }}' "$MEMENTO_CI_TIER"
       - uses: actions/upload-artifact@v4
         if: failure()
