@@ -15,6 +15,10 @@ Bij werk in deze repository: gebruik `AGENTS.md` als basis. Selecteer **alleen d
 
 Lees alleen benodigde skillbestanden (bij overlap maximaal de direct relevante); ga daarna direct verder met de bestaande risicogestuurde workflow. Skills vervangen de CI-gates, privacyregels of gebruikersopdracht niet. Als het bestand ontbreekt, meld dat en werk volgens `AGENTS.md`; maak geen nieuw duplicaat. Zoek vanaf de repositoryroot, niet vanuit een lege `/workspace`.
 
+## Standaard voor alle schermen: Android Developers × Memento
+
+[De Memento Android-PWA UX-standaard](docs/android-pwa-ux-standaard.md) is **normatief** voor ontwerp, implementatie en acceptatie van ieder tabblad. Vertaal Android-richtlijnen naar HTML/CSS/PWA; behoud het goedgekeurde Memento-design. Lees alleen de relevante voorschriften en de direct geraakte code, niet dagelijks alle Android-documentatie. Volg bij onverwachte fouten de oorzaakanalyse → gerichte reparatie → passende regressietest → bewijs → procesverbetering. Rapporteer een blokkade met de eigenaar/route en het exacte PR-head-SHA; benoem expliciet wanneer een externe of reeds bestaande fout niet door de wijziging is veroorzaakt. Geen automatische merges op basis van alleen een groene status.
+
 ## Samsung Galaxy A54 — snelle PWA-controle
 
 Memento wordt primair als geïnstalleerde Android-PWA gebruikt. Beoordeel relevante wijzigingen daarom op standalone-schermruimte, veilige marges bij Android-systeemnavigatie, bereikbare acties bij geopend toetsenbord en scroll/overlays. Browsertests simuleren dit slechts gedeeltelijk; claim geen fysiek toestelbewijs.
@@ -51,6 +55,20 @@ en overflow; alleen aantallen knoppen of `isVisible()` zijn geen layoutbewijs.
 Voor Mijn dag geldt [het V3/V2-contract](docs/mijn-dag-v3-acceptance.md) en de
 gerichte `day-v3-browser`-suite. Beoordeel de CI-screenshots op de exacte head
 vóór merge; rapporteer ontbrekend visueel bewijs als niet geverifieerd.
+
+## Verplicht visueel acceptatiecontract per tabblad (Android-first)
+
+Een groen functioneel CI-resultaat is **geen** visuele goedkeuring. PR #59 slaagde omdat de Knowledge-test alleen acties/opslaan en de algemene layouttest andere tabbladen controleerden; op de echte A54 waren de sticky balk, schermbrede knoppen en bijlagekiezer toch fout. Deze blinde vlek mag niet worden herhaald.
+
+Bij wijzigingen aan de **schermindeling, navigatie, editor, actiehiërarchie, overlay of interactie** (niet bij louter documentatie of een geïsoleerde kleur/icooncorrectie):
+1. Leg vóór coderen per geraakt tabblad de goedgekeurde schermtoestand vast: start, bewerken, scroll midden/onderaan, menu geopend, lange inhoud en relevante lege/fouttoestand. Benoem de bestaande functies/IDs die blijven. Gebruik het originele prototype als referentie; testdata en toestanden moeten vergelijkbaar zijn.
+2. Bepaal de enige bestaande JS/CSS-eigenaar en verwijder conflicterende oude regels in plaats van onderaan overrides te stapelen. Controleer cascade én de renderroute voor gewone notities en document-/receptvarianten.
+3. Voeg in **de bestaande domein-browserjourney** echte gebruikersinteracties en geometrieasserties toe voor de gewijzigde toestanden. Meet breedte/hoogte, open menusheets, zichtbaarheid bij scrollen, sticky-headertegenligging, laatste actie boven de bottom-nav, file-input en korte viewport waar relevant. Hergebruik `tests/helpers/mobile-visual-contract.cjs` **als deze op de gecontroleerde branch bestaat**; anders test je dezelfde relevante geometrie in de bestaande domeinjourney. Voorkom afhankelijkheid van nog niet gemergede PR's. Geen tests die slechts `count()` of `isVisible()` controleren.
+4. De centrale CI bewaart de relevante schermbeelden op de exacte PR-head **ook als de tests groen zijn**. Inspecteer ze zelf naast het goedgekeurde ontwerp vóór merge; keur mismatches af en herstel in dezelfde PR. Een groen resultaat zonder deze vergelijking heet **functioneel GESLAAGD / visueel NIET GEVERIFIEERD**, niet visueel GESLAAGD.
+5. Op echte A54-afwijkingen: gebruik de door de gebruiker getoonde screenshots als concrete regressiecase. Test dezelfde paginastaat eerst in Chromium op 393 px, plus 360/412 en 470px hoogte alleen bij daadwerkelijk relevant overloop-/keyboardrisico. Browserverificatie is geen fysieke toesteltest; meld dat verschil.
+6. Publiceer pas na geautoriseerde merge en controleer versienummers/serviceworker. Verwijder of reset nooit echte lokale PWA-data om een layoutprobleem te 'repareren'.
+
+Deze extra diepgang is **domeingebonden en risicogestuurd**: één getroffen editor => één relevante journey met meerdere schermtoestanden, geen volledige matrix van alle tabbladen. Voor louter niveau-1 kleur-/icoonwijzigingen blijft de bestaande korte rooktest voldoende. Bij opslag, beveiliging, financiën of serviceworkerlogica blijft niveau 3 verplicht.
 
 ## Wat test je wanneer?
 
