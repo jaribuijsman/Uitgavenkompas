@@ -24,6 +24,12 @@ Het uitgangspunt is een kalm, informatiegericht scherm: eerst de primaire handel
 - **Navigatie:** oorspronkelijke tabstructuur en bestaande routes behouden tenzij expliciet anders goedgekeurd; geen extra hoofdtab om één feature toe te voegen.
 - **Beweging:** subtiel, zinvol, uit te zetten met `prefers-reduced-motion`; geen voortdurend dure animatie die mobiel scrollen schaadt.
 
+## 2a. Goedgekeurd prototype heeft voorrang binnen zijn scherm
+
+Een door de gebruiker expliciet gekozen, concrete HTML-prototypeversie is de **normatieve UI-referentie** voor de genoemde schermen en interacties. Gebruik de algemene bosgroene ontwerpregels als fallback waar het prototype niets over zegt, niet om een goedgekeurde compositie te vervangen. Behoud de feitelijke bestaande appgegevens, lokale opslag, toegankelijkheid en technische veiligheid.
+
+Visuele gelijkheid omvat niet alleen kleur maar ook **de volgorde en groepering van velden, marges, typografische hiërarchie, relatieve maten, primaire en secundaire acties, bottom sheets, geopende menu's, sticky header, scrollgedrag en gebruikersroutes**. Een prototype met fictieve actieknoppen vergt veilige koppeling aan echte functies zonder de goedgekeurde interface ongemerkt te veranderen. Bij noodzakelijke technische of toegankelijkheidsafwijking: kleinste mogelijke aanpassing, expliciet documenteren en bij wezenlijk ander uiterlijk vooraf toestemming vragen. Zie het uitvoerbare prototypecontract in `AGENTS.md`; maak geen tweede testmatrix.
+
 ## 3. Prestatiebesluit: geen dure live glass-blur
 
 In `main` is op 29 oktober de permanente `backdrop-filter` van diverse oppervlakken verwijderd ten gunste van visueel vergelijkbare maar beter presterende dekkende groene lagen. Mobiele bosachtergrond mag meescrollen in plaats van vastgeprikt zijn. Zet geen zware live-blur, nieuwe wereldwijde overrides of DOM-observers terug voor cosmetische redenen. Bron: [glasprestatierapport](https://github.com/jaribuijsman/Uitgavenkompas/blob/main/docs/glass-performance-20261029/README.md).
