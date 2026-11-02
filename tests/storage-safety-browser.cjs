@@ -75,7 +75,7 @@ async function addTransaction(page, description) {
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     checks.push("Two-tab Life conflict preserves saved task and quick-capture input");
-    await navigate(b, "life", "backup"); await require("./helpers/reveal.cjs")(b,"#lifeOpenPurgeTrash");await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
+    await navigate(b, "life", "backup"); await b.locator("#mementoSettingsLife [data-ms-target=trash]").click(); await require("./helpers/reveal.cjs")(b,"#lifeOpenPurgeTrash");await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
     assert.match(await b.locator("#lifePurgeFeedback").textContent(), /Geen items definitief verwijderd/);
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     await b.locator("#mementoStorageNotice [data-storage-dismiss]").click();
@@ -101,7 +101,7 @@ async function addTransaction(page, description) {
     const binary = await c.evaluate(async () => { const all = (await window.MementoKnowledgeStore.all()).filter(r => r.noteId !== "kc-system-snapshot"); const attached=all.find(r=>r.name==="fictief.pdf"); return { count: all.length, text: attached?await attached.blob.text():"", meta: attached?.id }; });
     assert.equal(binary.count, 1); assert(binary.text.startsWith("%PDF-1.4")); checks.push("Real IndexedDB attachment write uses the owning operation token");
     await c.evaluate(()=>window.MementoFinanceValidation.validate(JSON.parse(localStorage.getItem("uitgavenkompas_v1"))));
-    await navigate(c, "life", "backup"); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;
+    await navigate(c, "life", "backup"); await c.locator("#mementoSettingsLife [data-ms-target=backup]").click(); const downloadPromise = c.waitForEvent("download"); await c.locator("#lifeExportBackup").click(); const download = await downloadPromise;
     const archive = fs.readFileSync(await download.path()); assert.equal(archive.readUInt32LE(0), 0x04034b50);
     const before = await c.evaluate(() => ({ life: JSON.parse(localStorage.getItem("compass_life_preview_v1")), finance: JSON.parse(localStorage.getItem("uitgavenkompas_v1")) }));
     const restoredNavigation=c.waitForNavigation({waitUntil:"domcontentloaded"});
@@ -121,7 +121,7 @@ async function addTransaction(page, description) {
     const ZIP=require('../assets/memento-backup.js'),parts=ZIP.unzip(archive);
     parts.set('data/finance.json',new TextEncoder().encode(JSON.stringify(malformed)));
     const invalidArchive=Buffer.from(await ZIP.zip([...parts].map(([name,bytes])=>({name,bytes}))).arrayBuffer());
-    await navigate(c,'life','backup');await require('./helpers/reveal.cjs')(c,'#lifeImportFile');
+    await navigate(c,'life','backup');await c.locator('#mementoSettingsLife [data-ms-target=backup]').click();await require('./helpers/reveal.cjs')(c,'#lifeImportFile');
     await c.locator('#lifeImportFile').setInputFiles({name:'invalid-finance.zip',mimeType:'application/zip',buffer:invalidArchive});
     await c.waitForFunction(()=>document.getElementById('lifeMessage').textContent.includes('Ongeldige financiële gegevens'));
     assert.deepEqual(await c.evaluate(()=>Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)]))),exactBefore);

@@ -80,12 +80,15 @@ async function checkbox(page,selector){
       taskBorders:[styles[0].borderTopWidth,styles[0].borderBottomWidth],
       label:card.querySelector('.life-task-menu>summary')?.textContent?.trim()};
    });
-   assert.equal(parity.taskColumns,parity.eventColumns,'Task and appointment must have equal grid structure');
-   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,4);
+   assert.equal(parity.taskColumns,4,'Task grid retains checkbox, date, content and action tracks');
+   assert.equal(parity.eventColumns,3,'Compact appointment uses its distinct three-column grid');
+   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,3,'Compact appointment keeps its three interactive/display elements');
    assert(parity.firstTarget.right<=parity.date.left+1,'Task checkbox must not overlap date');
    assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
-   assert.equal(parity.taskSurface,parity.eventSurface,'Matching cards must have same card background');
-   assert.equal(parity.taskRadius,parity.eventRadius,'Matching cards must have same corner radius');
+   assert.notEqual(parity.taskSurface,'rgba(0, 0, 0, 0)','Task card retains a visible surface');
+   assert.equal(parity.eventSurface,'rgba(0, 0, 0, 0)','Compact appointment inherits its glass surface');
+   assert.notEqual(parity.taskRadius,'0px','Task retains rounded corners');
+   assert.notEqual(parity.eventRadius,'0px','Appointment retains rounded corners');
    assert.equal(parity.label,'⋮');
    await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-v3-menu>summary');
    await taskCard.locator('.memento-v3-menu>summary').click();
