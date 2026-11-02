@@ -435,7 +435,7 @@ function renderEditor(){
  '<button type="button" data-kc="format" data-id="[tekst](https://)" title="Link">'+kcV3Icon('link')+' Link</button>'+
  '<button type="button" class="kc-v3-text-task" data-kc="selection-task" title="Taak van geselecteerde tekst">'+kcV3Icon('task')+' Taak</button></div>';
  const body=e.document
-  ?'<div class="kc-v3-editor-pane kc-v3-block-pane">'+renderVisualDocument()+'</div>'+renderTemplateFields(e)
+  ?'<span class="kc-v3-content-label">Inhoud</span><div class="kc-v3-editor-pane kc-v3-block-pane">'+renderVisualDocument()+'</div>'+renderTemplateFields(e)
   :'<label class="kc-v3-content-label" for="kc-body">Inhoud</label><div class="kc-v3-editor-pane">'+toolbar+
     '<textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="11" placeholder="Schrijf je notitie…">'+esc(e.body||"")+'</textarea></div>'+
     '<div class="kc-v3-helper-bar"><span>Selecteer tekst en kies Taak om die te verwerken.</span>'+btn("Voorbeeld","preview")+'</div>';
@@ -485,6 +485,7 @@ function renderEditor(){
  '<button class="kc-v3-sheet-item" data-kc="editor-followup-kind" data-id="note">'+kcV3Icon('file')+'<span>Vervolgnotitie<small>Schrijf verder in een aparte notitie</small></span></button>')+
  kcV3Sheet('kc-v3-relations-sheet','Koppelingen',linksBody)+
  kcV3Sheet('kc-v3-manual-sheet','Passage invoeren','<p class="kc-v3-sheet-help">Neem een passage over of typ zelf een actie. De brontekst blijft staan.</p><label class="kc-v3-sheet-label">Passage<textarea id="kc-task-passage" maxlength="2500" rows="4" placeholder="Welke actie moet hieruit ontstaan?"></textarea></label>'+btn('Taakvoorstel controleren','passage-task','',true))+
+ kcV3Sheet('kc-v3-block-tools-sheet','Meer tekstopmaak','<button class="kc-v3-sheet-item" data-kc="ws-block" data-id="text">Tekstblok toevoegen</button><button class="kc-v3-sheet-item" data-kc="ws-block" data-id="quote">Citaat toevoegen</button><button class="kc-v3-sheet-item" data-kc="ws-block" data-id="check">Checklistpunt toevoegen</button><button class="kc-v3-sheet-item" data-kc="ws-mark" data-id="italic">Cursief</button><button class="kc-v3-sheet-item" data-kc="ws-editor-design">Blokken aanpassen en verplaatsen</button>')+
  kcV3Sheet('kc-v3-attachments-sheet','Bijlagen','<p class="kc-v3-sheet-help">PDF’s en afbeeldingen worden lokaal bewaard en meegenomen in de ZIP-back-up.</p><label class="kc-v3-sheet-label">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple aria-label="PDF of afbeelding toevoegen"></label><p class="kc-v3-sheet-help">Maximaal 25 MB per bestand.</p>'+attachmentsHTML(e))+
  '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog kc-v3-sheet" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-sheet-handle" aria-hidden="true"></div><div class="kc-v3-sheet-head"><h3>Meer acties</h3><button type="button" data-kc="editor-menu-close" aria-label="Sluiten">×</button></div>'+
  (selectedId?'<div class="kc-v3-dialog-group"><span>Notitie</span>'+btn(e.pinned?"Losmaken":"Vastzetten","pin",selectedId)+btn(e.archived?"Uit archief":"Archiveren","archive-item",selectedId)+'</div>':"")+
@@ -540,7 +541,8 @@ function render(){
  else if(screen==="link")output=renderLink();
  else if(screen==="file")output=renderFile();
  root.MementoSortableUI?.clear(host);
- host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+(workspaceReady()&&!["edit","collection-editor"].includes(screen)?workspaceNavigation():"")+breadcrumbs()+output+(workspaceUndo&&JSON.stringify(read())===workspaceUndoAfter?btn("Ongedaan maken","ws-undo"):"")+"</div>";
+ const prototypeEditorVisible=output.includes('class="kc-v3-prototype-editor"');
+ host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+(workspaceReady()&&!["edit","collection-editor"].includes(screen)&&!prototypeEditorVisible?workspaceNavigation():"")+(prototypeEditorVisible?"":breadcrumbs())+output+(workspaceUndo&&JSON.stringify(read())===workspaceUndoAfter?btn("Ongedaan maken","ws-undo"):"")+"</div>";
  // Handle list search on the current field, before any parent-level listeners
  // can replace the input during bubbling. Native search clear also fires
  // a non-bubbling "search" event in some browsers.
@@ -661,7 +663,9 @@ function renderDocumentRead(doc){if(!doc?.blocks)return '';return doc.blocks.map
  if(['image','pdf'].includes(b.type)){const n=editing||read().notes.find(n=>n.id===selectedId),meta=n?.attachments?.find(a=>a.id===b.fileId);return meta?(b.type==='image'?'<figure><img class="kc-inline-image" data-kc-cover-file="'+esc(b.fileId)+'" alt="'+esc(b.text)+'"><figcaption>'+esc(b.text)+'</figcaption></figure>':btn(esc(meta.name),'file',meta.id)):'<p class="kc-missing-image">Bestand ontbreekt · '+esc(b.text)+'</p>';}
  const tag=b.type==='heading'?'h3':b.type==='quote'?'blockquote':'p',text=esc(b.text);return '<'+tag+'>'+ (b.type==='check'?(b.checked?'☑ ':'☐ '):'')+(b.marks?.includes('bold')?'<b>':'')+(b.marks?.includes('italic')?'<i>':'')+text+(b.marks?.includes('italic')?'</i>':'')+(b.marks?.includes('bold')?'</b>':'')+'</'+tag+'>';
  }).join('');}
-function renderVisualDocument(){return '<div class="kc-visual-toolbar" role="toolbar" aria-label="Visuele teksteditor">'+btn('Kop','ws-block','heading')+btn('Tekst','ws-block','text')+btn('☐','ws-block','check')+btn('Citaat','ws-block','quote')+btn('Vet','ws-mark','bold')+btn('Cursief','ws-mark','italic')+btn('Aanpassen','ws-editor-design')+'</div><div class="kc-visual-document">'+editing.document.blocks.map(b=>['image','pdf'].includes(b.type)?renderDocumentRead({blocks:[b]}):'<div class="kc-visual-block kc-block-'+b.type+' '+(b.marks||[]).join(' ')+'"><'+(b.type==='check'?'label':'div')+'>'+(b.type==='check'?'<input type="checkbox" data-ws-block-check="'+esc(b.id)+'"'+(b.checked?' checked':'')+'>':'')+'<div contenteditable="true" role="textbox" aria-label="'+({heading:'Kop',quote:'Citaat',check:'Checklistpunt',text:'Tekstblok'}[b.type])+'" data-ws-block="'+esc(b.id)+'">'+esc(b.text)+'</div></'+(b.type==='check'?'label':'div')+'>'+(workspaceEditorDesign?'<div class="kc-block-tools">'+btn('↑','ws-block-up',b.id)+btn('↓','ws-block-down',b.id)+btn('Verwijderen','ws-block-remove',b.id)+'</div>':'')+'</div>').join('')+'</div>'+btn('+ Tekstblok','ws-block','text')+(workspaceEditorDesign?'<div class="kc-ws-tools">'+btn('Als sjabloon bewaren','ws-template-save')+btn('Afbeelding uit bijlagen invoegen','ws-inline-image')+btn('PDF-kaart invoegen','ws-inline-pdf')+'</div>':'');}
+function renderVisualDocument(){return '<div class="kc-visual-toolbar" role="toolbar" aria-label="Visuele teksteditor">'+
+ btn('H1','ws-block','heading')+btn('Vet','ws-mark','bold')+btn('☷ Lijst','ws-bullets')+btn('Link','ws-insert-link')+btn('Taak','selection-task')+
+ btn('Meer','editor-block-options')+'</div><div class="kc-visual-document">'+editing.document.blocks.map(b=>['image','pdf'].includes(b.type)?renderDocumentRead({blocks:[b]}):'<div class="kc-visual-block kc-block-'+b.type+' '+(b.marks||[]).join(' ')+'"><'+(b.type==='check'?'label':'div')+'>'+(b.type==='check'?'<input type="checkbox" data-ws-block-check="'+esc(b.id)+'"'+(b.checked?' checked':'')+'>':'')+'<div contenteditable="true" role="textbox" aria-label="'+({heading:'Kop',quote:'Citaat',check:'Checklistpunt',text:'Tekstblok'}[b.type])+'" data-ws-block="'+esc(b.id)+'">'+esc(b.text)+'</div></'+(b.type==='check'?'label':'div')+'>'+(workspaceEditorDesign?'<div class="kc-block-tools">'+btn('↑','ws-block-up',b.id)+btn('↓','ws-block-down',b.id)+btn('Verwijderen','ws-block-remove',b.id)+'</div>':'')+'</div>').join('')+'</div>'+btn('+ Tekstblok','ws-block','text')+(workspaceEditorDesign?'<div class="kc-ws-tools">'+btn('Als sjabloon bewaren','ws-template-save')+btn('Afbeelding uit bijlagen invoegen','ws-inline-image')+btn('PDF-kaart invoegen','ws-inline-pdf')+'</div>':'');}
 function renderTemplateFields(n){const t=ws().templates.find(t=>t.id===n.templateId);if(!t)return '';const missing=selectedId?W.missingFields(read(),selectedId):[];return '<details class="kc-compact-fold"><summary>Eigenschappen · '+esc(t.name)+'</summary>'+ (t.fields||[]).filter(f=>Object.hasOwn(n.properties||{},f.key)).map(f=>'<label>'+esc(f.label)+'<input type="'+esc(f.type)+'" data-ws-property="'+esc(f.key)+'" maxlength="2000" value="'+esc(n.properties[f.key])+'"></label>').join('')+(missing.length?'<p>'+missing.length+' nieuwe velden beschikbaar: '+missing.map(f=>esc(f.label)).join(', ')+'</p>'+btn('Nieuwe velden toevoegen','ws-template-fields'):'')+'</details>';}
 function workspacePanelOpen(panel){if(!flush())return;workspacePanel=panel;screen='workspace';render();}
 function workspaceAction(op,id,el){
@@ -903,6 +907,21 @@ function click(event){
   return;
  }
  if(op==='editor-relations'){showEditorSheet('kc-v3-relations-sheet');return;}
+ if(op==='editor-block-options'){showEditorSheet('kc-v3-block-tools-sheet');return;}
+ if(op==='ws-bullets'||op==='ws-insert-link'){
+  if(!editing?.document)return;
+  let block=editing.document.blocks.find(b=>b.id===workspaceBlock&&!['image','pdf'].includes(b.type));
+  if(!block){block={id:C.uid(),type:'text',text:''};editing.document.blocks.push(block);}
+  if(op==='ws-bullets')block.text=block.text.split('\n').map(line=>'• '+line.replace(/^• /,'')).join('\n');
+  else{
+   const href=prompt('Link (https://)','https://');
+   if(!href)return;
+   const safe=safeURL(href);
+   if(!safe){notify('Gebruik een geldige http- of https-link.');return;}
+   block.text+=(block.text?' ':'')+safe;
+  }
+  editing.body=C.documentText(editing.document);workspaceBlock=block.id;schedule();render();return;
+ }
  if(op==='editor-manual-passage'){closeEditorSheets();showEditorSheet('kc-v3-manual-sheet');return;}
  if(op==='editor-attachments'){if(!flush())return;showEditorSheet('kc-v3-attachments-sheet');return;}
  if(op==='editor-link-note'){if(!flush())return;closeEditorSheets();linkQuery='';screen='link';render();return;}
