@@ -868,6 +868,44 @@ function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
  const editorMenu=host.querySelector("#kc-editor-menu");
+ const editorSheet=id=>host.querySelector('#'+id);
+ const showEditorSheet=id=>{const dialog=editorSheet(id);if(dialog&&!dialog.open)dialog.showModal();};
+ const closeEditorSheets=()=>host.querySelectorAll('.kc-v3-sheet[open]').forEach(dialog=>dialog.close());
+ if(op==='editor-sheet-close'){el.closest('dialog')?.close();return;}
+ if(op==='editor-folder'){showEditorSheet('kc-v3-folder-sheet');return;}
+ if(op==='editor-folder-select'){if(!editing)return;editing.collectionId=id;schedule();render();return;}
+ if(op==='editor-tags'){showEditorSheet('kc-v3-tags-sheet');return;}
+ if(op==='editor-tags-apply'){
+  if(!editing)return;
+  const raw=host.querySelector('#kc-v3-tags-input')?.value||'';
+  editing.tags=[...new Set(raw.split(',').map(t=>t.trim().replace(/^#/,'').slice(0,60)).filter(Boolean))].slice(0,30);
+  schedule();render();return;
+ }
+ if(op==='editor-linked-folders'){if(!flush())return;showEditorSheet('kc-v3-locations-sheet');return;}
+ if(op==='editor-locations-save'){
+  if(!flush())return;
+  const ids=[...host.querySelectorAll('[data-kc-location]:checked')].map(x=>x.dataset.kcLocation);
+  const ok=workspaceWrite(life=>{
+   const note=life.notes.find(n=>n.id===selectedId);
+   if(!note)throw Error('Notitie niet gevonden.');
+   W.setLocations(life,selectedId,ids,C.collectionOf(life,note));
+  },{undo:true});
+  if(ok)startEdit(selectedId);
+  return;
+ }
+ if(op==='editor-followup'){if(!flush())return;showEditorSheet('kc-v3-followup-sheet');return;}
+ if(op==='editor-followup-kind'){
+  if(!flush())return;
+  closeEditorSheets();
+  if(!root.MementoLifeFlow?.start?.('note',selectedId)){notify('Slim opvolgen is niet beschikbaar.');return;}
+  const target=document.getElementById('followupTarget');
+  if(target){target.value=id;target.dispatchEvent(new Event('change',{bubbles:true}));}
+  return;
+ }
+ if(op==='editor-relations'){showEditorSheet('kc-v3-relations-sheet');return;}
+ if(op==='editor-manual-passage'){closeEditorSheets();showEditorSheet('kc-v3-manual-sheet');return;}
+ if(op==='editor-attachments'){if(!flush())return;showEditorSheet('kc-v3-attachments-sheet');return;}
+ if(op==='editor-link-note'){if(!flush())return;closeEditorSheets();linkQuery='';screen='link';render();return;}
  if(op==="editor-menu"){editorMenu?.showModal();return;}
  if(op==="editor-menu-close"){editorMenu?.close();return;}
  if(editorMenu?.open)editorMenu.close();
@@ -887,7 +925,7 @@ function click(event){
  if(["selection-task","passage-task","convert-task"].includes(op)){
   const field=host.querySelector('#kc-body'),n=editing||read().notes.find(n=>n.id===selectedId);
   const passage=(op==="passage-task"?host.querySelector('#kc-task-passage')?.value:field?field.value.slice(field.selectionStart,field.selectionEnd):window.getSelection()?.toString())?.trim()||"";
-  if(!passage||!n?.body?.includes(passage)){notify("Selecteer een passage in de notitie, of plak die bij ‘Passage invoeren’. Er wordt geen hele notitie gekopieerd.");field?.focus();return;}
+  if(!passage||(op!=="passage-task"&&!n?.body?.includes(passage))){notify("Selecteer een passage in de notitie, of typ een actie bij ‘Passage invoeren’.");field?.focus();return;}
   if(!flush())return;bridge.convert?.(selectedId,"task",passage);return;
  }
  if(op==="recover-draft"){recoverDraft();return;}
@@ -1137,8 +1175,8 @@ root.visualViewport?.addEventListener("resize",updateDiaryKeyboard);
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
 
 document.addEventListener("click",e=>{
- const menu=host?.querySelector("#kc-editor-menu");
- if(e.target===menu&&menu.open)menu.close();
+ const dialog=e.target?.closest?.(".kc-v3-sheet");
+ if(dialog&&e.target===dialog&&dialog.open)dialog.close();
 });
 
 document.addEventListener("input",e=>{if(host?.contains(e.target)&&e.target.dataset.kcInput!=="search")onInput(e);});
