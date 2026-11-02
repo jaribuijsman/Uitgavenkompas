@@ -492,7 +492,7 @@
 #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-icon-btn svg{width:22px;height:22px}
 #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-more-trigger{flex:none;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:11px;background:transparent;color:#edf6ed;padding:0}
 #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-more-trigger svg{width:21px;height:21px}
-#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-primary{flex:none;background:var(--kp-sage);color:#153b29;border:0;border-radius:11px;min-height:44px;padding:0 13px;font-size:13px;font-weight:750;white-space:nowrap}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-save-btn{flex:none;background:var(--kp-sage);color:#153b29;border:0;border-radius:11px;min-height:44px;padding:0 13px;font-size:13px;font-weight:750;white-space:nowrap}
 #lifeApp[data-life-view="notes"] .kc-v3-save-state{display:flex;align-items:center;gap:7px;color:#c3d6c1;font-size:12px;margin:0 5px 11px;padding:0;min-height:20px}
 #lifeApp[data-life-view="notes"] .kc-v3-save-state:before{content:"";display:inline-block;flex:none;width:7px;height:7px;border-radius:100%;background:#b3d9bb}
 #lifeApp[data-life-view="notes"] .kc-v3-writing-card,#lifeApp[data-life-view="notes"] .kc-v3-organization,#lifeApp[data-life-view="notes"] .kc-v3-followups{background:var(--kp-panel);border:1px solid var(--kp-stroke);border-radius:20px;box-shadow:inset 0 1px 0 #e5ffcb13,0 8px 20px #00160c1e;padding:16px;margin:0 0 12px;min-width:0}
@@ -574,6 +574,6 @@
 @media(max-width:359px){
  #lifeApp[data-life-view="notes"] .kc-v3-writing-card,#lifeApp[data-life-view="notes"] .kc-v3-organization,#lifeApp[data-life-view="notes"] .kc-v3-followups{padding:12px}
  #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-head-label h2{font-size:14px}
- #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-primary{padding:0 9px}
+ #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-save-btn{padding:0 9px}
  #lifeApp[data-life-view="notes"] .kc-v3-meta-two{grid-template-columns:1fr}
 }
