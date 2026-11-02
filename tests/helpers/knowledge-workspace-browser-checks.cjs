@@ -26,6 +26,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(n.document.blocks.length,1,'Existing document shape and block ID remain intact');
  assert.equal(n.document.blocks[0].text,fixtureBody,'Textarea synchronizes the same original block');
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
+ assert.equal(await page.locator('.kc-v3-save-btn').count(),1,'Prototype save button uses independent class to avoid global kc-btn overrides');
+ assert.equal(await page.locator('.kc-v3-save-btn').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(197, 223, 195)','Save button must retain approved sage fill');
  assert.equal(await page.locator('.kc-local-tabs').count(),0,'No redundant tabs above the editor');
  assert.equal(await page.locator('.kc-breadcrumbs').count(),0,'Editor uses exactly one prototype breadcrumb');
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
