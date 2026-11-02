@@ -422,7 +422,7 @@ function renderEditor(){
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
  '<p class="kc-muted">Maximaal 25 MB per bestand. PDF’s en afbeeldingen blijven op dit apparaat en worden meegenomen in de volledige ZIP-back-up.</p>'+
  attachmentsHTML(e)+linkedHTML(e)+(selectedId?'<div class="kc-ws-tools">'+btn(e.pinned?'Losmaken':'Vastzetten','pin',selectedId)+btn(e.archived?'Uit archief':'Archiveren','archive-item',selectedId)+btn('Koppelen','link',selectedId)+btn('Verwijderen','delete',selectedId)+'</div>':'')+passageActions()+(workspaceReady()?'<div class="kc-ws-tools">'+btn("Mappen koppelen","ws-locations")+W.suggestions(read(),e).map(t=>btn("+ #"+esc(t),"ws-tag",t)).join("")+"</div>":"")+
- '<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+"</div></div>";
+ (selectedId?followupLinksForNote(e)+btn('Slim opvolgen','followup-start',selectedId):'')+'<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+"</div></div>";
 }
 function passageActions(){return '<div class="kc-passage-actions">'+btn('Taak uit selectie','selection-task')+'<details><summary>Passage invoeren</summary><label>Geselecteerde passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="2" placeholder="Plak hier de exacte passage"></textarea></label>'+btn('Controleer taakvoorstel','passage-task')+'</details></div>';}
 function renderVersions(){
