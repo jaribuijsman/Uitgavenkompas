@@ -478,6 +478,7 @@
 
 /* Knowledge editor: approved prototype parity (SHA-256 8fe95983...), scoped to non-journal editor.
    Single owner for editor visuals: no cascading V3 override appendix. */
+#lifeApp[data-life-view="notes"] .kc-app:has(.kc-v3-prototype-editor){background:linear-gradient(180deg,#082b20c9 0%,#06281ed9 55%,#061e19ed 100%);border-radius:0 0 16px 16px}
 #lifeApp[data-life-view="notes"] .kc-v3-prototype-editor{--kp-panel:#14382bf2;--kp-field:#102d24;--kp-stroke:#9cc09548;--kp-text:#f0f6e7;--kp-muted:#afc8b6;--kp-sage:#c5dfc3;padding:0 0 calc(100px + env(safe-area-inset-bottom,0px));color:var(--kp-text);font-size:15px;line-height:1.45;min-width:0}
 #lifeApp[data-life-view="notes"] .kc-v3-eyebrow{margin:10px 2px 9px;color:#c5d7c4;font-size:12px;display:flex;align-items:center;gap:5px;min-height:22px}
 #lifeApp[data-life-view="notes"] .kc-v3-eyebrow strong{color:#edf4e9;font-weight:650}
@@ -513,7 +514,7 @@
 #lifeApp[data-life-view="notes"] .kc-v3-helper-bar .kc-btn{flex:none;min-height:44px;padding:5px 0;border:0;background:transparent;color:#e8d39d;font-size:12px}
 #lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-visual-toolbar{position:static;display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;gap:3px;border-radius:0;background:transparent;border-bottom:1px solid #9dbb9a30;margin:0;padding:5px 6px;scrollbar-width:none}
 #lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-visual-toolbar .kc-btn{flex:none;min-height:44px;min-width:43px;padding:7px 9px;white-space:nowrap;font-size:13px;background:transparent;border:0;color:#dcead9}
-#lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-visual-document{min-height:270px;background:transparent;border:0;border-radius:0;padding:14px 13px}
+#lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-visual-document{min-height:0;background:transparent;border:0;border-radius:0;padding:14px 13px}
 #lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-visual-block [contenteditable]{min-height:32px;padding:4px 2px;line-height:1.6;font-size:16px}
 #lifeApp[data-life-view="notes"] .kc-v3-block-pane .kc-block-heading [contenteditable]{font-size:20px;font-weight:700}
 #lifeApp[data-life-view="notes"] .kc-v3-block-pane>.kc-btn{margin:8px 13px 12px;min-height:44px}
@@ -533,7 +534,7 @@
 #lifeApp[data-life-view="notes"] .kc-v3-management{display:flex;align-items:center;text-align:left;width:100%;gap:10px;min-height:49px;padding:0 2px;border:0;background:transparent;color:#e0e8d9;font-size:13px;font-weight:680}
 #lifeApp[data-life-view="notes"] .kc-v3-management>svg{width:19px;height:19px;flex:none}
 #lifeApp[data-life-view="notes"] .kc-v3-management>svg:last-child{margin-left:0}
-#lifeApp[data-life-view="notes"] .kc-v3-management>small{margin-left:auto;font-size:12px;font-weight:400;color:#b5cab7}
+#lifeApp[data-life-view="notes"] .kc-v3-management>small{margin-left:auto;flex:none;white-space:nowrap;font-size:12px;font-weight:400;color:#b5cab7}
 #lifeApp[data-life-view="notes"] .kc-v3-related{display:flex;align-items:start;gap:8px;margin:12px 0 9px;padding:10px 11px;background:#102f25;border:1px solid #8fb48a44;border-radius:12px}
 #lifeApp[data-life-view="notes"] .kc-v3-related>svg{width:19px;height:19px;flex:none;color:#dcbf83}
 #lifeApp[data-life-view="notes"] .kc-v3-related strong{display:block;color:var(--kp-text);font-size:13px;font-weight:700;overflow-wrap:anywhere}
