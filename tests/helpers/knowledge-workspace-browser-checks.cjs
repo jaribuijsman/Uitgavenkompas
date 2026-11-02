@@ -74,8 +74,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('[data-kc=editor-locations-save]').click();
  assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
  checks.push('Prototype sheets: follow-up choices, attachments, other actions, linked folders and saved note IDs');
- await page.locator('[data-kc=editor-block-options]').click();
- await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();
+ await page.locator('.kc-v3-editor-head [data-kc=editor-menu]').click();
+ await page.locator('#kc-editor-menu [data-kc=editor-block-options]').click();
+ await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-block][data-id=heading]').click();
  assert(await page.locator('[data-ws-block]').count()>1,'Multi-block documents remain in their structured editor');await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
  await page.locator('.kc-v3-editor-head [data-kc=back]').click();
