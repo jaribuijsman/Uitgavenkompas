@@ -1,5 +1,7 @@
 # Memento — eindrapport masterplan 1.0
 
+> **Historische tijdsopname — niet normatief voor actuele voortgang.** Dit document en zijn oorspronkelijke bewijs gelden voor de genoemde datum/commit. Gebruik [de productrouter](product/README.md) en [de actuele technische roadmap](TECHNISCHE_ROADMAP.md) voor een nieuwe taak. De oorspronkelijke inhoud hieronder is behouden.
+
 Uitvoering van het geautoriseerde masterplan van 28 oktober 2026, rechtstreeks op `main`. Technisch vertrekpunt: `52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9`. De vijf implementatiefasen zijn uitgevoerd. De functionele wijzigingen zijn gebouwd en getest; de hieronder expliciet genoemde fysieke en gebruikerstests zijn niet uitgevoerd. Publicatiebewijzen en de resterende acceptatiebeperkingen staan onderaan.
 
 Live-app: <https://jaribuijsman.github.io/Uitgavenkompas/>. Het [bewijsdossier per fase](masterplan-implementation.md) beschrijft oorspronkelijke fouten, code, gegevensimpact en uitgevoerde controles. [Browseracceptatie](masterplan-evidence/phase5/report.json), [voor/na-metingen en echte PWA-upgrade](masterplan-evidence/phase5/journeys/report.json) en screenshots zijn in de repository opgenomen. Alle testgegevens zijn fictief en gebruikt in afgescheiden browserprofielen; de persoonlijke browseropslag van de eigenaar is niet gebruikt.

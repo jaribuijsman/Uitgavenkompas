@@ -1,5 +1,7 @@
 # Memento — complete cleanup: actuele voortgang en resterende risico's
 
+> **Historische tijdsopname — niet normatief voor actuele voortgang.** Dit document en zijn oorspronkelijke bewijs gelden voor de genoemde datum/commit. Gebruik [de productrouter](product/README.md) en [de actuele technische roadmap](TECHNISCHE_ROADMAP.md) voor een nieuwe taak. De oorspronkelijke inhoud hieronder is behouden.
+
 **Laatst bijgewerkt:** 31 oktober 2026, na PR #26. **Status: gedeeltelijk afgerond, nog géén volledige cleanup.**
 
 Repository: `jaribuijsman/Uitgavenkompas`. Gecontroleerde `main`-commit: `d591c4099cfee938c9e943007778ab85cb6be678`.

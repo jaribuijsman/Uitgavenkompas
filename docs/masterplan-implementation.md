@@ -1,5 +1,7 @@
 # Memento masterplan 1.0 — uitvoering en bewijs
 
+> **Historische tijdsopname — niet normatief voor actuele voortgang.** Dit document en zijn oorspronkelijke bewijs gelden voor de genoemde datum/commit. Gebruik [de productrouter](product/README.md) en [de actuele technische roadmap](TECHNISCHE_ROADMAP.md) voor een nieuwe taak. De oorspronkelijke inhoud hieronder is behouden.
+
 Contract: besluitversie 1.0 van 28 oktober 2026, M01–M20, Q01–Q05 en A01–A18. De expliciete uitvoeringsopdracht van de eigenaar autoriseert implementatie, commits en publicatie op `main`. Uitgangspunt: `52ac8c2f120b97769e26a8fb7f2ec1735ea7c0c9`.
 
 ## Nulmeting en gegevenscontract

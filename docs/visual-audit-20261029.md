@@ -1,5 +1,7 @@
 # Visuele controle van alle hoofdtabbladen — 29 oktober 2026
 
+> **Historische tijdsopname — niet normatief voor actuele voortgang.** Dit document en zijn oorspronkelijke bewijs gelden voor de genoemde datum/commit. Gebruik [de productrouter](product/README.md) en [de actuele technische roadmap](TECHNISCHE_ROADMAP.md) voor een nieuwe taak. De oorspronkelijke inhoud hieronder is behouden.
+
 ## Uitkomst
 
 De vorige implementatie is **niet visueel gelijkwaardig aan het goedgekeurde voorstel**. De gedeelde glasstijl is aanwezig, maar veel schermen behouden de oude informatievolgorde, grote statistiekblokken en uitgebreide bediening boven de inhoud. De vorige broncontrole en functionele tests konden daarom geen volledige uitvoering van het ontwerp aantonen.
