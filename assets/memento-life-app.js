@@ -685,7 +685,7 @@ function quickForm(){
  return '<form class="life-quick-add memento-quick-note memento-capture-card" id="lifeQuickForm">'+
  '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?">'+['note','appointment','task'].map(k=>'<button type="button" data-life-quick-kind="'+k+'" aria-pressed="'+(k===quickKind)+'">'+labels[k]+'</button>').join('')+'</div>'+
  '<input id="lifeQuickTitle" aria-label="'+prompts[quickKind]+'" placeholder="'+prompts[quickKind]+'" required maxlength="2500" autocomplete="off">'+
- '<div class="memento-capture-toolbar"><label class="memento-capture-date" id="lifeQuickDateField"'+(note?' hidden':'')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span><input id="lifeQuickDate" type="date" aria-label="Datum voor '+labels[quickKind]+'" value="'+esc(date)+'"'+(note?' disabled':'')+'></label>'+
+ '<div class="memento-capture-toolbar"><button class="memento-capture-date" type="button" id="lifeQuickDateField" data-life-quick-date aria-label="Datum kiezen"'+(note?' hidden':'')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span></button><input id="lifeQuickDate" type="hidden" value="'+esc(date)+'"'+(note?' disabled':'')+'>'+
  '<span class="memento-capture-inbox" id="lifeQuickInbox"'+(note?'':' hidden')+'><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v11H3z M3 7V4h7l2 3"/></svg><span id="lifeQuickCollectionLabel">'+esc(quickCollectionLabel())+'</span></span>'+
  '<button class="memento-voice-btn" type="button" id="mementoVoiceButton" aria-label="Spreek tekst in" aria-pressed="false" title="Inspreken"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="13" rx="4"></rect><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"></path></svg></button>'+
  '<button class="life-btn life-btn-primary memento-capture-submit" type="submit" aria-label="'+(quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen')+'" title="'+(quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen')+'"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>'+
@@ -698,7 +698,7 @@ function syncQuickForm(){
  input.placeholder=prompts[quickKind];input.setAttribute('aria-label',input.placeholder);
  root.querySelectorAll('[data-life-quick-kind]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lifeQuickKind===quickKind)));
  $('lifeQuickDateField').hidden=note;$('lifeQuickDate').disabled=note;
- $('lifeQuickDate').setAttribute('aria-label','Datum voor '+(quickKind==='appointment'?'Afspraak':'Taak'));
+ $('lifeQuickDateField').setAttribute('aria-label','Datum kiezen voor '+(quickKind==='appointment'?'Afspraak':'Taak')+': '+quickDateLabel(quickDate===null?today():quickDate));
  $('lifeQuickInbox').hidden=!note;
  $('lifeQuickDateLabel').textContent=quickDateLabel(quickDate===null?today():quickDate);
  // The native field and the optional date in Opties must never diverge.
@@ -1442,7 +1442,7 @@ root.addEventListener('click',e=>{
  if(d.shoppingResearch){openShoppingResearch(d.shoppingResearch);return}
  if(d.shoppingGroup){groceryGrouped=!groceryGrouped;render();return}
  if(d.shoppingNew){editGrocery();return}
- if(d.lifeQuickOptions!==undefined){openQuickOptions();return}
+ if(d.lifeQuickDate!==undefined||d.lifeQuickOptions!==undefined){openQuickOptions();return}
  if(d.lifeQuickKind){if(['note','appointment','task'].includes(d.lifeQuickKind)){quickKind=d.lifeQuickKind;if(quickKind==='appointment'&&quickDate==='')quickDate=null;}syncQuickForm();return}
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
  if(d.lifeJournal!==undefined){if(!setView('notes'))return;window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
