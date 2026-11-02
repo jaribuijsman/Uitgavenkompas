@@ -200,6 +200,26 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
  assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
  assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/21|storage-safety-browser/);
 });
+check("manual workflows reject obsolete V1 browser contracts without losing offline or safety coverage",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const mp=fs.readFileSync(path.join(__dirname,"../.github/workflows/masterplan.yml"),"utf8");
+ const kc=fs.readFileSync(path.join(__dirname,"../.github/workflows/knowledge-v2.yml"),"utf8");
+ for(const [name,body] of [["masterplan",mp],["knowledge",kc]]){
+  assert(/workflow_dispatch:/.test(body),name+" manual entry must stay intentional");
+  assert(!/node (?:app\/)?tests\/(?:masterplan-browser|masterplan-journeys|knowledge-v2-browser)\.cjs/.test(body),name+" still runs obsolete V1 DOM");
+  assert(!/node (?:app\/)?tests\/visual-browser\.cjs/.test(body),name+" still runs a stale baseline geometry comparison");
+  assert(!/ref: f7d1d04fdca7fc26185cb3a7931859ca9c8c903e/.test(body),name+" still pins the old visual baseline");
+  assert.equal(planFor([".github/workflows/"+(name==="masterplan"?"masterplan.yml":"knowledge-v2.yml")]).tier,"high");
+ }
+ for(const suite of ["knowledge-v2-safety","storage-safety","storage-lock-native","memento-regression","fitness-regression"])assert(mp.includes("node tests/"+suite+".cjs"),"manual masterplan safety lost: "+suite);
+ for(const suite of ["ci-groups.cjs life-knowledge high","taken-v4-browser.cjs","day-v3-browser.cjs","memento-category-browser.cjs","app-review-browser.cjs","recovery-upgrade-browser.cjs"])assert(mp.includes("node tests/"+suite),"manual masterplan journey lost: "+suite);
+ assert(mp.includes("248a5dd811b90b293aebda134e67c32338563e86"),"immutable pre-F0 worker upgrade baseline missing");
+ assert(mp.includes("MEMENTO_RECOVERY_BASELINE_ROOT="),"offline upgrade baseline not configured");
+ for(const suite of ["knowledge-workspace-browser.cjs","storage-safety-browser.cjs","pin-disabled-regression.cjs","pin-forest-regression.cjs","knowledge-v2-publication.cjs"])assert(kc.includes("node tests/"+suite),"manual knowledge safety lost: "+suite);
+ assert(kc.includes("matrix:")&&kc.includes("width: [360, 393, 412, 1280]"),"manual viewport range changed");
+ assert(kc.includes("if-no-files-found: error"),"missing green visual artifact should fail");
+ assert(!kc.includes("cmp \"$RUNNER_TEMP/kc2-review/before"),"old PIN pixel comparison survived");
+});
 console.log("CI_PLANNER_REGRESSION_PASS "+count+" cases");
 
 

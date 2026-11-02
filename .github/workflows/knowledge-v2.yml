@@ -1,5 +1,5 @@
-name: Knowledge 2 acceptance
-# Manual specialist suites; automated checks are consolidated in app-review.yml.
+name: Knowledge workspace manual acceptance
+# Manual specialist checks of CURRENT app, not the removed V1 DOM; app-review.yml is the PR gate.
 on:
   workflow_dispatch:
 permissions:
@@ -24,24 +24,19 @@ jobs:
           node tests/fitness-regression.cjs
           node tests/trash-regression.cjs
           node tests/pin-forest-regression.cjs
+          node tests/pin-disabled-regression.cjs
           node --check assets/memento-knowledge.js
           node --check assets/memento-knowledge-core.js
           node --check sw.js
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         width: [360, 393, 412, 1280]
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: app
-      - uses: actions/checkout@v4
-        with:
-          ref: f7d1d04fdca7fc26185cb3a7931859ca9c8c903e
-          path: baseline
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -50,36 +45,21 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
-      - run: node app/tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/kc2-fixture.json"
-      - name: Existing app baseline
+      - name: Build private-in-run synthetic visual fixture
+        run: node tests/helpers/visual-fixture.cjs > "$RUNNER_TEMP/kc2-fixture.json"
+      - name: Current knowledge workspace, editor, interactions and geometry
         env:
-          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/baseline
-          MEMENTO_VISUAL_PHASE: before
           MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
-          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/kc2-review
           MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/kc2-fixture.json
-        run: node app/tests/visual-browser.cjs
-      - name: Real hierarchy, touch, diary and restore interactions
-        env:
-          MEMENTO_VISUAL_ROOT: ${{ github.workspace }}/app
-          MEMENTO_VISUAL_PHASE: after
-          MEMENTO_VISUAL_WIDTH: ${{ matrix.width }}
-          MEMENTO_VISUAL_OUT: ${{ runner.temp }}/kc2-review
-          MEMENTO_VISUAL_FIXTURE: ${{ runner.temp }}/kc2-fixture.json
-        run: node app/tests/knowledge-v2-browser.cjs
-      - name: Verify disabled PIN or preserve enabled forest
-        run: |
-          if head -n 3 app/index.html | grep -Eq 'data-memento-pin-lock="(disabled|manual)"'; then
-            node app/tests/pin-disabled-regression.cjs
-            node app/tests/memento-start-browser.cjs
-          else
-            cmp "$RUNNER_TEMP/kc2-review/before/${{ matrix.width }}/pin.jpg" "$RUNNER_TEMP/kc2-review/after/${{ matrix.width }}/pin.jpg"
-          fi
-      - uses: actions/upload-artifact@v4
+        run: node tests/knowledge-workspace-browser.cjs
+      - name: Keep actual current knowledge screenshots even on green
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: kc2-review-${{ matrix.width }}
-          path: ${{ runner.temp }}/kc2-review
+          name: knowledge-current-${{ matrix.width }}
+          path: /tmp/memento-workspace-visual/after/${{ matrix.width }}
+          if-no-files-found: error
+          retention-days: 7
   original-storage-browser:
     runs-on: ubuntu-latest
     timeout-minutes: 15
