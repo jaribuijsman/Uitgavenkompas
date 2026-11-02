@@ -1,5 +1,5 @@
 {
-  "base": "dd0bcb2736eafb1cb421684d786bd86adc9ad0e3",
+  "base": "909adc595c4d5de5e07f506edae17ac18fd5696a",
   "differential_render_cases": 33,
   "exact_old_new_markup": true,
   "images": [
@@ -33,14 +33,9 @@
     },
     {
       "name": "360-list.png",
-      "pixels_equal": false,
-      "difference_bounds": [
-        23,
-        298,
-        111,
-        346
-      ],
-      "before_sha256": "5596baa8ff18259122879ac3ff466f063f6c4905334c1a1003ea2876ca483de2",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "2ad8019bdac1975420d3e6e5b1bebade23369de140f2fbf0fcd8c388bd10f846",
       "after_sha256": "2ad8019bdac1975420d3e6e5b1bebade23369de140f2fbf0fcd8c388bd10f846"
     },
     {
@@ -66,21 +61,21 @@
     },
     {
       "name": "393-list.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "d3362e140777a0375078ca01719633becb239260baea5acc9da98f6c63b6037f",
+      "after_sha256": "d3362e140777a0375078ca01719633becb239260baea5acc9da98f6c63b6037f"
+    },
+    {
+      "name": "1-tasks.png",
       "pixels_equal": false,
       "difference_bounds": [
         27,
         298,
-        121,
+        122,
         346
       ],
-      "before_sha256": "d3362e140777a0375078ca01719633becb239260baea5acc9da98f6c63b6037f",
-      "after_sha256": "7dde3dbe993a17a161459adb7aacbe1828eeb55fea482b00219d072c82c6d2a1"
-    },
-    {
-      "name": "1-tasks.png",
-      "pixels_equal": true,
-      "difference_bounds": null,
-      "before_sha256": "e5ee9a73bda7ab7a93cb82a2570c2a3cb60ada4c8948755334d212993e43ecec",
+      "before_sha256": "b8868abb23746c95b58df89b6dc4b91811e95ac2825bca73db20e9f6606b529e",
       "after_sha256": "e5ee9a73bda7ab7a93cb82a2570c2a3cb60ada4c8948755334d212993e43ecec"
     },
     {
@@ -134,9 +129,14 @@
     },
     {
       "name": "393-short.png",
-      "pixels_equal": true,
-      "difference_bounds": null,
-      "before_sha256": "921baf9b446bccb33dd53af70542bf5a2e766d97b1771c69646a57372c05409d",
+      "pixels_equal": false,
+      "difference_bounds": [
+        21,
+        113,
+        372,
+        400
+      ],
+      "before_sha256": "277617351a9ca59bd485d44257bbefcd80c2fa9bbaac8df34f0371f73c98fbbe",
       "after_sha256": "921baf9b446bccb33dd53af70542bf5a2e766d97b1771c69646a57372c05409d"
     },
     {
@@ -147,9 +147,9 @@
       "after_sha256": "cd3ad43c7f11add26f3e7275f0d5d35d0ef155d12900b64540b4f836b870849a"
     }
   ],
-  "visual_review": "17 exact images. Two initial list images only differ in keyboard focus halo on unmodified Open tab; editor/menu/short/timer states unchanged. No material change.",
-  "life_app_bytes_before": 181180,
-  "life_app_bytes_after": 179452,
+  "visual_review": "17 exact raw images. One initial list differs in focus halo; one short-editor image differs in 12px of in-flight scroll settling. A separate normalized short capture has identical scroll/focus/geometry and pixels. No material layout change.",
+  "life_app_bytes_before": 181259,
+  "life_app_bytes_after": 179531,
   "presentation_bytes": 2395,
   "new_asset_sha256": "1e2f3800a46d18863f132540c43a27ce2e5746cbdb4873201ec6dbf4c28b0a45",
   "storage_contract": "unchanged; failed measurement write, draft preservation, backup and offline upgrade checked",

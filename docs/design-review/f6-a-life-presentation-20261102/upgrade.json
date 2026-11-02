@@ -1,9 +1,9 @@
 {
-  "baseline": "dd0bcb2736eafb1cb421684d786bd86adc9ad0e3",
+  "baseline": "909adc595c4d5de5e07f506edae17ac18fd5696a",
   "journeys": [],
   "upgrade": {
     "passed": true,
-    "currentCache": "memento-pwa-v124-20261102-life-presentation-v1",
+    "currentCache": "memento-pwa-v125-20261102-life-presentation-v2",
     "protectedExistingData": true,
     "additiveWorkspace": true,
     "pinUnchanged": true,
@@ -20,15 +20,15 @@
       "core": "object",
       "duty": "function",
       "scripts": [
-        "http://127.0.0.1:36631/assets/memento-fitness-core.js?v=20261028-master-p4",
-        "http://127.0.0.1:36631/assets/memento-fitness.js?v=20261101-sortable-v1"
+        "http://127.0.0.1:46739/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:46739/assets/memento-fitness.js?v=20261101-sortable-v1"
       ],
       "caches": [
         {
-          "name": "memento-pwa-v123-20261102-dialog-footer-owner-v1",
+          "name": "memento-pwa-v124-20261102-dialog-autofocus-v1",
           "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
           "assets": [
-            "http://127.0.0.1:36631/assets/memento-fitness-core.js?v=20261028-master-p4"
+            "http://127.0.0.1:46739/assets/memento-fitness-core.js?v=20261028-master-p4"
           ]
         },
         {
@@ -37,10 +37,10 @@
           "assets": []
         },
         {
-          "name": "memento-pwa-v124-20261102-life-presentation-v1",
+          "name": "memento-pwa-v125-20261102-life-presentation-v2",
           "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
           "assets": [
-            "http://127.0.0.1:36631/assets/memento-fitness-core.js?v=20261028-master-p4"
+            "http://127.0.0.1:46739/assets/memento-fitness-core.js?v=20261028-master-p4"
           ]
         }
       ]
@@ -50,8 +50,8 @@
       "core": "object",
       "duty": "function",
       "scripts": [
-        "http://127.0.0.1:36631/assets/memento-fitness-core.js?v=20261028-master-p4",
-        "http://127.0.0.1:36631/assets/memento-fitness.js?v=20261101-sortable-v1"
+        "http://127.0.0.1:46739/assets/memento-fitness-core.js?v=20261028-master-p4",
+        "http://127.0.0.1:46739/assets/memento-fitness.js?v=20261101-sortable-v1"
       ],
       "caches": [
         {
@@ -60,10 +60,10 @@
           "assets": []
         },
         {
-          "name": "memento-pwa-v124-20261102-life-presentation-v1",
+          "name": "memento-pwa-v125-20261102-life-presentation-v2",
           "htmlFitness": "memento-fitness-core.js?v=20261028-master-p4",
           "assets": [
-            "http://127.0.0.1:36631/assets/memento-fitness-core.js?v=20261028-master-p4"
+            "http://127.0.0.1:46739/assets/memento-fitness-core.js?v=20261028-master-p4"
           ]
         }
       ]
