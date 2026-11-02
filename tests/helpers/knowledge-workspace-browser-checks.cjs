@@ -17,7 +17,13 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('.kc-local-tabs [data-kc=home]').click();await page.locator('[data-kc=new]').first().click();
  await page.locator('#kc-title').fill('V2 browsercontrole');await page.locator('[data-ws-block]').first().fill('Dit blijft behouden in een visuele notitie.');await page.locator('[data-kc=save]').first().click();
  const n=(await state()).notes.find(n=>n.title==='V2 browsercontrole');assert(n?.document);assert.equal(n.body,'Dit blijft behouden in een visuele notitie.');
- await page.locator('[data-kc=pin]').click();assert((await state()).notes.find(x=>x.id===n.id).pinned);
+ assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
+ assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
+ assert.equal(await page.locator('.kc-v3-followups h3').innerText(),'Opvolging & koppelingen');
+ await page.locator('[data-kc=editor-menu]').click();
+ assert.equal(await page.locator('#kc-editor-menu').evaluate(dialog=>dialog.open),true);
+ await page.locator('#kc-editor-menu [data-kc=pin]').click();assert((await state()).notes.find(x=>x.id===n.id).pinned);
+ assert.equal(await page.locator('#kc-editor-menu').evaluate(dialog=>dialog.open),false);
  await page.locator('[data-kc=ws-locations]').click();await page.locator('[data-ws-location="'+root+'"]').check();await page.locator('[data-kc=ws-locations-save]').click();assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
  await page.locator('[data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
