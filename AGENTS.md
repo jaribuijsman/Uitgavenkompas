@@ -15,6 +15,10 @@ Bij werk in deze repository: gebruik `AGENTS.md` als basis. Selecteer **alleen d
 
 Lees alleen benodigde skillbestanden (bij overlap maximaal de direct relevante); ga daarna direct verder met de bestaande risicogestuurde workflow. Skills vervangen de CI-gates, privacyregels of gebruikersopdracht niet. Als het bestand ontbreekt, meld dat en werk volgens `AGENTS.md`; maak geen nieuw duplicaat. Zoek vanaf de repositoryroot, niet vanuit een lege `/workspace`.
 
+## Standaard voor alle schermen: Android Developers × Memento
+
+[De Memento Android-PWA UX-standaard](docs/android-pwa-ux-standaard.md) is **normatief** voor ontwerp, implementatie en acceptatie van ieder tabblad. Vertaal Android-richtlijnen naar HTML/CSS/PWA; behoud het goedgekeurde Memento-design. Lees alleen de relevante voorschriften en de direct geraakte code, niet dagelijks alle Android-documentatie. Volg bij onverwachte fouten de oorzaakanalyse → gerichte reparatie → passende regressietest → bewijs → procesverbetering. Rapporteer een blokkade met de eigenaar/route en het exacte PR-head-SHA; benoem expliciet wanneer een externe of reeds bestaande fout niet door de wijziging is veroorzaakt. Geen automatische merges op basis van alleen een groene status.
+
 ## Samsung Galaxy A54 — snelle PWA-controle
 
 Memento wordt primair als geïnstalleerde Android-PWA gebruikt. Beoordeel relevante wijzigingen daarom op standalone-schermruimte, veilige marges bij Android-systeemnavigatie, bereikbare acties bij geopend toetsenbord en scroll/overlays. Browsertests simuleren dit slechts gedeeltelijk; claim geen fysiek toestelbewijs.
