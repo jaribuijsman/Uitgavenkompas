@@ -3,7 +3,6 @@ name: Memento complete glass review
 on:
   pull_request:
     branches: [main]
-    paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/**', 'AGENTS.md']
   push:
     branches: [main]
     paths: ['index.html', 'sw.js', 'assets/**', 'tests/**', '.github/workflows/**', 'AGENTS.md']
@@ -59,6 +58,7 @@ jobs:
           node --check tests/ci-plan.cjs
           node --check tests/ci-groups.cjs
           node tests/ci-plan-regression.cjs
+          node tests/ci-release-gate-regression.cjs
           node tests/knowledge-prototype-parity-regression.cjs
           node --check tests/ci-postmerge.cjs
           node tests/ci-postmerge-regression.cjs
@@ -220,9 +220,10 @@ jobs:
     needs: [plan, core, browser, upgrade]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
       - name: Require every selected job to pass
         env:
           MEMENTO_GATE_RESULTS: ${{ toJSON(needs) }}
-        run: |
-          node -e 'const jobs=JSON.parse(process.env.MEMENTO_GATE_RESULTS);const failures=Object.entries(jobs).filter(([,j])=>!["success","skipped"].includes(j.result));if(jobs.plan.result!=="success"||failures.length){console.error("Memento CI blocked",JSON.stringify(failures));process.exit(1)}console.log("All selected Memento checks passed")'
-
+        run: node tests/ci-release-gate.cjs

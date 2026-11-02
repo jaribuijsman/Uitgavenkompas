@@ -3,7 +3,7 @@
 // state/security/worker/inline-code changes, not cache version-only churn.
 const cp=require("node:child_process"),fs=require("node:fs");
 const FULL=["interface-layout","interface-feature","interface-acceptance","interface-visual","life-full","data-full"];
-const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
+const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression|release-gate|release-gate-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
 function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
