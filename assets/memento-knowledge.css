@@ -475,3 +475,48 @@
 @media(max-width:700px){#lifeApp[data-life-view="notes"] .kc-topic-page{gap:10px}#lifeApp[data-life-view="notes"] .kc-topic-scene{height:95px}#lifeApp[data-life-view="notes"] .kc-topic-title{padding:10px;min-height:66px}#lifeApp[data-life-view="notes"] .kc-topic-title strong{font-size:13px}#lifeApp[data-life-view="notes"] .kc-widget-grid,#lifeApp[data-life-view="notes"] .kc-compare{grid-template-columns:1fr}#lifeApp[data-life-view="notes"] .kc-tree-children{margin-left:10px;padding-left:5px}#lifeApp[data-life-view="notes"] .kc-tree-toggle,#lifeApp[data-life-view="notes"] .kc-tree-spacer{width:44px;min-width:44px}#lifeApp[data-life-view="notes"] .kc-tree-open .kc-collection-icon{display:none}#lifeApp[data-life-view="notes"] .kc-visual-toolbar{position:static}#lifeApp[data-life-view="notes"] .kc-editor-head .kc-header{flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-topic-track{transition:none}}
 @media(max-width:700px){#lifeApp[data-life-view="notes"] .kc-widget{grid-column:auto!important;grid-row:auto!important}}
+
+/* Knowledge item editor V3: owns only the ordinary editor, not journals or global buttons. */
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head{top:72px;z-index:40;padding:6px 0;background:#0e2a21f4}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-header{gap:7px}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-head-label h2{font-size:16px;overflow-wrap:normal}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-more-trigger{flex:none;width:44px;min-width:44px;height:44px;border:0;border-radius:11px;background:transparent;color:#eef5e9;font-size:26px;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-primary{padding:9px 12px;white-space:nowrap;min-height:44px}
+#lifeApp[data-life-view="notes"] .kc-v3-save-state{padding:2px 4px;margin:8px 0 12px}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card{background:#163a2ce8;border:1px solid #9cc0954a;border-radius:19px;padding:14px 12px 13px;box-shadow:inset 0 1px #f0ffde14}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-editor-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 9px}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-editor-fields>*{min-width:0;grid-column:1/-1}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-editor-fields>label:nth-child(1),#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-editor-fields>label:nth-child(2){grid-column:auto;grid-row:2}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-editor-fields>label:nth-child(3){grid-column:1/-1;grid-row:1}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card #kc-title{font-weight:650;font-size:16px;min-height:50px}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card #kc-body{min-height:260px;font-size:16px;line-height:1.7;border-radius:0 0 13px 13px}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-v3-format{display:flex;align-items:center;gap:3px;flex-wrap:wrap;padding:5px;border-radius:12px 12px 0 0;background:#0f2c22;border:1px solid #9cc0954a}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-v3-format .kc-btn{background:transparent!important;border-color:transparent!important;min-height:44px;padding:7px 9px;font-size:12px}
+#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-v3-format .kc-btn:last-child{margin-left:auto;background:#254d38!important;border-color:#648b6c88!important}
+#lifeApp[data-life-view="notes"] .kc-v3-organization,#lifeApp[data-life-view="notes"] .kc-v3-followups{margin:14px 0;padding:14px;border:1px solid #9cc0954a;border-radius:18px;background:#153529e8}
+#lifeApp[data-life-view="notes"] .kc-v3-section-title h3,#lifeApp[data-life-view="notes"] .kc-v3-followups-head h3{margin:0 0 12px;font-size:15px;color:#eef4e9}
+#lifeApp[data-life-view="notes"] .kc-v3-tags{display:grid;gap:7px;font-size:12px;color:#c6dac8;font-weight:650}
+#lifeApp[data-life-view="notes"] .kc-v3-tags input{min-height:48px}
+#lifeApp[data-life-view="notes"] .kc-v3-suggestions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+#lifeApp[data-life-view="notes"] .kc-v3-suggestions .kc-btn{min-height:44px;font-size:12px;padding:8px}
+#lifeApp[data-life-view="notes"] .kc-v3-followups-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+#lifeApp[data-life-view="notes"] .kc-v3-followups-head h3{margin:0}
+#lifeApp[data-life-view="notes"] .kc-v3-followups-head .kc-primary{min-height:48px;font-size:13px}
+#lifeApp[data-life-view="notes"] .kc-v3-followups>.kc-btn{width:100%;text-align:left;margin:8px 0 4px;min-height:48px}
+#lifeApp[data-life-view="notes"] .kc-v3-passage{border-top:1px solid #9cc09538;margin-top:11px;padding-top:4px}
+#lifeApp[data-life-view="notes"] .kc-v3-passage>summary{display:flex;align-items:center;min-height:48px;color:#c9dec9;cursor:pointer;font-size:13px}
+#lifeApp[data-life-view="notes"] .kc-v3-passage>div{display:grid;gap:9px;padding:8px 0}
+#lifeApp[data-life-view="notes"] .kc-v3-passage label{display:grid;gap:6px;font-size:12px;color:#c9dec9}
+#lifeApp[data-life-view="notes"] .kc-v3-attachments{border:1px solid #9cc09542;border-radius:16px;background:#143427a8;margin:14px 0}
+#lifeApp[data-life-view="notes"] .kc-v3-attachments>summary{display:flex;align-items:center;justify-content:space-between;min-height:50px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:650}
+#lifeApp[data-life-view="notes"] .kc-v3-attachment-body{padding:0 14px 14px}
+#lifeApp[data-life-view="notes"] .kc-v3-preview{display:flex;justify-content:flex-start;margin:10px 0 20px}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-dialog{position:fixed;inset:auto 0 0;margin:0 auto;width:min(100%,540px);max-height:min(78dvh,780px);overflow-y:auto;overscroll-behavior:contain;color:#eef5e8;background:#102d24;border:1px solid #83a68c70;border-radius:23px 23px 0 0;padding:16px 17px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -18px 50px #0008}
+#lifeApp[data-life-view="notes"] .kc-v3-editor-dialog::backdrop{background:#0009}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:18px}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-head button{width:44px;height:44px;border:0;background:transparent;color:#eef5e8;font-size:28px}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-group{display:grid;gap:6px;padding-top:10px;margin-top:9px;border-top:1px solid #9cc09530}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-group>span{font-size:11px;color:#acc9b4;font-weight:650;text-transform:uppercase;letter-spacing:.06em}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-group .kc-btn{width:100%;min-height:48px;text-align:left;background:#193c2d!important;border:1px solid #9cc09540!important}
+#lifeApp[data-life-view="notes"] .kc-v3-dialog-danger .kc-btn{color:#f3c9ba!important}
+@media(max-width:370px){#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-header{gap:4px}#lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-head-label h2{font-size:14px}#lifeApp[data-life-view="notes"] .kc-v3-writing-card{padding:11px 9px}#lifeApp[data-life-view="notes"] .kc-v3-writing-card .kc-v3-format .kc-btn{padding:7px 6px;font-size:11px}}

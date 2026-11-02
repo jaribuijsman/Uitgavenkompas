@@ -404,8 +404,10 @@ function renderEditor(){
  const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link";
  const tags=(e.tags||[]).join(", ");
  const recipe=e.recipe||{ingredients:[],status:"concept",version:1,notes:""};
- return '<div class="kc-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,btn("Opslaan","save","",true))+'</div><p class="kc-save-state" id="kc-save-state" role="status">'+(dirty?"Concept":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
- '<div class="kc-editor-fields">'+
+ const more='<button type="button" class="kc-v3-more-trigger" data-kc="editor-menu" aria-label="Meer kennisitemacties" aria-haspopup="dialog">⋮</button>';
+ return '<div class="kc-editor-head kc-v3-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,more+btn("Opslaan","save","",true))+'</div>'+
+ '<p class="kc-save-state kc-v3-save-state" id="kc-save-state" role="status">'+(dirty?"Concept":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
+ '<section class="kc-v3-writing-card" aria-label="Kennisitem schrijven"><div class="kc-editor-fields">'+
  '<label>Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
  '<label>Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
  '<option value="inbox"'+(e.collectionId==="inbox"?" selected":"")+'>Inbox</option>'+
@@ -413,18 +415,30 @@ function renderEditor(){
  '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
  (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
  (e.document?renderVisualDocument()+renderTemplateFields(e):'<label for="kc-body">Inhoud</label>'+
- '<div class="kc-format-bar" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+(root.MementoDictation?.button?.("kc-body")||"")+"</div>"+
+ '<div class="kc-format-bar kc-v3-format" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+(root.MementoDictation?.button?.("kc-body")||"")+btn("Taak","selection-task")+"</div>"+
  '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>")+
  (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
  recipeEditRows(recipe)+'<details class="mg-fold"><summary>Tekstinvoer ingrediënten</summary><label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label></details>"+
  '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+"</textarea></label></div>":"")+
- '<label>Tags (gescheiden door komma’s)<input data-kc-edit="tags" maxlength="1000" value="'+esc(tags)+'" placeholder="Bijvoorbeeld: Inspiratie, Project"></label>'+
+ '</div></section>'+
+ '<section class="kc-v3-organization" aria-labelledby="kc-v3-organization-title"><div class="kc-v3-section-title"><h3 id="kc-v3-organization-title">Organiseren</h3></div>'+
+ '<label class="kc-v3-tags">Labels<input data-kc-edit="tags" maxlength="1000" value="'+esc(tags)+'" placeholder="Bijvoorbeeld: welzijn, project"></label>'+
+ (workspaceReady()?'<div class="kc-v3-suggestions">'+(selectedId?btn("Ook tonen in andere mappen","ws-locations"):"")+W.suggestions(read(),e).map(t=>btn("+ #"+esc(t),"ws-tag",t)).join("")+"</div>":"")+
+ '</section>'+
+ '<section class="kc-v3-followups" aria-labelledby="kc-v3-followups-title"><div class="kc-v3-followups-head"><h3 id="kc-v3-followups-title">Opvolging & koppelingen</h3>'+
+ (selectedId?btn("Nieuw vervolg","followup-start",selectedId,true):"")+'</div>'+
+ (selectedId?followupLinksForNote(e)+linkedHTML(e)+btn("Notitie koppelen","link",selectedId):'<p class="kc-muted">Sla je kennisitem op om gekoppelde vervolgen toe te voegen.</p>')+
+ passageActions(Boolean(e.document))+'</section>'+
+ '<details class="kc-v3-attachments"'+((e.attachments||[]).length?' open':'')+'><summary>Bijlagen <span>'+((e.attachments||[]).length||"")+'</span></summary><div class="kc-v3-attachment-body">'+
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
- '<p class="kc-muted">Maximaal 25 MB per bestand. PDF’s en afbeeldingen blijven op dit apparaat en worden meegenomen in de volledige ZIP-back-up.</p>'+
- attachmentsHTML(e)+linkedHTML(e)+(selectedId?'<div class="kc-ws-tools">'+btn(e.pinned?'Losmaken':'Vastzetten','pin',selectedId)+btn(e.archived?'Uit archief':'Archiveren','archive-item',selectedId)+btn('Koppelen','link',selectedId)+btn('Verwijderen','delete',selectedId)+'</div>':'')+passageActions()+(workspaceReady()?'<div class="kc-ws-tools">'+btn("Mappen koppelen","ws-locations")+W.suggestions(read(),e).map(t=>btn("+ #"+esc(t),"ws-tag",t)).join("")+"</div>":"")+
- (selectedId?followupLinksForNote(e)+btn('Slim opvolgen','followup-start',selectedId):'')+'<div class="kc-editor-actions">'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+"</div></div>";
+ '<p class="kc-muted">Maximaal 25 MB per bestand. Originele bestanden blijven lokaal en gaan mee in de volledige ZIP-back-up.</p>'+attachmentsHTML(e)+'</div></details>'+
+ '<div class="kc-v3-preview">'+btn("Voorbeeld","preview")+'</div>'+
+ '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-dialog-head"><strong>Meer acties</strong><button type="button" data-kc="editor-menu-close" aria-label="Menu sluiten">×</button></div>'+
+ (selectedId?'<div class="kc-v3-dialog-group"><span>Notitie</span>'+btn(e.pinned?"Losmaken":"Vastzetten","pin",selectedId)+btn(e.archived?"Uit archief":"Archiveren","archive-item",selectedId)+'</div>':"")+
+ '<div class="kc-v3-dialog-group"><span>Controleren</span>'+btn("Versiegeschiedenis","versions")+'</div>'+
+ '<div class="kc-v3-dialog-group kc-v3-dialog-danger"><span>Voorzichtig</span>'+btn("Concept verwerpen","discard-draft")+(selectedId?btn("Notitie verwijderen","delete",selectedId):"")+'</div></dialog>';
 }
-function passageActions(){return '<div class="kc-passage-actions">'+btn('Taak uit selectie','selection-task')+'<details><summary>Passage invoeren</summary><label>Geselecteerde passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="2" placeholder="Plak hier de exacte passage"></textarea></label>'+btn('Controleer taakvoorstel','passage-task')+'</details></div>';}
+function passageActions(includeSelection=true){return (includeSelection?btn('Taak uit selectie','selection-task'):'')+'<details class="kc-v3-passage"><summary>Passage handmatig invoeren</summary><div><label>Passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="3" placeholder="Plak of typ een passage uit de notitie"></textarea></label>'+btn('Taakvoorstel controleren','passage-task')+'</div></details>';}
 function renderVersions(){
  const n=read().notes.find(x=>x.id===selectedId);
  return header("Eerdere versies",true)+
@@ -799,6 +813,10 @@ function copyDiaryAI(){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ const editorMenu=host.querySelector("#kc-editor-menu");
+ if(op==="editor-menu"){editorMenu?.showModal();return;}
+ if(op==="editor-menu-close"){editorMenu?.close();return;}
+ if(editorMenu?.open)editorMenu.close();
  if(op==='followup-start'){if(!flush())return;root.MementoLifeFlow?.start('note',id);return;}
  if(op==='followup-open'){if(!flush())return;const sep=id.indexOf('|');if(sep<0)return;const kind=id.slice(0,sep),recordId=id.slice(sep+1);
   if(kind==='note')root.MementoKnowledge?.showNote?.(recordId);
@@ -1063,6 +1081,12 @@ document.addEventListener("focusin",e=>{
 document.addEventListener("focusout",e=>{if(e.target?.id!=="kc-body")return;root.setTimeout(()=>{if(document.activeElement!==e.target){diaryKeyboardBase=0;updateDiaryKeyboard();}},0);});
 root.visualViewport?.addEventListener("resize",updateDiaryKeyboard);
 document.addEventListener("click",e=>{if(host?.contains(e.target))click(e);});
+
+document.addEventListener("click",e=>{
+ const menu=host?.querySelector("#kc-editor-menu");
+ if(e.target===menu&&menu.open)menu.close();
+});
+
 document.addEventListener("input",e=>{if(host?.contains(e.target)&&e.target.dataset.kcInput!=="search")onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
 root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";activateWorkspace();render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
