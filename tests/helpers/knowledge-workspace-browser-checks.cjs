@@ -39,9 +39,23 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const actualGeometry=await require('./knowledge-prototype-geometry.cjs')(page,shot);
  assert.equal(actualGeometry.length,12,'Prototype editor: three scroll positions and four mobile viewport/height combinations');
  checks.push('Prototype parity: sticky editor, compact writing, mobile controls and bottom navigation');
+ const parity=require('./knowledge-prototype-parity.cjs');
+ const approved=parity.verifyReference();
+ const proof=parity.evidenceRecorder(width);
  const reference=await context.newPage();await reference.goto(url+'/docs/design-review/knowledge-prototype-approved-20261102.html');
  assert.equal(await reference.locator('.editor-head').count(),1);
  assert.equal(await reference.locator('.panel').count(),4);
+ assert.equal(await reference.locator('#title').inputValue(),fixtureTitle,'Reference must use the same fictional title');
+ assert.equal(await reference.locator('#body').inputValue(),fixtureBody,'Reference must use the same fictional content');
+ for(const position of ['top','middle','bottom']){
+  const expected=await parity.captureEditor(reference,true,position);
+  const actual=await parity.captureEditor(page,false,position);
+  proof.check('editor-'+position,()=>parity.assertEditor(expected,actual,position));
+  await shot(reference,'parity-reference-editor-'+position);
+  await shot(page,'parity-app-editor-'+position);
+ }
+ await page.evaluate(()=>scrollTo(0,0));
+ await reference.evaluate(()=>scrollTo(0,0));
  await shot(reference,'approved-prototype-reference');
  const [referenceStyle,actualStyle]=await Promise.all([
   reference.locator('.panel').first().evaluate(el=>({radius:getComputedStyle(el).borderRadius,background:getComputedStyle(el).backgroundColor})),
@@ -52,13 +66,19 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert(Math.abs(referencePanel.width-actualPanel.width)<=12,'Writing card width must match reference within 12 CSS px');
  checks.push('Approved fixture: panel geometry, colors, title/body and primary controls compared on matching viewports');
  const kinds=[['task','follow-task'],['appointment','follow-appointment'],['note','follow-note']];
- const referenceForms={};
+ const referenceForms={};let referenceChoice=null;
  for(const [kind,action] of kinds){
   await reference.locator('[data-action=followup]').click();
+  if(kind==='task'){
+   referenceChoice=await parity.captureSheet(reference,'.sheet');
+   const options=await reference.locator('.sheet [data-action^=follow-]').allTextContents();
+   referenceChoice.labels=options;
+   await shot(reference,'parity-reference-followup-choices');
+  }
   await reference.locator('[data-action='+action+']').click();
   await reference.locator('#actTitle').fill(fixtureTitle);
   if(kind==='appointment')await reference.locator('#actDate').fill('2026-10-27');
-  referenceForms[kind]=await reference.locator('.sheet').boundingBox();
+  referenceForms[kind]=await parity.captureSheet(reference,'.sheet','#actTitle');
   await shot(reference,'approved-reference-followup-'+kind);
   await reference.locator('.sheet [data-action=close]').click();
  }
@@ -67,14 +87,19 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
   await page.locator('[data-kc=editor-followup]').click();
   assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
   assert.equal(await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').count(),3);
-  if(kind==='task')await shot(page,'approved-followup-sheet');
+  if(kind==='task'){
+   const appChoice=await parity.captureSheet(page,'#kc-v3-followup-sheet');
+   const awaitedChoiceLabels=await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').allTextContents();
+   proof.check('followup-options',()=>parity.assertChoices(referenceChoice.labels,awaitedChoiceLabels));
+   proof.check('followup-sheet',()=>parity.assertSheet(referenceChoice,appChoice,'followup-sheet'));
+   await shot(page,'approved-followup-sheet');
+  }
   await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind][data-id='+kind+']').click();
   assert.equal(await page.locator('#followupTarget').inputValue(),kind,'Chosen follow-up type reaches the real Memento flow');
   assert(await page.locator('#mementoFollowupForm').isVisible(),'Follow-up form is connected to live UI');
   assert.equal(await page.locator('#followupTitle').inputValue(),fixtureTitle);
-  const form=await page.locator('#lifeDialogPanel').boundingBox(),ref=referenceForms[kind];
-  assert(Math.abs(form.y+form.height-ref.y-ref.height)<=3,'Follow-up sheet must meet viewport bottom: '+kind+' '+JSON.stringify({form,ref}));
-  assert(Math.abs(form.y-ref.y)<=125,'Follow-up sheet should stay near approved compact form: '+kind+' '+JSON.stringify({form,ref}));
+  const actualForm=await parity.captureSheet(page,'#lifeDialogPanel','#followupTitle');
+  proof.check('followup-form-'+kind,()=>parity.assertSheet(referenceForms[kind],actualForm,'followup-form-'+kind,{form:true}));
   await shot(page,'approved-followup-form-'+kind);
   await page.locator('#followupOptionsSummary').click();
   assert(await page.locator('#followupIntent').isVisible(),'Conversion remains accessible');
@@ -90,6 +115,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
   }
   await page.locator('#lifeDialog [data-life-close]').first().click();
  }
+ const parityResults=proof.finish();
+ checks.push('Binding prototype parity: '+parityResults.states.length+' reference/app states, SHA '+approved.slice(0,12));
  await page.locator('[data-kc=editor-attachments]').click();
  const picker=page.locator('#kc-v3-attachments-sheet #kc-file-input');
  assert(await picker.isVisible(),'Native local file picker must remain available');
