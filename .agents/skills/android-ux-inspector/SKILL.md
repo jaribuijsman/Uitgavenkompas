@@ -7,6 +7,10 @@ description: Audit Memento Android-sized touch and layout behavior with real bro
 
 Use this skill for mobile layout, navigation, dialogs, forms, overflow, gestures and responsive acceptance checks in Memento.
 
+## Normatieve bron
+
+Gebruik bij werk in Memento de [Android-PWA UX-standaard](../../../docs/android-pwa-ux-standaard.md) en de relevante richtlijnen van developer.android.com. De Android-ervaring bepaalt de UX, maar dit blijft een **PWA**: neem geen Compose-API, native insets of nieuwe dependencies over. Een bestaande goedgekeurde Memento-component en de eigen visuele identiteit blijven leidend. Inspecteer daadwerkelijke browser-hit-testing/scroll en de primaire gebruikersroute.
+
 ## Preparation
 1. Read `AGENTS.md`, the current `main` SHA, the affected UI modules and any relevant acceptance contract. Reuse existing browser tests and artifacts before proposing new tooling.
 2. Determine the target behavior and the exact affected states, including keyboard open/closed, long content, empty lists, accessibility labels and touch reachability.
