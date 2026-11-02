@@ -28,6 +28,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
  assert.equal(await page.locator('.kc-v3-save-btn').count(),1,'Prototype save button uses independent class to avoid global kc-btn overrides');
  assert.equal(await page.locator('.kc-v3-save-btn').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(197, 223, 195)','Save button must retain approved sage fill');
+ const mic=page.locator('[data-memento-dictate="kc-body"]');
+ assert(await mic.isVisible(),'Existing note dictation stays reachable outside the five-action toolbar');
+ const micBox=await mic.boundingBox();assert(micBox.width>=44&&micBox.height>=44,'Dictation touch target remains at least 44 CSS px');
  assert.equal(await page.locator('.kc-local-tabs').count(),0,'No redundant tabs above the editor');
  assert.equal(await page.locator('.kc-breadcrumbs').count(),0,'Editor uses exactly one prototype breadcrumb');
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');

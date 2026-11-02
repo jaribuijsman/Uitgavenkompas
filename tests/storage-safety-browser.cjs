@@ -95,7 +95,7 @@ async function addTransaction(page, description) {
     await a.evaluate(() => { Storage.prototype.setItem = window.originalSetItem; }); await a.locator("#lifeQuickForm button[type=submit]").click();
     checks.push("Writable-tab quota failure preserves input and retry saves it");
     await a.close(); await b.close(); const c = await context.newPage(); await c.goto(url, { waitUntil: "domcontentloaded" }); await unlock(c); await until(c, () => window.MementoStorageGuard?.writable);
-    await navigate(c, "life", "notes"); await c.locator('[data-kc="new"]').first().click(); await c.locator("#kc-title").fill("Fictieve PDF"); await c.locator("[data-ws-block]").first().fill("Bijlagefixture");
+    await navigate(c, "life", "notes"); await c.locator('[data-kc="new"]').first().click(); await c.locator("#kc-title").fill("Fictieve PDF"); await c.locator("#kc-body").fill("Bijlagefixture");
     await c.locator("#kc-file-input").setInputFiles({ name: "fictief.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\nFictieve integriteitsbytes\n%%EOF") });
     await until(c, () => JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n => n.attachments?.length));
     const binary = await c.evaluate(async () => { const all = (await window.MementoKnowledgeStore.all()).filter(r => r.noteId !== "kc-system-snapshot"); const attached=all.find(r=>r.name==="fictief.pdf"); return { count: all.length, text: attached?await attached.blob.text():"", meta: attached?.id }; });

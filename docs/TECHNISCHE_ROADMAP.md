@@ -33,7 +33,7 @@
 
 | ID | Werkpakket | Prioriteit | Technisch risico (vooraf) | Status | PR / bewijs |
 |---|---|---|---|---|---|
-| F0-A | Afwijking na PR #66 vaststellen en herstellen | P0 | Hoog als `memento-life-app.js` geraakt wordt | IN UITVOERING | Branch `fix/f0a-knowledge-followup`; PR-head/CI volgt |
+| F0-A | Afwijking na PR #66 vaststellen en herstellen | P0 | Hoog als `memento-life-app.js` geraakt wordt | IN UITVOERING | [PR #67](https://github.com/jaribuijsman/Uitgavenkompas/pull/67); exacte head/CI en ontwerpacceptatie volgen |
 | F1-A | `AGENTS.md` en efficiencyregels consolideren | P1 | Laag, documentatie | OPEN | — |
 | F2-A | Dubbele browserjourney in volledige CI oplossen | P1 | Hoog: CI-planner/groepen | OPEN | — |
 | F2-B | Historische handmatige workflows en tests corrigeren | P1 | Hoog: workflows; veiligheidsdekking behouden | OPEN | — |
