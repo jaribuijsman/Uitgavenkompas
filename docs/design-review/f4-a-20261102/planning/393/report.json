@@ -1,0 +1,66 @@
+{
+  "phase": "planning",
+  "width": 393,
+  "diagnostics": [
+    {
+      "name": "planning-hitbox",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "bill-edit-existing",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": "billName"
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "{\"selector\":\"[data-edit-bill]\",\"rect\":{\"x\":333,\"y\":530.578125,\"width\":30,\"height\":30,\"top\":530.578125,\"right\":363,\"bottom\":560.578125,\"left\":333},\"edgeHits\":[true,true]}",
+    "planning-hitbox: captured"
+  ],
+  "errors": []
+}

@@ -1,0 +1,28 @@
+{
+  "source_main": "2275741f0c9cc6808442058ceaa00813ffc80edf",
+  "capture_source": "b833bd304b6534fb5080f10c26217c39465a9738",
+  "app_files_identical_to_main": true,
+  "viewport": {
+    "width": 393,
+    "height": 852,
+    "short_height": 430
+  },
+  "fixture_generator": "tests/helpers/visual-fixture.cjs",
+  "fixture_sha256": "5d0d03301a9b85bd08ca9bc7ccda5183fbdcb9edf8ba4ca700ea4f556f95baac",
+  "fixed_time": "2026-10-27T09:30:00+01:00",
+  "locale": "nl-NL",
+  "timezone": "Europe/Amsterdam",
+  "browser": "Playwright 1.62.1 Chromium, Linux emulation; not physical A54",
+  "captures": {
+    "audit": 49,
+    "extra": 10,
+    "planning": 2
+  },
+  "limitations": [
+    "No physical Android/IME/TalkBack test",
+    "External requests blocked; weather failure state is deliberate",
+    "One supplementary planning attempt used the still-selected goals tab and was not verified; fresh-context planning capture resolved this",
+    "Native selectors/file pickers, every empty/error state and all receipt import steps not independently operated",
+    "Current screenshots are audit evidence, not approved design references"
+  ]
+}

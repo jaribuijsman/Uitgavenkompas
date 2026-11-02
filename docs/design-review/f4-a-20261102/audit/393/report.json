@@ -1,0 +1,4578 @@
+{
+  "phase": "audit",
+  "width": 393,
+  "diagnostics": [
+    {
+      "name": "day",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "life-day-column",
+          "rect": {
+            "x": 378,
+            "y": 496.5,
+            "width": 363,
+            "height": 150.6875,
+            "top": 496.5,
+            "right": 741,
+            "bottom": 647.1875,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-appointments",
+          "rect": {
+            "x": 378,
+            "y": 504.5,
+            "width": 363,
+            "height": 51.5,
+            "top": 504.5,
+            "right": 741,
+            "bottom": 556,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption",
+          "rect": {
+            "x": 379,
+            "y": 504.5,
+            "width": 361,
+            "height": 26,
+            "top": 504.5,
+            "right": 740,
+            "bottom": 530.5,
+            "left": 379
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 379,
+            "y": 507.75,
+            "width": 80.15625,
+            "height": 19.5,
+            "top": 507.75,
+            "right": 459.15625,
+            "bottom": 527.25,
+            "left": 379
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 467.15625,
+            "y": 504.5,
+            "width": 26,
+            "height": 26,
+            "top": 504.5,
+            "right": 493.15625,
+            "bottom": 530.5,
+            "left": 467.15625
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "memento-day-hint",
+          "rect": {
+            "x": 378,
+            "y": 539.5,
+            "width": 363,
+            "height": 16.5,
+            "top": 539.5,
+            "right": 741,
+            "bottom": 556,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption memento-day-task-label",
+          "rect": {
+            "x": 379,
+            "y": 571,
+            "width": 361,
+            "height": 26,
+            "top": 571,
+            "right": 740,
+            "bottom": 597,
+            "left": 379
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 379,
+            "y": 574.25,
+            "width": 44.671875,
+            "height": 19.5,
+            "top": 574.25,
+            "right": 423.671875,
+            "bottom": 593.75,
+            "left": 379
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 431.671875,
+            "y": 571,
+            "width": 26,
+            "height": 26,
+            "top": 571,
+            "right": 457.671875,
+            "bottom": 597,
+            "left": 431.671875
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "life-day-empty",
+          "rect": {
+            "x": 378,
+            "y": 607,
+            "width": 363,
+            "height": 40.1875,
+            "top": 607,
+            "right": 741,
+            "bottom": 647.1875,
+            "left": 378
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "life-day-column",
+          "rect": {
+            "x": 741,
+            "y": 496.5,
+            "width": 363,
+            "height": 150.6875,
+            "top": 496.5,
+            "right": 1104,
+            "bottom": 647.1875,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-appointments",
+          "rect": {
+            "x": 741,
+            "y": 504.5,
+            "width": 363,
+            "height": 51.5,
+            "top": 504.5,
+            "right": 1104,
+            "bottom": 556,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption",
+          "rect": {
+            "x": 742,
+            "y": 504.5,
+            "width": 361,
+            "height": 26,
+            "top": 504.5,
+            "right": 1103,
+            "bottom": 530.5,
+            "left": 742
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 742,
+            "y": 507.75,
+            "width": 80.15625,
+            "height": 19.5,
+            "top": 507.75,
+            "right": 822.15625,
+            "bottom": 527.25,
+            "left": 742
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 830.15625,
+            "y": 504.5,
+            "width": 26,
+            "height": 26,
+            "top": 504.5,
+            "right": 856.15625,
+            "bottom": 530.5,
+            "left": 830.15625
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "memento-day-hint",
+          "rect": {
+            "x": 741,
+            "y": 539.5,
+            "width": 363,
+            "height": 16.5,
+            "top": 539.5,
+            "right": 1104,
+            "bottom": 556,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption memento-day-task-label",
+          "rect": {
+            "x": 742,
+            "y": 571,
+            "width": 361,
+            "height": 26,
+            "top": 571,
+            "right": 1103,
+            "bottom": 597,
+            "left": 742
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 742,
+            "y": 574.25,
+            "width": 44.671875,
+            "height": 19.5,
+            "top": 574.25,
+            "right": 786.671875,
+            "bottom": 593.75,
+            "left": 742
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 794.671875,
+            "y": 571,
+            "width": 26,
+            "height": 26,
+            "top": 571,
+            "right": 820.671875,
+            "bottom": 597,
+            "left": 794.671875
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "life-day-empty",
+          "rect": {
+            "x": 741,
+            "y": 607,
+            "width": 363,
+            "height": 40.1875,
+            "top": 607,
+            "right": 1104,
+            "bottom": 647.1875,
+            "left": 741
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Afspraak voor de fiets bevestigen",
+          "width": 187,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Een halfuur naar buiten",
+          "width": 147,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Keuken opfrissen",
+          "width": 147,
+          "height": 21
+        },
+        {
+          "id": "",
+          "text": "Post en administratie bijwerken",
+          "width": 189,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "day-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "life-day-column",
+          "rect": {
+            "x": 378,
+            "y": -166.5,
+            "width": 363,
+            "height": 150.6875,
+            "top": -166.5,
+            "right": 741,
+            "bottom": -15.8125,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-appointments",
+          "rect": {
+            "x": 378,
+            "y": -158.5,
+            "width": 363,
+            "height": 51.5,
+            "top": -158.5,
+            "right": 741,
+            "bottom": -107,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption",
+          "rect": {
+            "x": 379,
+            "y": -158.5,
+            "width": 361,
+            "height": 26,
+            "top": -158.5,
+            "right": 740,
+            "bottom": -132.5,
+            "left": 379
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 379,
+            "y": -155.25,
+            "width": 80.15625,
+            "height": 19.5,
+            "top": -155.25,
+            "right": 459.15625,
+            "bottom": -135.75,
+            "left": 379
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 467.15625,
+            "y": -158.5,
+            "width": 26,
+            "height": 26,
+            "top": -158.5,
+            "right": 493.15625,
+            "bottom": -132.5,
+            "left": 467.15625
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "memento-day-hint",
+          "rect": {
+            "x": 378,
+            "y": -123.5,
+            "width": 363,
+            "height": 16.5,
+            "top": -123.5,
+            "right": 741,
+            "bottom": -107,
+            "left": 378
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption memento-day-task-label",
+          "rect": {
+            "x": 379,
+            "y": -92,
+            "width": 361,
+            "height": 26,
+            "top": -92,
+            "right": 740,
+            "bottom": -66,
+            "left": 379
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 379,
+            "y": -88.75,
+            "width": 44.671875,
+            "height": 19.5,
+            "top": -88.75,
+            "right": 423.671875,
+            "bottom": -69.25,
+            "left": 379
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 431.671875,
+            "y": -92,
+            "width": 26,
+            "height": 26,
+            "top": -92,
+            "right": 457.671875,
+            "bottom": -66,
+            "left": 431.671875
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "life-day-empty",
+          "rect": {
+            "x": 378,
+            "y": -56,
+            "width": 363,
+            "height": 40.1875,
+            "top": -56,
+            "right": 741,
+            "bottom": -15.8125,
+            "left": 378
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "life-day-column",
+          "rect": {
+            "x": 741,
+            "y": -166.5,
+            "width": 363,
+            "height": 150.6875,
+            "top": -166.5,
+            "right": 1104,
+            "bottom": -15.8125,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-appointments",
+          "rect": {
+            "x": 741,
+            "y": -158.5,
+            "width": 363,
+            "height": 51.5,
+            "top": -158.5,
+            "right": 1104,
+            "bottom": -107,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption",
+          "rect": {
+            "x": 742,
+            "y": -158.5,
+            "width": 361,
+            "height": 26,
+            "top": -158.5,
+            "right": 1103,
+            "bottom": -132.5,
+            "left": 742
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 742,
+            "y": -155.25,
+            "width": 80.15625,
+            "height": 19.5,
+            "top": -155.25,
+            "right": 822.15625,
+            "bottom": -135.75,
+            "left": 742
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 830.15625,
+            "y": -158.5,
+            "width": 26,
+            "height": 26,
+            "top": -158.5,
+            "right": 856.15625,
+            "bottom": -132.5,
+            "left": 830.15625
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "memento-day-hint",
+          "rect": {
+            "x": 741,
+            "y": -123.5,
+            "width": 363,
+            "height": 16.5,
+            "top": -123.5,
+            "right": 1104,
+            "bottom": -107,
+            "left": 741
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "memento-day-caption memento-day-task-label",
+          "rect": {
+            "x": 742,
+            "y": -92,
+            "width": 361,
+            "height": 26,
+            "top": -92,
+            "right": 1103,
+            "bottom": -66,
+            "left": 742
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 742,
+            "y": -88.75,
+            "width": 44.671875,
+            "height": 19.5,
+            "top": -88.75,
+            "right": 786.671875,
+            "bottom": -69.25,
+            "left": 742
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 794.671875,
+            "y": -92,
+            "width": 26,
+            "height": 26,
+            "top": -92,
+            "right": 820.671875,
+            "bottom": -66,
+            "left": 794.671875
+          }
+        },
+        {
+          "tag": "P",
+          "id": "",
+          "class": "life-day-empty",
+          "rect": {
+            "x": 741,
+            "y": -56,
+            "width": 363,
+            "height": 40.1875,
+            "top": -56,
+            "right": 1104,
+            "bottom": -15.8125,
+            "left": 741
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Afspraak voor de fiets bevestigen",
+          "width": 187,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Een halfuur naar buiten",
+          "width": 147,
+          "height": 42
+        },
+        {
+          "id": "",
+          "text": "Keuken opfrissen",
+          "width": 147,
+          "height": 21
+        },
+        {
+          "id": "",
+          "text": "Post en administratie bijwerken",
+          "width": 189,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "tasks",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 294,
+            "width": 120,
+            "height": 67,
+            "top": 294,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 315,
+            "width": 120,
+            "height": 46,
+            "top": 315,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 373,
+            "width": 120,
+            "height": 67,
+            "top": 373,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 394,
+            "width": 120,
+            "height": 46,
+            "top": 394,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 452,
+            "width": 120,
+            "height": 67,
+            "top": 452,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 473,
+            "width": 120,
+            "height": 46,
+            "top": 473,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 531,
+            "width": 120,
+            "height": 67,
+            "top": 531,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 552,
+            "width": 120,
+            "height": 46,
+            "top": 552,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 306.46875,
+            "y": 616,
+            "width": 120,
+            "height": 193,
+            "top": 616,
+            "right": 426.46875,
+            "bottom": 809,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 637,
+            "width": 120,
+            "height": 46,
+            "top": 637,
+            "right": 426.46875,
+            "bottom": 683,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 687,
+            "width": 119.4375,
+            "height": 120,
+            "top": 687,
+            "right": 425.90625,
+            "bottom": 807,
+            "left": 306.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "tasks-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 79,
+            "width": 120,
+            "height": 67,
+            "top": 79,
+            "right": 426.46875,
+            "bottom": 146,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 100,
+            "width": 120,
+            "height": 46,
+            "top": 100,
+            "right": 426.46875,
+            "bottom": 146,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 158,
+            "width": 120,
+            "height": 67,
+            "top": 158,
+            "right": 426.46875,
+            "bottom": 225,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 179,
+            "width": 120,
+            "height": 46,
+            "top": 179,
+            "right": 426.46875,
+            "bottom": 225,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 237,
+            "width": 120,
+            "height": 67,
+            "top": 237,
+            "right": 426.46875,
+            "bottom": 304,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 258,
+            "width": 120,
+            "height": 46,
+            "top": 258,
+            "right": 426.46875,
+            "bottom": 304,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 316,
+            "width": 120,
+            "height": 67,
+            "top": 316,
+            "right": 426.46875,
+            "bottom": 383,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 337,
+            "width": 120,
+            "height": 46,
+            "top": 337,
+            "right": 426.46875,
+            "bottom": 383,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 306.46875,
+            "y": 401,
+            "width": 120,
+            "height": 193,
+            "top": 401,
+            "right": 426.46875,
+            "bottom": 594,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 422,
+            "width": 120,
+            "height": 46,
+            "top": 422,
+            "right": 426.46875,
+            "bottom": 468,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 472,
+            "width": 119.4375,
+            "height": 120,
+            "top": 472,
+            "right": 425.90625,
+            "bottom": 592,
+            "left": 306.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "groceries",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "groceries-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "wishes",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 93,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "wishes-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 93,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "agenda",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "agenda-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 359,
+            "y": 665.25,
+            "width": 325,
+            "height": 180,
+            "top": 665.25,
+            "right": 684,
+            "bottom": 845.25,
+            "left": 359
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 359,
+            "y": 665.25,
+            "width": 325,
+            "height": 180,
+            "top": 665.25,
+            "right": 684,
+            "bottom": 845.25,
+            "left": 359
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "g",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": 695.1285400390625,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": 695.1285400390625,
+            "right": 528.0587158203125,
+            "bottom": 800.0678100585938,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 464.2609558105469,
+            "y": 737.8694458007812,
+            "width": 22.65625,
+            "height": 11,
+            "top": 737.8694458007812,
+            "right": 486.9172058105469,
+            "bottom": 748.8694458007812,
+            "left": 464.2609558105469
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 448.0890808105469,
+            "y": 748.6305541992188,
+            "width": 55.08447265625,
+            "height": 19,
+            "top": 748.6305541992188,
+            "right": 503.1735534667969,
+            "bottom": 767.6305541992188,
+            "left": 448.0890808105469
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": 710.7965698242188,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 710.7965698242188,
+            "right": 553.9291381835938,
+            "bottom": 718.812744140625,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": 708.7196044921875,
+            "width": 59.82818603515625,
+            "height": 11,
+            "top": 708.7196044921875,
+            "right": 619.222900390625,
+            "bottom": 719.7196044921875,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": 708.7196044921875,
+            "width": 17.9921875,
+            "height": 12.00006103515625,
+            "top": 708.7196044921875,
+            "right": 637.4876708984375,
+            "bottom": 720.7196655273438,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": 739.9463500976562,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 739.9463500976562,
+            "right": 553.9291381835938,
+            "bottom": 747.9625244140625,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": 737.8694458007812,
+            "width": 41.871337890625,
+            "height": 11,
+            "top": 737.8694458007812,
+            "right": 601.2660522460938,
+            "bottom": 748.8694458007812,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": 737.8694458007812,
+            "width": 17.9921875,
+            "height": 12,
+            "top": 737.8694458007812,
+            "right": 637.4876708984375,
+            "bottom": 749.8694458007812,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": 769.0961303710938,
+            "width": 8.01617431640625,
+            "height": 8.0162353515625,
+            "top": 769.0961303710938,
+            "right": 553.9291381835938,
+            "bottom": 777.1123657226562,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": 767.0192260742188,
+            "width": 53.22247314453125,
+            "height": 11,
+            "top": 767.0192260742188,
+            "right": 612.6171875,
+            "bottom": 778.0192260742188,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": 767.0192260742188,
+            "width": 17.9921875,
+            "height": 12,
+            "top": 767.0192260742188,
+            "right": 637.4876708984375,
+            "bottom": 779.0192260742188,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": 798.2459716796875,
+            "width": 8.01617431640625,
+            "height": 8.01617431640625,
+            "top": 798.2459716796875,
+            "right": 553.9291381835938,
+            "bottom": 806.2621459960938,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": 796.1690063476562,
+            "width": 26.73443603515625,
+            "height": 11.00006103515625,
+            "top": 796.1690063476562,
+            "right": 586.129150390625,
+            "bottom": 807.1690673828125,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 624.4954833984375,
+            "y": 796.1690063476562,
+            "width": 12.99609375,
+            "height": 12.00006103515625,
+            "top": 796.1690063476562,
+            "right": 637.4915771484375,
+            "bottom": 808.1690673828125,
+            "left": 624.4954833984375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 684,
+            "y": 665.25,
+            "width": 325,
+            "height": 180,
+            "top": 665.25,
+            "right": 1009,
+            "bottom": 845.25,
+            "left": 684
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 684,
+            "y": 665.25,
+            "width": 325,
+            "height": 180,
+            "top": 665.25,
+            "right": 1009,
+            "bottom": 845.25,
+            "left": 684
+          }
+        },
+        {
+          "tag": "path",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 734.2732543945312,
+            "y": 690.02734375,
+            "width": 224.45343017578125,
+            "height": 122.42913818359375,
+            "top": 690.02734375,
+            "right": 958.7266845703125,
+            "bottom": 812.4564819335938,
+            "left": 734.2732543945312
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 758.19873046875,
+            "y": 823.132568359375,
+            "width": 10.90625,
+            "height": 12,
+            "top": 823.132568359375,
+            "right": 769.10498046875,
+            "bottom": 835.132568359375,
+            "left": 758.19873046875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 811.7005004882812,
+            "y": 823.132568359375,
+            "width": 15.671875,
+            "height": 12,
+            "top": 823.132568359375,
+            "right": 827.3723754882812,
+            "bottom": 835.132568359375,
+            "left": 811.7005004882812
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 859.617431640625,
+            "y": 700.95849609375,
+            "width": 31.33599853515625,
+            "height": 111.49798583984375,
+            "top": 700.95849609375,
+            "right": 890.9534301757812,
+            "bottom": 812.4564819335938,
+            "left": 859.617431640625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 867.6788940429688,
+            "y": 823.132568359375,
+            "width": 14.48431396484375,
+            "height": 12,
+            "top": 823.132568359375,
+            "right": 882.1632080078125,
+            "bottom": 835.132568359375,
+            "left": 867.6788940429688
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 915.0020141601562,
+            "y": 799.1754150390625,
+            "width": 31.33599853515625,
+            "height": 13.28106689453125,
+            "top": 799.1754150390625,
+            "right": 946.3380126953125,
+            "bottom": 812.4564819335938,
+            "left": 915.0020141601562
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "m9-replay",
+          "text": "Grafiekanimatie opnieuw afspelen",
+          "width": 40,
+          "height": 40
+        },
+        {
+          "id": "m9-allcats",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        },
+        {
+          "id": "m9-alltx",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "finance-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 359,
+            "y": -257.75,
+            "width": 325,
+            "height": 180,
+            "top": -257.75,
+            "right": 684,
+            "bottom": -77.75,
+            "left": 359
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 359,
+            "y": -257.75,
+            "width": 325,
+            "height": 180,
+            "top": -257.75,
+            "right": 684,
+            "bottom": -77.75,
+            "left": 359
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "g",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 423.11944580078125,
+            "y": -227.8714599609375,
+            "width": 104.93927001953125,
+            "height": 104.93927001953125,
+            "top": -227.8714599609375,
+            "right": 528.0587158203125,
+            "bottom": -122.93218994140625,
+            "left": 423.11944580078125
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 464.2609558105469,
+            "y": -185.1305694580078,
+            "width": 22.65625,
+            "height": 11,
+            "top": -185.1305694580078,
+            "right": 486.9172058105469,
+            "bottom": -174.1305694580078,
+            "left": 464.2609558105469
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 448.0890808105469,
+            "y": -174.36944580078125,
+            "width": 55.08447265625,
+            "height": 19.000015258789062,
+            "top": -174.36944580078125,
+            "right": 503.1735534667969,
+            "bottom": -155.3694305419922,
+            "left": 448.0890808105469
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": -212.2034454345703,
+            "width": 8.01617431640625,
+            "height": 8.016189575195312,
+            "top": -212.2034454345703,
+            "right": 553.9291381835938,
+            "bottom": -204.187255859375,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": -214.28036499023438,
+            "width": 59.82818603515625,
+            "height": 11,
+            "top": -214.28036499023438,
+            "right": 619.222900390625,
+            "bottom": -203.28036499023438,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": -214.28036499023438,
+            "width": 17.9921875,
+            "height": 12,
+            "top": -214.28036499023438,
+            "right": 637.4876708984375,
+            "bottom": -202.28036499023438,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": -183.05364990234375,
+            "width": 8.01617431640625,
+            "height": 8.016204833984375,
+            "top": -183.05364990234375,
+            "right": 553.9291381835938,
+            "bottom": -175.03744506835938,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": -185.1305694580078,
+            "width": 41.871337890625,
+            "height": 11,
+            "top": -185.1305694580078,
+            "right": 601.2660522460938,
+            "bottom": -174.1305694580078,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": -185.1305694580078,
+            "width": 17.9921875,
+            "height": 12.000015258789062,
+            "top": -185.1305694580078,
+            "right": 637.4876708984375,
+            "bottom": -173.13055419921875,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": -153.90383911132812,
+            "width": 8.01617431640625,
+            "height": 8.016189575195312,
+            "top": -153.90383911132812,
+            "right": 553.9291381835938,
+            "bottom": -145.8876495361328,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": -155.98077392578125,
+            "width": 53.22247314453125,
+            "height": 11.000015258789062,
+            "top": -155.98077392578125,
+            "right": 612.6171875,
+            "bottom": -144.9807586669922,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 619.4954833984375,
+            "y": -155.98077392578125,
+            "width": 17.9921875,
+            "height": 12,
+            "top": -155.98077392578125,
+            "right": 637.4876708984375,
+            "bottom": -143.98077392578125,
+            "left": 619.4954833984375
+          }
+        },
+        {
+          "tag": "circle",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 545.9129638671875,
+            "y": -124.75404357910156,
+            "width": 8.01617431640625,
+            "height": 8.016189575195312,
+            "top": -124.75404357910156,
+            "right": 553.9291381835938,
+            "bottom": -116.73785400390625,
+            "left": 545.9129638671875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 559.3947143554688,
+            "y": -126.83097839355469,
+            "width": 26.73443603515625,
+            "height": 11.000015258789062,
+            "top": -126.83097839355469,
+            "right": 586.129150390625,
+            "bottom": -115.83096313476562,
+            "left": 559.3947143554688
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 624.4954833984375,
+            "y": -126.83097839355469,
+            "width": 12.99609375,
+            "height": 12.000015258789062,
+            "top": -126.83097839355469,
+            "right": 637.4915771484375,
+            "bottom": -114.83096313476562,
+            "left": 624.4954833984375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "m9-slide",
+          "rect": {
+            "x": 684,
+            "y": -257.75,
+            "width": 325,
+            "height": 180,
+            "top": -257.75,
+            "right": 1009,
+            "bottom": -77.75,
+            "left": 684
+          }
+        },
+        {
+          "tag": "svg",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 684,
+            "y": -257.75,
+            "width": 325,
+            "height": 180,
+            "top": -257.75,
+            "right": 1009,
+            "bottom": -77.75,
+            "left": 684
+          }
+        },
+        {
+          "tag": "path",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 734.2732543945312,
+            "y": -232.97267150878906,
+            "width": 224.45343017578125,
+            "height": 122.42915344238281,
+            "top": -232.97267150878906,
+            "right": 958.7266845703125,
+            "bottom": -110.54351806640625,
+            "left": 734.2732543945312
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 758.19873046875,
+            "y": -99.86740112304688,
+            "width": 10.90625,
+            "height": 12,
+            "top": -99.86740112304688,
+            "right": 769.10498046875,
+            "bottom": -87.86740112304688,
+            "left": 758.19873046875
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 811.7005004882812,
+            "y": -99.86740112304688,
+            "width": 15.671875,
+            "height": 12,
+            "top": -99.86740112304688,
+            "right": 827.3723754882812,
+            "bottom": -87.86740112304688,
+            "left": 811.7005004882812
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 859.617431640625,
+            "y": -222.04150390625,
+            "width": 31.33599853515625,
+            "height": 111.49798583984375,
+            "top": -222.04150390625,
+            "right": 890.9534301757812,
+            "bottom": -110.54351806640625,
+            "left": 859.617431640625
+          }
+        },
+        {
+          "tag": "text",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 867.6788940429688,
+            "y": -99.86740112304688,
+            "width": 14.48431396484375,
+            "height": 12,
+            "top": -99.86740112304688,
+            "right": 882.1632080078125,
+            "bottom": -87.86740112304688,
+            "left": 867.6788940429688
+          }
+        },
+        {
+          "tag": "rect",
+          "id": "",
+          "class": "[object SVGAnimatedString]",
+          "rect": {
+            "x": 915.0020141601562,
+            "y": -123.82455444335938,
+            "width": 31.33599853515625,
+            "height": 13.281036376953125,
+            "top": -123.82455444335938,
+            "right": 946.3380126953125,
+            "bottom": -110.54351806640625,
+            "left": 915.0020141601562
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "m9-replay",
+          "text": "Grafiekanimatie opnieuw afspelen",
+          "width": 40,
+          "height": 40
+        },
+        {
+          "id": "m9-allcats",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        },
+        {
+          "id": "m9-alltx",
+          "text": "Bekijk alles ›",
+          "width": 92,
+          "height": 42
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "transactions",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 940.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 940.46875,
+            "right": 409.140625,
+            "bottom": 984.46875,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1096.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1096.0625,
+            "right": 409.140625,
+            "bottom": 1140.0625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1268.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1268.5625,
+            "right": 409.140625,
+            "bottom": 1312.5625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1441.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1441.0625,
+            "right": 409.140625,
+            "bottom": 1485.0625,
+            "left": 315.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "transactions-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 323.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 323.46875,
+            "right": 409.140625,
+            "bottom": 367.46875,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 479.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 479.0625,
+            "right": 409.140625,
+            "bottom": 523.0625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 651.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 651.5625,
+            "right": 409.140625,
+            "bottom": 695.5625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 824.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 824.0625,
+            "right": 409.140625,
+            "bottom": 868.0625,
+            "left": 315.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "analysis",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "🛒 Boodschappen",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🎮 Vrije tijd & entertainment",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🚗 Auto & vervoer",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🍔 Horeca & uit eten",
+          "width": 289,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "analysis-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "🛒 Boodschappen",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🎮 Vrije tijd & entertainment",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🚗 Auto & vervoer",
+          "width": 282,
+          "height": 18
+        },
+        {
+          "id": "",
+          "text": "🍔 Horeca & uit eten",
+          "width": 289,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "accounts",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "accounts-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "receipts",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "receipts-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance-settings",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "finance-settings-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "smartbuy",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "smartbuy-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "moneycoach",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "moneycoach-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "budgets",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "budgets-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "planning",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "planning-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "knowledge",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "kc-topic-page",
+          "rect": {
+            "x": -348,
+            "y": 441.875,
+            "width": 363,
+            "height": 347.59375,
+            "top": 441.875,
+            "right": 15,
+            "bottom": 789.46875,
+            "left": -348
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -347,
+            "y": 442.875,
+            "width": 175.5,
+            "height": 172.59375,
+            "top": 442.875,
+            "right": -171.5,
+            "bottom": 615.46875,
+            "left": -347
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -346,
+            "y": 443.875,
+            "width": 173.5,
+            "height": 95,
+            "top": 443.875,
+            "right": -172.5,
+            "bottom": 538.875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -346,
+            "y": 443.875,
+            "width": 173.5,
+            "height": 95,
+            "top": 443.875,
+            "right": -172.5,
+            "bottom": 538.875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -346,
+            "y": 443.875,
+            "width": 173.5,
+            "height": 95,
+            "top": 443.875,
+            "right": -172.5,
+            "bottom": 538.875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -346,
+            "y": 538.875,
+            "width": 173.5,
+            "height": 75.59375,
+            "top": 538.875,
+            "right": -172.5,
+            "bottom": 614.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 548.875,
+            "width": 120.5,
+            "height": 55.59375,
+            "top": 548.875,
+            "right": -215.5,
+            "bottom": 604.46875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 548.875,
+            "width": 120.5,
+            "height": 35.09375,
+            "top": 548.875,
+            "right": -215.5,
+            "bottom": 583.96875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 587.96875,
+            "width": 120.5,
+            "height": 16.5,
+            "top": 587.96875,
+            "right": -215.5,
+            "bottom": 604.46875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -207.5,
+            "y": 561.671875,
+            "width": 25,
+            "height": 30,
+            "top": 561.671875,
+            "right": -182.5,
+            "bottom": 591.671875,
+            "left": -207.5
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -161.5,
+            "y": 442.875,
+            "width": 175.5,
+            "height": 172.59375,
+            "top": 442.875,
+            "right": 14,
+            "bottom": 615.46875,
+            "left": -161.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -160.5,
+            "y": 448.671875,
+            "width": 173.5,
+            "height": 95,
+            "top": 448.671875,
+            "right": 13,
+            "bottom": 543.671875,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -160.5,
+            "y": 448.671875,
+            "width": 173.5,
+            "height": 95,
+            "top": 448.671875,
+            "right": 13,
+            "bottom": 543.671875,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -160.5,
+            "y": 448.671875,
+            "width": 173.5,
+            "height": 95,
+            "top": 448.671875,
+            "right": 13,
+            "bottom": 543.671875,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -160.5,
+            "y": 543.671875,
+            "width": 173.5,
+            "height": 66,
+            "top": 543.671875,
+            "right": 13,
+            "bottom": 609.671875,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": 557.640625,
+            "width": 112.0625,
+            "height": 38.046875,
+            "top": 557.640625,
+            "right": -38.4375,
+            "bottom": 595.6875,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": 557.640625,
+            "width": 112.0625,
+            "height": 17.546875,
+            "top": 557.640625,
+            "right": -38.4375,
+            "bottom": 575.1875,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": 579.1875,
+            "width": 112.0625,
+            "height": 16.5,
+            "top": 579.1875,
+            "right": -38.4375,
+            "bottom": 595.6875,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -22,
+            "y": 561.671875,
+            "width": 25,
+            "height": 30,
+            "top": 561.671875,
+            "right": 3,
+            "bottom": 591.671875,
+            "left": -22
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -347,
+            "y": 625.46875,
+            "width": 175.5,
+            "height": 163,
+            "top": 625.46875,
+            "right": -171.5,
+            "bottom": 788.46875,
+            "left": -347
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -346,
+            "y": 626.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 626.46875,
+            "right": -172.5,
+            "bottom": 721.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -346,
+            "y": 626.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 626.46875,
+            "right": -172.5,
+            "bottom": 721.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -346,
+            "y": 626.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 626.46875,
+            "right": -172.5,
+            "bottom": 721.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -346,
+            "y": 721.46875,
+            "width": 173.5,
+            "height": 66,
+            "top": 721.46875,
+            "right": -172.5,
+            "bottom": 787.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 735.4375,
+            "width": 63.046875,
+            "height": 38.046875,
+            "top": 735.4375,
+            "right": -272.953125,
+            "bottom": 773.484375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 735.4375,
+            "width": 63.046875,
+            "height": 17.546875,
+            "top": 735.4375,
+            "right": -272.953125,
+            "bottom": 752.984375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 756.984375,
+            "width": 63.046875,
+            "height": 16.5,
+            "top": 756.984375,
+            "right": -272.953125,
+            "bottom": 773.484375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -207.5,
+            "y": 739.46875,
+            "width": 25,
+            "height": 30,
+            "top": 739.46875,
+            "right": -182.5,
+            "bottom": 769.46875,
+            "left": -207.5
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -161.5,
+            "y": 625.46875,
+            "width": 175.5,
+            "height": 163,
+            "top": 625.46875,
+            "right": 14,
+            "bottom": 788.46875,
+            "left": -161.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -160.5,
+            "y": 626.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 626.46875,
+            "right": 13,
+            "bottom": 721.46875,
+            "left": -160.5
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "kc-topic-page",
+          "rect": {
+            "x": -348,
+            "y": -135.125,
+            "width": 363,
+            "height": 347.59375,
+            "top": -135.125,
+            "right": 15,
+            "bottom": 212.46875,
+            "left": -348
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -347,
+            "y": -134.125,
+            "width": 175.5,
+            "height": 172.59375,
+            "top": -134.125,
+            "right": -171.5,
+            "bottom": 38.46875,
+            "left": -347
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -346,
+            "y": -133.125,
+            "width": 173.5,
+            "height": 95,
+            "top": -133.125,
+            "right": -172.5,
+            "bottom": -38.125,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -346,
+            "y": -133.125,
+            "width": 173.5,
+            "height": 95,
+            "top": -133.125,
+            "right": -172.5,
+            "bottom": -38.125,
+            "left": -346
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -346,
+            "y": -133.125,
+            "width": 173.5,
+            "height": 95,
+            "top": -133.125,
+            "right": -172.5,
+            "bottom": -38.125,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -346,
+            "y": -38.125,
+            "width": 173.5,
+            "height": 75.59375,
+            "top": -38.125,
+            "right": -172.5,
+            "bottom": 37.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": -28.125,
+            "width": 120.5,
+            "height": 55.59375,
+            "top": -28.125,
+            "right": -215.5,
+            "bottom": 27.46875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": -28.125,
+            "width": 120.5,
+            "height": 35.09375,
+            "top": -28.125,
+            "right": -215.5,
+            "bottom": 6.96875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 10.96875,
+            "width": 120.5,
+            "height": 16.5,
+            "top": 10.96875,
+            "right": -215.5,
+            "bottom": 27.46875,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -207.5,
+            "y": -15.328125,
+            "width": 25,
+            "height": 30,
+            "top": -15.328125,
+            "right": -182.5,
+            "bottom": 14.671875,
+            "left": -207.5
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -161.5,
+            "y": -134.125,
+            "width": 175.5,
+            "height": 172.59375,
+            "top": -134.125,
+            "right": 14,
+            "bottom": 38.46875,
+            "left": -161.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -160.5,
+            "y": -128.328125,
+            "width": 173.5,
+            "height": 95,
+            "top": -128.328125,
+            "right": 13,
+            "bottom": -33.328125,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -160.5,
+            "y": -128.328125,
+            "width": 173.5,
+            "height": 95,
+            "top": -128.328125,
+            "right": 13,
+            "bottom": -33.328125,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -160.5,
+            "y": -128.328125,
+            "width": 173.5,
+            "height": 95,
+            "top": -128.328125,
+            "right": 13,
+            "bottom": -33.328125,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -160.5,
+            "y": -33.328125,
+            "width": 173.5,
+            "height": 66,
+            "top": -33.328125,
+            "right": 13,
+            "bottom": 32.671875,
+            "left": -160.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": -19.359375,
+            "width": 112.0625,
+            "height": 38.046875,
+            "top": -19.359375,
+            "right": -38.4375,
+            "bottom": 18.6875,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": -19.359375,
+            "width": 112.0625,
+            "height": 17.546875,
+            "top": -19.359375,
+            "right": -38.4375,
+            "bottom": -1.8125,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -150.5,
+            "y": 2.1875,
+            "width": 112.0625,
+            "height": 16.5,
+            "top": 2.1875,
+            "right": -38.4375,
+            "bottom": 18.6875,
+            "left": -150.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -22,
+            "y": -15.328125,
+            "width": 25,
+            "height": 30,
+            "top": -15.328125,
+            "right": 3,
+            "bottom": 14.671875,
+            "left": -22
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -347,
+            "y": 48.46875,
+            "width": 175.5,
+            "height": 163,
+            "top": 48.46875,
+            "right": -171.5,
+            "bottom": 211.46875,
+            "left": -347
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -346,
+            "y": 49.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 49.46875,
+            "right": -172.5,
+            "bottom": 144.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-art-wrap",
+          "rect": {
+            "x": -346,
+            "y": 49.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 49.46875,
+            "right": -172.5,
+            "bottom": 144.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "kc-cover-image",
+          "rect": {
+            "x": -346,
+            "y": 49.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 49.46875,
+            "right": -172.5,
+            "bottom": 144.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-title",
+          "rect": {
+            "x": -346,
+            "y": 144.46875,
+            "width": 173.5,
+            "height": 66,
+            "top": 144.46875,
+            "right": -172.5,
+            "bottom": 210.46875,
+            "left": -346
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 158.4375,
+            "width": 63.046875,
+            "height": 38.046875,
+            "top": 158.4375,
+            "right": -272.953125,
+            "bottom": 196.484375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "STRONG",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 158.4375,
+            "width": 63.046875,
+            "height": 17.546875,
+            "top": 158.4375,
+            "right": -272.953125,
+            "bottom": 175.984375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -336,
+            "y": 179.984375,
+            "width": 63.046875,
+            "height": 16.5,
+            "top": 179.984375,
+            "right": -272.953125,
+            "bottom": 196.484375,
+            "left": -336
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -207.5,
+            "y": 162.46875,
+            "width": 25,
+            "height": 30,
+            "top": 162.46875,
+            "right": -182.5,
+            "bottom": 192.46875,
+            "left": -207.5
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "kc-topic-card",
+          "rect": {
+            "x": -161.5,
+            "y": 48.46875,
+            "width": 175.5,
+            "height": 163,
+            "top": 48.46875,
+            "right": 14,
+            "bottom": 211.46875,
+            "left": -161.5
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "kc-topic-scene",
+          "rect": {
+            "x": -160.5,
+            "y": 49.46875,
+            "width": 173.5,
+            "height": 95,
+            "top": 49.46875,
+            "right": 13,
+            "bottom": 144.46875,
+            "left": -160.5
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "settings",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "settings-bottom",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "tasks-menu",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 294,
+            "width": 120,
+            "height": 67,
+            "top": 294,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 315,
+            "width": 120,
+            "height": 46,
+            "top": 315,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 373,
+            "width": 120,
+            "height": 67,
+            "top": 373,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 394,
+            "width": 120,
+            "height": 46,
+            "top": 394,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 452,
+            "width": 120,
+            "height": 67,
+            "top": 452,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 473,
+            "width": 120,
+            "height": 46,
+            "top": 473,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 531,
+            "width": 120,
+            "height": 67,
+            "top": 531,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 552,
+            "width": 120,
+            "height": 46,
+            "top": 552,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 306.46875,
+            "y": 616,
+            "width": 120,
+            "height": 193,
+            "top": 616,
+            "right": 426.46875,
+            "bottom": 809,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 637,
+            "width": 120,
+            "height": 46,
+            "top": 637,
+            "right": 426.46875,
+            "bottom": 683,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 687,
+            "width": 119.4375,
+            "height": 120,
+            "top": 687,
+            "right": 425.90625,
+            "bottom": 807,
+            "left": 306.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-folders-closed",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "knowledge-folders-open",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "transaction-modal",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 940.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 940.46875,
+            "right": 409.140625,
+            "bottom": 984.46875,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1096.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1096.0625,
+            "right": 409.140625,
+            "bottom": 1140.0625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1268.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1268.5625,
+            "right": 409.140625,
+            "bottom": 1312.5625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1441.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1441.0625,
+            "right": 409.140625,
+            "bottom": 1485.0625,
+            "left": 315.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "transaction-modal-short",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 940.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 940.46875,
+            "right": 409.140625,
+            "bottom": 984.46875,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1096.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1096.0625,
+            "right": 409.140625,
+            "bottom": 1140.0625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1268.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1268.5625,
+            "right": 409.140625,
+            "bottom": 1312.5625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1441.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1441.0625,
+            "right": 409.140625,
+            "bottom": 1485.0625,
+            "left": 315.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "txDescription"
+    },
+    {
+      "name": "transaction-filters",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1517.46875,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1517.46875,
+            "right": 409.140625,
+            "bottom": 1561.46875,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1673.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1673.0625,
+            "right": 409.140625,
+            "bottom": 1717.0625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 1845.5625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 1845.5625,
+            "right": 409.140625,
+            "bottom": 1889.5625,
+            "left": 315.671875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "btn sm danger",
+          "rect": {
+            "x": 315.671875,
+            "y": 2018.0625,
+            "width": 93.46875,
+            "height": 44,
+            "top": 2018.0625,
+            "right": 409.140625,
+            "bottom": 2062.0625,
+            "left": 315.671875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "toggleMoreTxFilters"
+    },
+    {
+      "name": "fitness-plan",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "fitness-progress",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "navigation",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "mementoMenuClose"
+    },
+    {
+      "name": "start",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -340.796875,
+            "width": 707.375,
+            "height": 1533.59375,
+            "top": -340.796875,
+            "right": 550.1875,
+            "bottom": 1192.796875,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "ms-thought ms-glass ms-feature-slide",
+          "rect": {
+            "x": 379,
+            "y": 86,
+            "width": 365,
+            "height": 281.5,
+            "top": 86,
+            "right": 744,
+            "bottom": 367.5,
+            "left": 379
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-quote-host",
+          "class": "",
+          "rect": {
+            "x": 380,
+            "y": 87,
+            "width": 363,
+            "height": 279.5,
+            "top": 87,
+            "right": 743,
+            "bottom": 366.5,
+            "left": 380
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-hero",
+          "rect": {
+            "x": 380,
+            "y": 87,
+            "width": 363,
+            "height": 279.5,
+            "top": 87,
+            "right": 743,
+            "bottom": 366.5,
+            "left": 380
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-hero-top",
+          "rect": {
+            "x": 396,
+            "y": 103,
+            "width": 331,
+            "height": 52,
+            "top": 103,
+            "right": 727,
+            "bottom": 155,
+            "left": 396
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 110.984375,
+            "width": 169.984375,
+            "height": 36.03125,
+            "top": 110.984375,
+            "right": 565.984375,
+            "bottom": 147.015625,
+            "left": 396
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-eyebrow",
+          "rect": {
+            "x": 396,
+            "y": 110.984375,
+            "width": 169.984375,
+            "height": 14.84375,
+            "top": 110.984375,
+            "right": 565.984375,
+            "bottom": 125.828125,
+            "left": 396
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-date",
+          "rect": {
+            "x": 396,
+            "y": 130.828125,
+            "width": 169.984375,
+            "height": 16.1875,
+            "top": 130.828125,
+            "right": 565.984375,
+            "bottom": 147.015625,
+            "left": 396
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "flow-avatar",
+          "rect": {
+            "x": 675,
+            "y": 103,
+            "width": 52,
+            "height": 52,
+            "top": 103,
+            "right": 727,
+            "bottom": 155,
+            "left": 675
+          }
+        },
+        {
+          "tag": "BLOCKQUOTE",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 169,
+            "width": 331,
+            "height": 100.3125,
+            "top": 169,
+            "right": 727,
+            "bottom": 269.3125,
+            "left": 396
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-citation",
+          "rect": {
+            "x": 396,
+            "y": 282.3125,
+            "width": 331,
+            "height": 68.1875,
+            "top": 282.3125,
+            "right": 727,
+            "bottom": 350.5,
+            "left": 396
+          }
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 306.5,
+            "width": 331,
+            "height": 44,
+            "top": 306.5,
+            "right": 727,
+            "bottom": 350.5,
+            "left": 396
+          }
+        },
+        {
+          "tag": "SUMMARY",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 306.5,
+            "width": 331,
+            "height": 44,
+            "top": 306.5,
+            "right": 727,
+            "bottom": 350.5,
+            "left": 396
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 349.5,
+            "width": 278.203125,
+            "height": 17,
+            "top": 349.5,
+            "right": 674.203125,
+            "bottom": 366.5,
+            "left": 396
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 396,
+            "y": 366.6875,
+            "width": 90.859375,
+            "height": 44,
+            "top": 366.6875,
+            "right": 486.859375,
+            "bottom": 410.6875,
+            "left": 396
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "start-slide2",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -340.796875,
+            "width": 707.375,
+            "height": 1533.59375,
+            "top": -340.796875,
+            "right": 550.1875,
+            "bottom": 1192.796875,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "ms-weather ms-glass ms-feature-slide",
+          "rect": {
+            "x": -16,
+            "y": 86,
+            "width": 365,
+            "height": 281.5,
+            "top": 86,
+            "right": 349,
+            "bottom": 367.5,
+            "left": -16
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "ms-thought ms-glass ms-feature-slide",
+          "rect": {
+            "x": 349,
+            "y": 86,
+            "width": 365,
+            "height": 281.5,
+            "top": 86,
+            "right": 714,
+            "bottom": 367.5,
+            "left": 349
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-quote-host",
+          "class": "",
+          "rect": {
+            "x": 350,
+            "y": 87,
+            "width": 363,
+            "height": 279.5,
+            "top": 87,
+            "right": 713,
+            "bottom": 366.5,
+            "left": 350
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-hero",
+          "rect": {
+            "x": 350,
+            "y": 87,
+            "width": 363,
+            "height": 279.5,
+            "top": 87,
+            "right": 713,
+            "bottom": 366.5,
+            "left": 350
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-hero-top",
+          "rect": {
+            "x": 366,
+            "y": 103,
+            "width": 331,
+            "height": 52,
+            "top": 103,
+            "right": 697,
+            "bottom": 155,
+            "left": 366
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 110.984375,
+            "width": 169.984375,
+            "height": 36.03125,
+            "top": 110.984375,
+            "right": 535.984375,
+            "bottom": 147.015625,
+            "left": 366
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-eyebrow",
+          "rect": {
+            "x": 366,
+            "y": 110.984375,
+            "width": 169.984375,
+            "height": 14.84375,
+            "top": 110.984375,
+            "right": 535.984375,
+            "bottom": 125.828125,
+            "left": 366
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-date",
+          "rect": {
+            "x": 366,
+            "y": 130.828125,
+            "width": 169.984375,
+            "height": 16.1875,
+            "top": 130.828125,
+            "right": 535.984375,
+            "bottom": 147.015625,
+            "left": 366
+          }
+        },
+        {
+          "tag": "IMG",
+          "id": "",
+          "class": "flow-avatar",
+          "rect": {
+            "x": 645,
+            "y": 103,
+            "width": 52,
+            "height": 52,
+            "top": 103,
+            "right": 697,
+            "bottom": 155,
+            "left": 645
+          }
+        },
+        {
+          "tag": "BLOCKQUOTE",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 169,
+            "width": 331,
+            "height": 100.3125,
+            "top": 169,
+            "right": 697,
+            "bottom": 269.3125,
+            "left": 366
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "flow-citation",
+          "rect": {
+            "x": 366,
+            "y": 282.3125,
+            "width": 331,
+            "height": 68.1875,
+            "top": 282.3125,
+            "right": 697,
+            "bottom": 350.5,
+            "left": 366
+          }
+        },
+        {
+          "tag": "DETAILS",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 306.5,
+            "width": 331,
+            "height": 44,
+            "top": 306.5,
+            "right": 697,
+            "bottom": 350.5,
+            "left": 366
+          }
+        },
+        {
+          "tag": "SUMMARY",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 306.5,
+            "width": 331,
+            "height": 44,
+            "top": 306.5,
+            "right": 697,
+            "bottom": 350.5,
+            "left": 366
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 349.5,
+            "width": 278.203125,
+            "height": 17,
+            "top": 349.5,
+            "right": 644.203125,
+            "bottom": 366.5,
+            "left": 366
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 366,
+            "y": 366.6875,
+            "width": 90.859375,
+            "height": 44,
+            "top": 366.6875,
+            "right": 456.859375,
+            "bottom": 410.6875,
+            "left": 366
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "pin",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -340.796875,
+            "width": 707.375,
+            "height": 1533.59375,
+            "top": -340.796875,
+            "right": 550.1875,
+            "bottom": 1192.796875,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "pinInput",
+          "class": "pin-digits",
+          "rect": {
+            "x": -9982,
+            "y": 306.40625,
+            "width": 26,
+            "height": 30,
+            "top": 306.40625,
+            "right": -9956,
+            "bottom": 336.40625,
+            "left": -9982
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "pinInput"
+    },
+    {
+      "name": "pin-short",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -8.59375,
+            "width": 408.71875,
+            "height": 447.1875,
+            "top": -8.59375,
+            "right": 400.859375,
+            "bottom": 438.59375,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -8.59375,
+            "width": 408.71875,
+            "height": 447.1875,
+            "top": -8.59375,
+            "right": 400.859375,
+            "bottom": 438.59375,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -172,
+            "width": 707.375,
+            "height": 774,
+            "top": -172,
+            "right": 550.1875,
+            "bottom": 602,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -43,
+            "width": 675.9375,
+            "height": 516,
+            "top": -43,
+            "right": 534.46875,
+            "bottom": 473,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -43,
+            "width": 675.9375,
+            "height": 516,
+            "top": -43,
+            "right": 534.46875,
+            "bottom": 473,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "pinInput",
+          "class": "pin-digits",
+          "rect": {
+            "x": -9982,
+            "y": 280.40625,
+            "width": 26,
+            "height": 30,
+            "top": 280.40625,
+            "right": -9956,
+            "bottom": 310.40625,
+            "left": -9982
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "pinInput"
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "tasks-menu: captured",
+    "knowledge-folders: captured",
+    "transaction-modal-keyboard: captured",
+    "transaction-filters: captured",
+    "fitness-tabs: captured",
+    "navigation: captured",
+    "start-slides: captured",
+    "PIN: captured"
+  ],
+  "errors": []
+}

@@ -1,0 +1,690 @@
+{
+  "phase": "extra",
+  "width": 393,
+  "diagnostics": [
+    {
+      "name": "task-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 294,
+            "width": 120,
+            "height": 67,
+            "top": 294,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 315,
+            "width": 120,
+            "height": 46,
+            "top": 315,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 373,
+            "width": 120,
+            "height": 67,
+            "top": 373,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 394,
+            "width": 120,
+            "height": 46,
+            "top": 394,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 452,
+            "width": 120,
+            "height": 67,
+            "top": 452,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 473,
+            "width": 120,
+            "height": 46,
+            "top": 473,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 531,
+            "width": 120,
+            "height": 67,
+            "top": 531,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 552,
+            "width": 120,
+            "height": 46,
+            "top": 552,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 306.46875,
+            "y": 616,
+            "width": 120,
+            "height": 193,
+            "top": 616,
+            "right": 426.46875,
+            "bottom": 809,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 637,
+            "width": 120,
+            "height": 46,
+            "top": 637,
+            "right": 426.46875,
+            "bottom": 683,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 687,
+            "width": 119.4375,
+            "height": 120,
+            "top": 687,
+            "right": 425.90625,
+            "bottom": 807,
+            "left": 306.46875
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "wish-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Productlink ↗",
+          "width": 93,
+          "height": 18
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "grocery-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "lifeProductFavorite",
+          "text": "",
+          "width": 339,
+          "height": 13
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "agenda-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "mementoEventAllDay",
+          "text": "",
+          "width": 23,
+          "height": 23
+        },
+        {
+          "id": "mementoEventDone",
+          "text": "",
+          "width": 23,
+          "height": 23
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "budget-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "budgetCategory"
+    },
+    {
+      "name": "account-check",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "balanceActual"
+    },
+    {
+      "name": "bill-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "",
+          "text": "Bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": "billName"
+    },
+    {
+      "name": "goal-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Doel bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": "goalName"
+    },
+    {
+      "name": "start-slide2-settled",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -17.03125,
+            "width": 408.71875,
+            "height": 886.0625,
+            "top": -17.03125,
+            "right": 400.859375,
+            "bottom": 869.03125,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -340.796875,
+            "width": 707.375,
+            "height": 1533.59375,
+            "top": -340.796875,
+            "right": 550.1875,
+            "bottom": 1192.796875,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -85.1875,
+            "width": 675.9375,
+            "height": 1022.375,
+            "top": -85.1875,
+            "right": 534.46875,
+            "bottom": 937.1875,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "SECTION",
+          "id": "",
+          "class": "ms-weather ms-glass ms-feature-slide",
+          "rect": {
+            "x": -351,
+            "y": 86,
+            "width": 365,
+            "height": 281.5,
+            "top": 86,
+            "right": 14,
+            "bottom": 367.5,
+            "left": -351
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "ms-overline",
+          "rect": {
+            "x": -337,
+            "y": 99,
+            "width": 337,
+            "height": 14.84375,
+            "top": 99,
+            "right": 0,
+            "bottom": 113.84375,
+            "left": -337
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "ms-topweather",
+          "rect": {
+            "x": -337,
+            "y": 116.84375,
+            "width": 337,
+            "height": 46.1875,
+            "top": 116.84375,
+            "right": 0,
+            "bottom": 163.03125,
+            "left": -337
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-temp",
+          "class": "ms-temperature",
+          "rect": {
+            "x": -337,
+            "y": 116.84375,
+            "width": 59.234375,
+            "height": 46.1875,
+            "top": 116.84375,
+            "right": -277.765625,
+            "bottom": 163.03125,
+            "left": -337
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-condition",
+          "class": "ms-condition",
+          "rect": {
+            "x": -178.28125,
+            "y": 131.15625,
+            "width": 178.28125,
+            "height": 17.546875,
+            "top": 131.15625,
+            "right": 0,
+            "bottom": 148.703125,
+            "left": -178.28125
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-summary",
+          "class": "ms-summary",
+          "rect": {
+            "x": -337,
+            "y": 167.03125,
+            "width": 337,
+            "height": 16.1875,
+            "top": 167.03125,
+            "right": 0,
+            "bottom": 183.21875,
+            "left": -337
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "ms-hourly",
+          "class": "ms-hourly",
+          "rect": {
+            "x": -337,
+            "y": 191.21875,
+            "width": 337,
+            "height": 116.9375,
+            "top": 191.21875,
+            "right": 0,
+            "bottom": 308.15625,
+            "left": -337
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -337,
+            "y": 199.21875,
+            "width": 52.828125,
+            "height": 108.9375,
+            "top": 199.21875,
+            "right": -284.171875,
+            "bottom": 308.15625,
+            "left": -337
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "ms-source",
+          "rect": {
+            "x": -337,
+            "y": 308.15625,
+            "width": 337,
+            "height": 44,
+            "top": 308.15625,
+            "right": 0,
+            "bottom": 352.15625,
+            "left": -337
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "ms-weather-status",
+          "class": "",
+          "rect": {
+            "x": -337,
+            "y": 316.40625,
+            "width": 221.078125,
+            "height": 27.5,
+            "top": 316.40625,
+            "right": -115.921875,
+            "bottom": 343.90625,
+            "left": -337
+          }
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -108.921875,
+            "y": 308.15625,
+            "width": 108.921875,
+            "height": 44,
+            "top": 308.15625,
+            "right": 0,
+            "bottom": 352.15625,
+            "left": -108.921875
+          }
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": -108.921875,
+            "y": 308.15625,
+            "width": 64.921875,
+            "height": 44,
+            "top": 308.15625,
+            "right": -44,
+            "bottom": 352.15625,
+            "left": -108.921875
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "ms-refresh",
+          "class": "ms-refresh",
+          "rect": {
+            "x": -44,
+            "y": 308.15625,
+            "width": 44,
+            "height": 44,
+            "top": 308.15625,
+            "right": 0,
+            "bottom": 352.15625,
+            "left": -44
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "Doel bewerken",
+          "width": 30,
+          "height": 30
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "pin-short-scrolled",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image mf-active",
+          "rect": {
+            "x": -7.859375,
+            "y": -385.59375,
+            "width": 408.71875,
+            "height": 447.1875,
+            "top": -385.59375,
+            "right": 400.859375,
+            "bottom": 61.59375,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-image",
+          "rect": {
+            "x": -7.859375,
+            "y": -385.59375,
+            "width": 408.71875,
+            "height": 447.1875,
+            "top": -385.59375,
+            "right": 400.859375,
+            "bottom": 61.59375,
+            "left": -7.859375
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-rays",
+          "rect": {
+            "x": -157.1875,
+            "y": -549,
+            "width": 707.375,
+            "height": 774,
+            "top": -549,
+            "right": 550.1875,
+            "bottom": 225,
+            "left": -157.1875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog",
+          "rect": {
+            "x": -141.46875,
+            "y": -420,
+            "width": 675.9375,
+            "height": 516,
+            "top": -420,
+            "right": 534.46875,
+            "bottom": 96,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "mf-fog mf-fog-two",
+          "rect": {
+            "x": -141.46875,
+            "y": -420,
+            "width": 675.9375,
+            "height": 516,
+            "top": -420,
+            "right": 534.46875,
+            "bottom": 96,
+            "left": -141.46875
+          }
+        },
+        {
+          "tag": "INPUT",
+          "id": "pinInput",
+          "class": "pin-digits",
+          "rect": {
+            "x": -9982,
+            "y": -96.59375,
+            "width": 26,
+            "height": 30,
+            "top": -96.59375,
+            "right": -9956,
+            "bottom": -66.59375,
+            "left": -9982
+          }
+        }
+      ],
+      "smallControls": [],
+      "focus": "pinInput"
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "task-editor: captured",
+    "wish-editor: captured",
+    "grocery-editor: captured",
+    "agenda-editor: captured",
+    "budget-editor: captured",
+    "account-check: captured",
+    "bill-editor: captured",
+    "goal-editor: captured",
+    "planning-hitbox: NOT VERIFIED: locator.scrollIntoViewIfNeeded: Timeout 4990.313999999999ms exceeded.",
+    "start-slide2-settled: captured",
+    "pinSubmit bounds {\"x\":41,\"y\":245.40625,\"width\":311,\"height\":50}",
+    "pin-short-scrolled: captured"
+  ],
+  "errors": []
+}
