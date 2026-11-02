@@ -302,6 +302,113 @@ function toggleAppointmentCompletion(source,id){
  },done?'Afspraak afgevinkt.':'Afspraak weer opengezet.',true);
 }
 
+
+/* Slim opvolgen: keep original records and save source + follow-up atomically. */
+function followupSource(kind,id){
+ if(kind==='task')return state.tasks.find(x=>x.id===id&&!x.deletedAt);
+ if(kind==='note')return state.notes.find(x=>x.id===id&&!x.deletedAt);
+ if(kind==='appointment')return localAppointments().find(x=>x.id===id);
+ if(kind==='google')return knownGoogleAppointments().find(x=>x.id===id)||window.MementoGoogleCalendar?.getEventById?.(id);
+ return null;
+}
+function followupTitle(x){return String(x.title||x.summary||'Afspraak');}
+function followupChildren(kind,id){
+ return [['note',state.notes],['task',state.tasks],['appointment',localAppointments()]].flatMap(([type,items])=>items.filter(x=>!x.deletedAt&&x.mementoFlow?.origin?.kind===kind&&x.mementoFlow.origin.id===id).map(x=>({kind:type,id:x.id,title:x.title})));
+}
+function followupContext(kind,x){
+ const lines=[],date=kind==='google'?appointmentDate(x,'google'):x.date;
+ if(date)lines.push('Datum: '+date);
+ if(kind==='appointment'&&x.time&&!x.allDay)lines.push('Tijd: '+x.time+(x.endTime?'–'+x.endTime:''));
+ if(kind==='google'&&x.start?.dateTime)lines.push('Start: '+x.start.dateTime);
+ if(x.location)lines.push('Locatie: '+x.location);
+ if(kind==='task'){if(x.category)lines.push('Categorie: '+x.category);if(x.priority)lines.push('Belangrijk');if(x.repeat&&x.repeat!=='none')lines.push('Herhaling: '+repeatLabel(x));}
+ const contents=kind==='note'?x.body:x.notes;
+ if(contents)lines.push(String(contents));
+ if(kind==='task'&&x.steps?.length)lines.push('Stappen:\n'+x.steps.map(s=>(s.done?'[x] ':'[ ] ')+s.text).join('\n'));
+ return lines.join('\n\n');
+}
+function followupHistory(kind,id,x){
+ const parent=x.mementoFlow?.origin,children=followupChildren(kind,id);
+ if(!parent&&!children.length)return '';
+ const link=(k,i,label)=>'<button type="button" class="life-btn" data-followup-open="'+esc(k)+'" data-followup-id="'+esc(i)+'">'+esc(label)+'</button>';
+ return '<div class="life-detail-summary"><strong>Opvolging</strong><div class="life-card-actions">'+
+ (parent?link(parent.kind,parent.id,'Bron: '+parent.title):'')+children.map(y=>link(y.kind,y.id,'Vervolg: '+y.title)).join('')+'</div></div>';
+}
+function startFollowup(kind,id){
+ const original=followupSource(kind,id);
+ if(!original){status('Oorspronkelijk item ontbreekt.',false,true);return false;}
+ if(kind==='task'&&original.timing?.session){status('Rond eerst de lopende tijdmeting af.',false,true);return false;}
+ if(kind==='note'&&window.MementoKnowledge?.hasPending?.()){status('Sla je notitieconcept eerst op.',false,true);return false;}
+ modal={mode:'followup',sourceKind:kind,sourceId:id};
+ const folders=[['inbox','Inbox'],...(state.knowledge?.collections||[]).filter(c=>!c.archived).map(c=>[c.id,c.name])];
+ const preferred=kind==='note'&&folders.some(x=>x[0]===original.collectionId)?original.collectionId:'inbox';
+ const body='<form id="mementoFollowupForm"><div class="life-form-grid">'+
+ '<div class="life-form-field wide"><label for="followupIntent">Wat wil je doen?</label><select id="followupIntent"><option value="followup">Gekoppeld vervolg maken</option>'+
+ (kind==='google'?'':'<option value="convert">Omzetten (origineel afronden of archiveren)</option>')+'</select></div>'+
+ '<div class="life-form-field wide"><label for="followupTarget">Soort vervolg</label><select id="followupTarget">'+option([['project','Projectnotitie'],['note','Notitie'],['task','Taak'],['appointment','Afspraak']],'project')+'</select></div>'+
+ '<div class="life-form-field wide"><label for="followupTitle">Titel</label><input id="followupTitle" maxlength="180" required value="'+esc(followupTitle(original))+'"></div>'+
+ '<div class="life-form-field wide" id="followupFolderRow"><label for="followupFolder">Map</label><select id="followupFolder">'+option(folders,preferred)+'</select></div>'+
+ '<div class="life-form-field wide" id="followupDateRow" hidden><label for="followupDate">Datum vervolgafspraak</label><input id="followupDate" type="date" value="'+today()+'"></div>'+
+ '<div class="life-form-field wide" id="followupTimeRow" hidden><label for="followupTime">Begintijd</label><input id="followupTime" type="time" value="'+esc(kind==='appointment'&&original.time?original.time:'09:00')+'"></div>'+
+ '<div class="life-form-field wide"><label for="followupExtra">Antwoord, bevindingen of volgende stap</label><textarea id="followupExtra" rows="5" maxlength="8000" placeholder="Wat is er besproken of moet je later oppakken?"></textarea></div>'+
+ '<p class="life-footnote wide">De oorspronkelijke informatie blijft bewaard. Na opslaan opent de gewone editor voor verdere aanpassingen.</p></div></form>';
+ showDialog('Slim opvolgen','Vanuit: '+followupTitle(original),body,'<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="mementoFollowupForm" class="life-btn life-btn-primary">Opslaan en openen</button>');
+ return true;
+}
+function saveFollowup(){
+ if(modal?.mode!=='followup')return;
+ const kind=modal.sourceKind,id=modal.sourceId,x=followupSource(kind,id);
+ const target=$('followupTarget').value,intent=$('followupIntent').value,title=$('followupTitle').value.trim(),extra=$('followupExtra').value.trim();
+ if(!x||!title||!['note','project','task','appointment'].includes(target)||!['followup','convert'].includes(intent)||(kind==='google'&&intent==='convert')){status('Controleer de vervolgkeuze.',false,true);return;}
+ const type=target==='project'?'note':target;
+ if(followupChildren(kind,id).some(y=>y.kind===type)&&!confirm('Er bestaat al een vervolg van dit type. Nog een maken?'))return;
+ const context=followupContext(kind,x),body=[context,extra?'Antwoord / vervolg:\n'+extra:''].filter(Boolean).join('\n\n');
+ if((target==='task'&&body.length>5000)||(target==='appointment'&&body.length>8000)||(['note','project'].includes(target)&&body.length>19500)){status('Te veel tekst voor dit type. Kort de inhoud in of kies een notitie.',false,true);return;}
+ const folder=$('followupFolder').value;
+ if(type==='note'&&folder!=='inbox'&&!state.knowledge?.collections?.some(c=>c.id===folder&&!c.archived)){status('De gekozen map is niet beschikbaar.',false,true);return;}
+ const date=$('followupDate').value,time=$('followupTime').value;
+ if(target==='appointment'&&(!validDate(date)||!isTime(time))){status('Controleer datum en tijd.',false,true);return;}
+ const C=window.MementoKnowledgeCore,W=window.MementoKnowledgeWorkspace;
+ if(type==='note'&&!C||target==='project'&&!W){status('Het Kenniscentrum is niet volledig geladen.',false,true);return;}
+ const origin={kind,id,title:followupTitle(x).slice(0,180),date:kind==='google'?appointmentDate(x,'google'):String(x.date||''),time:kind==='google'?String(x.start?.dateTime||''):String(x.time||''),location:String(x.location||'').slice(0,250)};
+ const prev=clone(state);let created;
+ try{
+  const ok=mutate(()=>{
+   if(target==='task'){
+    created={id:uid(),title,kind:'task',category:categories.includes(x.category)?x.category:'Persoonlijk',room:x.room||'Hele huis',repeat:'none',repeatDays:4,date:'',notes:body,steps:kind==='task'?clone(x.steps||[]):[],priority:Boolean(x.priority),done:false,archived:false,deletedAt:'',lastDone:'',history:[],focusDate:'',sourceUrl:'',sourceLabel:'Slim opvolgen'};
+    state.tasks.push(created);
+   }else if(target==='appointment'){
+    created={id:uid(),title,date,time,allDay:false,endTime:'',location:String(x.location||'').slice(0,250),notes:body,done:false,completedAt:'',createdAt:new Date().toISOString()};
+    state.appointments.push(created);
+   }else{
+    if(target==='project'&&!state.knowledge?.workspace)W.migrate(state);
+    created=C.makeNote({title,body,collectionId:folder},state);
+    if(target==='project'){
+     created.document=W.document([{type:'heading',text:'Aanleiding'},{type:'text',text:context},{type:'heading',text:'Antwoord en bevindingen'},{type:'text',text:extra},{type:'heading',text:'Volgende stap'},{type:'check',text:''}]);
+     created.body=C.documentText(created.document);
+     if(created.body.length>20000)throw Error('Projectnotitie te lang.');
+    }
+    state.notes.push(created);
+   }
+   created.mementoFlow={version:1,origin,intent,createdAt:new Date().toISOString()};
+   if(intent==='convert'){
+    if(kind==='task'||kind==='note')x.archived=true;
+    else if(kind==='appointment'){x.done=true;x.completedAt=x.completedAt||new Date().toISOString();}
+   }
+  },'Vervolg opgeslagen.');
+  if(!ok)return;
+ }catch(e){state=prev;status(e.message||'Vervolg opslaan mislukt.',false,true);return;}
+ closeDialog();
+ if(type==='note'){if(setView('notes'))window.MementoKnowledge?.showNote?.(created.id);}
+ else if(type==='task'){if(setView('tasks'))editTask(created.id);}
+ else if(type==='appointment'){if(setView('agenda'))editAppointment(created.id);}
+}
+function followupOpen(kind,id){
+ if(kind==='google'){status('De oorspronkelijke Google-afspraak blijft in Google Agenda.',false,true);return;}
+ window.MementoKnowledgeBridge?.openRelated?.(kind,id);
+}
+window.MementoLifeFlow={start:startFollowup,openRelated:followupOpen};
+
 function editAppointment(id=null,date=today(),prefillTitle='',prefillNotes=''){
  const event=localAppointments().find(x=>x.id===id)||{title:prefillTitle,date,allDay:false,time:'09:00',endTime:'',location:'',notes:prefillNotes};
  const disabled=event.allDay?' disabled':'';
@@ -319,8 +426,8 @@ function editAppointment(id=null,date=today(),prefillTitle='',prefillNotes=''){
  '<div class="life-form-field wide" id="mementoEventNotesField"><div class="memento-appt-note-head"><label for="mementoEventNotes">Notitie (optioneel)</label><div class="memento-appt-note-tools"><button type="button" class="memento-appt-expand" data-memento-expand-notes aria-expanded="false" aria-controls="mementoEventNotes" aria-label="Notitie vergroten">⤢</button>'+(window.MementoDictation?.button?.("mementoEventNotes")||"")+'</div></div><textarea id="mementoEventNotes" rows="4" maxlength="8000">'+esc(event.notes||'')+'</textarea></div>'+
  '<div class="memento-appt-section wide">Status en beheer</div>'+
  '<label class="memento-appt-check wide"><input id="mementoEventDone" type="checkbox" '+(event.done?'checked':'')+'><span>Afgerond</span></label>'+
- (id?'<details class="memento-appt-manage wide"><summary>Meer opties</summary><button type="button" class="life-btn life-btn-danger" data-memento-delete-event="'+esc(id)+'">Afspraak verwijderen</button></details>':'')+
- '<p id="mementoAppointmentError" class="memento-appt-error wide" role="alert" hidden></p></div></form>',
+ (id?'<details class="memento-appt-manage wide"><summary>Meer opties</summary><button type="button" class="life-btn" data-followup-start="appointment" data-followup-id="'+esc(id)+'">Slim opvolgen</button><button type="button" class="life-btn life-btn-danger" data-memento-delete-event="'+esc(id)+'">Afspraak verwijderen</button></details>':'')+
+ '<p id="mementoAppointmentError" class="memento-appt-error wide" role="alert" hidden></p></div></form>'+(id?followupHistory('appointment',id,event):''),
  '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" class="life-btn life-btn-primary" form="mementoAppointmentForm">Afspraak opslaan</button>');
 }
 function saveAppointment(id){
@@ -440,7 +547,7 @@ function renderUnifiedAppointmentItem(e,source,options={}){
   const titleControl=local?'<button type="button" class="memento-v3-title" data-memento-edit-event="'+esc(e.id)+'">'+esc(title)+'</button>':'<strong>'+esc(title)+'</strong>';
   const meta=[carried?fmt(date)+(done?'':' · nog open'):'',e.location||'',label,done?'Afgerond':''].filter(Boolean);
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+title)+'">⋮</summary><div class="life-task-actions">'+
-   (local?'<button type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerken</button>':'')+
+   (local?'<button type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerken</button>':'')+'<button type="button" data-followup-start="'+(local?'appointment':'google')+'" data-followup-id="'+esc(e.id)+'">Slim opvolgen</button>'+
    '<button type="button" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'">'+(done?'Heropenen':'Afronden')+'</button>'+
    (local?'<button type="button" class="life-task-delete" data-memento-delete-day-event="'+esc(e.id)+'">Verwijderen</button>':googleLink?'<a href="'+esc(e.htmlLink)+'" target="_blank" rel="noopener noreferrer">Open in Google Agenda</a>':'')+
    '</div></details>';
@@ -601,7 +708,7 @@ function taskRow(t){
  if(inDay){
   const dateLabel=t.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):'—';
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+t.title)+'">⋮</summary><div class="life-task-actions">'+
-   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-menu-complete="'+esc(t.id)+'">'+(finished?'Heropenen':'Afronden')+'</button>':'')+actions+
+   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-followup-start="task" data-followup-id="'+esc(t.id)+'">Slim opvolgen</button><button type="button" data-life-menu-complete="'+esc(t.id)+'">'+(finished?'Heropenen':'Afronden')+'</button>':'')+actions+
    (!t.deletedAt?'<button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+'</div></details>';
   return '<article data-order-id="'+esc(t.id)+'" class="life-task memento-unified-event memento-unified-task memento-v3-card'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
    '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
@@ -613,7 +720,7 @@ function taskRow(t){
  '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
  '<div class="life-task-body"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="life-task-meta">'+meta.map(x=>'<span>'+x+'</span>').join('')+'</div></div>'+
  '<details class="life-task-menu"><summary aria-label="'+esc('Opties voor '+t.title)+'">⋮</summary><div class="life-task-actions">'+actions+
- (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+
+ (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button><button type="button" data-followup-start="task" data-followup-id="'+esc(t.id)+'">Slim opvolgen</button><button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+
  '</div></details></article>';
 }
 function empty(title,text,button=''){return '<div class="life-empty"><b>'+esc(title)+'</b>'+esc(text)+(button?'<br>'+button:'')+'</div>'}
@@ -952,7 +1059,7 @@ function noteCards(){
    '<details class="memento-note-manage"><summary aria-label="Meer notitieacties">⋯ <span>Meer</span></summary><div>'+
    '<button type="button" class="memento-note-action" data-memento-note-pin="'+esc(n.id)+'">'+(n.pinned?'Losmaken':'Vastzetten')+'</button>'+
    '<details class="memento-convert-note"><summary>Verwerken als…</summary><div>'+
-   '<button type="button" data-memento-convert="task" data-memento-note-id="'+esc(n.id)+'">Taak</button>'+
+   '<button type="button" data-followup-start="note" data-followup-id="'+esc(n.id)+'">Slim opvolgen</button>'+'<button type="button" data-memento-convert="task" data-memento-note-id="'+esc(n.id)+'">Taak</button>'+
    '<button type="button" data-memento-convert="appointment" data-memento-note-id="'+esc(n.id)+'">Afspraak</button>'+
    '<button type="button" data-memento-convert="wish" data-memento-note-id="'+esc(n.id)+'">Wens</button>'+
    '</div></details>'+
@@ -1140,8 +1247,8 @@ function detail(id){
  '<label class="life-form-field">Kleine stap toevoegen<input id="lifeDetailStep" maxlength="300" placeholder="Eén haalbare stap"'+disabled+'></label>'+
  (t.deletedAt?'':'<button type="submit" class="life-btn life-btn-primary">Wijzigingen opslaan</button>')+'</form>'+
  (t.notes?'<div class="life-detail-summary">'+esc(t.notes)+'</div>':'')+
- (t.history.length?'<details><summary>Eerdere afrondingen ('+t.history.length+')</summary><div class="life-detail-summary">'+t.history.slice(-10).reverse().map(h=>fmt(h.date)).join('<br>')+'</div></details>':'')+sourceLink(t)+(t.sourceNoteId?'<button type="button" class="life-btn" data-life-source-note="'+esc(t.sourceNoteId)+'">Bronnotitie openen</button>':''),
- '<button type="button" class="life-btn" data-life-close>Sluiten</button>'+(t.deletedAt?'<button type="button" class="life-btn" data-life-task-restore="'+esc(id)+'">Terugzetten</button>':'<button type="button" class="life-btn" data-life-detail-complete="'+esc(id)+'">'+(t.done?'Weer openen':'Afronden')+'</button><button type="button" class="life-btn" data-life-edit="'+esc(id)+'">Alle eigenschappen</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>'));
+ (t.history.length?'<details><summary>Eerdere afrondingen ('+t.history.length+')</summary><div class="life-detail-summary">'+t.history.slice(-10).reverse().map(h=>fmt(h.date)).join('<br>')+'</div></details>':'')+sourceLink(t)+followupHistory('task',id,t)+(t.sourceNoteId?'<button type="button" class="life-btn" data-life-source-note="'+esc(t.sourceNoteId)+'">Bronnotitie openen</button>':''),
+ '<button type="button" class="life-btn" data-life-close>Sluiten</button>'+(t.deletedAt?'<button type="button" class="life-btn" data-life-task-restore="'+esc(id)+'">Terugzetten</button>':'<button type="button" class="life-btn" data-followup-start="task" data-followup-id="'+esc(id)+'">Slim opvolgen</button><button type="button" class="life-btn" data-life-detail-complete="'+esc(id)+'">'+(t.done?'Weer openen':'Afronden')+'</button><button type="button" class="life-btn" data-life-edit="'+esc(id)+'">Alle eigenschappen</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>'));
 }
 
 function editTask(id=null,fromTemplate=null,asTemplate=false){const old=(asTemplate?state.templates:state.tasks).find(t=>t.id===id),t=old||fromTemplate||{title:'',kind:'task',category:'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date:'',notes:'',steps:[],priority:false};modal={mode:asTemplate?'template':'task',id,fromTemplate:fromTemplate?.id||null,steps:clone(t.steps||[]),estimateSource:t.planning?.estimateSource||'manual'};
@@ -1267,6 +1374,8 @@ root.addEventListener('click',e=>{
  const section=summary?.parentElement;
  if(section?.matches?.('.memento-task-category')){const id=section.dataset.taskGroup;if(section.open)collapsedTaskCategories.add(id);else collapsedTaskCategories.delete(id);}
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.followupStart&&d.followupId){startFollowup(d.followupStart,d.followupId);return;}
+  if(d.followupOpen&&d.followupId){followupOpen(d.followupOpen,d.followupId);return;}
  if(d.lifeDaySlide!==undefined){showDaySlide(Number(d.lifeDaySlide));return}
  if(d.mementoNewTask!==undefined){const date=root.querySelectorAll('.life-day-column')[daySlide]?.dataset.lifeDay||today();editTask();if($('lifeTaskDate'))$('lifeTaskDate').value=date;return}
  if(d.mementoQuickOpen!==undefined){quickKind='note';syncQuickForm();$('lifeQuickTitle')?.focus();root.querySelector('.memento-day-add-menu')?.removeAttribute('open');return}
@@ -1332,7 +1441,9 @@ root.addEventListener('change',e=>{
 });
 root.addEventListener('submit',e=>{if(e.target.id==='lifeShoppingForm'){e.preventDefault();addShoppingItem();return}if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;
- if(b.dataset.taskTimer){taskTimerAction(b.dataset.taskTimer);return}
+ if(b.dataset.followupStart&&b.dataset.followupId){startFollowup(b.dataset.followupStart,b.dataset.followupId);return;}
+  if(b.dataset.followupOpen&&b.dataset.followupId){closeDialog();followupOpen(b.dataset.followupOpen,b.dataset.followupId);return;}
+  if(b.dataset.taskTimer){taskTimerAction(b.dataset.taskTimer);return;}
  if(b.dataset.taskStepMove!==undefined&&modal?.steps){const i=Number(b.dataset.taskStepMove),j=i+Number(b.dataset.direction);if(j>=0&&j<modal.steps.length){[modal.steps[i],modal.steps[j]]=[modal.steps[j],modal.steps[i]];$('lifeTaskSteps').value=modal.steps.map(s=>s.text).join('\n');paintTaskSteps();dialog.querySelector('[data-task-step-move="'+j+'"][data-direction="'+b.dataset.direction+'"]')?.focus()}return}
  if(b.dataset.mementoAiMode&&modal?.mode==='note-ai'){
   modal.aiMode=b.dataset.mementoAiMode;
@@ -1360,9 +1471,11 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
  }return;
  }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(t?.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return}if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
 dialog.addEventListener('input',e=>{if(e.target.id==='lifeTaskSteps')syncTaskSteps();if(e.target.id==='lifeTaskEstimate'&&modal){modal.estimateSource='manual';$('lifeEstimateSource').textContent='Zelf ingesteld'}});
-dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
+dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='followupTarget'){const appointment=e.target.value==='appointment';$('followupFolderRow').hidden=!['note','project'].includes(e.target.value);$('followupDateRow').hidden=!appointment;$('followupTimeRow').hidden=!appointment;return;}
+ if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
+ if(e.target.id==='mementoFollowupForm'){saveFollowup();return;}
  if(e.target.id==='mgSavedTaskFilterForm'){e.preventDefault();const name=$('mgTaskFilterName').value.trim();if(!name)return;if((state.uiPreferences?.taskFilters||[]).length>=12){status('Je kunt maximaal 12 selecties bewaren.',false,true);return;}const filters=taskFilterSnapshot();if(mutate(()=>{state.uiPreferences||={};state.uiPreferences.taskFilters||=[];state.uiPreferences.taskFilters.push({id:uid(),name,filters});},'Selectie bewaard.'))closeDialog();return;}
  if(mode==='detail'&&e.target.id==='lifeTaskDetailForm'){const t=state.tasks.find(x=>x.id===id),date=$('lifeDetailDate').value,text=$('lifeDetailStep').value.trim();if(!t||t.deletedAt||!validDate(date)){status('Controleer de datum.',false,true);return}if(mutate(()=>{t.date=date;if(text&&!t.steps.some(s=>s.text===text))t.steps.push({text,done:false})},'Taak bijgewerkt.',true))detail(id);return}
  if(mode==='permanent-purge'){performPermanentTrashPurge();return}

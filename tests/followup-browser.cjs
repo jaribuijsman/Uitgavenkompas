@@ -1,0 +1,60 @@
+"use strict";
+// Isolated fictional fixtures: exercises the actual 393px Android-sized journey.
+const fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
+const {chromium}=require("playwright"),root=path.resolve(__dirname,"..");
+const fixture=require("./helpers/visual-fixture.cjs").fixture;
+(async()=>{
+ const data=await fixture(),browser=await chromium.launch({args:["--no-sandbox","--disable-dev-shm-usage"]});
+ const context=await browser.newContext({viewport:{width:393,height:852},hasTouch:true,isMobile:true,locale:"nl-NL",timezoneId:"Europe/Amsterdam",serviceWorkers:"block"});
+ const errors=[],page=await context.newPage();page.on("pageerror",err=>errors.push(err.message));
+ await context.route("https://memento.test/**/*",route=>{
+  const url=new URL(route.request().url()),file=path.resolve(root,"."+ (url.pathname==="/"?"/index.html":decodeURIComponent(url.pathname)));
+  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile())return route.fulfill({status:404,body:""});
+  return route.fulfill({body:fs.readFileSync(file),contentType:({".html":"text/html",".js":"application/javascript",".css":"text/css",".svg":"image/svg+xml",".png":"image/png",".webp":"image/webp",".json":"application/json"})[path.extname(file)]||"application/octet-stream"});
+ });
+ await context.addInitScript(()=>{const NativeDate=Date,at=NativeDate.parse("2026-10-27T10:00:00+02:00");window.Date=class extends NativeDate{constructor(...args){super(...(args.length?args:[at]));}static now(){return at;}};});
+ try{
+  await page.goto("https://memento.test/manifest.json");
+  await page.evaluate(d=>{localStorage.setItem("compass_life_preview_v1",JSON.stringify(d.life));localStorage.setItem("uitgavenkompas_v1",JSON.stringify(d.finance));},data);
+  await page.goto("https://memento.test/");
+  await require("./helpers/enter-app.cjs")(page);
+  await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoLifeFlow?.start);
+  const life=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
+  const finance=await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1"));
+  await page.locator('#mementoQuickNav [data-memento-dest="life:today"]').click();
+  const appt=page.locator('.memento-appointment-card:has([data-followup-id="bike"])').first();
+  await appt.locator(".memento-v3-menu > summary").click();
+  await appt.locator('[data-followup-start="appointment"][data-followup-id="bike"]').click();
+  assert.equal(await page.locator("#lifeDialogTitle").innerText(),"Slim opvolgen");
+  await page.locator("#followupIntent").selectOption("convert");
+  await page.locator("#followupExtra").fill("Fictief: huisartsadvies opvolgen.");
+  await page.locator('button[form="mementoFollowupForm"][type="submit"]').click();
+  const first=await life(),newNote=first.notes.find(n=>n.mementoFlow?.origin.id==="bike");
+  assert(newNote&&newNote.document?.blocks?.length===6,"projectnotitie moet projectblokken gebruiken");
+  assert.equal(first.appointments.find(a=>a.id==="bike").done,true);
+  assert.equal(first.appointments.find(a=>a.id==="bike").time,"10:30");
+  assert.equal(newNote.mementoFlow.origin.time,"10:30");
+  assert(newNote.body.includes("Fictief: huisartsadvies opvolgen."));
+  assert(!Object.hasOwn(newNote,"time"),"notitie mag geen verplichte tijd bevatten");
+  await page.locator('[data-kc="followup-open"]').first().waitFor({state:"visible"});
+  const dialogRect=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,width:innerWidth}));
+  assert(dialogRect.scrollWidth<=dialogRect.width+1,"horizontale overflow na conversie");
+  await page.locator('#mementoQuickNav [data-memento-dest="life:tasks"]').click();
+  const task=page.locator('.life-task:has([data-followup-id="album"])').first();
+  await task.locator('.life-task-menu > summary').click();
+  await task.locator('[data-followup-start="task"][data-followup-id="album"]').click();
+  await page.locator("#followupTarget").selectOption("task");
+  await page.locator("#followupExtra").fill("Fictief: opvolging toevoegen.");
+  await page.locator('button[form="mementoFollowupForm"][type="submit"]').click();
+  const second=await life(),child=second.tasks.find(t=>t.mementoFlow?.origin.id==="album");
+  assert(child&&child.notes.includes("Fictief: opvolging toevoegen."));
+  assert.equal(second.tasks.find(t=>t.id==="album").archived,false,"gekoppeld vervolg mag bron niet archiveren");
+  assert.equal(child.repeat,"none");
+  assert.equal(await page.locator("#lifeTaskTitle").inputValue(),child.title);
+  await page.locator('[data-life-close]').first().click();
+  const afterFinance=await page.evaluate(()=>localStorage.getItem("uitgavenkompas_v1"));
+  assert.equal(afterFinance,finance,"financiële data moeten onaangetast blijven");
+  assert.deepEqual(errors,[],"geen browserruntimefouten");
+  console.log("PASS follow-up appointment→project (convert), task→task (linked), origin, 393px and finance safety");
+ }finally{await context.close();await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});

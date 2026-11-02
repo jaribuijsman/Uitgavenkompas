@@ -10,7 +10,7 @@ const suitesByGroup={
  "interface-acceptance":["release-acceptance-browser"],
  "interface-visual":["glass-rendering-browser","knowledge-workspace-browser"],
  // V1-only browser contracts (old folder always expanded, textarea #kc-body, V1 cover DOM) are not run against V2. The real V2 workspace journey replaces them; domain and safety/core suites remain.
- "life-full":["taken-v4-browser","sortable-visibility-browser","global-search-browser","memento-category-browser","knowledge-workspace-browser","journal-selfcare-browser","memento-assistant-browser","fitness-browser"],
+ "life-full":["followup-browser","taken-v4-browser","sortable-visibility-browser","global-search-browser","memento-category-browser","knowledge-workspace-browser","journal-selfcare-browser","memento-assistant-browser","fitness-browser"],
  "data-full":["app-review-browser","storage-safety-browser","recovery-browser"],
  "interface-smoke":["visual-browser"],
  "interface-layout-smoke":["visual-layout-browser"],
