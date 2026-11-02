@@ -47,6 +47,8 @@ body #view-planning .goal-progress,body #view-planning .goal-actions,body #view-
 body #view-planning .bill-row{grid-template-columns:42px minmax(0,1fr);gap:9px;padding:12px 0}
 body #view-planning .bill-amount{grid-column:2;display:flex;align-items:center;flex-wrap:wrap;gap:7px;text-align:left}
 body #view-planning .bill-amount .btn{margin:0}
+/* Keep the existing edit icon; enlarge its independent touch target. */
+body #view-planning .bill-amount .mini-icon-btn,body #view-planning .goal-top .mini-icon-btn{min-width:44px;min-height:44px;display:inline-grid;place-items:center}
 body #view-smartbuy .smartbuy-layout,body #view-moneycoach .moneycoach-layout{display:block!important}
 body .ml-coach-choice{display:grid;gap:6px;font-size:13px;margin:0 0 12px}
 body .ml-coach-choice select{width:100%}
