@@ -18,10 +18,13 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const fixtureTitle='Projectbespreking: voortgang en actiepunten';
  const fixtureBody='Besproken tijdens het overleg:\n• De voortgang van het bestaande project.\n• Openstaande vragen en aandachtspunten.\n\nResultaat van de bespreking:\n[Vul hier het ontvangen antwoord in.]\n\nVervolg:\n[Wat wil ik later nog oppakken?]';
  await page.locator('#kc-title').fill(fixtureTitle);
- await page.locator('[data-ws-block]').first().fill(fixtureBody);
+ await page.locator('#kc-body').fill(fixtureBody);
+ assert.equal(await page.locator('.kc-v3-block-pane').count(),0,'Single text-block document uses the approved continuous editor');
  await page.locator('[data-kc=save]').first().click();
  const n=(await state()).notes.find(n=>n.title===fixtureTitle);assert(n?.document);
  assert(n.body.includes('Besproken tijdens het overleg:'),'Document text is safely stored');
+ assert.equal(n.document.blocks.length,1,'Existing document shape and block ID remain intact');
+ assert.equal(n.document.blocks[0].text,fixtureBody,'Textarea synchronizes the same original block');
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
  assert.equal(await page.locator('.kc-local-tabs').count(),0,'No redundant tabs above the editor');
  assert.equal(await page.locator('.kc-breadcrumbs').count(),0,'Editor uses exactly one prototype breadcrumb');
@@ -70,7 +73,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
  checks.push('Prototype sheets: follow-up choices, attachments, other actions, linked folders and saved note IDs');
  await page.locator('[data-kc=editor-block-options]').click();
- await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
+ await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();
+ assert(await page.locator('[data-ws-block]').count()>1,'Multi-block documents remain in their structured editor');await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
  await page.locator('.kc-v3-editor-head [data-kc=back]').click();
  await page.locator('.kc-local-tabs [data-kc=home]').click();
