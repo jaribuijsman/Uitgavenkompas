@@ -577,3 +577,9 @@
  #lifeApp[data-life-view="notes"] .kc-v3-editor-head .kc-v3-save-btn{padding:0 9px}
  #lifeApp[data-life-view="notes"] .kc-v3-meta-two{grid-template-columns:1fr}
 }
+
+/* External knowledge shortcuts share the same visual language as local folders. */
+#lifeApp[data-life-view="notes"] .kc-topic-tile{position:relative;min-width:0}
+#lifeApp[data-life-view="notes"] .kc-topic-tile .kc-topic-card{width:100%;height:100%;text-decoration:none;font:inherit;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-topic-edit{position:absolute;right:8px;top:8px;z-index:3;min-height:36px;padding:7px 11px;border:1px solid #cedac4;background:#173a2fe8;color:#fff;border-radius:11px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-topic-edit:focus-visible{outline:3px solid #f7d98c;outline-offset:2px}
