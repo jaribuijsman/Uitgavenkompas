@@ -68,10 +68,10 @@ async function addTransaction(page, description) {
     assert(stored.transactions.some(t => t.description === "Transactie A")); assert(!stored.transactions.some(t => t.description === "Concept B"));
     checks.push("Native two-tab transaction conflict preserves A and B's unsaved form");
     await b.locator("#cancelTx").click(); await navigate(a, "life", "tasks");
-    await require("./helpers/reveal.cjs")(a,"#lifeQuickTitle");await a.locator("#lifeQuickTitle").fill("Taak A"); await a.locator("#lifeQuickForm button[type=submit]").click();
+    await require("./helpers/reveal.cjs")(a,"#lifeQuickTitle");await a.locator('[data-life-quick-kind="task"]').click();await a.locator("#lifeQuickTitle").fill("Taak A"); await a.locator("#lifeQuickForm button[type=submit]").click();
     await require("./helpers/reveal.cjs")(a,'[data-life-quick-kind="note"]');await a.locator('[data-life-quick-kind="note"]').click(); await a.locator("#lifeQuickTitle").fill("Notitie A"); await a.locator("#lifeQuickForm button[type=submit]").click();
     await until(a,()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n=>n.title==="Notitie A"));
-    await navigate(b, "life", "tasks"); await require("./helpers/reveal.cjs")(b,"#lifeQuickTitle");await b.locator("#lifeQuickTitle").fill("Taakconcept B"); await b.locator("#lifeQuickForm button[type=submit]").click();
+    await navigate(b, "life", "tasks"); await require("./helpers/reveal.cjs")(b,"#lifeQuickTitle");await b.locator('[data-life-quick-kind="task"]').click();await b.locator("#lifeQuickTitle").fill("Taakconcept B"); await b.locator("#lifeQuickForm button[type=submit]").click();
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     checks.push("Two-tab Life conflict preserves saved task and quick-capture input");
