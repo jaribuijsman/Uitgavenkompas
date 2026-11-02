@@ -18,6 +18,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('#kc-title').fill('V2 browsercontrole');await page.locator('[data-ws-block]').first().fill('Dit blijft behouden in een visuele notitie.');await page.locator('[data-kc=save]').first().click();
  const n=(await state()).notes.find(n=>n.title==='V2 browsercontrole');assert(n?.document);assert.equal(n.body,'Dit blijft behouden in een visuele notitie.');
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
+ assert.equal(await page.locator('.kc-local-tabs').count(),0,'No redundant tabs above the editor');
+ assert.equal(await page.locator('.kc-breadcrumbs').count(),0,'Editor uses exactly one prototype breadcrumb');
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
  assert.equal(await page.locator('.kc-v3-followups h3').innerText(),'Opvolging & koppelingen');
  const actualGeometry=await require('./knowledge-prototype-geometry.cjs')(page,shot);
@@ -54,7 +56,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('[data-kc=editor-locations-save]').click();
  assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
  checks.push('Prototype sheets: follow-up choices, attachments, other actions, linked folders and saved note IDs');
- await page.locator('[data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
+ await page.locator('[data-kc=editor-block-options]').click();
+ await page.locator('#kc-v3-block-tools-sheet [data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
  await page.locator('.kc-local-tabs [data-kc=home]').click();
  await page.locator('.kc-compact-fold summary').filter({hasText:'Instellingen & back-up'}).click();
