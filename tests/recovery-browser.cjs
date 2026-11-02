@@ -82,7 +82,7 @@ async function checkbox(page,selector){
    });
    assert.equal(parity.taskColumns,4,'Task grid retains checkbox, date, content and action tracks');
    assert.equal(parity.eventColumns,3,'Compact appointment uses its distinct three-column grid');
-   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,4);
+   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,3,'Compact appointment keeps its three interactive/display elements');
    assert(parity.firstTarget.right<=parity.date.left+1,'Task checkbox must not overlap date');
    assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
    assert.equal(parity.taskSurface,parity.eventSurface,'Matching cards must have same card background');

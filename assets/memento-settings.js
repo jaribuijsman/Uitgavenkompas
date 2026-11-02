@@ -104,8 +104,16 @@
  function mountFinance(){
   const host=$('#view-settings'),grid=$('.settings-grid',host);
   if(!host||!grid||host.querySelector(':scope > .ms-shell'))return;
-  const cards=[...grid.querySelectorAll(':scope > .settings-card')];
-  if(cards.length<5)return;
+  // Existing glass/layout decorators may wrap original cards in <details> before
+  // this script loads. Locate cards by their native controls, never wrapper order.
+  const cards=[
+   $('#settingsForm')?.closest('.settings-card'),
+   $('#exportBackup')?.closest('.settings-card'),
+   $('#categorySettingsList')?.closest('.settings-card'),
+   $('#clearAllData')?.closest('.settings-card'),
+   $('#view-settings [data-memento-pin-lock-now]')?.closest('.settings-card')
+  ];
+  if(cards.some(card=>!card))return;
   const {body}=create('finance',host);
   move(cards[0],body('personal'));
   move(cards[1],body('backup'));
@@ -116,7 +124,7 @@
  }
  const life=$('#lifeContent'),finance=$('#view-settings');
  if(life)new MutationObserver(mountLife).observe(life,{childList:true});
- if(finance)new MutationObserver(refreshFinanceTrash).observe(finance,{childList:true});
+ if(finance)new MutationObserver(()=>{if(!$('#mementoSettingsFinance'))mountFinance();refreshFinanceTrash();}).observe(finance,{childList:true,subtree:true});
  mountFinance();mountLife();
  window.MementoSettings={open,mountLife,mountFinance,refreshFinanceTrash};
 })();
