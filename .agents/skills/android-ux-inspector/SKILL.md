@@ -7,6 +7,10 @@ description: Audit Memento Android-sized touch and layout behavior with real bro
 
 Use this skill for mobile layout, navigation, dialogs, forms, overflow, gestures and responsive acceptance checks in Memento.
 
+## Normatieve bron
+
+Gebruik bij werk in Memento de [Android-PWA UX-standaard](../../../docs/android-pwa-ux-standaard.md) en de relevante richtlijnen van developer.android.com. De Android-ervaring bepaalt de UX, maar dit blijft een **PWA**: neem geen Compose-API, native insets of nieuwe dependencies over. Een bestaande goedgekeurde Memento-component en de eigen visuele identiteit blijven leidend. Inspecteer daadwerkelijke browser-hit-testing/scroll en de primaire gebruikersroute.
+
 ## Preparation
 1. Read `AGENTS.md`, the current `main` SHA, the affected UI modules and any relevant acceptance contract. Reuse existing browser tests and artifacts before proposing new tooling.
 2. Determine the target behavior and the exact affected states, including keyboard open/closed, long content, empty lists, accessibility labels and touch reachability.
@@ -20,6 +24,10 @@ Use this skill for mobile layout, navigation, dialogs, forms, overflow, gestures
 - Memento is primarily opened as a standalone PWA on Samsung Galaxy A54 5G. When relevant, verify standalone display mode, safe-area/system-navigation clearance, visible form actions during keyboard-like viewport resizing, and absence of blocked scrolling or menus. Browser emulation cannot establish physical Android behavior.
 - Use the existing 393px targeted smoke by default. Add 360/412px, keyboard-height or standalone-specific cases only where the actual diff presents that risk. Prefer existing fixtures and CI screenshots; do not install new tools or run a full suite for a cosmetic patch.
 - Separate application defects from selector drift, timing/flakiness, and browser setup failures. Never weaken assertions to hide genuine bugs. Report the failed interaction and smallest reproducible evidence.
+
+## Gate voor echt mobiel schermbewijs
+
+Begin bij een concrete bestaande appstaat en reconstrueer de gebruikerroute tot de afwijkende scrollpositie (top, midden, einde), na actie en bij geopend menu. Een screenshot van alleen de eerste viewport bewijst geen geldige sticky header of bereikbare laatste actie. Gebruik bij gewijzigde editors de bestaande domeinjourney en, **indien aanwezig op de huidige branch**, `tests/helpers/mobile-visual-contract.cjs`; controleer dat de test de gewijzigde editor daadwerkelijk opent, niet slechts de tab. Bij visueel werk: vergelijk geslaagde CI-artifacts voor de exacte PR-head met het overeengekomen prototype; afwezig bewijs = NIET GEVERIFIEERD, ook bij groene CI. Houd de extra scenario's gericht.
 
 ## Boundaries
 - Never change production data, run destructive storage resets or hide an existing test failure.

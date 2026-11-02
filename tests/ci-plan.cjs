@@ -56,7 +56,7 @@ function workerCacheOnly(before,after){
  }catch{return false}
 }
 function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
- const application=[...new Set(paths)].filter(p=>p&&!/^docs\//.test(p)&&!["AGENTS.md","README.md"].includes(p));
+ const application=[...new Set(paths)].filter(p=>p&&!/^docs\//.test(p)&&!/^\.agents\/skills\/(?:[^/]+\/)*[^/]+\.md$/.test(p)&&!["AGENTS.md","README.md"].includes(p));
  if(!application.length&&!forceFull)return {tier:"none",groups:[],upgrade:false,files:paths};
  // Safe only after Git + GitHub API proof that this exact tree already passed PR CI.
  // Never applied for manual force-full or unverifiable/direct pushes to main.

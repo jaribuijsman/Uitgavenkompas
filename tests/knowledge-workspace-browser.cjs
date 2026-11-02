@@ -57,7 +57,7 @@ async function shot(page, name, log = true) {
     if (pinDisabled) await shot(page, "direct-open", width === 393);
     checks.push((pinDisabled ? "Direct app opening" : "PIN unlocked") + "; fixture writer owns Web Lock");
     await require('./helpers/knowledge-workspace-browser-checks.cjs')(page,navigate,shot,context,url,width,checks);
-    for(const d of diagnostics)assert(d.scrollWidth<=width+1,"Horizontal overflow: "+d.name);
+    for(const d of diagnostics)assert(d.scrollWidth<=d.clientWidth+1,"Horizontal overflow: "+d.name+" (measured "+d.scrollWidth+" vs actual viewport "+d.clientWidth+")");
     const sheets = await page.evaluate(() => [...document.styleSheets].map(sheet => { let rules = []; try { rules = [...sheet.cssRules].map(r => r.cssText); } catch {} return { id: sheet.ownerNode?.id || "", href: sheet.href, rules }; }));
     fs.writeFileSync(path.join(out, "cssom.json"), JSON.stringify(sheets));
     fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ phase, width, diagnostics, checks, errors }, null, 2)); assert.deepEqual(errors, []);

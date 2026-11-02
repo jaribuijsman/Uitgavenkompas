@@ -20,6 +20,13 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
  assert.equal(await page.locator('.kc-v3-followups h3').innerText(),'Opvolging & koppelingen');
+ const actualGeometry=await require('./mobile-visual-contract.cjs')(page,{
+  header:'.kc-v3-editor-head',action:'.kc-v3-followups > .kc-btn',
+  fileLabel:'.kc-v3-file-trigger',fileInput:'#kc-file-input',expandSelector:'.kc-v3-attachments',
+  lastAction:'.kc-v3-preview > .kc-btn',shot
+ });
+ assert.equal(actualGeometry.length,12,'Three scroll states on 360/393/412 and short viewport');
+ checks.push('Editor geometry: sticky header, compact action, accessible file picker, bottom navigation and 360/393/412 plus short viewport');
  await page.locator('[data-kc=editor-menu]').click();
  assert.equal(await page.locator('#kc-editor-menu').evaluate(dialog=>dialog.open),true);
  await page.locator('#kc-editor-menu [data-kc=pin]').click();assert((await state()).notes.find(x=>x.id===n.id).pinned);

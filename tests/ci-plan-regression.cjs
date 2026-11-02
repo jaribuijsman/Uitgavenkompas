@@ -11,6 +11,12 @@ function check(title,fn){fn();count++;console.log("PASS "+title)}
 check("documentation-only does not invoke browsers",()=>{
  const a=planFor(["AGENTS.md","docs/readme.md"]);assert.equal(a.tier,"none");assert.deepEqual(a.groups,[]);
 });
+check("Agent Markdown skills are documentation-only, not a browser regression",()=>{
+ const doc=planFor(["AGENTS.md","docs/android-pwa-ux-standaard.md",".agents/skills/android-ux-inspector/SKILL.md",".agents/skills/design-system-guardian/SKILL.md"]);
+ assert.equal(doc.tier,"none");assert.deepEqual(doc.groups,[]);assert.equal(doc.upgrade,false);
+ const code=planFor([".agents/skills/android-ux-inspector/browser-helper.js"]);
+ assert.notEqual(code.tier,"none","Executable helpers remain code");
+});
 check("local CSS selects only a mobile smoke journey",()=>{
  const a=planFor(["assets/memento-dictation.css"]);assert.equal(a.tier,"low");assert.deepEqual(a.groups,["interface-smoke"]);assert.equal(a.upgrade,false);
 });
