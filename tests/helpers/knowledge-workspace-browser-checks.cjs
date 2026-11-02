@@ -89,4 +89,23 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.evaluate(()=>localStorage.getItem('uitgavenkompas_v1')),finance);
  checks.push('Right swipe advances four; folders collapse and remember; visual note autosave/pin/links; own background and image widget; finance unchanged');
  await page.reload({waitUntil:'domcontentloaded'});await require('./enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');assert.equal((await state()).notes.find(x=>x.id===n.id).body.includes('Volgende stap'),true);assert((await state()).knowledge.workspace.background.file);await shot(page,'workspace-reopened');
+ // Independently verify the ordinary textarea editor against the approved
+ // prototype: the structured-document fixture above cannot establish this.
+ await page.evaluate(id=>window.MementoKnowledge.showNote(id),n.id);
+ await page.evaluate(id=>window.MementoLifeFlow.start('note',id),n.id);
+ assert(await page.locator('#mementoFollowupForm').isVisible(),'Linked follow-up creation must be available');
+ await page.locator('#followupTarget').selectOption('note');
+ await page.locator('#followupTitle').fill(fixtureTitle);
+ await page.getByRole('button',{name:'Opslaan en openen'}).click();
+ await page.waitForFunction(originId=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes.some(x=>x.mementoFlow?.origin?.id===originId&&x.document==null),n.id);
+ const plain=(await state()).notes.find(x=>x.mementoFlow?.origin?.id===n.id&&!x.document);
+ assert(plain,'Follow-up note uses the original plain-text storage shape');
+ await page.locator('[data-kc=edit]').first().click();
+ assert.equal(await page.locator('#kc-title').inputValue(),fixtureTitle);
+ assert.equal(await page.locator('#kc-body').inputValue(),fixtureBody,'Normal note editor shows the same text as the approved prototype');
+ assert.equal(await page.locator('.kc-v3-format>button').count(),5,'Normal editor uses the exact five prototype toolbar actions');
+ assert.equal(await page.locator('.kc-v3-save-btn').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(197, 223, 195)');
+ await shot(page,'approved-plain-editor-same-fixture');
+ checks.push('Approved plain-text prototype compared independently from preserved visual document; exact title/body and five toolbar actions');
+
 };
