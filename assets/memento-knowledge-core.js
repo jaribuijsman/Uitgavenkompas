@@ -239,6 +239,9 @@ function saveCollection(life,input){
  const k=ensure(life),old=input.id?k.collections.find(c=>c.id===input.id):null;
  if(input.id&&!old)throw Error('Verzameling ontbreekt');
  const name=String(input.name||'').trim(),parentId=input.parentId||null;
+ const externalUrl=String(input.externalUrl||'').trim();
+ if(externalUrl){let parsed;try{parsed=new URL(externalUrl);}catch{throw Error('Gebruik een volledige https://-URL');}if(parsed.protocol!=='https:'||!parsed.hostname||parsed.username||parsed.password)throw Error('Gebruik een veilige https://-URL');}
+
  if(!name||name.length>80)throw Error('Geef een naam van maximaal 80 tekens');
  if(!iconIds.has(input.icon)||!['list','gallery','table'].includes(input.view))throw Error('Ongeldig pictogram of weergave');
  const parent=parentId?k.collections.find(c=>c.id===parentId&&!c.archived):null;
@@ -249,7 +252,7 @@ function saveCollection(life,input){
  // Bind legacy name-only notes before a rename; links and note IDs remain intact.
  const previousParent=old?.parentId||null;
  const notes=old?life.notes.filter(n=>collectionOf(life,n)===old.id):[];
- Object.assign(c,{name,icon:input.icon,view:input.view,parentId,updatedAt:timestamp(),revision:(old?.revision||0)+1});
+ Object.assign(c,{name,icon:input.icon,view:input.view,parentId,externalUrl,updatedAt:timestamp(),revision:(old?.revision||0)+1});
  if(Object.prototype.hasOwnProperty.call(input,'coverId'))c.coverId=input.coverId||'';
  if(Object.prototype.hasOwnProperty.call(input,'coverFocus'))c.coverFocus=input.coverFocus;
  if(Object.prototype.hasOwnProperty.call(input,'coverFile'))c.coverFile=input.coverFile||null;
