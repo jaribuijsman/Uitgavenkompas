@@ -1152,7 +1152,7 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <script src="./assets/memento-knowledge-cover-ui.js?v=20261027-covers-v1"></script>
 <script src="./assets/memento-knowledge-backup.js?v=20261101-workspace-v2"></script>
 <script src="./assets/memento-knowledge.js?v=20261102-followup-source-v2"></script>
-<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261102-life-presentation-v2"></script>
+<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261102-quick-capture-a-v1"></script>
 <script src="./assets/memento-global-search-core.js?v=20261031-global-search-v1"></script>
 <script src="./assets/memento-global-search.js?v=20261031-navigation-contract-v1"></script>
 
@@ -1607,21 +1607,79 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 @media(max-width:360px){#lifeApp .memento-capture-card{padding:14px;gap:14px}#lifeApp .memento-capture-toolbar{gap:5px}#lifeApp .memento-capture-toolbar .life-btn-primary{font-size:14px;padding:10px 11px}#lifeApp .memento-capture-date{padding:8px;font-size:13px;gap:5px;max-width:calc(100% - 146px)}#lifeApp .life-list>.life-task,#lifeApp .life-day-column .life-list>.life-task{gap:4px;padding:12px 5px}}
 </style>
 
-<style id="memento-compact-capture-20261025">
-/* Two compact rows; keep note/task, native date picker and voice capture. */
-#lifeApp .memento-capture-card{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;align-items:center}
-#lifeApp .memento-capture-card .memento-capture-kinds{grid-column:1;grid-row:1;justify-self:start;align-self:center;border-radius:12px;padding:2px;min-width:0}
-#lifeApp .memento-capture-card .memento-capture-kinds button{min-width:60px;padding:6px 10px;font-size:14px;border-radius:9px}
-#lifeApp .memento-capture-card input#lifeQuickTitle{grid-column:1;grid-row:2;min-height:46px;padding:9px 10px;font-size:16px;border-radius:10px}
-#lifeApp .memento-capture-card .memento-capture-toolbar{display:contents}
-#lifeApp .memento-capture-card .memento-capture-date{grid-row:1;min-height:44px;padding:7px;font-size:13px;gap:5px;border-color:transparent;background:transparent;border-radius:10px}
+<style id="memento-compact-capture-20261102">
+/* Quick capture A: one visible composer, three kinds, compact options below. */
+#lifeApp .memento-capture-card{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:8px;
+ align-items:center;min-width:0;border-radius:20px;
+ border:1px solid #698976;background:linear-gradient(145deg,#1e4936f5,#123b2df5);
+ box-shadow:0 7px 24px #06241b56;
+}
+#lifeApp .memento-capture-card .memento-capture-kinds{
+ grid-column:1/-1;grid-row:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:4px;width:100%;max-width:none;min-width:0;padding:3px;
+ border:1px solid #53765d;border-radius:14px;background:#133326;
+}
+#lifeApp .memento-capture-card .memento-capture-kinds button{
+ min-width:0;min-height:44px;padding:7px 4px;border:1px solid transparent;
+ border-radius:11px;font-size:14px;font-weight:700;white-space:nowrap;
+ background:#193b2c;color:#dcebe0;
+}
+#lifeApp .memento-capture-card .memento-capture-kinds button[aria-pressed=true]{
+ background:#bdd3c2;color:#14261a;border-color:#bdd3c2;
+}
+#lifeApp .memento-capture-card input#lifeQuickTitle{
+ grid-column:1;grid-row:1;min-width:0;min-height:48px;
+ padding:10px 11px;font-size:16px;line-height:1.3;border-radius:12px;
+}
+#lifeApp .memento-capture-card .memento-capture-toolbar{display:grid;grid-column:1;grid-row:2;grid-template-columns:minmax(0,1fr) 48px 48px;grid-template-rows:48px 44px;gap:8px;align-items:center;min-width:0;width:100%}
+#lifeApp .memento-capture-card .memento-voice-btn{
+ grid-column:2;grid-row:1;display:grid;place-items:center;
+ width:48px;min-width:48px;height:48px;margin:0;border:0;
+ border-radius:12px;background:#214b38;color:#e7f2e9;
+}
+#lifeApp .memento-capture-card .memento-capture-submit{
+ grid-column:3;grid-row:1;display:grid;place-items:center;
+ width:48px;min-width:48px;height:48px;min-height:48px;
+ margin:0;padding:11px;border-radius:12px;
+}
+#lifeApp .memento-capture-card .memento-capture-submit svg{width:22px;height:22px;display:block}
+#lifeApp .memento-capture-card .memento-capture-date{
+ grid-column:1;grid-row:2;justify-self:start;max-width:100%;min-width:0;
+ min-height:44px;padding:7px 9px;gap:6px;border:1px solid #70957c;
+ background:#244a39;border-radius:12px;font-size:13px;
+}
 #lifeApp .memento-capture-card .memento-capture-date svg{width:17px;height:17px}
-#lifeApp .memento-capture-card .memento-capture-inbox{grid-column:2 / 4;grid-row:1;justify-self:end;font-size:12px}
-#lifeApp .memento-capture-card .memento-voice-btn{grid-column:2;grid-row:2;margin:0;width:44px;min-width:44px;height:46px;background:transparent}
-#lifeApp .memento-capture-card .memento-capture-submit{grid-column:3;grid-row:2;display:grid;place-items:center;box-sizing:border-box;width:44px;min-width:44px;min-height:46px;padding:10px;border-radius:11px}
-#lifeApp .memento-capture-submit svg{width:22px;height:22px;display:block}
-#lifeApp .memento-capture-card .memento-voice-message{grid-column:1 / -1;grid-row:3;font-size:12px}
-@media(max-width:340px){#lifeApp .memento-capture-card{padding:10px;gap:6px}#lifeApp .memento-capture-card .memento-capture-kinds button{min-width:56px;padding:6px 8px}}
+/* Date selection now opens the existing Options dialog; no invisible input can overlap its neighbor. */
+#lifeApp .memento-capture-card button.memento-capture-date{font:inherit;font-size:13px;cursor:pointer}
+#lifeApp .memento-capture-card input#lifeQuickDate[type="hidden"]{display:none}
+#lifeApp .memento-capture-card .memento-capture-inbox{
+ grid-column:1;grid-row:2;min-width:0;display:flex;align-items:center;
+ gap:6px;font-size:13px;color:#d9ebde;white-space:nowrap;overflow:hidden;
+}
+#lifeApp .memento-capture-card .memento-capture-inbox svg{
+ width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;
+}
+#lifeApp .memento-capture-card #lifeQuickCollectionLabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lifeApp .memento-capture-card .memento-capture-options{
+ grid-column:2/4;grid-row:2;justify-self:end;display:flex;align-items:center;
+ gap:4px;min-width:76px;min-height:44px;padding:7px 8px;
+ border:0;background:transparent;color:#d6e9d9;font-size:13px;
+ font-weight:700;border-radius:10px;cursor:pointer;
+}
+#lifeApp .memento-capture-card .memento-capture-options span{font-size:21px;line-height:1}
+#lifeApp .memento-capture-card .memento-voice-message{
+ grid-column:1/-1;grid-row:3;margin:0;font-size:12px;
+}
+#lifeApp .memento-capture-card [hidden]{display:none!important}
+#lifeApp .memento-capture-card button:focus-visible,
+#lifeApp .memento-capture-card .memento-capture-date:focus-within{
+ outline:2px solid #bdd3c2;outline-offset:2px;
+}
+@media(max-width:360px){
+ #lifeApp .memento-capture-card{gap:6px}
+ #lifeApp .memento-capture-card .memento-capture-kinds button{font-size:13px;padding:7px 2px}
+}
 </style>
 <style id="memento-quiet-status-20261025">#saveStatus[hidden],#lifeApp #lifeSaveStatus[hidden],#lifeApp #lifeSubtitle[hidden]{display:none!important}#lifeApp .life-topline:not(:has(.life-save:not([hidden]))):has(#lifeCrumb){min-height:0}</style>
 <style id="memento-shopping-20261025">
@@ -1726,17 +1784,10 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 </script>
 
 <link rel="stylesheet" href="./assets/memento-tokens.css?v=20261029-scroll-v1">
-<link rel="stylesheet" href="./assets/memento-ui.css?v=20261102-dialog-footer-owner-v1">
+<link rel="stylesheet" href="./assets/memento-ui.css?v=20261102-quick-capture-date-owner-v1">
 <script src="./assets/memento-ui.js?v=20261029-visual-repair-v1"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261101-salary-period-v1"></script>
-<style id="memento-diary-shortcut-20261029">
-/* The diary link uses the existing quick-entry row, without changing task handling. */
-#lifeApp .memento-capture-card .memento-capture-kinds button{min-width:0;padding:6px 8px;font-size:13px;white-space:nowrap}
-#lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut{border:1px solid #53755c;background:#234434;color:#d5e9d9;margin-left:8px}
-#lifeApp .memento-capture-card .memento-capture-kinds .memento-diary-shortcut:focus-visible{outline:2px solid #bdd3c2;outline-offset:2px}
-@media(max-width:380px){#lifeApp .memento-capture-card .memento-capture-kinds button{padding:6px 6px;font-size:12px}}
-</style>
-<link rel="stylesheet" href="./assets/memento-glass.css?v=20261102-mobile-contract-v3">
+<link rel="stylesheet" href="./assets/memento-glass.css?v=20261102-quick-capture-a-v1">
 <link rel="stylesheet" href="./assets/memento-layout.css?v=20261102-planning-touch-v1">
 <script src="./assets/memento-disclosure.js?v=20261029-recovery-v2"></script>
 <script src="./assets/memento-layout.js?v=20261102-material-settings-v1"></script>

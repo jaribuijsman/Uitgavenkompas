@@ -17,18 +17,23 @@ const server=http.createServer((req,res)=>{
   await require("./helpers/enter-app.cjs")(page,true);
   await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
   await page.locator("#lifeQuickForm").waitFor({state:"visible"});
-  const shortcut=page.locator(".memento-diary-shortcut");
-  assert.equal(await shortcut.count(),1);
-  assert.equal(await page.locator('[data-life-quick-kind="note"]').count(),1);
-  assert.equal(await page.locator('[data-life-quick-kind="task"]').count(),1);
-  const rects=await page.evaluate(()=>{
-   const a=document.querySelector(".memento-capture-kinds").getBoundingClientRect(),b=document.querySelector(".memento-capture-date").getBoundingClientRect();
-   return {groupRight:a.right,dateLeft:b.left,scroll:document.documentElement.scrollWidth,inner:innerWidth};
-  });
-  assert(rects.groupRight<=rects.dateLeft+1,"Shortcut overlaps date: "+JSON.stringify(rects));
+  // Dagboek remains reachable through Notities, but was deliberately removed
+  // from the quick-entry card in the approved Notitie / Afspraak / Taak design.
+  assert.equal(await page.locator(".memento-diary-shortcut").count(),0);
+  assert.deepEqual(await page.locator("[data-life-quick-kind]").allTextContents(),["Notitie","Afspraak","Taak"]);
+  const rects=await page.evaluate(()=>({
+   widths:[...document.querySelectorAll(".memento-capture-kinds button")].map(b=>b.getBoundingClientRect().width),
+   scroll:document.documentElement.scrollWidth,inner:innerWidth
+  }));
+  assert(rects.widths.every(w=>w>=44),"Quick-entry touch targets must remain usable: "+JSON.stringify(rects));
   assert(rects.scroll<=rects.inner+1,"Horizontal overflow: "+JSON.stringify(rects));
-  await shortcut.click();
-  await page.locator("#kc-body").waitFor();
+  const openDiary=async()=>{
+   await page.locator('[data-memento-menu="open"]').click();
+   await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();
+   await page.evaluate(()=>window.MementoKnowledge.showJournal(window.MementoKnowledgeCore.journalDate()));
+   await page.locator("#kc-body").waitFor();
+  };
+  await openDiary();
   assert.equal(await page.locator(".kc-diary-selfcare").count(),0,"No personal-care card should appear");
   assert.equal(await page.locator("[data-kc-self-care]").count(),0);
   assert.equal(await page.locator('[data-kc="journal-selfcare-done"]').count(),0);
@@ -44,8 +49,7 @@ const server=http.createServer((req,res)=>{
   await page.reload({waitUntil:"domcontentloaded"});
   await require("./helpers/enter-app.cjs")(page,true);
   await page.locator("#lifeQuickForm").waitFor({state:"visible"});
-  await page.locator(".memento-diary-shortcut").click();
-  await page.locator("#kc-body").waitFor();
+  await openDiary();
   assert.equal(await page.locator(".kc-diary-selfcare").count(),0);
   assert.equal(await page.locator("#kc-body").inputValue(),"Dagboek zonder persoonlijke verzorging");
   // Het dagboek van 28 oktober krijgt de slaap van 27 op 28 oktober.
@@ -80,8 +84,7 @@ const server=http.createServer((req,res)=>{
   await require("./helpers/enter-app.cjs")(page,true);
   // De notitiemodule wordt pas gemount nadat de Leven-weergave is geopend.
   await page.locator("#lifeQuickForm").waitFor({state:"visible"});
-  await page.locator(".memento-diary-shortcut").click();
-  await page.locator("#kc-body").waitFor();
+  await openDiary();
   await page.evaluate(()=>window.MementoKnowledge.showJournal("2026-10-28"));
   await page.locator(".kc-diary-health > summary").click();
   assert.equal(await page.locator('[data-kc-manual-health="sleepHours"]').inputValue(),"5");

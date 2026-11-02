@@ -23,7 +23,7 @@ const repeats={none:'Niet herhalen',daily:'Dagelijks',weekly:'Wekelijks',monthly
 const categories=['Huishouden','Huis & klussen','Administratie','Persoonlijk','Samen','Gezondheid','Werk'];
 const rooms=['Keuken','Badkamer & toilet','Slaapkamer','Wasruimte','Hele huis'];
 const views=[['today','☀','Mijn dag'],['tasks','☑','Taken'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Notities'],['agenda','◷','Agenda'],['fitness','↗','Fitness'],['backup','⚙','Back-up & instellingen']];
-let quickKind='task',quickDate=null,daySlide=0;
+let quickKind='note',quickDate=null,quickCollectionId='inbox',quickCategory='Persoonlijk',quickRoom='Hele huis',quickPriority=false,daySlide=0;
 const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title','manual'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
@@ -514,12 +514,15 @@ async function copyMementoNoteAI(){
  mementoNoteAIStatus(copied?'Tekst gekopieerd. Open ChatGPT en plak de opdracht.':'Kopiëren lukte niet. Selecteer en kopieer de tekst handmatig.',!copied);
 }
 
-function noteFromQuick(raw){
+function noteFromQuick(raw,collectionId='inbox'){
  const body=String(raw||'').trim();if(!body)return false;
- const title=(body.split(/[\r\n]/)[0]||body).trim().slice(0,84)+(body.split(/[\r\n]/)[0].trim().length>84?'…':'');
+ const core=window.MementoKnowledgeCore;
+ if(!core?.makeNote&&collectionId!=='inbox'){status('De notitiemodule is niet geladen. Er is niets opgeslagen.',false,true);return false}
+ const title=body.split(/[\r\n]/)[0].trim().slice(0,84);
  noteTab='active';noteCategoryFilter='all';
- return mutate(()=>state.notes.unshift(window.MementoKnowledgeCore?window.MementoKnowledgeCore.makeNote({body,collectionId:'inbox'},state):{id:uid(),title,body,category:'Inbox',createdAt:new Date().toISOString(),deletedAt:'',sourceUrl:''}),
-  'Notitie toegevoegd aan Inbox.');
+ return mutate(()=>state.notes.unshift(core?.makeNote?core.makeNote({body,collectionId},state):{
+  id:uid(),title,body,category:'Inbox',createdAt:new Date().toISOString(),deletedAt:'',sourceUrl:''
+ }), 'Notitie opgeslagen in '+(collectionId==='inbox'?'Inbox':quickCollectionLabel())+'.');
 }
 function googleEventDay(e,iso){
  const start=e.start?.date||e.start?.dateTime;if(!start)return false;
@@ -665,32 +668,77 @@ window.MementoAssistantBridge={
  }
 };
 
+function quickCollections(){
+ const core=window.MementoKnowledgeCore;
+ return (state.knowledge?.collections||[]).filter(c=>c&&!c.archived&&c.special!=='journal'&&core?.activeCollection?.(state,c.id));
+}
+function quickCollection(){
+ return quickCollectionId==='inbox'||quickCollections().some(c=>c.id===quickCollectionId)?quickCollectionId:'';
+}
+function quickCollectionLabel(){
+ const id=quickCollection();
+ return id==='inbox'?'Inbox':id?window.MementoKnowledgeCore.collectionPath(state,id):'Map niet beschikbaar';
+}
 function quickForm(){
- const task=quickKind==='task',date=quickDate===null?today():quickDate;
+ const note=quickKind==='note',date=quickDate===null?today():quickDate;
+ const labels={note:'Notitie',appointment:'Afspraak',task:'Taak'},prompts={note:'Wat wil je onthouden?',appointment:'Welke afspraak wil je plannen?',task:'Wat wil je doen?'};
  return '<form class="life-quick-add memento-quick-note memento-capture-card" id="lifeQuickForm">'+
- '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?"><button type="button" data-life-quick-kind="note" aria-pressed="'+!task+'">Notitie</button><button type="button" data-life-quick-kind="task" aria-pressed="'+task+'">Taak</button><button type="button" class="memento-diary-shortcut" data-life-journal="" aria-label="Open dagboek van vandaag" title="Schrijf in je dagboek">Dagboek</button></div>'+
- '<input id="lifeQuickTitle" aria-label="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" placeholder="'+(task?'Wat wil je doen?':'Wat wil je onthouden?')+'" required maxlength="2500" autocomplete="off">'+
- '<div class="memento-capture-toolbar"><label class="memento-capture-date" id="lifeQuickDateField"'+(task?'':' hidden')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span><input id="lifeQuickDate" type="date" aria-label="Taakdatum (optioneel)" value="'+esc(date)+'"'+(task?'':' disabled')+'></label>'+
- '<span class="memento-capture-inbox" id="lifeQuickInbox"'+(task?' hidden':'')+'>Notities · Inbox</span>'+
+ '<div class="memento-capture-kinds" role="group" aria-label="Wat wil je vastleggen?">'+['note','appointment','task'].map(k=>'<button type="button" data-life-quick-kind="'+k+'" aria-pressed="'+(k===quickKind)+'">'+labels[k]+'</button>').join('')+'</div>'+
+ '<div class="memento-capture-toolbar"><input id="lifeQuickTitle" aria-label="'+prompts[quickKind]+'" placeholder="'+prompts[quickKind]+'" required maxlength="2500" autocomplete="off">'+
+ '<button class="memento-capture-date" type="button" id="lifeQuickDateField" data-life-quick-date aria-label="Datum kiezen"'+(note?' hidden':'')+'><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span id="lifeQuickDateLabel">'+esc(quickDateLabel(date))+'</span></button><input id="lifeQuickDate" type="hidden" value="'+esc(date)+'"'+(note?' disabled':'')+'>'+
+ '<span class="memento-capture-inbox" id="lifeQuickInbox"'+(note?'':' hidden')+'><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v11H3z M3 7V4h7l2 3"/></svg><span id="lifeQuickCollectionLabel">'+esc(quickCollectionLabel())+'</span></span>'+
  '<button class="memento-voice-btn" type="button" id="mementoVoiceButton" aria-label="Spreek tekst in" aria-pressed="false" title="Inspreken"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="13" rx="4"></rect><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"></path></svg></button>'+
- '<button class="life-btn life-btn-primary memento-capture-submit" type="submit" aria-label="Toevoegen" title="Toevoegen"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div><div class="memento-voice-message" id="mementoVoiceMessage" aria-live="polite"></div></form>';
+ '<button class="life-btn life-btn-primary memento-capture-submit" type="submit" aria-label="'+(quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen')+'" title="'+(quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen')+'"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>'+
+ '<button class="memento-capture-options" type="button" data-life-quick-options aria-label="Opties voor '+labels[quickKind]+'">Opties <span aria-hidden="true">⋯</span></button></div><div class="memento-voice-message" id="mementoVoiceMessage" aria-live="polite"></div></form>';
 }
 function quickDateLabel(date){return date===today()?'Vandaag':date?fmt(date):'Geen datum'}
 function syncQuickForm(){
- const task=quickKind==='task',input=$('lifeQuickTitle');if(!input)return;
- input.placeholder=task?'Wat wil je doen?':'Wat wil je onthouden?';input.setAttribute('aria-label',input.placeholder);
+ const input=$('lifeQuickTitle');if(!input)return;
+ const prompts={note:'Wat wil je onthouden?',appointment:'Welke afspraak wil je plannen?',task:'Wat wil je doen?'},note=quickKind==='note';
+ input.placeholder=prompts[quickKind];input.setAttribute('aria-label',input.placeholder);
  root.querySelectorAll('[data-life-quick-kind]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lifeQuickKind===quickKind)));
- $('lifeQuickDateField').hidden=!task;$('lifeQuickDate').disabled=!task;$('lifeQuickInbox').hidden=task;
+ $('lifeQuickDateField').hidden=note;$('lifeQuickDate').disabled=note;
+ $('lifeQuickDateField').setAttribute('aria-label','Datum kiezen voor '+(quickKind==='appointment'?'Afspraak':'Taak')+': '+quickDateLabel(quickDate===null?today():quickDate));
+ $('lifeQuickInbox').hidden=!note;
  $('lifeQuickDateLabel').textContent=quickDateLabel(quickDate===null?today():quickDate);
+ // The native field and the optional date in Opties must never diverge.
+ $('lifeQuickDate').value=quickDate===null?today():quickDate;
+ $('lifeQuickCollectionLabel').textContent=quickCollectionLabel();
+ const submit=root.querySelector('.memento-capture-submit'),action=quickKind==='appointment'?'Afspraak verder invullen':'Toevoegen';
+ submit.setAttribute('aria-label',action);submit.title=action;
+ root.querySelector('.memento-capture-options')?.setAttribute('aria-label','Opties voor '+({note:'Notitie',appointment:'Afspraak',task:'Taak'})[quickKind]);
+}
+function openQuickOptions(){
+ modal={mode:'quick-options'};
+ const note=quickKind==='note',task=quickKind==='task';
+ const collections=quickCollections(),selected=quickCollection();
+ const collectionField='<label class="life-form-field wide" for="lifeQuickCollection">Opslaan in map<select id="lifeQuickCollection"><option value="inbox"'+(selected==='inbox'?' selected':'')+'>Inbox</option>'+collections.map(c=>'<option value="'+esc(c.id)+'"'+(selected===c.id?' selected':'')+'>'+esc(window.MementoKnowledgeCore.collectionPath(state,c.id))+'</option>').join('')+'</select></label>';
+ const categoryField='<label class="life-form-field wide" for="lifeQuickCategory">Categorie<select id="lifeQuickCategory">'+categories.map(c=>'<option value="'+esc(c)+'"'+(quickCategory===c?' selected':'')+'>'+esc(c)+'</option>').join('')+'</select></label>'+
+ '<label class="life-form-field wide" for="lifeQuickRoom">Ruimte<select id="lifeQuickRoom">'+rooms.map(r=>'<option value="'+esc(r)+'"'+(quickRoom===r?' selected':'')+'>'+esc(r)+'</option>').join('')+'</select></label>'+
+ '<label class="life-checkbox-label wide"><input id="lifeQuickPriority" type="checkbox"'+(quickPriority?' checked':'')+'> Belangrijk</label>';
+ const dateField='<label class="life-form-field wide" for="lifeQuickOptionsDate">Datum (optioneel)<input id="lifeQuickOptionsDate" type="date" value="'+esc(quickDate===null?today():quickDate)+'"></label>';
+ showDialog('Snelle invoer · Opties',note?'Kies een bestaande map. Inbox blijft de standaard.':task?'Aanvullende taakinstellingen zijn optioneel.':'De begintijd en overige details vul je in de afspraakeditor in.',
+ '<div class="life-form-grid memento-quick-options-fields">'+(note?collectionField:dateField+(task?categoryField:''))+'</div>',
+ '<button type="button" class="life-btn life-btn-primary" data-life-close>Gereed</button>');
 }
 function submitQuickCapture(){
- const body=$('lifeQuickTitle').value.trim();if(!body)return false;
- const task=quickKind==='task',date=task?$('lifeQuickDate').value:'';
- if(task&&!validDate(date)){status('Kies een geldige taakdatum of laat de datum leeg.',false,true);return false}
+ const input=$('lifeQuickTitle'),body=input?.value.trim();if(!body)return false;
+ const note=quickKind==='note',appointment=quickKind==='appointment',date=note?'':$('lifeQuickDate').value;
+ if(!note&&!validDate(date)){status('Kies een geldige datum of laat de datum leeg.',false,true);return false}
  window.MementoVoice?.stop?.();
- if(task)quickDate=date===today()?null:date;
- if(task){taskTab='open';taskScope='all';roomFilter='all';repeatFilter='all';categoryFilter='all';search='';}
- const saved=task?mutate(()=>state.tasks.unshift({id:uid(),title:body.slice(0,180),notes:body.length>180?body:'',kind:'task',category:'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date,focusDate:'',priority:false,done:false,archived:false,deletedAt:'',lastDone:'',steps:[],history:[],sourceUrl:''}),'Taak opgeslagen.'):noteFromQuick(body);
+ if(!note)quickDate=date===today()?null:date;
+ if(appointment){
+  // Do not guess a start time or write a calendar event from the quick field.
+  editAppointment(null,date||today(),body.slice(0,180),body.length>180?body:'');
+  return true;
+ }
+ if(note&&!quickCollection()){status('De gekozen map bestaat niet meer. Kies bij Opties opnieuw een map.',false,true);return false}
+ if(!note){taskTab='open';taskScope='all';roomFilter='all';repeatFilter='all';categoryFilter='all';search='';}
+ const saved=note?noteFromQuick(body,quickCollection()):mutate(()=>state.tasks.unshift({
+  id:uid(),title:body.slice(0,180),notes:body.length>180?body:'',kind:'task',category:quickCategory,room:quickRoom,
+  repeat:'none',repeatDays:4,date,focusDate:'',priority:quickPriority,done:false,archived:false,deletedAt:'',
+  lastDone:'',steps:[],history:[],sourceUrl:''
+ }),'Taak opgeslagen.');
  if(!saved&&$('lifeQuickTitle'))$('lifeQuickTitle').value=body;
  $('lifeQuickTitle')?.focus();return saved;
 }
@@ -1394,7 +1442,8 @@ root.addEventListener('click',e=>{
  if(d.shoppingResearch){openShoppingResearch(d.shoppingResearch);return}
  if(d.shoppingGroup){groceryGrouped=!groceryGrouped;render();return}
  if(d.shoppingNew){editGrocery();return}
- if(d.lifeQuickKind){quickKind=d.lifeQuickKind==='note'?'note':'task';syncQuickForm();return}
+ if(d.lifeQuickDate!==undefined||d.lifeQuickOptions!==undefined){openQuickOptions();return}
+ if(d.lifeQuickKind){if(['note','appointment','task'].includes(d.lifeQuickKind)){quickKind=d.lifeQuickKind;if(quickKind==='appointment'&&quickDate==='')quickDate=null;}syncQuickForm();return}
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
  if(d.lifeJournal!==undefined){if(!setView('notes'))return;window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
@@ -1473,7 +1522,15 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
  }return;
  }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(t?.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return}if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
 dialog.addEventListener('input',e=>{if(e.target.id==='lifeTaskSteps')syncTaskSteps();if(e.target.id==='lifeTaskEstimate'&&modal){modal.estimateSource='manual';$('lifeEstimateSource').textContent='Zelf ingesteld'}});
-dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='followupTarget'||e.target.id==='followupTime'){updateFollowupPresentation();return;}
+dialog.addEventListener('change',e=>{if(modal?.mode==='quick-options'){
+  const el=e.target;
+  if(el.id==='lifeQuickCollection')quickCollectionId=el.value;
+  else if(el.id==='lifeQuickCategory')quickCategory=el.value;
+  else if(el.id==='lifeQuickRoom')quickRoom=el.value;
+  else if(el.id==='lifeQuickPriority')quickPriority=el.checked;
+  else if(el.id==='lifeQuickOptionsDate')quickDate=el.value===today()?null:el.value;
+  syncQuickForm();return;
+ }if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='followupTarget'||e.target.id==='followupTime'){updateFollowupPresentation();return;}
  if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
