@@ -1,0 +1,395 @@
+{
+  "base": "7f51c5b20400ac0bdecf15f2be1f843c5cd0fe00",
+  "fixture": "../f4-a-20261102/fixture.json",
+  "asset_sha256": "19471ae135a0f00f4ad4ba295f6c41eead6c303964bd6a4d99632af2a24c864d",
+  "states": [
+    {
+      "state": "workspace-home",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "workspace-swiped",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "workspace-tree",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-editor-same-fixture",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "7e95885818bead9c45c48ae5a9de8421af5a59694b8f1e90dd7060af4d93a3c7"
+    },
+    {
+      "state": "approved-editor-360x852-middle",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "394d7935c4e4826ad08ed8541f6dc24ee76b98545faf86bb741e9978c592748c"
+    },
+    {
+      "state": "approved-editor-360x852-bottom",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "394d7935c4e4826ad08ed8541f6dc24ee76b98545faf86bb741e9978c592748c"
+    },
+    {
+      "state": "approved-editor-393x852-middle",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-editor-393x852-bottom",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-editor-412x852-middle",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "63067284434f335b6e76cf337318aa570c01578b29e0b8619cc6ba0206003db1"
+    },
+    {
+      "state": "approved-editor-412x852-bottom",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "63067284434f335b6e76cf337318aa570c01578b29e0b8619cc6ba0206003db1"
+    },
+    {
+      "state": "approved-editor-393x470-middle",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "e771eb4ac7042b6ebaf50415c7108380bf30326034fceae8751d76f3e7aa605e"
+    },
+    {
+      "state": "approved-editor-393x470-bottom",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "e771eb4ac7042b6ebaf50415c7108380bf30326034fceae8751d76f3e7aa605e"
+    },
+    {
+      "state": "parity-reference-editor-top",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "parity-app-editor-top",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "7e95885818bead9c45c48ae5a9de8421af5a59694b8f1e90dd7060af4d93a3c7"
+    },
+    {
+      "state": "parity-reference-editor-middle",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "parity-app-editor-middle",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "parity-reference-editor-bottom",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "parity-app-editor-bottom",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-prototype-reference",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "parity-reference-followup-choices",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-reference-followup-task",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-reference-followup-appointment",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-reference-followup-note",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-followup-sheet",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-followup-form-task",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-followup-form-appointment",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-followup-short-viewport",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "e771eb4ac7042b6ebaf50415c7108380bf30326034fceae8751d76f3e7aa605e"
+    },
+    {
+      "state": "approved-followup-form-note",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-attachment-sheet",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "approved-more-actions-sheet",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "1654d5faeddb553734b6a1a89a2e00e5db12885c3e585a59f92a22e6c49ed695"
+    },
+    {
+      "state": "workspace-visual-editor",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "7e95885818bead9c45c48ae5a9de8421af5a59694b8f1e90dd7060af4d93a3c7"
+    },
+    {
+      "state": "workspace-images",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "workspace-reopened",
+      "matched_headers": 0,
+      "computed_style_and_geometry_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "approved-plain-editor-same-fixture",
+      "matched_headers": 1,
+      "computed_style_and_geometry_sha256": "7e95885818bead9c45c48ae5a9de8421af5a59694b8f1e90dd7060af4d93a3c7"
+    }
+  ],
+  "images": [
+    {
+      "state": "parity-app-editor-bottom",
+      "before_sha256": "2d76159ea5569ef959b156f09044e2f8edd2f5fe624453e09cc8629593935e9e",
+      "after_sha256": "2d76159ea5569ef959b156f09044e2f8edd2f5fe624453e09cc8629593935e9e",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-followup-short-viewport",
+      "before_sha256": "5a0beba477afe0d8fcf75f20b45d0bd35d12ebaa48b6631a48d4e9f76e9d0379",
+      "after_sha256": "5a0beba477afe0d8fcf75f20b45d0bd35d12ebaa48b6631a48d4e9f76e9d0379",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-reopened",
+      "before_sha256": "397f402459494f5047d3869e01292d05593a21176522950bc262b602c42298c4",
+      "after_sha256": "397f402459494f5047d3869e01292d05593a21176522950bc262b602c42298c4",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-followup-form-appointment",
+      "before_sha256": "564489e8563c3d764857d10bf40d15875a95dbb35c7b78553454d4260b191572",
+      "after_sha256": "564489e8563c3d764857d10bf40d15875a95dbb35c7b78553454d4260b191572",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-swiped",
+      "before_sha256": "973a68a8569d83a23205ece9256d60fa7e78dce5c0f8eebfa4932d4dd4df5d17",
+      "after_sha256": "973a68a8569d83a23205ece9256d60fa7e78dce5c0f8eebfa4932d4dd4df5d17",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-followup-form-note",
+      "before_sha256": "5e4f0d002ab15f2ed2ddc2ecd1816616fe2866c00a5b86d74c29de094cbcfcf4",
+      "after_sha256": "5e4f0d002ab15f2ed2ddc2ecd1816616fe2866c00a5b86d74c29de094cbcfcf4",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-app-editor-top",
+      "before_sha256": "719ba13200f4f720b69636dc6e0622e4504b19e98713f3ed6e1faa25d3c3bb08",
+      "after_sha256": "719ba13200f4f720b69636dc6e0622e4504b19e98713f3ed6e1faa25d3c3bb08",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-app-editor-middle",
+      "before_sha256": "01ef106d6252973e9ba0b8c4860bb5d0d7d1dd806ee87050cae169ff2b040e69",
+      "after_sha256": "01ef106d6252973e9ba0b8c4860bb5d0d7d1dd806ee87050cae169ff2b040e69",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-393x852-middle",
+      "before_sha256": "01ef106d6252973e9ba0b8c4860bb5d0d7d1dd806ee87050cae169ff2b040e69",
+      "after_sha256": "01ef106d6252973e9ba0b8c4860bb5d0d7d1dd806ee87050cae169ff2b040e69",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-393x470-bottom",
+      "before_sha256": "a98a6f4db90ad16fda64683f9725e298fa372aab86af802eb3b0ed9184a92c30",
+      "after_sha256": "a98a6f4db90ad16fda64683f9725e298fa372aab86af802eb3b0ed9184a92c30",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-reference-editor-middle",
+      "before_sha256": "852a433410e7c9a514df82fc11fc2dae8ef210db755a4ba046c8b3bf056e4d8a",
+      "after_sha256": "852a433410e7c9a514df82fc11fc2dae8ef210db755a4ba046c8b3bf056e4d8a",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-prototype-reference",
+      "before_sha256": "a19cb7f96a8cdf1252589d925efb3ba589e3ccc8150f34b69cd95fc8cd07481a",
+      "after_sha256": "a19cb7f96a8cdf1252589d925efb3ba589e3ccc8150f34b69cd95fc8cd07481a",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-412x852-bottom",
+      "before_sha256": "98a8223a9661c7746f80417ab4615db2f173e9c7faf651ba1eeec69d0d4e0782",
+      "after_sha256": "98a8223a9661c7746f80417ab4615db2f173e9c7faf651ba1eeec69d0d4e0782",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-followup-sheet",
+      "before_sha256": "cf7c60665115f6a4dd237641d570f1b16809d0c0666652571e0e1371ecdfa95b",
+      "after_sha256": "cf7c60665115f6a4dd237641d570f1b16809d0c0666652571e0e1371ecdfa95b",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-reference-followup-task",
+      "before_sha256": "cbc78814e658b7457931deac007add0da29867c849bc09f204d2b15731f59685",
+      "after_sha256": "cbc78814e658b7457931deac007add0da29867c849bc09f204d2b15731f59685",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-same-fixture",
+      "before_sha256": "719ba13200f4f720b69636dc6e0622e4504b19e98713f3ed6e1faa25d3c3bb08",
+      "after_sha256": "719ba13200f4f720b69636dc6e0622e4504b19e98713f3ed6e1faa25d3c3bb08",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-images",
+      "before_sha256": "649616747e40f94f156b9a2c176cb2030116b2c98282fdc90b44224f4887183b",
+      "after_sha256": "649616747e40f94f156b9a2c176cb2030116b2c98282fdc90b44224f4887183b",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-more-actions-sheet",
+      "before_sha256": "885f0ac272445ecd32baf365396ae5cd0a20b529fe7c98b6b516b1f8ed3c9ad7",
+      "after_sha256": "885f0ac272445ecd32baf365396ae5cd0a20b529fe7c98b6b516b1f8ed3c9ad7",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-plain-editor-same-fixture",
+      "before_sha256": "65b79264d07f38dd8098c56eef16eb9d27897d2259988968eb7068b80e0fd2df",
+      "after_sha256": "65b79264d07f38dd8098c56eef16eb9d27897d2259988968eb7068b80e0fd2df",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-reference-editor-top",
+      "before_sha256": "1b82bf1033700d72198a76f0d3f6e4fa5bf2374c1badfd0b374d2060736800d8",
+      "after_sha256": "1b82bf1033700d72198a76f0d3f6e4fa5bf2374c1badfd0b374d2060736800d8",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-home",
+      "before_sha256": "e3c10a98810a0563edaf9afe82aad96c21912479a73ff1a922e200e0f0370f93",
+      "after_sha256": "e3c10a98810a0563edaf9afe82aad96c21912479a73ff1a922e200e0f0370f93",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-412x852-middle",
+      "before_sha256": "895edaf4b468a1429d051ca68b5859059cf180d088591443dd2294e2e14c0b39",
+      "after_sha256": "895edaf4b468a1429d051ca68b5859059cf180d088591443dd2294e2e14c0b39",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-reference-followup-choices",
+      "before_sha256": "5663b264bd75d3a5f5635bbb60f9434627074acf676e5dbf04a0f0aa86239f5b",
+      "after_sha256": "5663b264bd75d3a5f5635bbb60f9434627074acf676e5dbf04a0f0aa86239f5b",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-reference-followup-appointment",
+      "before_sha256": "da8105d397ce46d8e04804b9c66e19e5fd7ea84250eb353d7e225887a013cfd4",
+      "after_sha256": "da8105d397ce46d8e04804b9c66e19e5fd7ea84250eb353d7e225887a013cfd4",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-tree",
+      "before_sha256": "fb90cb5d0230965fa2640a71726c803a43ba8fc412d5a9c53debfe521a6af52a",
+      "after_sha256": "fb90cb5d0230965fa2640a71726c803a43ba8fc412d5a9c53debfe521a6af52a",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-393x852-bottom",
+      "before_sha256": "2d76159ea5569ef959b156f09044e2f8edd2f5fe624453e09cc8629593935e9e",
+      "after_sha256": "2d76159ea5569ef959b156f09044e2f8edd2f5fe624453e09cc8629593935e9e",
+      "pixels_equal": true
+    },
+    {
+      "state": "parity-reference-editor-bottom",
+      "before_sha256": "1c8356d81ae58e141e8dc22fb6dfb84acd09b556dcb2b46651bb930a4a27a15c",
+      "after_sha256": "1c8356d81ae58e141e8dc22fb6dfb84acd09b556dcb2b46651bb930a4a27a15c",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-reference-followup-note",
+      "before_sha256": "d8a426e5659eed706b13f43255c94ab582e18493f8b9454336b83cebf74d696f",
+      "after_sha256": "d8a426e5659eed706b13f43255c94ab582e18493f8b9454336b83cebf74d696f",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-393x470-middle",
+      "before_sha256": "2040cf8eb66306dd214b916b9445a138ed620ea60f1af97211aaf5d77bc15686",
+      "after_sha256": "2040cf8eb66306dd214b916b9445a138ed620ea60f1af97211aaf5d77bc15686",
+      "pixels_equal": true
+    },
+    {
+      "state": "workspace-visual-editor",
+      "before_sha256": "e4db1ce2f3954b60050ed342f3f96ac74a44447edd1a55a9ae4791ea31a6ffd8",
+      "after_sha256": "e4db1ce2f3954b60050ed342f3f96ac74a44447edd1a55a9ae4791ea31a6ffd8",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-360x852-bottom",
+      "before_sha256": "27d73fd2ebb8d913e94463dc7f115f34eea8bb0cec16b4b91a1d0f68a2f235b7",
+      "after_sha256": "27d73fd2ebb8d913e94463dc7f115f34eea8bb0cec16b4b91a1d0f68a2f235b7",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-attachment-sheet",
+      "before_sha256": "78760cfa148df94b44be4c2112d4be45cdca25bdb1c52d6bede9d80c80748b8e",
+      "after_sha256": "78760cfa148df94b44be4c2112d4be45cdca25bdb1c52d6bede9d80c80748b8e",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-followup-form-task",
+      "before_sha256": "44b30a949d0e778fa9900125a990957731af37c5a1abd7f0472cded3bbac2e4b",
+      "after_sha256": "44b30a949d0e778fa9900125a990957731af37c5a1abd7f0472cded3bbac2e4b",
+      "pixels_equal": true
+    },
+    {
+      "state": "approved-editor-360x852-middle",
+      "before_sha256": "0caeb5c275825d16e6baf9903e159dc93cacbc223e12a0bb94859a92fd0d3b3c",
+      "after_sha256": "0caeb5c275825d16e6baf9903e159dc93cacbc223e12a0bb94859a92fd0d3b3c",
+      "pixels_equal": true
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "Prototype parity: sticky editor, compact writing, mobile controls and bottom navigation",
+    "Approved fixture: panel geometry, colors, title/body and primary controls compared on matching viewports",
+    "Binding prototype parity: 8 reference/app states, SHA 193a7573ec6a",
+    "Prototype sheets: follow-up choices, attachments, other actions, linked folders and saved note IDs",
+    "Right swipe advances four; folders collapse and remember; visual note autosave/pin/links; own background and image widget; finance unchanged",
+    "Approved plain-text prototype compared independently from preserved visual document; exact title/body and five toolbar actions",
+    "All three follow-up kinds persisted in fictional storage with origin, extra text, appointment date/time and unchanged source document"
+  ],
+  "errors": [],
+  "physical_A54": "NIET GEVERIFIEERD"
+}
