@@ -66,7 +66,11 @@ const reports=[];
    if(!count){assert.equal(await page.locator('.memento-v3-card').count(),0);continue;}
    const event=page.locator('[data-life-day="2026-10-31"] .memento-v3-card').filter({has:page.locator('[data-memento-edit-event="v3-event"]')});
    const zones=await event.evaluate(el=>[...el.children].map(n=>n.getBoundingClientRect().toJSON()));
-   assert.equal(zones.length,4);for(let i=0;i<3;i++)assert(zones[i].right<=zones[i+1].left+1,'Approved four-column layout changed');
+   assert.equal(zones.length,3);for(let i=0;i<2;i++)assert(zones[i].right<=zones[i+1].left+1,'Time, title and actions must not overlap');
+   const actions=await event.locator('.memento-event-actions').evaluate(el=>[...el.children].map(n=>({className:n.className,rect:n.getBoundingClientRect().toJSON()})));
+   assert.deepEqual(actions.map(n=>n.className),['memento-day-note','memento-event-complete','life-task-menu memento-v3-menu']);
+   for(let i=0;i<actions.length-1;i++)assert(actions[i].rect.right<=actions[i+1].rect.left+1,'Note, checkbox and menu must not overlap');
+   assert(actions.every(n=>Math.abs(n.rect.y-actions[0].rect.y)<2),'Actions must share one row');
    for(const selector of ['.memento-event-complete','.memento-v3-menu>summary','.memento-day-note>summary']){
     const b=await event.locator(selector).boundingBox();assert(b.width>=44&&b.height>=44,'Touch target '+selector);
    }
