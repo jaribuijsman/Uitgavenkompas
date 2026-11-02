@@ -1438,7 +1438,7 @@ root.addEventListener('click',e=>{
  if(d.shoppingGroup){groceryGrouped=!groceryGrouped;render();return}
  if(d.shoppingNew){editGrocery();return}
  if(d.lifeQuickOptions!==undefined){openQuickOptions();return}
- if(d.lifeQuickKind){if(['note','appointment','task'].includes(d.lifeQuickKind))quickKind=d.lifeQuickKind;syncQuickForm();return}
+ if(d.lifeQuickKind){if(['note','appointment','task'].includes(d.lifeQuickKind)){quickKind=d.lifeQuickKind;if(quickKind==='appointment'&&quickDate==='')quickDate=null;}syncQuickForm();return}
  if(d.gcalDay&&$('mementoDutyDetail'))$('mementoDutyDetail').textContent=dutyDetail(d.gcalDay);
  if(d.lifeJournal!==undefined){if(!setView('notes'))return;window.MementoKnowledge?.showJournal?.(window.MementoKnowledgeCore?.journalDate?.()||today());requestAnimationFrame(()=>document.getElementById('kc-body')?.focus({preventScroll:true}));return}
  if(d.mementoCompleteEvent){toggleAppointmentCompletion(d.mementoEventSource,d.mementoCompleteEvent);return}
