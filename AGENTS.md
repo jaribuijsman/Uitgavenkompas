@@ -2,6 +2,14 @@
 
 Geldt voor Codex, ChatGPT Work en andere agents in deze repository. De recentste gebruikersopdracht en hogere instructies gaan voor. De gebruiker heeft gevraagd om opdrachten zoveel mogelijk **in één uitvoering volledig af te handelen**; vraag niet opnieuw om reeds verstrekte toestemming en stop niet na alleen een plan.
 
+## Canonieke productbronnen — lees altijd relevant, nooit een verouderde chatkopie
+
+**De vier projectbronnen staan vanaf nu in GitHub** onder [`docs/product/README.md`](docs/product/README.md): [01_MASTERPLAN](docs/product/01_MASTERPLAN.md), [02_DESIGN_SYSTEM](docs/product/02_DESIGN_SYSTEM.md), [03_BESLUITEN_EN_ROADMAP](docs/product/03_BESLUITEN_EN_ROADMAP.md) en [04_HISTORISCHE_BESLUITENAUDIT](docs/product/04_HISTORISCHE_BESLUITENAUDIT.md) (uitsluitend historisch). Dit is de versiebeheerde productbron; oude ChatGPT-projectuploads synchroniseren niet. Voor iedere Memento-opdracht, ook via een gewone GPT-chat/GitHub-connector, lees eerst de actuele `main` en uitsluitend de **relevante** passages uit deze bronnen. GitHub-code en tests blijven de feitelijke bron voor huidige werking; een recent expliciet goedgekeurd ontwerp bepaalt gewenste werking.
+
+**Ontwerpwerk ≠ uitvoering.** Bij een expliciet gevraagd ontwerp in GitHub: maak een designbranch met een versieerbaar ontwerpcontract/prototype en relevante productbesluiten; wijzig geen appcode zonder implementatieopdracht. Bij een later goedgekeurde implementatie: vertaal alle afgesproken eisen aantoonbaar naar code, gebruikersroutes en bewijs. Werk `03_BESLUITEN_EN_ROADMAP.md` binnen die PR bij bij een wezenlijk besluit of bewezen statusverandering. Werk `02_DESIGN_SYSTEM.md` bij indien de definitieve visuele afspraak verandert; laat het historische archief intact. Geen documenten in een publieke repo zetten met persoonlijke of vertrouwelijke gegevens.
+
+**Zelfverbeterend werken:** reproduceer fouten, onderscheid echte appdefecten van verouderde/foutieve tests en reeds bestaande blokkades via vergelijking met de basisbranch, herstel de oorzaak en pas de kleinste relevante regressietest of procesregel aan. Meld niet-gerelateerde blokkades afzonderlijk; geen willekeurige testuitzonderingen, `force`-clicks of geforceerde merges. Zie [Android-PWA UX-standaard](docs/android-pwa-ux-standaard.md).
+
 ## Taakgerichte skillrouter (ook als cloudcatalogus leeg is)
 
 Bij werk in deze repository: gebruik `AGENTS.md` als basis. Selecteer **alleen de relevante** lokale instructies uit `.agents/skills/<naam>/SKILL.md` op basis van de taak, ook wanneer de cloud-/executor-skillcatalogus ze niet automatisch toont. Dit is handmatig lezen van projectinstructies, **geen bewijs van automatische skillactivering**.
