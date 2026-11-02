@@ -21,6 +21,10 @@ Use this skill for mobile layout, navigation, dialogs, forms, overflow, gestures
 - Use the existing 393px targeted smoke by default. Add 360/412px, keyboard-height or standalone-specific cases only where the actual diff presents that risk. Prefer existing fixtures and CI screenshots; do not install new tools or run a full suite for a cosmetic patch.
 - Separate application defects from selector drift, timing/flakiness, and browser setup failures. Never weaken assertions to hide genuine bugs. Report the failed interaction and smallest reproducible evidence.
 
+## Gate voor echt mobiel schermbewijs
+
+Begin bij een concrete bestaande appstaat en reconstrueer de gebruikerroute tot de afwijkende scrollpositie (top, midden, einde), na actie en bij geopend menu. Een screenshot van alleen de eerste viewport bewijst geen geldige sticky header of bereikbare laatste actie. Gebruik bij gewijzigde editors `tests/helpers/mobile-visual-contract.cjs` en de bestaande domeinjourney; controleer dat de test de gewijzigde editor daadwerkelijk opent, niet slechts de tab. Bij visueel werk: vergelijk geslaagde CI-artifacts voor de exacte PR-head met het overeengekomen prototype; afwezig bewijs = NIET GEVERIFIEERD, ook bij groene CI. Houd de extra scenario's gericht.
+
 ## Boundaries
 - Never change production data, run destructive storage resets or hide an existing test failure.
 - Follow the authoritative `AGENTS.md` risk tiers and `tests/ci-plan.cjs`; this skill does not downgrade CI.
