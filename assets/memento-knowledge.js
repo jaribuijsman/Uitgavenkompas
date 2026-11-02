@@ -366,6 +366,18 @@ function recipeHTML(r){
 }
 function renderRecipeShop(){const note=read().notes.find(n=>n.id===selectedId);if(!note)return header('Recept niet gevonden',true);const rows=ingredientRows(note.recipe);return header('Ingrediënten kiezen',true,btn('Op boodschappenlijst','recipe-shop-confirm','',true))+'<div class="life-panel">'+rows.map((x,i)=>'<label class="mg-recipe-check"><input data-mg-shop="'+i+'" type="checkbox" checked><span>'+esc(x.name)+' · '+esc(x.amount)+' '+esc(x.unit)+'</span></label>').join('')+'</div>';}
 function recipeEditRows(recipe){return '<div id="mg-recipe-rows">'+(recipe.ingredients||[]).map((x,i)=>'<div class="mg-recipe-row">'+[['name','Ingrediënt',120],['amount','Hoeveelheid',40],['unit','Eenheid',40]].map(([key,label,max])=>'<label>'+label+'<input data-mg-ingredient="'+i+'" data-key="'+key+'" maxlength="'+max+'" value="'+esc(x[key])+'"></label>').join('')+btn('×','recipe-remove',i)+'</div>').join('')+'</div>'+btn('+ Ingrediënt','recipe-add');}
+
+function followupLinksForNote(n){
+ const origin=n.mementoFlow?.origin;
+ const next=[['note',read().notes],['task',read().tasks],['appointment',read().appointments||[]]]
+  .flatMap(([kind,items])=>items.filter(x=>!x.deletedAt&&x.mementoFlow?.origin?.kind==='note'&&x.mementoFlow.origin.id===n.id)
+   .map(x=>({kind,id:x.id,title:x.title})));
+ if(!origin&&!next.length)return '';
+ const link=(kind,id,label)=>btn(esc(label),'followup-open',kind+'|'+id);
+ return '<section class="kc-detail-actions"><strong>Opvolging</strong>'+
+  (origin?link(origin.kind,origin.id,'Bron: '+origin.title):'')+
+  next.map(x=>link(x.kind,x.id,'Vervolg: '+x.title)).join('')+'</section>';
+}
 function renderDetail(){
  const n=read().notes.find(x=>x.id===selectedId);
  if(!n)return header("Notitie niet gevonden",true)+"<p>Dit kennisitem is niet meer beschikbaar.</p>";
@@ -383,9 +395,9 @@ function renderDetail(){
  (C.typeOf(n)==="recipe"?recipeHTML(n.recipe):"")+
  (direct?'<div class="kc-editor-fields kc-direct-editor"><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(n.body?.trim()===n.title.trim()?"":editing.title)+'"></label><label>Verzameling<select id="kc-collection" data-kc-edit="collectionId"><option value="inbox"'+(editing.collectionId==="inbox"?' selected':'')+'>Inbox</option>'+collections().map(c=>'<option value="'+esc(c.id)+'"'+(editing.collectionId===c.id?' selected':'')+'>'+esc(pathName(c))+'</option>').join('')+'</select></label><label for="kc-body">Inhoud</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000">'+esc(editing.body)+'</textarea><p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?'Concept':'Opgeslagen')+'</p>'+btn('Opslaan','save','',true)+'</div>':check||'<div class="kc-readable">'+markdown(n.body)+"</div>")+
  (original?'<a class="kc-source" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':"")+
- attachmentsHTML(n)+(workspaceReady()&&n.document?renderDocumentRead(n.document):"")+linkedHTML(n)+(n.deletedAt?'':passageActions())+
+ attachmentsHTML(n)+(workspaceReady()&&n.document?renderDocumentRead(n.document):"")+linkedHTML(n)+followupLinksForNote(n)+(n.deletedAt?'':passageActions())+
  (n.deletedAt?"":'<div class="kc-detail-actions">'+(workspaceReady()?btn("Visueel bewerken","ws-convert",n.id)+btn("Mappen koppelen","ws-locations"):"")+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Onderzoeken met AI","ai",n.id))+
- '<details class="kc-note-menu"><summary aria-label="Notitie beheren">⋯</summary><div>'+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
+ '<details class="kc-note-menu"><summary aria-label="Notitie beheren">⋯</summary><div>'+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+btn("Slim opvolgen","followup-start",n.id)+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
 }
 function renderEditor(){
  const e=editing;if(!e)return "";if(e.journal)return renderJournalEditor();
@@ -787,6 +799,13 @@ function copyDiaryAI(){
 function click(event){
  const el=event.target.closest("[data-kc]");if(!el||!host?.contains(el))return;
  const op=el.dataset.kc,id=el.dataset.id||"";
+ if(op==='followup-start'){if(!flush())return;root.MementoLifeFlow?.start('note',id);return;}
+ if(op==='followup-open'){if(!flush())return;const sep=id.indexOf('|');if(sep<0)return;const kind=id.slice(0,sep),recordId=id.slice(sep+1);
+  if(kind==='note')root.MementoKnowledge?.showNote?.(recordId);
+  else if(kind==='google')notify('De bronafspraak blijft in Google Agenda.');
+  else bridge.openRelated?.(kind,recordId);
+  return;
+ }
  if(op==='recipe-add'||op==='recipe-remove'){if(!editing)return;editing.recipe||={ingredients:[],status:'concept',version:1,notes:''};if(op==='recipe-add')editing.recipe.ingredients.push({name:'',amount:'',unit:''});else editing.recipe.ingredients.splice(Number(id),1);schedule();render();return;}
  if(op==='recipe-shop'){if(!flush())return;screen='recipe-groceries';render();return;}
  if(op==='recipe-shop-confirm'){const n=read().notes.find(n=>n.id===selectedId);if(!n)return;const rows=ingredientRows(n.recipe).filter((x,i)=>host.querySelector('[data-mg-shop="'+i+'"]')?.checked);if(!rows.length){notify('Kies ten minste één ingrediënt.');return;}if(!confirm(rows.length+' ingrediënten op je boodschappenlijst zetten?'))return;if(bridge.addRecipeIngredients?.(rows)){screen='detail';notice='Ingrediënten toegevoegd.';render();}else notify('Ingrediënten niet opgeslagen. Probeer opnieuw.');return;}
