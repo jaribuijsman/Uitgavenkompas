@@ -343,17 +343,30 @@ function startFollowup(kind,id){
  const folders=[['inbox','Inbox'],...(state.knowledge?.collections||[]).filter(c=>!c.archived).map(c=>[c.id,c.name])];
  const preferred=kind==='note'&&folders.some(x=>x[0]===original.collectionId)?original.collectionId:'inbox';
  const body='<form id="mementoFollowupForm"><div class="life-form-grid">'+
- '<div class="life-form-field wide"><label for="followupIntent">Wat wil je doen?</label><select id="followupIntent"><option value="followup">Gekoppeld vervolg maken</option>'+
- (kind==='google'?'':'<option value="convert">Omzetten (origineel afronden of archiveren)</option>')+'</select></div>'+
- '<div class="life-form-field wide"><label for="followupTarget">Soort vervolg</label><select id="followupTarget">'+option([['project','Projectnotitie'],['note','Notitie'],['task','Taak'],['appointment','Afspraak']],'project')+'</select></div>'+
+ '<p class="life-followup-help wide">De oorspronkelijke informatie blijft behouden. Er wordt alleen een gekoppeld vervolg gemaakt.</p>'+
  '<div class="life-form-field wide"><label for="followupTitle">Titel</label><input id="followupTitle" maxlength="180" required value="'+esc(followupTitle(original))+'"></div>'+
- '<div class="life-form-field wide" id="followupFolderRow"><label for="followupFolder">Map</label><select id="followupFolder">'+option(folders,preferred)+'</select></div>'+
  '<div class="life-form-field wide" id="followupDateRow" hidden><label for="followupDate">Datum vervolgafspraak</label><input id="followupDate" type="date" value="'+today()+'"></div>'+
+ '<details class="life-followup-options wide"><summary id="followupOptionsSummary">Soort vervolg en meer opties</summary><div class="life-followup-options-fields">'+
+ '<p class="life-footnote">Vanuit: '+esc(followupTitle(original))+'</p>'+
+ '<div class="life-form-field"><label for="followupIntent">Wat wil je doen?</label><select id="followupIntent"><option value="followup">Gekoppeld vervolg maken</option>'+
+ (kind==='google'?'':'<option value="convert">Omzetten (origineel afronden of archiveren)</option>')+'</select></div>'+
+ '<div class="life-form-field"><label for="followupTarget">Soort vervolg</label><select id="followupTarget">'+option([['project','Projectnotitie'],['note','Notitie'],['task','Taak'],['appointment','Afspraak']],'project')+'</select></div>'+
+ '<div class="life-form-field" id="followupFolderRow"><label for="followupFolder">Map</label><select id="followupFolder">'+option(folders,preferred)+'</select></div>'+
  '<div class="life-form-field wide" id="followupTimeRow" hidden><label for="followupTime">Begintijd</label><input id="followupTime" type="time" value="'+esc(kind==='appointment'&&original.time?original.time:'09:00')+'"></div>'+
- '<div class="life-form-field wide"><label for="followupExtra">Antwoord, bevindingen of volgende stap</label><textarea id="followupExtra" rows="5" maxlength="8000" placeholder="Wat is er besproken of moet je later oppakken?"></textarea></div>'+
- '<p class="life-footnote wide">De oorspronkelijke informatie blijft bewaard. Na opslaan opent de gewone editor voor verdere aanpassingen.</p></div></form>';
- showDialog('Slim opvolgen','Vanuit: '+followupTitle(original),body,'<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="mementoFollowupForm" class="life-btn life-btn-primary">Opslaan en openen</button>');
+ '<div class="life-form-field"><label for="followupExtra">Antwoord, bevindingen of volgende stap</label><textarea id="followupExtra" rows="5" maxlength="8000" placeholder="Wat is er besproken of moet je later oppakken?"></textarea></div>'+
+ '</div></details></div></form>';
+ showDialog('Nieuw vervolg','',body,'<button type="submit" form="mementoFollowupForm" class="life-btn life-btn-primary">Vervolg toevoegen</button>');
+ updateFollowupPresentation();
  return true;
+}
+function updateFollowupPresentation(){
+ const target=$('followupTarget')?.value;if(!target)return;
+ const names={project:'projectnotitie',note:'notitie',task:'taak',appointment:'afspraak'};
+ $('lifeDialogTitle').textContent='Nieuwe '+names[target];
+ $('followupOptionsSummary').textContent='Meer opties · '+names[target]+(target==='appointment'?' · begintijd '+$('followupTime').value:'');
+ $('followupFolderRow').hidden=!['note','project'].includes(target);
+ $('followupDateRow').hidden=target!=='appointment';
+ $('followupTimeRow').hidden=target!=='appointment';
 }
 function saveFollowup(){
  if(modal?.mode!=='followup')return;
@@ -1471,7 +1484,7 @@ dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[dat
  }return;
  }if(b.dataset.lifeSourceNote){if(setView("notes"))window.MementoKnowledge?.showNote?.(b.dataset.lifeSourceNote);return}if(b.dataset.lifeDetailComplete){if(completeTask(b.dataset.lifeDetailComplete))detail(b.dataset.lifeDetailComplete);return}if(b.dataset.lifeDuplicate){if(duplicateTask(b.dataset.lifeDuplicate))closeDialog();return}if(b.dataset.lifeTaskDelete){if(removeTask(b.dataset.lifeTaskDelete))closeDialog();return}if(b.dataset.lifeTaskRestore){if(restoreTask(b.dataset.lifeTaskRestore))closeDialog();return}if(b.dataset.lifeNoteDelete){if(removeNote(b.dataset.lifeNoteDelete))closeDialog();return}if(b.dataset.lifeSaveTemplate){const t=state.tasks.find(x=>x.id===b.dataset.lifeSaveTemplate);if(mutate(()=>storeTemplate(t),'Taak bewaard in je bibliotheek.'))b.textContent='✓ Bewaard in bibliotheek';return}if(b.dataset.lifeEdit){editTask(b.dataset.lifeEdit);return}if(b.dataset.lifeArchive){const t=state.tasks.find(x=>x.id===b.dataset.lifeArchive);if(t?.timing?.session){status('Bevestig of verwerp eerst de tijdmeting.',false,true);return}if(mutate(()=>{t.archived=!t.archived},t.archived?'Taak teruggezet.':'Taak naar het archief verplaatst.',true))closeDialog()}});
 dialog.addEventListener('input',e=>{if(e.target.id==='lifeTaskSteps')syncTaskSteps();if(e.target.id==='lifeTaskEstimate'&&modal){modal.estimateSource='manual';$('lifeEstimateSource').textContent='Zelf ingesteld'}});
-dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='followupTarget'){const appointment=e.target.value==='appointment';$('followupFolderRow').hidden=!['note','project'].includes(e.target.value);$('followupDateRow').hidden=!appointment;$('followupTimeRow').hidden=!appointment;return;}
+dialog.addEventListener('change',e=>{if(e.target.dataset.taskStepCheck!==undefined&&modal?.steps){modal.steps[Number(e.target.dataset.taskStepCheck)].done=e.target.checked;return}if(e.target.id==='mementoEventAllDay'){for(const id of ['mementoEventTime','mementoEventEnd'])$(id).disabled=e.target.checked;return;}if(e.target.id==='lifeProductCategory'){$('lifeProductCustomCategory').hidden=e.target.value!=='__new__';if(e.target.value==='__new__')$('lifeProductCustomCategory').focus();return}if(e.target.id==='lifeProductList'){$('lifeProductBudgetField').hidden=e.target.value!=='purchases';$('lifeProductBudget').disabled=e.target.value!=='purchases';return}if(e.target.id==='followupTarget'||e.target.id==='followupTime'){updateFollowupPresentation();return;}
  if(e.target.id==='lifeTaskRepeat'){const custom=e.target.value==='custom';$('lifeRepeatDaysField').hidden=!custom;$('lifeTaskRepeatDays').required=custom;return}if(e.target.dataset.lifeStep!==undefined){const t=state.tasks.find(x=>x.id===e.target.dataset.lifeTaskId),checked=e.target.checked;mutate(()=>{t.steps[Number(e.target.dataset.lifeStep)].done=checked})}});
 dialog.addEventListener('submit',e=>{
  e.preventDefault();if(!modal)return;const {mode,id,fromTemplate}=modal;
