@@ -20,18 +20,40 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
  assert.equal(await page.locator('.kc-v3-followups h3').innerText(),'Opvolging & koppelingen');
- const actualGeometry=await require('./mobile-visual-contract.cjs')(page,{
-  header:'.kc-v3-editor-head',action:'.kc-v3-followups > .kc-btn',
-  fileLabel:'.kc-v3-file-trigger',fileInput:'#kc-file-input',expandSelector:'.kc-v3-attachments',
-  lastAction:'.kc-v3-preview > .kc-btn',shot
- });
- assert.equal(actualGeometry.length,12,'Three scroll states on 360/393/412 and short viewport');
- checks.push('Editor geometry: sticky header, compact action, accessible file picker, bottom navigation and 360/393/412 plus short viewport');
- await page.locator('[data-kc=editor-menu]').click();
+ const actualGeometry=await require('./knowledge-prototype-geometry.cjs')(page,shot);
+ assert.equal(actualGeometry.length,12,'Prototype editor: three scroll positions and four mobile viewport/height combinations');
+ checks.push('Prototype parity: sticky editor, compact writing, mobile controls and bottom navigation');
+ const reference=await context.newPage();await reference.goto(url+'/docs/design-review/knowledge-prototype-approved-20261102.html');
+ assert.equal(await reference.locator('.editor-head').count(),1);
+ assert.equal(await reference.locator('.panel').count(),4);
+ await shot(reference,'approved-prototype-reference');
+ const [referenceStyle,actualStyle]=await Promise.all([
+  reference.locator('.panel').first().evaluate(el=>({radius:getComputedStyle(el).borderRadius,background:getComputedStyle(el).backgroundColor})),
+  page.locator('.kc-v3-writing-card').evaluate(el=>({radius:getComputedStyle(el).borderRadius,background:getComputedStyle(el).backgroundColor}))
+ ]);
+ assert.deepEqual(actualStyle,referenceStyle,'Writing panel token parity with approved HTML');
+ await reference.close();
+ await page.locator('[data-kc=editor-followup]').click();
+ assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
+ assert.equal(await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').count(),3);
+ await shot(page,'approved-followup-sheet');
+ await page.locator('#kc-v3-followup-sheet [data-kc=editor-sheet-close]').click();
+ await page.locator('[data-kc=editor-attachments]').click();
+ const picker=page.locator('#kc-v3-attachments-sheet #kc-file-input');
+ assert(await picker.isVisible(),'Native local file picker must remain available');
+ await shot(page,'approved-attachment-sheet');
+ await page.locator('#kc-v3-attachments-sheet [data-kc=editor-sheet-close]').click();
+ await page.locator('[data-kc=editor-menu]').first().click();
  assert.equal(await page.locator('#kc-editor-menu').evaluate(dialog=>dialog.open),true);
- await page.locator('#kc-editor-menu [data-kc=pin]').click();assert((await state()).notes.find(x=>x.id===n.id).pinned);
+ await shot(page,'approved-more-actions-sheet');
+ await page.locator('#kc-editor-menu [data-kc=pin]').click();
+ assert((await state()).notes.find(x=>x.id===n.id).pinned);
  assert.equal(await page.locator('#kc-editor-menu').evaluate(dialog=>dialog.open),false);
- await page.locator('[data-kc=ws-locations]').click();await page.locator('[data-ws-location="'+root+'"]').check();await page.locator('[data-kc=ws-locations-save]').click();assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
+ await page.locator('[data-kc=editor-linked-folders]').first().click();
+ await page.locator('[data-kc-location="'+root+'"]').check();
+ await page.locator('[data-kc=editor-locations-save]').click();
+ assert((await state()).notes.find(x=>x.id===n.id).collectionIds.includes(root));
+ checks.push('Prototype sheets: follow-up choices, attachments, other actions, linked folders and saved note IDs');
  await page.locator('[data-kc=ws-editor-design]').click();await page.locator('[data-kc=ws-block][data-id=heading]').click();await page.locator('[data-ws-block]').last().fill('Volgende stap');await page.locator('[data-kc=save]').first().click();
  await shot(page,'workspace-visual-editor');
  await page.locator('.kc-local-tabs [data-kc=home]').click();
