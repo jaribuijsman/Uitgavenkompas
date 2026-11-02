@@ -157,6 +157,12 @@ const reports=[];
     assert(newNote&&newNote.collectionId==='projects','Note stored in selected existing folder');
     assert.equal(afterNote.finance,baseline.finance,'Quick note must not alter finance');
     await capture.locator('[data-life-quick-kind="task"]').click();
+    const quickGeometry=await capture.evaluate(el=>{
+     const rect=s=>{const r=el.querySelector(s).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+     const css=s=>{const e=el.querySelector(s),c=getComputedStyle(e);return {display:c.display,gridColumn:c.gridColumn,gridRow:c.gridRow,position:c.position,zIndex:c.zIndex}};
+     return {card:rect('#lifeQuickTitle'),toolbar:rect('.memento-capture-toolbar'),date:rect('#lifeQuickDateField'),options:rect('[data-life-quick-options]'),dateCSS:css('#lifeQuickDateField'),optionsCSS:css('[data-life-quick-options]'),toolbarCSS:css('.memento-capture-toolbar')};
+    });
+    assert(quickGeometry.date.right<=quickGeometry.options.left+1,'Quick footer buttons overlap: '+JSON.stringify(quickGeometry));
     await capture.locator('[data-life-quick-options]').click();
     await page.locator('#lifeQuickCategory').selectOption('Huishouden');
     await page.locator('#lifeQuickRoom').selectOption('Keuken');
