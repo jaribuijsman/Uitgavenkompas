@@ -14,6 +14,12 @@ De volgende **technische documentatie** is in GitHub `main` aangetroffen op de r
 
 **Statusregels:** een historische SHA of assistentclaim is geen actuele deploymentverificatie. D01–D30 en oude verificatievragen blijven bewaard als historisch bewijs, met ongewijzigde oorspronkelijke statusclaims. Nieuwe updates moeten expliciet bewijs bevatten voordat een oude status als 'aangetoond' wordt opgewaardeerd.
 
+## Nieuw expliciet besluit — 2 november 2026: bindende prototypefideliteit
+
+**Status: BESLOTEN voor het ontwikkelproces, NIET GEVERIFIEERD als reeds geïmplementeerde UI.** De gebruiker heeft bevestigd dat een expliciet goedgekeurd interactief HTML-prototype bij implementatie zo nauwkeurig mogelijk één-op-één als visueel en interactioneel contract moet gelden, voor **ieder Memento-tabblad**. Geen vrije herinterpretatie naar generieke Android- of oude design-systeemlayouts; technische/toegankelijkheidsconflicten uitsluitend minimaal oplossen en wezenlijk afwijkende vormgeving apart laten goedkeuren. Werk dit af met dezelfde-schermtoestand screenshots van prototype versus echte app, echte acties en een harde visuele PR-acceptatie. Groen functioneel CI zonder visuele vergelijking is niet genoeg. Zie `AGENTS.md` en `02_DESIGN_SYSTEM.md`.
+
+**Geselecteerde referentie voor de toekomstige Kenniscentrum-editoruitvoering:** door de gebruiker in dit gesprek op 2 november 2026 aangeleverd `memento-kenniscentrum-prototype.html`, SHA-256 `8fe95983290fb8f63c080932530a763eb9f628d97ff6156183bbce329b84b837`. De bron bevat echte persoonlijke gezondheidsgerelateerde voorbeeldtekst en is daarom **niet** rechtstreeks in de publieke repository opgenomen. Vóór een toekomstige implementatie moet dezelfde HTML-versie beschikbaar zijn voor de uitvoerende agent, of een gecontroleerd geanonimiseerde maar visueel/interactioneel gelijkwaardige, versieerbare referentie worden gemaakt. Het huidige verzoek betreft **alleen de procesregels**, niet de daadwerkelijke Kenniscentrum-herbouw. De eerdere, losser interpreteerbare prototype-naar-codepraktijk vervalt; lopende code wordt niet automatisch als conform aangemerkt.
+
 ## 1. Statuswoorden
 
 - **Besloten:** de gebruiker heeft het gewenste gedrag expliciet gekozen; dit bewijst geen technische voltooiing.
