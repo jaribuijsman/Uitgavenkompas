@@ -1650,6 +1650,9 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
  background:#244a39;border-radius:12px;font-size:13px;
 }
 #lifeApp .memento-capture-card .memento-capture-date svg{width:17px;height:17px}
+/* The transparent native date input must not swallow clicks on Opties beside it. */
+#lifeApp .memento-capture-card .memento-capture-date{overflow:hidden;isolation:isolate}
+#lifeApp .memento-capture-card .memento-capture-date input#lifeQuickDate{clip-path:inset(0);max-width:100%}
 #lifeApp .memento-capture-card .memento-capture-inbox{
  grid-column:1;grid-row:3;min-width:0;display:flex;align-items:center;
  gap:6px;font-size:13px;color:#d9ebde;white-space:nowrap;overflow:hidden;
