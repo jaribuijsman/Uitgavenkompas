@@ -19,6 +19,7 @@ function resetStorageFixture(){
 resetStorageFixture();sandbox.window.MementoStorageGuard=guardProxy;
 sandbox.window.MementoFinanceValidation=require("../assets/memento-finance-validation.js");
 sandbox.window.MementoFinancePeriodCore=require("../assets/memento-finance-period-core.js");
+sandbox.window.MementoFinancePresentation=require("../assets/memento-finance-presentation.js");
 sandbox.window.MementoLifePresentation=require("../assets/memento-life-presentation.js");
 const expose=`renderAll=()=>{};globalThis.testApp={get state(){return state},set state(v){state=v},get month(){return selectedMonth},set month(v){selectedMonth=v},set period(v){dashboardPeriodMode=v==='month'?'month':'salary'},loadState,emptyState,accountBalance,salaryPeriodSums,monthSums,budgetRecord,editableBudget,budgetExpenses,billDatesForMonth,billPayment,billOccurrences,planningAmounts,softDeleteFinance,restoreFinance,receiptMatchesTransaction,save,renderPlanning,renderBudgets,renderAccounts,renderReceipts,renderSettings,moneyCoachBuildData,moneyCoachDataPreview,moneyCoachBuildPrompt,toast,pinUnlock,pinCheckExpiry,pinRestoreRecentSession,getPinTimeoutMinutes,get pinTime(){return pinLastActivity},set pinTime(v){pinLastActivity=v},get pinUnlocked(){return pinUnlocked},loadDemo,exitDemo,saveResearch,loadResearch,get demo(){return demoStateBackup},set blocked(v){financeStorageBlocked=v}};`;
 vm.runInNewContext(first.replace(/\ninit\(\);\s*\n\}\)\(\);\s*$/,`\n${expose}\n})();`),sandbox);

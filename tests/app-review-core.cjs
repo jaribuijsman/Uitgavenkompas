@@ -84,4 +84,13 @@ test('Life presentation loads once before its entrypoint and is precached',()=>{
  assert.equal(tags.length,1);assert(!/async|defer/.test(tags[0][0]));assert.equal(sw.split('"'+tags[0][1]+'"').length-1,1);
  assert(html.indexOf(tags[0][0])<html.indexOf('id="compassLifeScript"'));
 });
+
+test('Finance presentation loads once before its entrypoint and is precached',()=>{
+ const fs=require('node:fs'),path=require('node:path'),root=path.join(__dirname,'..');
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+ const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];
+ const tags=scripts.filter(m=>m[1].startsWith('./assets/memento-finance-presentation.js?'));
+ assert.equal(tags.length,1);assert(!/async|defer/.test(tags[0][0]));assert.equal(sw.split('"'+tags[0][1]+'"').length-1,1);
+ assert(html.indexOf(tags[0][0])<html.indexOf('<script src="./assets/memento-finance-app.js?'));
+});
 console.log(n+' app review core checks passed.');
