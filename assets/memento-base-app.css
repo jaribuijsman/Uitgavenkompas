@@ -434,7 +434,6 @@ body.pin-locked #compassAreaBar,body.pin-locked #lifeApp{visibility:hidden;point
 #lifeDialog label{font-size:11px;font-weight:700;color:#c6e8d1!important}
 #lifeDialog small{font-size:10px;line-height:1.6;color:#a9d7b8}
 #lifeDialog textarea{resize:vertical;min-height:85px}
-#lifeDialog .life-dialog-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid #2d5b3c}
 #lifeDialog .life-step-list{display:grid;gap:8px;margin-top:12px}
 #lifeDialog .life-step-list label{display:flex;gap:9px;font-size:14px;align-items:center;font-weight:500;min-height:48px}
 #lifeDialog .life-step-list input{width:17px;min-height:17px;height:17px;accent-color:#b8eac9;margin:2px 0 0}
@@ -461,7 +460,6 @@ body.pin-locked #compassAreaBar,body.pin-locked #lifeApp{visibility:hidden;point
 #lifeApp .life-unplanned summary{font-size:12px;color:var(--life-muted);font-weight:650;cursor:pointer;margin-bottom:12px}
 #lifeApp .life-unplanned>.life-btn{margin-top:12px}
 #lifeApp .life-overdue{margin-bottom:20px}
-#lifeDialog .life-dialog-footer{justify-content:flex-end}
 @media(max-width:1100px){#lifeApp .life-horizon{grid-template-columns:1fr;gap:22px}#lifeApp .life-day-column .life-row-actions{margin-left:0}#lifeApp .life-day-column .life-task-body{flex-basis:auto}}
 @media(max-width:520px){#lifeApp .life-day-column .life-task-body{flex-basis:calc(100% - 40px)}#lifeApp .life-day-column .life-row-actions{margin-left:34px}#lifeApp .life-day-heading h2{font-size:19px}}
 #lifeApp .life-panel h2,#lifeApp .life-panel p{overflow-wrap:anywhere}
@@ -533,7 +531,6 @@ body[data-compass-area]{--life-bg:#101412;--life-surface:#1a231e;--life-surface2
 #lifeDialog .life-dialog-panel{background:#18251c;border-color:#425e4a;color:#edf7f0}
 #lifeDialog label{color:#ccdfd2!important}
 #lifeDialog .life-dialog-description,#lifeDialog .life-detail-summary,#lifeDialog small{color:#aabfb0}
-#lifeDialog .life-dialog-footer{border-color:#3b5142}
 #lifeDialog a{color:#a7efc1}
 #lifeDialog .life-step-list input{accent-color:#65e89b}
 #lifeApp button:focus-visible,#lifeApp summary:focus-visible,#lifeDialog button:focus-visible,#compassAreaBar button:focus-visible{outline:3px solid #8aefb1;outline-offset:2px}

@@ -1,0 +1,134 @@
+{
+  "base": "1d490d9f402f6797797c4592b6a7ab42823f0427",
+  "fixture": "../f4-a-20261102/fixture.json",
+  "assets_sha256": {
+    "memento-base-app.css": "168b2798b50aca412ce68d520d5fcc62c8e1f6cec724bd061e004a3c601caaa8",
+    "memento-ui.css": "819f27c789ce816448b0f748d974b32e636fbf75f9f4d112742ccae3046e6591"
+  },
+  "states": [
+    {
+      "state": "task-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "2c4f1e562112b95ce3f8153f37168f8a47f0313f78e961c29acc691decea886f"
+    },
+    {
+      "state": "wish-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8d0f4470fc42e53b11d5189781122b890e042ee1192e87f3281a39eca84eed54"
+    },
+    {
+      "state": "grocery-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8552a7938ff48dab6d6d3dca6140a5d4032327eae76697ccc0e744640c68ff8b"
+    },
+    {
+      "state": "agenda-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "7213b79994ba3ea6dea79b2d7f3f0d53421b0450bb1ff67eff40c1de927ae6b0"
+    },
+    {
+      "state": "budget-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8d341c0f9b20846c21653f02d9c0a78c2b169a72aba022ea49fcedc896a50840"
+    },
+    {
+      "state": "account-check",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8d341c0f9b20846c21653f02d9c0a78c2b169a72aba022ea49fcedc896a50840"
+    },
+    {
+      "state": "bill-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8d341c0f9b20846c21653f02d9c0a78c2b169a72aba022ea49fcedc896a50840"
+    },
+    {
+      "state": "goal-editor",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "8d341c0f9b20846c21653f02d9c0a78c2b169a72aba022ea49fcedc896a50840"
+    },
+    {
+      "state": "start-slide2-settled",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "c415cb156ec1010dcfea3d5bf9c859ab90020f627c4f4af32316cbb43336a923"
+    },
+    {
+      "state": "pin-short-scrolled",
+      "footer_count": 1,
+      "computed_style_and_geometry_sha256": "098b3620689aa30c38a01f56499cc2985c9a96c25f32d0ec9318772e68fd2ab7"
+    }
+  ],
+  "images": [
+    {
+      "name": "grocery-editor",
+      "before_sha256": "9eb926fadedf9795b8c219ec595edb249a4922c185f1a1d2084a476251ffd2a2",
+      "after_sha256": "9eb926fadedf9795b8c219ec595edb249a4922c185f1a1d2084a476251ffd2a2",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "pin-short-scrolled",
+      "before_sha256": "cc2cbc7be36ae80cd9f7c0f85ca25faf3a1c53a2164c8dfbb530b3d08b19347e",
+      "after_sha256": "cc2cbc7be36ae80cd9f7c0f85ca25faf3a1c53a2164c8dfbb530b3d08b19347e",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "bill-editor",
+      "before_sha256": "92ebbf7c9db077873492202c2d82b1abc7869770c9f6e6da42d43febdde4967d",
+      "after_sha256": "92ebbf7c9db077873492202c2d82b1abc7869770c9f6e6da42d43febdde4967d",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "wish-editor",
+      "before_sha256": "090f4fafb631ee3a11b16e31207522006998d068997110a23cf2fc2569422e35",
+      "after_sha256": "090f4fafb631ee3a11b16e31207522006998d068997110a23cf2fc2569422e35",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "budget-editor",
+      "before_sha256": "630c4ddd5cd939491b5686ffe6719953083c9d531e625dab9b168fa0c3cdf8f2",
+      "after_sha256": "1fc836dda1055ebf04d633a6e52ac080783be95e309bab13454822e45cf7e88c",
+      "different_pixels": 2,
+      "max_channel_delta": 1
+    },
+    {
+      "name": "account-check",
+      "before_sha256": "add31b89834ce0975747b0288c26aa8bbbe3a234eec30597ab4d4c8689f57499",
+      "after_sha256": "add31b89834ce0975747b0288c26aa8bbbe3a234eec30597ab4d4c8689f57499",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "task-editor",
+      "before_sha256": "b1bfc2f7f596869856d8f303e60e33fe7fd329135ebd99f4254aa314657a7e8c",
+      "after_sha256": "b1bfc2f7f596869856d8f303e60e33fe7fd329135ebd99f4254aa314657a7e8c",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "goal-editor",
+      "before_sha256": "c1b5d2a5d220242a9b6387bac82d5cdb7c3d4ee48351ffd54a44ffb595a19010",
+      "after_sha256": "c1b5d2a5d220242a9b6387bac82d5cdb7c3d4ee48351ffd54a44ffb595a19010",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "start-slide2-settled",
+      "before_sha256": "ce7a7a22bf3ec3afc1d0ef9bf81a5b62f2c46e9a0c47046cb1134947e389275d",
+      "after_sha256": "ce7a7a22bf3ec3afc1d0ef9bf81a5b62f2c46e9a0c47046cb1134947e389275d",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "name": "agenda-editor",
+      "before_sha256": "17baa37739b386c9cf47194da712d029eaecd8eea369b1fd24d59562c127c5d7",
+      "after_sha256": "17baa37739b386c9cf47194da712d029eaecd8eea369b1fd24d59562c127c5d7",
+      "different_pixels": 0,
+      "max_channel_delta": 0
+    }
+  ],
+  "visual_review": "No material difference. Nine images pixel-identical; two edge pixels in finance budget modal differ by one RGB channel unit. All computed footer styles and geometry identical.",
+  "errors": []
+}
