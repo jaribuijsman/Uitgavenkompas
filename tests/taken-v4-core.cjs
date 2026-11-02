@@ -31,3 +31,26 @@ const renderToday=source=>source.slice(source.indexOf('function renderToday('),s
 // required in a shallow CI checkout to enforce this task's unchanged-day contract.
 assert(renderToday(code).length>100);assert.equal(require('node:crypto').createHash('sha256').update(renderToday(code)).digest('hex'),'cd5e439adf08bae46ffa4d51c845676d8adf5243c6925a14dcc66f2e6faf510c');
 console.log('PASS Taken v4 metadata validation, invalid imports, reusable copies and unchanged renderToday');
+
+// The same presentation interface used by the live editor works without a DOM or storage.
+const presentation=require('../assets/memento-life-presentation.js');
+assert.match(presentation.timerCard(null),/Sla de taak op/);
+assert.match(presentation.timerCard({id:'existing'}),/id="lifeTaskTimer"/);
+const steps=Object.freeze([Object.freeze({text:'<img src=x onerror=alert(1)>',done:true,custom:'preserved'}),Object.freeze({text:'<img src=x onerror=alert(1)>',done:false})]);
+const stepsBefore=JSON.stringify(steps),markup=presentation.taskSteps(steps);
+assert(!markup.includes('<img'));assert(markup.includes('&lt;img'));
+assert.equal((markup.match(/data-task-step-check=/g)||[]).length,2);assert.equal((markup.match(/ checked/g)||[]).length,1);
+assert(markup.includes('data-task-step-move="0" data-direction="-1" aria-label="Stap 1 omhoog" disabled'));
+assert(markup.includes('data-task-step-move="1" data-direction="1" aria-label="Stap 2 omlaag" disabled'));
+assert.equal(JSON.stringify(steps),stepsBefore);
+for(const status of ['running','paused','stopped','needsReview']){
+ const task=Object.freeze({id:'existing',timing:Object.freeze({measurements:Object.freeze([Object.freeze({activeSeconds:120})]),session:Object.freeze({id:'clock',status,activeSeconds:91.5})})});
+ const before=JSON.stringify(task),html=presentation.timerControls(task,'clock');
+ assert(html.includes('data-task-timer="discard"'));
+ assert.equal(html.includes('data-task-timer="pause"'),status==='running');
+ assert.equal(html.includes('data-task-timer="resume"'),status==='paused');
+ assert.equal(html.includes('id="lifeMeasuredMinutes"'),['stopped','needsReview'].includes(status));
+ if(status==='running')assert(presentation.timerControls(task,'other-clock').includes('Controle nodig'));
+ assert.equal(JSON.stringify(task),before);
+}
+console.log('PASS pure Life presentation: escaped duplicate steps, boundary actions, timer lifecycle states and immutable inputs');

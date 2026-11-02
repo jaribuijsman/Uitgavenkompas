@@ -1,0 +1,158 @@
+{
+  "base": "dd0bcb2736eafb1cb421684d786bd86adc9ad0e3",
+  "differential_render_cases": 33,
+  "exact_old_new_markup": true,
+  "images": [
+    {
+      "name": "1280-list.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "b975df1ef76e4109d971dc81408e1bc1c505f3d1a399bb55994fa9577f6bc83a",
+      "after_sha256": "b975df1ef76e4109d971dc81408e1bc1c505f3d1a399bb55994fa9577f6bc83a"
+    },
+    {
+      "name": "393-timer-review.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "6eca7ccd432cea966d3f99e25b7c3a4a14f30b7ade4ab0ae755f76417d911026",
+      "after_sha256": "6eca7ccd432cea966d3f99e25b7c3a4a14f30b7ade4ab0ae755f76417d911026"
+    },
+    {
+      "name": "412-list.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "2d9480161d83e892473e179633c1909ae5b07f42056d8960e5e37e54534aa32f",
+      "after_sha256": "2d9480161d83e892473e179633c1909ae5b07f42056d8960e5e37e54534aa32f"
+    },
+    {
+      "name": "360-short.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "6caa14083b1a5abe11d6a8478a2e57467a82cdef149cec47e8dbce30c222eff1",
+      "after_sha256": "6caa14083b1a5abe11d6a8478a2e57467a82cdef149cec47e8dbce30c222eff1"
+    },
+    {
+      "name": "360-list.png",
+      "pixels_equal": false,
+      "difference_bounds": [
+        23,
+        298,
+        111,
+        346
+      ],
+      "before_sha256": "5596baa8ff18259122879ac3ff466f063f6c4905334c1a1003ea2876ca483de2",
+      "after_sha256": "2ad8019bdac1975420d3e6e5b1bebade23369de140f2fbf0fcd8c388bd10f846"
+    },
+    {
+      "name": "412-menu.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "db308772e8b6c8bca828c05c9eba3cc3d4b3f453de795f47dc8f6dd5fac5d987",
+      "after_sha256": "db308772e8b6c8bca828c05c9eba3cc3d4b3f453de795f47dc8f6dd5fac5d987"
+    },
+    {
+      "name": "360-menu.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "b28862fe061ca3c6e4f4dd2df43dc7b1fe0fd9617e662f7d4242c462132bf8c8",
+      "after_sha256": "b28862fe061ca3c6e4f4dd2df43dc7b1fe0fd9617e662f7d4242c462132bf8c8"
+    },
+    {
+      "name": "412-editor.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "fdbcb10bfd4fe6be13532265b528666d1946ffe8d7bc9067614b5e106506a4d9",
+      "after_sha256": "fdbcb10bfd4fe6be13532265b528666d1946ffe8d7bc9067614b5e106506a4d9"
+    },
+    {
+      "name": "393-list.png",
+      "pixels_equal": false,
+      "difference_bounds": [
+        27,
+        298,
+        121,
+        346
+      ],
+      "before_sha256": "d3362e140777a0375078ca01719633becb239260baea5acc9da98f6c63b6037f",
+      "after_sha256": "7dde3dbe993a17a161459adb7aacbe1828eeb55fea482b00219d072c82c6d2a1"
+    },
+    {
+      "name": "1-tasks.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "e5ee9a73bda7ab7a93cb82a2570c2a3cb60ada4c8948755334d212993e43ecec",
+      "after_sha256": "e5ee9a73bda7ab7a93cb82a2570c2a3cb60ada4c8948755334d212993e43ecec"
+    },
+    {
+      "name": "1280-menu.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "79548c2515ae0eabb12f43b0eb361a3104fea9347000f6069b8acd8e20bc7c1b",
+      "after_sha256": "79548c2515ae0eabb12f43b0eb361a3104fea9347000f6069b8acd8e20bc7c1b"
+    },
+    {
+      "name": "412-short.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "3863718f6cd4037a9f7bd104436b6e96053d2a7cc0841ea82c669d25a24076c9",
+      "after_sha256": "3863718f6cd4037a9f7bd104436b6e96053d2a7cc0841ea82c669d25a24076c9"
+    },
+    {
+      "name": "1280-short.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "85ffdd2f2eef0637a0d9628bdb9c62b36b0698aa48d839b766aa0036c068e074",
+      "after_sha256": "85ffdd2f2eef0637a0d9628bdb9c62b36b0698aa48d839b766aa0036c068e074"
+    },
+    {
+      "name": "360-editor.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "75697aed59cbe495ea37ce8cfa20638f6fc3768b046ab16a8976af626da29c68",
+      "after_sha256": "75697aed59cbe495ea37ce8cfa20638f6fc3768b046ab16a8976af626da29c68"
+    },
+    {
+      "name": "393-editor.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "a9f6ec2eb20da92476ba42b9be0d842a3689699985f6abddf121c55132f0aeb7",
+      "after_sha256": "a9f6ec2eb20da92476ba42b9be0d842a3689699985f6abddf121c55132f0aeb7"
+    },
+    {
+      "name": "393-menu.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "fd8ea121933b34f4a74e4dc6fbc69d63a3cb9cd0a60b19b1cccbde55e863c862",
+      "after_sha256": "fd8ea121933b34f4a74e4dc6fbc69d63a3cb9cd0a60b19b1cccbde55e863c862"
+    },
+    {
+      "name": "0-tasks.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "7902c02bcd0fd816a5a2f816261f264939781209a68f111e2d5aaebe09ba9645",
+      "after_sha256": "7902c02bcd0fd816a5a2f816261f264939781209a68f111e2d5aaebe09ba9645"
+    },
+    {
+      "name": "393-short.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "921baf9b446bccb33dd53af70542bf5a2e766d97b1771c69646a57372c05409d",
+      "after_sha256": "921baf9b446bccb33dd53af70542bf5a2e766d97b1771c69646a57372c05409d"
+    },
+    {
+      "name": "1280-editor.png",
+      "pixels_equal": true,
+      "difference_bounds": null,
+      "before_sha256": "cd3ad43c7f11add26f3e7275f0d5d35d0ef155d12900b64540b4f836b870849a",
+      "after_sha256": "cd3ad43c7f11add26f3e7275f0d5d35d0ef155d12900b64540b4f836b870849a"
+    }
+  ],
+  "visual_review": "17 exact images. Two initial list images only differ in keyboard focus halo on unmodified Open tab; editor/menu/short/timer states unchanged. No material change.",
+  "life_app_bytes_before": 181180,
+  "life_app_bytes_after": 179452,
+  "presentation_bytes": 2395,
+  "new_asset_sha256": "1e2f3800a46d18863f132540c43a27ce2e5746cbdb4873201ec6dbf4c28b0a45",
+  "storage_contract": "unchanged; failed measurement write, draft preservation, backup and offline upgrade checked",
+  "risk": "high + six browser shards + upgrade; no demotion",
+  "physical_A54": "NIET GEVERIFIEERD"
+}

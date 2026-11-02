@@ -2,6 +2,8 @@
 (()=>{
 'use strict';
 const storageGuard=window.MementoStorageGuard;
+const presentation=window.MementoLifePresentation;
+if(!presentation)throw Error('Taakpresentatie ontbreekt. Vernieuw Memento.');
 const KEY='compass_life_preview_v1',RECOVERY=KEY+'_vorige',FINANCE_KEY='uitgavenkompas_v1';
 const seed=JSON.parse(document.getElementById('compassLifeSeed').textContent);
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -71,23 +73,10 @@ function timerCheckpoint(nextStatus){
  taskClock=null;
  if(ok)paintTaskTimer();return ok;
 }
-function taskTimerMarkup(t){
- if(!t?.id)return '<p class="life-footnote">Sla de taak op om optioneel tijd te meten.</p>';
- return '<details class="memento-task-timer"><summary>Tijd meten (optioneel)</summary><div id="lifeTaskTimer" aria-live="polite"></div></details>';
-}
+
 function paintTaskTimer(){
  const host=$('lifeTaskTimer');if(!host||modal?.mode!=='task')return;
- const t=state.tasks.find(t=>t.id===modal.id);if(!t)return;
- const s=t.timing?.session,last=t.timing?.measurements.at(-1);
- const button=(action,text)=>'<button type="button" class="life-btn" data-task-timer="'+action+'">'+text+'</button>';
- if(!s){host.innerHTML=(last?'<p>Gemeten: '+Math.round(last.activeSeconds/60*100)/100+' min</p>':'')+button('start',last?'Opnieuw meten':'Start meting');return}
- const live=s.status==='running'&&taskClock?.id===s.id;
- const review=s.status==='needsReview'||(s.status==='running'&&!live);
- host.innerHTML='<p>'+esc(review?'Controle nodig':live?'Timer loopt':s.status==='paused'?'Gepauzeerd':'Meting gestopt')+' · '+Math.floor(s.activeSeconds/60)+' min '+Math.floor(s.activeSeconds%60)+' sec vastgelegd</p>'+
- (live?button('pause','Pauzeren'):(s.status==='paused'?button('resume','Hervatten'):''))+
- (live||s.status==='paused'?button('stop','Stoppen'):'')+
- (!live&&s.status!=='paused'?'<label class="life-form-field">Actieve minuten controleren<input id="lifeMeasuredMinutes" type="number" min="0" max="1440" step="0.01" value="'+(Math.round(s.activeSeconds/60*100)/100)+'"></label>'+button('confirm','Meting bevestigen'):'')+
- button('discard','Meting verwerpen');
+ const t=state.tasks.find(t=>t.id===modal.id);if(t)host.innerHTML=presentation.timerControls(t,taskClock?.id);
 }
 function taskTimerAction(action){
  if(modal?.mode!=='task')return;
@@ -144,7 +133,7 @@ function syncTaskSteps(){
 }
 function paintTaskSteps(){
  const host=$('lifeTaskStepOrder');if(!host||!modal?.steps)return;
- host.innerHTML=modal.steps.map((s,i)=>'<div class="memento-step-order"><label><input type="checkbox" data-task-step-check="'+i+'"'+(s.done?' checked':'')+'><span>'+esc(s.text)+'</span></label><button type="button" class="life-btn" data-task-step-move="'+i+'" data-direction="-1" aria-label="Stap '+(i+1)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" class="life-btn" data-task-step-move="'+i+'" data-direction="1" aria-label="Stap '+(i+1)+' omlaag"'+(i===modal.steps.length-1?' disabled':'')+'>↓</button></div>').join('');
+ host.innerHTML=presentation.taskSteps(modal.steps);
 }
 
 function validate(s){
@@ -1266,7 +1255,7 @@ function detail(id){
 
 function editTask(id=null,fromTemplate=null,asTemplate=false){const old=(asTemplate?state.templates:state.tasks).find(t=>t.id===id),t=old||fromTemplate||{title:'',kind:'task',category:'Persoonlijk',room:'Hele huis',repeat:'none',repeatDays:4,date:'',notes:'',steps:[],priority:false};modal={mode:asTemplate?'template':'task',id,fromTemplate:fromTemplate?.id||null,steps:clone(t.steps||[]),estimateSource:t.planning?.estimateSource||'manual'};
  const field=(label,control,wide=false)=>'<div class="life-form-field'+(wide?' wide':'')+'">'+label+control+'</div>';
- const body='<form id="lifeTaskForm"><div class="life-form-grid">'+field('<label for="lifeTaskTitle">Omschrijving *</label>','<input id="lifeTaskTitle" required maxlength="180" value="'+esc(t.title)+'">'+(window.MementoDictation?.button?.("lifeTaskTitle")||"")+'',true)+field('<label for="lifeTaskKind">Soort</label>','<select id="lifeTaskKind">'+option([['task','Eenmalige taak'],['routine','Schoonmaakroutine']],t.kind)+'</select>')+field('<label for="lifeTaskCategory">Categorie</label>','<select id="lifeTaskCategory">'+option(categories.map(x=>[x,x]),t.category)+'</select>')+field('<label for="lifeTaskDate">Plandatum (optioneel)</label>','<input id="lifeTaskDate" type="date" value="'+esc(t.date||'')+'">')+field('<label for="lifeTaskRepeat">Herhaling na afronden</label>','<select id="lifeTaskRepeat">'+option(Object.entries(repeats),t.repeat)+'</select><small>Het interval gaat in op de dag dat je de taak afvinkt.</small>')+'<div class="life-form-field" id="lifeRepeatDaysField"'+(t.repeat==='custom'?'':' hidden')+'><label for="lifeTaskRepeatDays">Aantal dagen tussen afrondingen</label><input id="lifeTaskRepeatDays" type="number" min="1" max="3650" step="1" value="'+esc(t.repeatDays||4)+'"'+(t.repeat==='custom'?' required':'')+'><small>Bij 4 dagen: vandaag gedaan → vier dagen later opnieuw aan de beurt.</small></div>'+field('<label for="lifeTaskRoom">Ruimte</label>','<select id="lifeTaskRoom">'+option(rooms.map(x=>[x,x]),t.room||'Hele huis')+'</select>')+field('<label for="lifeTaskPriority">Aandacht</label>','<select id="lifeTaskPriority">'+option([['normal','Normaal'],['high','Belangrijk']],t.priority?'high':'normal')+'</select>')+field('<label for="lifeTaskEstimate">Geschatte actieve tijd (minuten, optioneel)</label>','<input id="lifeTaskEstimate" type="number" min="1" max="1440" step="1" value="'+esc(t.planning?.estimateMinutes??'')+'"><small id="lifeEstimateSource">'+(t.planning?.estimateSource==='measurement'?'Gebaseerd op één meting':t.planning?.estimateMinutes?'Zelf ingesteld':'Onbekend')+'</small>',true)+field('<label for="lifeTaskNotes">Notitie</label>','<textarea id="lifeTaskNotes" rows="3" maxlength="5000">'+esc(t.notes)+'</textarea>'+(window.MementoDictation?.button?.("lifeTaskNotes")||"")+'',true)+field('<label for="lifeTaskSteps">Kleine stappen — één per regel</label>','<textarea id="lifeTaskSteps" rows="3" maxlength="3000" placeholder="Bijvoorbeeld: spullen klaarleggen">'+esc(t.steps.map(x=>x.text).join('\n'))+'</textarea><div id="lifeTaskStepOrder"></div>',true)+(asTemplate?'':field('',taskTimerMarkup(old),true))+'</div></form>';
+ const body='<form id="lifeTaskForm"><div class="life-form-grid">'+field('<label for="lifeTaskTitle">Omschrijving *</label>','<input id="lifeTaskTitle" required maxlength="180" value="'+esc(t.title)+'">'+(window.MementoDictation?.button?.("lifeTaskTitle")||"")+'',true)+field('<label for="lifeTaskKind">Soort</label>','<select id="lifeTaskKind">'+option([['task','Eenmalige taak'],['routine','Schoonmaakroutine']],t.kind)+'</select>')+field('<label for="lifeTaskCategory">Categorie</label>','<select id="lifeTaskCategory">'+option(categories.map(x=>[x,x]),t.category)+'</select>')+field('<label for="lifeTaskDate">Plandatum (optioneel)</label>','<input id="lifeTaskDate" type="date" value="'+esc(t.date||'')+'">')+field('<label for="lifeTaskRepeat">Herhaling na afronden</label>','<select id="lifeTaskRepeat">'+option(Object.entries(repeats),t.repeat)+'</select><small>Het interval gaat in op de dag dat je de taak afvinkt.</small>')+'<div class="life-form-field" id="lifeRepeatDaysField"'+(t.repeat==='custom'?'':' hidden')+'><label for="lifeTaskRepeatDays">Aantal dagen tussen afrondingen</label><input id="lifeTaskRepeatDays" type="number" min="1" max="3650" step="1" value="'+esc(t.repeatDays||4)+'"'+(t.repeat==='custom'?' required':'')+'><small>Bij 4 dagen: vandaag gedaan → vier dagen later opnieuw aan de beurt.</small></div>'+field('<label for="lifeTaskRoom">Ruimte</label>','<select id="lifeTaskRoom">'+option(rooms.map(x=>[x,x]),t.room||'Hele huis')+'</select>')+field('<label for="lifeTaskPriority">Aandacht</label>','<select id="lifeTaskPriority">'+option([['normal','Normaal'],['high','Belangrijk']],t.priority?'high':'normal')+'</select>')+field('<label for="lifeTaskEstimate">Geschatte actieve tijd (minuten, optioneel)</label>','<input id="lifeTaskEstimate" type="number" min="1" max="1440" step="1" value="'+esc(t.planning?.estimateMinutes??'')+'"><small id="lifeEstimateSource">'+(t.planning?.estimateSource==='measurement'?'Gebaseerd op één meting':t.planning?.estimateMinutes?'Zelf ingesteld':'Onbekend')+'</small>',true)+field('<label for="lifeTaskNotes">Notitie</label>','<textarea id="lifeTaskNotes" rows="3" maxlength="5000">'+esc(t.notes)+'</textarea>'+(window.MementoDictation?.button?.("lifeTaskNotes")||"")+'',true)+field('<label for="lifeTaskSteps">Kleine stappen — één per regel</label>','<textarea id="lifeTaskSteps" rows="3" maxlength="3000" placeholder="Bijvoorbeeld: spullen klaarleggen">'+esc(t.steps.map(x=>x.text).join('\n'))+'</textarea><div id="lifeTaskStepOrder"></div>',true)+(asTemplate?'':field('',presentation.timerCard(old),true))+'</div></form>';
  showDialog(asTemplate?(old?'Bewaarde taak bewerken':'Een taak bewaren'):(old?'Taak bewerken':'Een taak toevoegen'),'Alleen de omschrijving is verplicht. Jij bepaalt de planning.',body,(old&&!asTemplate?'<button type="button" class="life-btn life-btn-danger" data-life-archive="'+esc(id)+'">'+(old.archived?'Terugzetten':'Naar archief')+'</button><button type="button" class="life-btn life-btn-danger" data-life-task-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeTaskForm">'+(asTemplate?'Bewaarde taak opslaan':'Opslaan')+'</button>');if(asTemplate)$('lifeTaskDate').closest('.life-form-field').hidden=true;paintTaskSteps();paintTaskTimer();
 }
 function editGrocery(id=null){
