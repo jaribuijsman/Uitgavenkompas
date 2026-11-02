@@ -349,7 +349,7 @@ function startFollowup(kind,id){
  '<div class="life-form-field wide"><label for="followupTitle">Titel</label><input id="followupTitle" maxlength="180" required value="'+esc(followupTitle(original))+'"></div>'+
  '<div class="life-form-field wide" id="followupFolderRow"><label for="followupFolder">Map</label><select id="followupFolder">'+option(folders,preferred)+'</select></div>'+
  '<div class="life-form-field wide" id="followupDateRow" hidden><label for="followupDate">Datum vervolgafspraak</label><input id="followupDate" type="date" value="'+today()+'"></div>'+
- '<div class="life-form-field wide" id="followupTimeRow" hidden><label for="followupTime">Begintijd</label><input id="followupTime" type="time" value="09:00"></div>'+
+ '<div class="life-form-field wide" id="followupTimeRow" hidden><label for="followupTime">Begintijd</label><input id="followupTime" type="time" value="'+esc(kind==='appointment'&&original.time?original.time:'09:00')+'"></div>'+
  '<div class="life-form-field wide"><label for="followupExtra">Antwoord, bevindingen of volgende stap</label><textarea id="followupExtra" rows="5" maxlength="8000" placeholder="Wat is er besproken of moet je later oppakken?"></textarea></div>'+
  '<p class="life-footnote wide">De oorspronkelijke informatie blijft bewaard. Na opslaan opent de gewone editor voor verdere aanpassingen.</p></div></form>';
  showDialog('Slim opvolgen','Vanuit: '+followupTitle(original),body,'<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="mementoFollowupForm" class="life-btn life-btn-primary">Opslaan en openen</button>');
@@ -369,7 +369,7 @@ function saveFollowup(){
  const date=$('followupDate').value,time=$('followupTime').value;
  if(target==='appointment'&&(!validDate(date)||!isTime(time))){status('Controleer datum en tijd.',false,true);return;}
  const C=window.MementoKnowledgeCore,W=window.MementoKnowledgeWorkspace;
- if(type==='note'&&!C||target==='project'&&(!W||!state.knowledge?.workspace)){status('Het Kenniscentrum is niet volledig geladen.',false,true);return;}
+ if(type==='note'&&!C||target==='project'&&!W){status('Het Kenniscentrum is niet volledig geladen.',false,true);return;}
  const origin={kind,id,title:followupTitle(x).slice(0,180),date:kind==='google'?appointmentDate(x,'google'):String(x.date||''),time:kind==='google'?String(x.start?.dateTime||''):String(x.time||''),location:String(x.location||'').slice(0,250)};
  const prev=clone(state);let created;
  try{
@@ -378,9 +378,10 @@ function saveFollowup(){
     created={id:uid(),title,kind:'task',category:categories.includes(x.category)?x.category:'Persoonlijk',room:x.room||'Hele huis',repeat:'none',repeatDays:4,date:'',notes:body,steps:kind==='task'?clone(x.steps||[]):[],priority:Boolean(x.priority),done:false,archived:false,deletedAt:'',lastDone:'',history:[],focusDate:'',sourceUrl:'',sourceLabel:'Slim opvolgen'};
     state.tasks.push(created);
    }else if(target==='appointment'){
-    created={id:uid(),title,date,time,allDay:false,endTime:'',location:'',notes:body,done:false,completedAt:'',createdAt:new Date().toISOString()};
+    created={id:uid(),title,date,time,allDay:false,endTime:'',location:String(x.location||'').slice(0,250),notes:body,done:false,completedAt:'',createdAt:new Date().toISOString()};
     state.appointments.push(created);
    }else{
+    if(target==='project'&&!state.knowledge?.workspace)W.migrate(state);
     created=C.makeNote({title,body,collectionId:folder},state);
     if(target==='project'){
      created.document=W.document([{type:'heading',text:'Aanleiding'},{type:'text',text:context},{type:'heading',text:'Antwoord en bevindingen'},{type:'text',text:extra},{type:'heading',text:'Volgende stap'},{type:'check',text:''}]);
