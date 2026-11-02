@@ -19,13 +19,15 @@ async function geometry(page,label){
  if(box.menu){assert(box.menu.left>=0&&box.menu.right<=box.width+1,label+' clipped menu');assert(box.menu.top>=0&&box.menu.bottom<=box.height+1,label+' unreachable menu')}
  evidence.push({label,...box});
 }
-async function launchFixture(width,count=43){
+async function launchFixture(width,count=43,delayAutofocus=false){
  const data=await fixture(),base=structuredClone(data.life.tasks.find(t=>t.id==='kitchen'));
  data.life.tasks=Array.from({length:count},(_,i)=>({...structuredClone(base),id:i===0?'v4-routine':'v4-'+i,title:i===0?'Kattenbak schoonmaken — lange titel om afbreken op mobiel te controleren':'Geïsoleerde testtaak '+i,category:i<3?'Huishouden':i%2?'Werk':'Persoonlijk',repeat:i===0?'custom':'none',repeatDays:4,kind:i===0?'routine':'task',date:'2026-11-01',priority:i===0,notes:'Bewaar deze notitie',sourceLabel:'Testbron',extra:{preserve:true},steps:i===0?[{text:'Voorbereiden',done:true,custom:'a'},{text:'Uitvoeren',done:false},{text:'Voorbereiden',done:false,custom:'b'}]:[],history:i===0?[{date:'2026-10-28',legacy:true}]:[]}));
  const context=await browser.newContext({viewport:{width,height:852},hasTouch:true,locale:'nl-NL',timezoneId:'Europe/Amsterdam',reducedMotion:'reduce'});
  await context.route('https://**/*',r=>r.abort());
  await context.addInitScript(()=>{const NativeDate=Date,fixed=NativeDate.parse('2026-11-01T12:00:00+01:00');window.Date=class extends NativeDate{constructor(...args){super(...(args.length?args:[fixed+performance.now()]))}static now(){return fixed+performance.now()}}});
- const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
+ const page=await context.newPage();
+ if(delayAutofocus)await page.addInitScript(()=>{const native=setTimeout;window.setTimeout=(callback,delay,...args)=>native(callback,delay===20?500:delay,...args)});
+ page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
  await page.goto(url+'/__seed__');await page.evaluate(({data,key})=>{localStorage.setItem(key,JSON.stringify(data.life));localStorage.setItem('uitgavenkompas_v1',JSON.stringify(data.finance));localStorage.setItem('uitgavenkompas_pin_config_v1',JSON.stringify(data.pin))},{data,key});
  await page.evaluate(async files=>{const db=await new Promise((ok,bad)=>{const r=indexedDB.open('memento_knowledge_files_v1',1);r.onupgradeneeded=()=>{const store=r.result.createObjectStore('files',{keyPath:'id'});store.createIndex('noteId','noteId',{unique:false})};r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)});await new Promise((ok,bad)=>{const tx=db.transaction('files','readwrite');tx.oncomplete=ok;tx.onerror=()=>bad(tx.error);for(const {base64,...meta} of files)tx.objectStore('files').put({...meta,blob:new Blob([Uint8Array.from(atob(base64),c=>c.charCodeAt(0))],{type:meta.type})})});db.close()},data.files);
  await page.goto(url,{waitUntil:'domcontentloaded'});await enter(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await nav(page,'tasks');
@@ -113,5 +115,13 @@ async function life(page){return page.evaluate(k=>JSON.parse(localStorage.getIte
  await nav(page,'today');assert.equal(await page.locator('#lifeApp [data-task-timer]').count(),0);assert(!await page.locator('#lifeApp').textContent().then(s=>s.includes('min geschat')));
  await nav(page,'agenda');await geometry(page,'agenda unchanged');await context.close();
  for(const count of [0,1]){const f=await launchFixture(393,count);assert.equal(await f.page.locator('#lifeTaskResults .life-task').count(),count);await geometry(f.page,count+' tasks');await f.page.screenshot({path:out+'/'+count+'-tasks.png'});await f.context.close()}
+ // Deterministic scheduling stress: delayed initial focus must respect later user input.
+ const focused=await launchFixture(393,1,true),originalFocusData=await life(focused.page);
+ await openEditor(focused.page);await focused.page.locator('#lifeTaskEstimate').fill('3');
+ await focused.page.waitForTimeout(600); // deliberately allow the delayed autofocus callback to run
+ assert(await focused.page.locator('#lifeTaskEstimate').evaluate(el=>el===document.activeElement),'Initial dialog autofocus must not steal a field explicitly focused by the user');
+ await focused.page.keyboard.press('ControlOrMeta+A');await focused.page.keyboard.press('Backspace');
+ assert.equal(await focused.page.locator('#lifeTaskEstimate').inputValue(),'','Backspace must clear the selected estimate, not another field');
+ await focused.page.locator('#lifeDialog [data-life-close]').first().click();assert.deepEqual(await life(focused.page),originalFocusData,'Cancelling focus stress preserves original task data');await focused.context.close();
  assert.deepEqual(errors,[]);console.log('PASS Taken v4: categories, editor, steps, estimates, sessions, restart, repeat, undo, copy, Mijn dag and mobile geometry');
  }finally{fs.writeFileSync(out+'/geometry.json',JSON.stringify(evidence,null,2));await browser?.close();server.close()}})().catch(e=>{console.error(e);process.exitCode=1});
