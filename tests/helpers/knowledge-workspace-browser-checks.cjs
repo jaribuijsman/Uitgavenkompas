@@ -48,7 +48,11 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
  assert.equal(await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').count(),3);
  await shot(page,'approved-followup-sheet');
- await page.locator('#kc-v3-followup-sheet [data-kc=editor-sheet-close]').click();
+ await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind][data-id=task]').click();
+ assert.equal(await page.locator('#followupTarget').inputValue(),'task','Chosen follow-up type reaches the real Memento flow');
+ assert(await page.locator('#mementoFollowupForm').isVisible(),'Follow-up form is connected to live UI');
+ await shot(page,'approved-followup-form');
+ await page.locator('#lifeDialog [data-life-close]').first().click();
  await page.locator('[data-kc=editor-attachments]').click();
  const picker=page.locator('#kc-v3-attachments-sheet #kc-file-input');
  assert(await picker.isVisible(),'Native local file picker must remain available');
