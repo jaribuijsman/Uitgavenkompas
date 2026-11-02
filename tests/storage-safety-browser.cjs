@@ -75,7 +75,7 @@ async function addTransaction(page, description) {
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     checks.push("Two-tab Life conflict preserves saved task and quick-capture input");
-    await navigate(b, "life", "backup"); await b.locator("[data-ms-target=trash]",{hasText:"Prullenbak"}).click(); await require("./helpers/reveal.cjs")(b,"#lifeOpenPurgeTrash");await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
+    await navigate(b, "life", "backup"); await b.locator("#mementoSettingsLife [data-ms-target=trash]").click(); await require("./helpers/reveal.cjs")(b,"#lifeOpenPurgeTrash");await b.locator("#lifeOpenPurgeTrash").click(); await b.locator("#lifePurgeWord").fill("VERWIJDEREN"); await b.locator("#lifePurgeExecute").click();
     assert.match(await b.locator("#lifePurgeFeedback").textContent(), /Geen items definitief verwijderd/);
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     await b.locator("#mementoStorageNotice [data-storage-dismiss]").click();
