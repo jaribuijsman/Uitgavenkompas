@@ -417,6 +417,10 @@ function kcV3Icon(name){
 function kcV3Sheet(id,title,body){
  return '<dialog id="'+id+'" class="kc-v3-sheet" aria-label="'+esc(title)+'"><div class="kc-v3-sheet-handle" aria-hidden="true"></div><div class="kc-v3-sheet-head"><h3>'+esc(title)+'</h3><button type="button" class="kc-v3-sheet-close" data-kc="editor-sheet-close" aria-label="Sluiten">×</button></div>'+body+'</dialog>';
 }
+function kcV3SingleTextDocument(note){
+ const blocks=note?.document?.blocks;
+ return Array.isArray(blocks)&&blocks.length===1&&blocks[0]?.type==='text'&&!(blocks[0].marks||[]).length;
+}
 function renderEditor(){
  const e=editing;if(!e)return "";if(e.journal)return renderJournalEditor();
  const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link",life=read();
@@ -434,11 +438,11 @@ function renderEditor(){
  '<button type="button" data-kc="format" data-id="- " title="Lijst">☷ Lijst</button>'+
  '<button type="button" data-kc="format" data-id="[tekst](https://)" title="Link">'+kcV3Icon('link')+' Link</button>'+
  '<button type="button" class="kc-v3-text-task" data-kc="selection-task" title="Taak van geselecteerde tekst">'+kcV3Icon('task')+' Taak</button></div>';
- const body=e.document
+ const body=e.document&&!kcV3SingleTextDocument(e)
   ?'<span class="kc-v3-content-label">Inhoud</span><div class="kc-v3-editor-pane kc-v3-block-pane">'+renderVisualDocument()+'</div>'+renderTemplateFields(e)
   :'<label class="kc-v3-content-label" for="kc-body">Inhoud</label><div class="kc-v3-editor-pane">'+toolbar+
     '<textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="11" placeholder="Schrijf je notitie…">'+esc(e.body||"")+'</textarea></div>'+
-    '<div class="kc-v3-helper-bar"><span>Selecteer tekst en kies Taak om die te verwerken.</span>'+btn("Voorbeeld","preview")+'</div>';
+    '<div class="kc-v3-helper-bar"><span>Selecteer tekst en kies Taak om die te verwerken.</span>'+btn("Voorbeeld","preview")+'</div>'+(e.document?renderTemplateFields(e):'');
  const recipeFields=isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+recipeEditRows(recipe)+
   '<details class="mg-fold"><summary>Tekstinvoer ingrediënten</summary><label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+'</textarea></label></details>'+
   '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+'</textarea></label></div>':"";
@@ -666,7 +670,7 @@ function renderDocumentRead(doc){if(!doc?.blocks)return '';return doc.blocks.map
 function renderVisualDocument(){return '<div class="kc-visual-toolbar" role="toolbar" aria-label="Visuele teksteditor">'+
  btn('H1','ws-block','heading')+btn('Vet','ws-mark','bold')+btn('☷ Lijst','ws-bullets')+btn('Link','ws-insert-link')+btn('Taak','selection-task')+
  btn('Meer','editor-block-options')+'</div><div class="kc-visual-document">'+editing.document.blocks.map(b=>['image','pdf'].includes(b.type)?renderDocumentRead({blocks:[b]}):'<div class="kc-visual-block kc-block-'+b.type+' '+(b.marks||[]).join(' ')+'"><'+(b.type==='check'?'label':'div')+'>'+(b.type==='check'?'<input type="checkbox" data-ws-block-check="'+esc(b.id)+'"'+(b.checked?' checked':'')+'>':'')+'<div contenteditable="true" role="textbox" aria-label="'+({heading:'Kop',quote:'Citaat',check:'Checklistpunt',text:'Tekstblok'}[b.type])+'" data-ws-block="'+esc(b.id)+'">'+esc(b.text)+'</div></'+(b.type==='check'?'label':'div')+'>'+(workspaceEditorDesign?'<div class="kc-block-tools">'+btn('↑','ws-block-up',b.id)+btn('↓','ws-block-down',b.id)+btn('Verwijderen','ws-block-remove',b.id)+'</div>':'')+'</div>').join('')+'</div>'+btn('+ Tekstblok','ws-block','text')+(workspaceEditorDesign?'<div class="kc-ws-tools">'+btn('Als sjabloon bewaren','ws-template-save')+btn('Afbeelding uit bijlagen invoegen','ws-inline-image')+btn('PDF-kaart invoegen','ws-inline-pdf')+'</div>':'');}
-function renderTemplateFields(n){const t=ws().templates.find(t=>t.id===n.templateId);if(!t)return '';const missing=selectedId?W.missingFields(read(),selectedId):[];return '<details class="kc-compact-fold"><summary>Eigenschappen · '+esc(t.name)+'</summary>'+ (t.fields||[]).filter(f=>Object.hasOwn(n.properties||{},f.key)).map(f=>'<label>'+esc(f.label)+'<input type="'+esc(f.type)+'" data-ws-property="'+esc(f.key)+'" maxlength="2000" value="'+esc(n.properties[f.key])+'"></label>').join('')+(missing.length?'<p>'+missing.length+' nieuwe velden beschikbaar: '+missing.map(f=>esc(f.label)).join(', ')+'</p>'+btn('Nieuwe velden toevoegen','ws-template-fields'):'')+'</details>';}
+function renderTemplateFields(n){const t=ws().templates.find(t=>t.id===n.templateId);if(!t)return '';const missing=selectedId?W.missingFields(read(),selectedId):[];if(!(t.fields||[]).length&&!missing.length)return '';return '<details class="kc-compact-fold"><summary>Eigenschappen · '+esc(t.name)+'</summary>'+ (t.fields||[]).filter(f=>Object.hasOwn(n.properties||{},f.key)).map(f=>'<label>'+esc(f.label)+'<input type="'+esc(f.type)+'" data-ws-property="'+esc(f.key)+'" maxlength="2000" value="'+esc(n.properties[f.key])+'"></label>').join('')+(missing.length?'<p>'+missing.length+' nieuwe velden beschikbaar: '+missing.map(f=>esc(f.label)).join(', ')+'</p>'+btn('Nieuwe velden toevoegen','ws-template-fields'):'')+'</details>';}
 function workspacePanelOpen(panel){if(!flush())return;workspacePanel=panel;screen='workspace';render();}
 function workspaceAction(op,id,el){
  if(op==='ws-conflict'){clearTimeout(timer);workspacePanel='conflict';screen='workspace';render();return true;}
@@ -991,7 +995,7 @@ function click(event){
   const field=host.querySelector("#kc-body");if(!field)return;
   const a=field.selectionStart,b=field.selectionEnd,selection=field.value.slice(a,b);
   const next=id==="**"?"**"+(selection||"tekst")+"**":id.startsWith("[")?id:id+(selection||"");
-  field.setRangeText(next,a,b,"end");editing.body=field.value;field.focus();schedule();return;
+  field.setRangeText(next,a,b,"end");editing.body=field.value;if(kcV3SingleTextDocument(editing)){editing.document.blocks[0].text=field.value;editing.body=C.documentText(editing.document);}field.focus();growText();schedule();return;
  }
  if(op==="file"){openFile(id).catch(e=>notify(e.message));return}
  if(op==="remove-file"){
@@ -1133,7 +1137,7 @@ function onInput(event){
     return {name:name.slice(0,120),amount:amount.slice(0,40),unit:unit.slice(0,40)};
   });
  }else editing[change]=field.value;
- if(change==="body"){if(diaryDictating&&!event.mementoDictation)stopDiaryDictation("Transcriptie gestopt om te typen.",false);if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
+ if(change==="body"){if(kcV3SingleTextDocument(editing)){editing.document.blocks[0].text=field.value;editing.body=C.documentText(editing.document);workspaceBlock=editing.document.blocks[0].id;}if(diaryDictating&&!event.mementoDictation)stopDiaryDictation("Transcriptie gestopt om te typen.",false);if(host.querySelector("#kc-title")?.value==="")editing.title="";growText();}
  if(change==="kind"){
   if(field.value==="recipe"&&!editing.recipe)editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
   schedule();render();return;
