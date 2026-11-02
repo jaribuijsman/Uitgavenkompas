@@ -1,0 +1,353 @@
+{
+  "phase": "live",
+  "width": 393,
+  "diagnostics": [
+    {
+      "name": "planning-hitbox",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "bill-edit-existing",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "billName"
+    },
+    {
+      "name": "live-task-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 294,
+            "width": 120,
+            "height": 67,
+            "top": 294,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskScopeFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 315,
+            "width": 120,
+            "height": 46,
+            "top": 315,
+            "right": 426.46875,
+            "bottom": 361,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 373,
+            "width": 120,
+            "height": 67,
+            "top": 373,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeCategoryFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 394,
+            "width": 120,
+            "height": 46,
+            "top": 394,
+            "right": 426.46875,
+            "bottom": 440,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 452,
+            "width": 120,
+            "height": 67,
+            "top": 452,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRoomFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 473,
+            "width": 120,
+            "height": 46,
+            "top": 473,
+            "right": 426.46875,
+            "bottom": 519,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 531,
+            "width": 120,
+            "height": 67,
+            "top": 531,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeRepeatFilter",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 552,
+            "width": 120,
+            "height": 46,
+            "top": 552,
+            "right": 426.46875,
+            "bottom": 598,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "LABEL",
+          "id": "",
+          "class": "memento-task-sort",
+          "rect": {
+            "x": 306.46875,
+            "y": 616,
+            "width": 120,
+            "height": 193,
+            "top": 616,
+            "right": 426.46875,
+            "bottom": 809,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SELECT",
+          "id": "lifeTaskSort",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 637,
+            "width": 120,
+            "height": 46,
+            "top": 637,
+            "right": 426.46875,
+            "bottom": 683,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "SMALL",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 306.46875,
+            "y": 687,
+            "width": 119.4375,
+            "height": 120,
+            "top": 687,
+            "right": 425.90625,
+            "bottom": 807,
+            "left": 306.46875
+          }
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "class": "life-task-actions",
+          "rect": {
+            "x": 484,
+            "y": 1057,
+            "width": 210,
+            "height": 278,
+            "top": 1057,
+            "right": 694,
+            "bottom": 1335,
+            "left": 484
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 491,
+            "y": 1064,
+            "width": 196,
+            "height": 44,
+            "top": 1064,
+            "right": 687,
+            "bottom": 1108,
+            "left": 491
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 491,
+            "y": 1108,
+            "width": 196,
+            "height": 44,
+            "top": 1108,
+            "right": 687,
+            "bottom": 1152,
+            "left": 491
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 491,
+            "y": 1152,
+            "width": 196,
+            "height": 44,
+            "top": 1152,
+            "right": 687,
+            "bottom": 1196,
+            "left": 491
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 491,
+            "y": 1196,
+            "width": 196,
+            "height": 44,
+            "top": 1196,
+            "right": 687,
+            "bottom": 1240,
+            "left": 491
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "",
+          "rect": {
+            "x": 491,
+            "y": 1240,
+            "width": 196,
+            "height": 44,
+            "top": 1240,
+            "right": 687,
+            "bottom": 1284,
+            "left": 491
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "class": "life-task-delete",
+          "rect": {
+            "x": 491,
+            "y": 1284,
+            "width": 196,
+            "height": 44,
+            "top": 1284,
+            "right": 687,
+            "bottom": 1328,
+            "left": 491
+          }
+        }
+      ],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        },
+        {
+          "id": "",
+          "text": "",
+          "width": 22,
+          "height": 22
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "live-knowledge-editor",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [
+        {
+          "id": "",
+          "text": "H1",
+          "width": 43,
+          "height": 44
+        },
+        {
+          "id": "",
+          "text": "Vet",
+          "width": 43,
+          "height": 44
+        }
+      ],
+      "focus": ""
+    },
+    {
+      "name": "live-offline-planning",
+      "clientWidth": 393,
+      "scrollWidth": 393,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "{\"selector\":\"[data-edit-bill]\",\"rect\":{\"x\":319,\"y\":524.578125,\"width\":44,\"height\":44,\"top\":524.578125,\"right\":363,\"bottom\":568.578125,\"left\":319},\"edgeHits\":[true,true]}",
+    "planning-hitbox: captured",
+    "live-task-editor: captured",
+    "live-KC-editor: captured",
+    "live active caches [\"memento-pwa-v126-20261102-finance-context-v1\"]",
+    "live offline restart and new Life/Finance presentation assets: PASS"
+  ],
+  "errors": []
+}

@@ -1,0 +1,678 @@
+[
+  {
+    "label": "baseline-high",
+    "pr": 72,
+    "pr_head_now": "1bbc4a9723f1f3f62ad852b1fc98bbb85297a4f1",
+    "merge_sha": "eca16e1bf59b5a0209114ed8db8aa4b8068d17d3",
+    "run_id": 41498366958,
+    "tested_head": "1bbc4a9723f1f3f62ad852b1fc98bbb85297a4f1",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T18:12:35Z",
+    "workflow_latency_seconds": 187,
+    "execution_span_seconds": 183,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (interface-feature)",
+      "browser (interface-layout)",
+      "browser (life-full)",
+      "browser (interface-visual)",
+      "browser (interface-acceptance)",
+      "browser (data-full)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 9
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 25
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 64
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 77
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "success",
+        "seconds": 79
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 37
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 162
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 91
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 3
+      }
+    ],
+    "pr_commits": 2,
+    "changed_files": 5,
+    "additions": 205,
+    "deletions": 8
+  },
+  {
+    "label": "G1-high",
+    "pr": 75,
+    "pr_head_now": "b833bd304b6534fb5080f10c26217c39465a9738",
+    "merge_sha": "9a78cdb00863ca8caab9a5ac934edbe5a07ca592",
+    "run_id": 41504372835,
+    "tested_head": "b833bd304b6534fb5080f10c26217c39465a9738",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T18:50:40Z",
+    "workflow_latency_seconds": 213,
+    "execution_span_seconds": 208,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (interface-feature)",
+      "browser (interface-acceptance)",
+      "browser (interface-visual)",
+      "browser (life-full)",
+      "browser (interface-layout)",
+      "browser (data-full)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 9
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 13
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 73
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 180
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 40
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "success",
+        "seconds": 86
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 81
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 100
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 12
+      }
+    ],
+    "pr_commits": 2,
+    "changed_files": 5,
+    "additions": 78,
+    "deletions": 8
+  },
+  {
+    "label": "G2-docs",
+    "pr": 77,
+    "pr_head_now": "0bbf9cc10140b86415f021b1517514cd41bc100a",
+    "merge_sha": "2275741f0c9cc6808442058ceaa00813ffc80edf",
+    "run_id": 41505128968,
+    "tested_head": "0bbf9cc10140b86415f021b1517514cd41bc100a",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T18:55:35Z",
+    "workflow_latency_seconds": 22,
+    "execution_span_seconds": 18,
+    "browser_jobs": 0,
+    "browser_job_names": [],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 6
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 8
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "core",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "browser",
+        "result": "skipped",
+        "seconds": null
+      }
+    ],
+    "pr_commits": 1,
+    "changed_files": 1,
+    "additions": 8,
+    "deletions": 2
+  },
+  {
+    "label": "F4-B-medium",
+    "pr": 80,
+    "pr_head_now": "f5629c157fddf9ab8c86a64f4e7d23a85b49fcb7",
+    "merge_sha": "7f51c5b20400ac0bdecf15f2be1f843c5cd0fe00",
+    "run_id": 41506489816,
+    "tested_head": "f5629c157fddf9ab8c86a64f4e7d23a85b49fcb7",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:04:19Z",
+    "workflow_latency_seconds": 81,
+    "execution_span_seconds": 77,
+    "browser_jobs": 2,
+    "browser_job_names": [
+      "browser (interface-layout-smoke)",
+      "browser (test-app-review-browser)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 14
+      },
+      {
+        "name": "browser (interface-layout-smoke)",
+        "result": "success",
+        "seconds": 32
+      },
+      {
+        "name": "browser (test-app-review-browser)",
+        "result": "success",
+        "seconds": 48
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 9
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 8
+      }
+    ],
+    "pr_commits": 1,
+    "changed_files": 17,
+    "additions": 137,
+    "deletions": 4
+  },
+  {
+    "label": "F5-A-medium",
+    "pr": 81,
+    "pr_head_now": "4418be1ba06ef85cb0ea74e99c2b80ec268e7f66",
+    "merge_sha": "1d490d9f402f6797797c4592b6a7ab42823f0427",
+    "run_id": 41507119123,
+    "tested_head": "4418be1ba06ef85cb0ea74e99c2b80ec268e7f66",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:08:18Z",
+    "workflow_latency_seconds": 121,
+    "execution_span_seconds": 68,
+    "browser_jobs": 2,
+    "browser_job_names": [
+      "browser (life-knowledge)",
+      "browser (interface-layout-smoke)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 7
+      },
+      {
+        "name": "browser (life-knowledge)",
+        "result": "success",
+        "seconds": 35
+      },
+      {
+        "name": "browser (interface-layout-smoke)",
+        "result": "success",
+        "seconds": 45
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 9
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 8
+      }
+    ],
+    "pr_commits": 2,
+    "changed_files": 9,
+    "additions": 407,
+    "deletions": 8
+  },
+  {
+    "label": "F5-B-medium",
+    "pr": 82,
+    "pr_head_now": "3f7086c07a5aa36b3cc1c57facabf153bb9cca30",
+    "merge_sha": "dd0bcb2736eafb1cb421684d786bd86adc9ad0e3",
+    "run_id": 41507906393,
+    "tested_head": "3f7086c07a5aa36b3cc1c57facabf153bb9cca30",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:13:17Z",
+    "workflow_latency_seconds": 91,
+    "execution_span_seconds": 85,
+    "browser_jobs": 2,
+    "browser_job_names": [
+      "browser (interface-layout-smoke)",
+      "browser (interface-day)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 10
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 8
+      },
+      {
+        "name": "browser (interface-layout-smoke)",
+        "result": "success",
+        "seconds": 33
+      },
+      {
+        "name": "browser (interface-day)",
+        "result": "success",
+        "seconds": 59
+      },
+      {
+        "name": "upgrade",
+        "result": "skipped",
+        "seconds": null
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 10
+      }
+    ],
+    "pr_commits": 1,
+    "changed_files": 10,
+    "additions": 144,
+    "deletions": 10
+  },
+  {
+    "label": "F6-A-first-failed",
+    "pr": 83,
+    "pr_head_now": "810737c431b30293dd7319a614a3857841bcd824",
+    "merge_sha": "5a8b4a34fd88a64c8bdbb88efd0df4fbe519ee8f",
+    "run_id": 41508735401,
+    "tested_head": "b12e91eda013ebf79f419b1949e2430dba89487e",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-02T19:18:38Z",
+    "workflow_latency_seconds": 194,
+    "execution_span_seconds": 189,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (data-full)",
+      "browser (interface-acceptance)",
+      "browser (interface-feature)",
+      "browser (interface-visual)",
+      "browser (interface-layout)",
+      "browser (life-full)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 9
+      },
+      {
+        "name": "upgrade",
+        "result": "success",
+        "seconds": 18
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 27
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 94
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 163
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 78
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 43
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 69
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "failure",
+        "seconds": 91
+      },
+      {
+        "name": "Memento release gate",
+        "result": "failure",
+        "seconds": 11
+      }
+    ],
+    "pr_commits": 2,
+    "changed_files": 21,
+    "additions": 373,
+    "deletions": 24
+  },
+  {
+    "label": "focus-fix",
+    "pr": 84,
+    "pr_head_now": "9c96d4d9ea17c0b506761c9dd9441d8805108c07",
+    "merge_sha": "909adc595c4d5de5e07f506edae17ac18fd5696a",
+    "run_id": 41510153098,
+    "tested_head": "9c96d4d9ea17c0b506761c9dd9441d8805108c07",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:27:47Z",
+    "workflow_latency_seconds": 215,
+    "execution_span_seconds": 210,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (interface-feature)",
+      "browser (interface-acceptance)",
+      "browser (interface-layout)",
+      "browser (data-full)",
+      "browser (interface-visual)",
+      "browser (life-full)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 18
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 10
+      },
+      {
+        "name": "upgrade",
+        "result": "success",
+        "seconds": 37
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 93
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 168
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 84
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 93
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 47
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "success",
+        "seconds": 90
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 11
+      }
+    ],
+    "pr_commits": 1,
+    "changed_files": 5,
+    "additions": 20,
+    "deletions": 8
+  },
+  {
+    "label": "F6-A-final",
+    "pr": 83,
+    "pr_head_now": "810737c431b30293dd7319a614a3857841bcd824",
+    "merge_sha": "5a8b4a34fd88a64c8bdbb88efd0df4fbe519ee8f",
+    "run_id": 41511453710,
+    "tested_head": "810737c431b30293dd7319a614a3857841bcd824",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:36:08Z",
+    "workflow_latency_seconds": 196,
+    "execution_span_seconds": 193,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (interface-acceptance)",
+      "browser (interface-feature)",
+      "browser (interface-visual)",
+      "browser (interface-layout)",
+      "browser (life-full)",
+      "browser (data-full)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 15
+      },
+      {
+        "name": "upgrade",
+        "result": "success",
+        "seconds": 26
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 161
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 70
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 38
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 78
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 20
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "success",
+        "seconds": 100
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 82
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 10
+      }
+    ],
+    "pr_commits": 2,
+    "changed_files": 21,
+    "additions": 373,
+    "deletions": 24
+  },
+  {
+    "label": "F6-B-high",
+    "pr": 85,
+    "pr_head_now": "a4e3c7e0057d8e06180ac6936b6c84500cb3d6b7",
+    "merge_sha": "1c8a73d432d89f67aa57cd288095794ede635dc0",
+    "run_id": 41512472162,
+    "tested_head": "a4e3c7e0057d8e06180ac6936b6c84500cb3d6b7",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-02T19:42:43Z",
+    "workflow_latency_seconds": 267,
+    "execution_span_seconds": 263,
+    "browser_jobs": 6,
+    "browser_job_names": [
+      "browser (interface-visual)",
+      "browser (data-full)",
+      "browser (interface-layout)",
+      "browser (life-full)",
+      "browser (interface-acceptance)",
+      "browser (interface-feature)"
+    ],
+    "jobs": [
+      {
+        "name": "plan",
+        "result": "success",
+        "seconds": 90
+      },
+      {
+        "name": "core",
+        "result": "success",
+        "seconds": 8
+      },
+      {
+        "name": "browser (interface-visual)",
+        "result": "success",
+        "seconds": 39
+      },
+      {
+        "name": "browser (data-full)",
+        "result": "success",
+        "seconds": 95
+      },
+      {
+        "name": "browser (interface-layout)",
+        "result": "success",
+        "seconds": 71
+      },
+      {
+        "name": "browser (life-full)",
+        "result": "success",
+        "seconds": 106
+      },
+      {
+        "name": "browser (interface-acceptance)",
+        "result": "success",
+        "seconds": 154
+      },
+      {
+        "name": "upgrade",
+        "result": "success",
+        "seconds": 23
+      },
+      {
+        "name": "browser (interface-feature)",
+        "result": "success",
+        "seconds": 69
+      },
+      {
+        "name": "Memento release gate",
+        "result": "success",
+        "seconds": 12
+      }
+    ],
+    "pr_commits": 1,
+    "changed_files": 18,
+    "additions": 329,
+    "deletions": 7
+  }
+]
