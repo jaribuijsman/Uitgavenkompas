@@ -367,8 +367,8 @@ function recipeHTML(r){
 function renderRecipeShop(){const note=read().notes.find(n=>n.id===selectedId);if(!note)return header('Recept niet gevonden',true);const rows=ingredientRows(note.recipe);return header('Ingrediënten kiezen',true,btn('Op boodschappenlijst','recipe-shop-confirm','',true))+'<div class="life-panel">'+rows.map((x,i)=>'<label class="mg-recipe-check"><input data-mg-shop="'+i+'" type="checkbox" checked><span>'+esc(x.name)+' · '+esc(x.amount)+' '+esc(x.unit)+'</span></label>').join('')+'</div>';}
 function recipeEditRows(recipe){return '<div id="mg-recipe-rows">'+(recipe.ingredients||[]).map((x,i)=>'<div class="mg-recipe-row">'+[['name','Ingrediënt',120],['amount','Hoeveelheid',40],['unit','Eenheid',40]].map(([key,label,max])=>'<label>'+label+'<input data-mg-ingredient="'+i+'" data-key="'+key+'" maxlength="'+max+'" value="'+esc(x[key])+'"></label>').join('')+btn('×','recipe-remove',i)+'</div>').join('')+'</div>'+btn('+ Ingrediënt','recipe-add');}
 
-function followupLinksForNote(n){
- const origin=n.mementoFlow?.origin;
+function followupLinksForNote(n,skipDisplayedOrigin=false){
+ const origin=skipDisplayedOrigin?null:n.mementoFlow?.origin;
  const next=[['note',read().notes],['task',read().tasks],['appointment',read().appointments||[]]]
   .flatMap(([kind,items])=>items.filter(x=>!x.deletedAt&&x.mementoFlow?.origin?.kind==='note'&&x.mementoFlow.origin.id===n.id)
    .map(x=>({kind,id:x.id,title:x.title})));
@@ -476,7 +476,7 @@ function renderEditor(){
  '<button type="button" class="kc-v3-management" data-kc="editor-linked-folders">'+kcV3Icon('folder')+' Ook tonen in andere mappen <small>Optioneel</small>'+kcV3Icon('right')+'</button></section>'+
  '<section class="kc-v3-followups" aria-label="Opvolging en koppelingen"><div class="kc-v3-section-title">'+
  '<span class="kc-v3-section-icon">'+kcV3Icon('branch')+'</span><span><h3>Opvolging &amp; koppelingen</h3><small>Maak een vervolg zonder informatie kwijt te raken.</small></span></div>'+
- originHTML+(selectedId?followupLinksForNote(e):"")+actionButtons+'</section>'+
+ originHTML+(selectedId?followupLinksForNote(e,true):"")+actionButtons+'</section>'+
  '<section class="kc-v3-extras" aria-label="Extra mogelijkheden">'+
  '<button type="button" class="kc-v3-management" data-kc="editor-attachments">'+kcV3Icon('paperclip')+' Bijlagen <small>'+(fileCount?fileCount+' bestand(en)':'Toevoegen')+'</small>'+kcV3Icon('right')+'</button>'+
  '<button type="button" class="kc-v3-management" data-kc="editor-menu">'+kcV3Icon('more')+' Alle overige acties <small>Beheer en historie</small>'+kcV3Icon('right')+'</button></section>'+
