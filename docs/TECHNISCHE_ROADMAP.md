@@ -1,10 +1,10 @@
 # Memento — technische roadmap voor stabilisatie en sneller ontwikkelen
 
-**Versie:** 1.0 · 2 november 2026
+**Versie:** 1.1 · 2 november 2026
 **Repository:** `jaribuijsman/Uitgavenkompas`
-**Beoogde vaste locatie in GitHub:** `docs/TECHNISCHE_ROADMAP.md`
+**Vaste locatie in GitHub:** `docs/TECHNISCHE_ROADMAP.md`
 **Gecontroleerde uitgangscommit:** `248a5dd811b90b293aebda134e67c32338563e86` (`main`, na merge van PR #66)
-**Status van dit bestand:** uitvoeringsplan, **geen bewijs van uitgevoerde wijzigingen**. GitHub is voor het opstellen uitsluitend gelezen; dit bestand is nog niet in de repository opgenomen.
+**Status van dit bestand:** opgenomen in de repository en de enige operationele voortgangsbron. De statusrijen en het uitvoerlog onderscheiden bewezen uitvoering van open werk. Het oorspronkelijke uitgangspunt hierboven blijft historisch; opnieuw gecontroleerde `main` bij G0: `eca16e1bf59b5a0209114ed8db8aa4b8068d17d3`. Het lokale actieplan van 2 november is een overdracht, geen tweede roadmap.
 
 > **Doel:** Memento stapsgewijs technisch vereenvoudigen, de ontwikkeling via GPT/Codex/Work versnellen, de prototypefideliteit verhogen en de Android-PWA veiliger en overzichtelijker maken. **Geen herbouw van `main` en geen grootschalige automatische cleanup.** Dit is het **enige voortgangs- en overdrachtsbestand** voor deze roadmap. Het verwijst naar bestaande bronbestanden, maar creëert geen parallelle procesdocumentatie.
 
@@ -33,25 +33,65 @@
 
 | ID | Werkpakket | Prioriteit | Technisch risico (vooraf) | Status | PR / bewijs |
 |---|---|---|---|---|---|
+| G0 | PR #73/#74 consolideren en roadmap corrigeren | P0 | Laag, documentatie | IN UITVOERING — gereed voor mergebeoordeling | Canoniek: [PR #74](https://github.com/jaribuijsman/Uitgavenkompas/pull/74); #73 vervalt; merge nog OPEN |
+| G1 | Centrale CI-status ook voor documentatie-PR's beschikbaar maken | P0 | Hoog, workflow/planner | OPEN — na G0 | Huidige PR-paths sluiten docs uit; geen groen CI-bewijs voor G0 |
+| G2 | `main` effectief beschermen | P0 | GitHub-beheerinstellingen | OPEN — na G1 | Opnieuw gelezen bij G0: `protected: false`, rulesets `[]`; protection-endpoint niet vastgesteld |
 | F0-A | Afwijking na PR #66 vaststellen en herstellen | P0 | Hoog als `memento-life-app.js` geraakt wordt | GESLAAGD | [PR #67](https://github.com/jaribuijsman/Uitgavenkompas/pull/67) · merge `e638d94e7759a5ada5113e1cf714f1e6cbb6b14b` · [PR-head-run 41453028522](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41453028522) · [beelden](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41453028522/artifacts/13146400500) |
 | F1-A | `AGENTS.md` en efficiencyregels consolideren | P1 | Laag, documentatie | GESLAAGD | [PR #69](https://github.com/jaribuijsman/Uitgavenkompas/pull/69) · merge `99b78c04183cbf012b050a8bf61c99bb7382094b` · [PR-head CI 41456245800](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41456245800) |
 | F2-A | Dubbele browserjourney in volledige CI oplossen | P1 | Hoog: CI-planner/groepen | GESLAAGD | [PR #70](https://github.com/jaribuijsman/Uitgavenkompas/pull/70) · merge `86460f546b258cf70ebd1683c2a1a2d617954e6b` · [CI 41456791941](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41456791941) |
 | F2-B | Historische handmatige workflows en tests corrigeren | P1 | Hoog: workflows; veiligheidsdekking behouden | GESLAAGD (centrale CI) | [PR #71](https://github.com/jaribuijsman/Uitgavenkompas/pull/71) · merge `55ac17b798a4d54c68a8d4536cb8fa6ef56b89be` · [CI 41475455926](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41475455926); handmatige dispatch NIET GEVERIFIEERD |
 | F3-A | Prototypevergelijking in bestaande domein-CI afdwingbaar maken | P1 | Hoog bij workflowaanpassing | GESLAAGD (Kenniscentrum-scope) | [PR #72](https://github.com/jaribuijsman/Uitgavenkompas/pull/72) · merge `eca16e1bf59b5a0209114ed8db8aa4b8068d17d3` · [head-CI 41498366958](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41498366958) · alleen Kenniscentrum-editor/vervolg, **niet appbreed** |
-| F3-B | **Appbrede prototypepariteit** voor alle hoofdviews en relevante toestanden | P1 | Middel/hoog per CI-scope | OPEN — expliciete wens 2 nov 2026 | Bouw gefaseerd op F3-A; audit/ontwerpreferentie per route nodig; **niet geïmplementeerd** |
+| F3-B1 | Appbreed register van goedgekeurde referenties en staten | P1 | Laag/middel | OPEN — na F4-A | Alle 19 ingangen registreren; ontbrekende goedkeuring blijft NIET GEVERIFIEERD |
+| F3-B2 | Eerste niet-Kenniscentrum-prototype afdwingbaar vergelijken | P1 | Middel/hoog | OPEN — na G1, F3-B1 en goedgekeurde referentie | Positieve en negatieve proef vereist |
+| F3-B3 | Poort uitbreiden naar overige goedgekeurde routes | P1 | Per deel-PR volgens planner | OPEN — na F3-B2 en referentie per route | F3-B is de overkoepelende scope; geen appbrede implementatieclaim |
 | F4-A | Per tabblad UX/tekst/knoppen-audit, read-only | P1 | Geen codewijziging | IN UITVOERING (code/testroutes; actuele visuele audit nog niet geverifieerd) | Branch `docs/f4a-screen-audit-and-global-parity-scope`; bewijzen in §5 |
 | F4-B | Eerste goedgekeurde UI-vereenvoudiging uitvoeren | P2 | Laag/middel afhankelijk van diff | OPEN, afhankelijk van F4-A en gebruikersgoedkeuring | — |
 | F5-A | Kenniscentrum-CSS-cascade consolideren | P2 | Laag/middel, werkelijk effect verifiëren | OPEN | — |
 | F5-B | Gedeelde/taken-CSS alleen bij bewezen duplicatie opschonen | P2 | Middel bij gedeelde CSS | OPEN | — |
 | F6-A | Leven: één UI-verantwoordelijkheid losmaken van persistentie | P2 | Hoog, opslag-/upgradecontract | OPEN | — |
 | F6-B | Financiën: één modulegrens vereenvoudigen | P3 | Hoog, financiële integriteit | OPEN | — |
-| F7-A | Effectmeting en afsluitende herprioritering | P2 | Documentatie-only tenzij code nodig is | OPEN | — |
+| D1 | Historische documentatie en bewijsbronnen ordenen | P2 | Laag, tenzij scripts/tests geraakt | OPEN — na G0 | Referentiebewijs behouden; bestaande router gebruiken |
+| F7-A | Effectmeting, device- en productiecontrole | P1 | Read-only en gerichte releasecontrole | OPEN — na voltooiing of expliciete behoud-/uitstelbesluiten | Fysieke A54, agenttijd en niet gemeten winst NIET GEVERIFIEERD |
 
-**Afhankelijkheden:** F0-A is de bekende kwaliteitsschuld; F1-A en F2-A/B kunnen daarna volgen. F3-A bouwt voort op F2-A/B en de bestaand werkende prototypejourney. **F3-B** is de nieuw afgesproken appbrede uitbreiding, start met de F4-A-routeinventarisatie en wordt per goedgekeurde referentie uitgevoerd. F4-A gaat vóór F4-B. F5/F6 voeren alleen bewezen verbeteringen uit, niet automatisch alle vermeende overtollige code. F7-A sluit af op basis van daadwerkelijk verzameld bewijs.
+**Uitvoervolgorde volgens de opdracht:** (1) G0; (2) G1–G2; (3) F4-A; (4) F3-B1 t/m B3; (5) F4-B; (6) F5-A/F5-B; (7) F6-A/F6-B; (8) D1; (9) F7-A. Eén samenhangend werkpakket per PR; geen bulkmerge. Een echte blokkade wordt vastgelegd en niet als voltooiing geteld.
+
+**Afhankelijkheden:** G0 → G1 → G2. G0 → F4-A → F3-B1 → F3-B2 → F3-B3; F3-B2 vereist ook G1. F4-A → F4-B en F5-B. G0 → F5-A en D1. G1 → F6-A/F6-B. F3-B2/B3 vereisen per route een daadwerkelijk goedgekeurde referentie; F4-B vereist goedkeuring van de concrete ontwerpwijziging. F5-A/B mogen alleen parallel zonder overlappende eigenaren. F7-A volgt na bewezen uitvoering of expliciete behoud-/uitstelbesluiten voor alle voorgaande pakketten. F0-A t/m F3-A blijven historisch bewezen binnen hun vermelde scope.
 
 ---
 
 ## 2. Technische fasen en uitvoercontracten
+
+### Governance — canonieke roadmap, CI-contract en bescherming
+
+### G0 — Eén canonieke F4-A/roadmap-PR uit #73/#74 kiezen en actualiseren
+
+**Prioriteit:** P0 · **Risico:** laag, documentatie · **Blokkades:** geen.
+
+**Gebruikersresultaat:** er is precies één actuele, betrouwbare voortgangslijst in de bestaande roadmap.
+
+**Uitvoering:** vergelijk de volledige inhoud van beide PR's met de dan actuele `main`; neem de beste onderbouwde onderdelen samen op één branch. Laat de andere PR vervallen na bevoegd besluit; merge niet beide. Herstel de aantoonbaar onjuiste roadmapinleiding; sluit F3-A met echte PR-head-/merge-/postmergegegevens; label F4-A als *broninventaris* zolang niet alle mobiele schermtoestanden visueel zijn bekeken. Voeg F3-B en de aanvullende governance-tickets aan dezelfde roadmap toe, zonder een nieuw permanent planbestand.
+
+**Acceptatie:** (a) één canonieke PR; (b) geen verloren gebruikersbesluiten; (c) geen onjuiste 'GESLAAGD'-claim; (d) uitsluitend docdiff; (e) geen dubbele issues of roadmapbronnen.
+
+### G1 — CI-contract voorbereiden op een verplichte mergecheck
+
+**Prioriteit:** P0 · **Risico:** hoog als workflow/planner aangepast · **Blokkades:** G0.
+
+**Gebruikersresultaat:** iedere merge heeft een bruikbare en passende verplicht te controleren status zonder onnodige browsermatrix.
+
+**Uitvoering:** onderzoek de statuschecknaam, `pull_request.paths`, docs-only gedrag en releasegate. Zorg dat een uitsluitend documentatie-PR een lichte consistente verificatie doorloopt **als** diezelfde status later verplicht wordt gesteld; PWA/opslag/financiële wijzigingen behouden hun zware controles. Gebruik de huidige planner, géén tweede workflow. Test wijzigingen in planner/CI met regressiefixtures voor docs-only, CSS, medium, high, PR/postmerge, mislukte/ontbrekende check en de geselecteerde suite.
+
+**Acceptatie:** (a) niet ontbrekende check bij docs-only PR; (b) geen afwaardering van safety-risico; (c) centrale gate groen op exacte PR-head; (d) niet-verifieerbare runs blijven geblokkeerd.
+
+### G2 — `main` effectief beschermen
+
+**Prioriteit:** P0 · **Risico:** operationele GitHub-instellingen · **Blokkades:** G1.
+
+**Gebruikersresultaat:** ongeteste of niet-goedgekeurde wijzigingen kunnen `main` niet ongemerkt vervangen.
+
+**Uitvoering:** controleer met bevoegde eigenaar repo-regels en permissies. Richt een passende branch protection/ruleset in: geen gewone directe pushes, geen force-push/deletion, PR als normale ingang, vereiste centrale releasegate, up-to-date branch/head-controle en behoud van beheerherstelmogelijkheden. Houd rekening met GitHub-plan- en accountbeperkingen en de benodigde toestemming voor admin-instellingen. Geen experimentele force-push op `main`.
+
+**Acceptatie:** (a) beleid is aantoonbaar actief via GitHub; (b) docs-only en code-PR zijn niet onterecht geblokkeerd; (c) falende of ontbrekende gate blokkeert merge; (d) rollbackroute beschreven. Bij ontoegankelijke instellingen: `NIET GEVERIFIEERD`, met exacte eigenaarshandeling.
 
 ### Fase 0 — Productkwaliteit na PR #66
 
@@ -99,78 +139,137 @@
 - **Test:** bewuste negatieve fixture/screenshot-afwijking moet de relevante gate laten falen, correcte huidige referentiestaat moet slagen. Integreer in huidige centrale gate, niet als permanente tweede workflow. Houd privacy en 7-daagse artifacts-retentie in acht.
 - **Gereed:** een volgende implementerende agent krijgt aantoonbaar automatisch rood bij een materiële afwijking binnen de benoemde scope; screenshots zijn herleidbaar tot exact PR-head-SHA.
 
-### Fase 3B — Bindende ontwerpvergelijking voor de **hele app** (nieuwe expliciete eis, 2 november 2026)
+### Fase 3B — Appbrede prototypepariteit, voortbouwend op F3-A
 
-**F3-B — Appbrede prototype-/implementatiepariteit, per gewijzigd scherm.**
+De bindende bronhiërarchie blijft `docs/product/README.md`. F3-A betreft alleen de Kenniscentrum-editor en drie vervolgformulieren. Algemene browserdekking of historische screenshots bewijzen geen goedgekeurde appbrede prototypepariteit. De bestaande `tests/helpers/mobile-visual-contract.cjs`, `knowledge-prototype-parity.cjs`, domeinjourneys en CI-planner blijven eigenaar; extraheer alleen aantoonbaar gedeelde primitives. Het kleine contract bevat route, referentiehash, fixture, viewport, interactiestaat, selectors/hiërarchie, toleranties, browserjourney en artifact. Geen tweede browserframework of mondiale pixelbaseline. Bewaar uitsluitend fictief bewijs op exacte PR-head, met de bestaande retentie van zeven dagen; automatische vergelijking vervangt de menselijke visuele acceptatie niet. Selecteer alleen relevante goedgekeurde routecontracten, behoud de brede safetycontrole bij gedeelde UI/opslagrisico en maak ongewijzigde schermen zonder referentie niet kunstmatig rood.
 
-- **Gebruikersbesluit:** de F3-A-gate mag **niet** worden aangezien voor een appbrede voorziening. Dezelfde afspraak `goedgekeurd ontwerp → echte app → dezelfde staat → automatische vergelijking → menselijke visuele acceptatie` moet gelden voor **alle** Memento-onderdelen, niet alleen editors. De daadwerkelijke huidige implementatie reikt uitsluitend tot Kenniscentrum-editor en drie vervolgformulieren.
-- **Inventarisatie:** `assets/memento-unified-nav.js` definieert acht Leven- en tien Financiën-hoofdviews; daarnaast startscherm, PIN, algemene menu's, sheets, modals, leeg-/fout-/lange-lijsttoestanden, afvinken/sorteren en focus/toetsenbord. Registreer per **betrokken toestand**, niet blind per pagina één screenshot. Het ongewijzigde ontwerp van elk deel blijft behouden tenzij expliciet goedgekeurd.
-- **Bindende bron per ontwerpwijziging:** een expliciet goedgekeurd, privacyveilig referentie-HTML/screenshot of ontwerpcontract, vastgezet met commit/blob-hash en acceptatiestaten. **Geen goedgekeurde referentie?** `NIET GEVERIFIEERD`, nooit op basis van historische screenshots, de toevallige `main` of zelfverzonnen mocks `GESLAAGD` verklaren. Bestaande `docs/design-review`-beelden zijn eerder vergelijkingsmateriaal, niet automatisch nieuwe gebruikersgoedkeuring. Voor Mijn dag/Taken bestaan specifieke contracten maar niet overal een bevroren 1-op-1-visuele referentie.
-- **Technisch pad:** ontwerp één herbruikbare, sobere scherm-/state-contractinterface met `route`, `referentiehash`, `fixture`, `viewport`, `interactiestaat`, `selectors/hiërarchie`, `toleranties`, `browserjourney`, `artifact`. Trek alleen aantoonbaar gedeelde primitives uit `tests/helpers/knowledge-prototype-parity.cjs`; laat de bestaande domeintests, `tests/helpers/mobile-visual-contract.cjs` en `tests/ci-plan.cjs` de eigenaren. **Geen tweede Playwright-instantie of mondiale pixelbaseline.**
-- **CI-selectie:** op elke *relevante* UI-wijziging alleen de werkelijk getroffen geautoriseerde visuele contracten in de bestaande domeingroep; een wijziging van gedeelde navigatie/CSS kiest aantoonbaar de relevante brede routes, opslag/financiën/security blijven de huidige hoge risicoklasse. Niet alle 18 views per knoppatch starten. Een materiële referentieafwijking is `AFGEKEURD`, ontbrekend bewijs `NIET GEVERIFIEERD`; screenshotartifacts bevatten alleen fictieve gegevens en verwijzen naar exacte PR-head, 7 dagen retentie.
-- **Gefaseerde acceptatie:** (1) route- en statenregister inclusief ontbrekende goedkeuringen; (2) navigatie, start, Mijn dag/Taken/Agenda en Instellingen; (3) Kenniscentrum **overzicht/mappen**, boodschappen/wensen/fitness; (4) alle tien Financiën-schermen, modals en herstel. Een fase kan alleen `GESLAAGD` zijn voor daadwerkelijk geverifieerde schermen. Geen onechte 100%-claim of kunstmatige visuele CI-roodstand voor bestaande schermen zonder geautoriseerde referentie.
-- **Test/veiligheid:** bij implementatie regressie met negatieve geometrie/ontbrekende-control/onjuiste-referentiefixture, gerichte echte browser, huidige veiligheidsmatrix, vóór/na-screenshots en menselijke ontwerpbeoordeling. Geen wijzigingen aan data-/PIN-/offlinecontracten en geen nieuwe afhankelijkheden. Eerste implementatie vereist een **afzonderlijke PR** na F4-A-routeinventarisatie en relevant gebruikersontwerpbesluit.
+### F3-B1 — Appbreed register van goedgekeurde prototypes en staten
 
-### Fase 4 — UX-jungle: eerst inventariseren, dan gericht verbeteren
+**Prioriteit:** P1 · **Risico:** laag voor registratie, middel voor testhulpmiddelen · **Blokkades:** F4-A.
 
-**F4-A — Read-only scherminventarisatie.**
+**Gebruikersresultaat:** per route is zichtbaar welk ontwerp daadwerkelijk is goedgekeurd, wat ontbreekt en wat getest moet worden.
 
-- **Onderzoek:** werk per daadwerkelijk gebruikte tabbladroute, gericht op Android 393px: kleine/lichtgrijze tekst en contrast, herhaalde uitleg, dubbele knoppen of verschillende labels met dezelfde handler, overvolle kaarten, diepte van menu's, lege staten en bereikbaarheid bij scroll/keyboard. Begin met Kenniscentrum/Leven, daarna Financiën, Agenda, Fitness, Instellingen; uitbreiden alleen als relevant.
-- **Bewijs:** leg per kandidaat vast: scherm en staat, selector/handler, bestaande gebruikersfunctie, beeld/geometry en voorstel (`behouden`, `hernoemen`, `verplaatsen`, `samenvoegen`, `verwijderen`). Markeer vermoedens. Twee knoppen met een soortgelijk label zijn **niet** automatisch functioneel identiek; test de handler en effecten. Geen nieuwe mockdata in echte opslag.
-- **Oplevering binnen dit bestand:** voeg onderaan maximaal tien **geprioriteerde bewezen kandidaten** toe als korte regels; geen apart omvangrijk inventarisatiedocument. Dit werkpakket is **alleen analyse**, geen UI-wijziging.
-- **Gereed:** eerste kleine voorstel met referentie-/acceptatiecriteria gereed voor expliciete gebruikersgoedkeuring.
+**Uitvoering:** registreer voor alle 19 primaire ingangen plus relevante sheets/dialogen: route, UI-eigenaar, indien aanwezig expliciet goedgekeurde referentiehash, fictieve fixture, viewport, interactiestaten, bestaande domeintest, te meten eigenschappen, bewijslocatie en status. Historische screenshots of toevallige actuele UI zijn niet automatisch een goedgekeurd prototype. Geen nieuwe referentie verzinnen.
 
-**F4-B — Eén goedgekeurde UI-vereenvoudiging.**
+**Acceptatie:** (a) register is volledig; (b) geen fictieve goedkeuring; (c) bestaande KC-gate behouden; (d) iedere route heeft `GESLAAGD`, `NIET GEVERIFIEERD` of `AFGEKEURD` uitsluitend op basis van werkelijk bewijs.
 
-- **Wijziging:** kies uitsluitend de hoogst geprioriteerde door gebruiker goedgekeurde wijziging uit F4-A. Hergebruik de bestaande CSS-/JS-eigenaar, geen nieuwe overrides of parallelle handler. Geen andere schermen in dezelfde PR.
-- **Test:** gerichte 393px domeinjourney; vergelijk vóór/na screenshots en open menu/scroll waar relevant; extra mobiele toestanden alleen bij echt risico. Functioneel gelijk gedrag en toegankelijkheid (minimaal 44×44 px; streef 48×48 bij nieuwe primaire bediening).
-- **Gereed:** minder herhaalde UI zonder functieverlies; expliciete visuele goedkeuring, PR-evidence en bijgewerkte status. Herhaal later per door gebruiker gewenst afzonderlijk UX-pakket, niet als automatische bulkcleanup.
+### F3-B2 — Eerste niet-Kenniscentrum-prototype betrouwbaar vergelijken
 
-### Fase 5 — CSS-eigenaren herstellen en overtollige regels verwijderen
+**Prioriteit:** P1 · **Risico:** middel/hoog afhankelijk van test/CI-diff · **Blokkades:** G1, F3-B1 en een echt goedgekeurde referentie voor de gekozen route.
 
-**F5-A — Kenniscentrum-scope.**
+**Gebruikersresultaat:** een visuele/interactionele mismatch in bijvoorbeeld Mijn dag of Taken veroorzaakt een echte rode PR-gate.
 
-- **Bestanden:** `assets/memento-knowledge.css`, relevante selectors uit `assets/memento-base-app.css`, `assets/memento-ui.css` en gerelateerde renderstructuur in `assets/memento-knowledge.js`. Geen globale styles zonder cascadebewijs wijzigen.
-- **Methode:** inventariseer per werkelijk geraakte component de CSS-source order, specificity, mediaquery, pseudo-state en computed style. Vind aantoonbaar volledig overschreven regels en selectors zonder runtime- of documentreferentie. Check dynamische classes en alternatieve notitievormen vóór verwijderen.
-- **Wijziging:** maximaal één samenhangend style-eigenaarschap per PR; verwijder bewezen overtollige declaraties in bestaande eigenaar in plaats van `!important`-appendices. Verander uiterlijk niet behalve bij een expliciet goedgekeurde reparatie.
-- **Tests:** parse/syntax, diff, dezelfde knowledge-journey en matched screenshots; 360/412 en korte viewport wanneer cascade/touch daarvan afhankelijk is; asset/cachecontract wanneer URLs gewijzigd zijn.
-- **Gereed:** gedocumenteerde exacte duplicaten verwijderd, uiterlijk en bestaande handlers ongewijzigd, meetbaar minder conflicterende declaraties. CSS-regel-aantal alleen is geen kwaliteitsbewijs.
+**Uitvoering:** hergebruik de kleinste generieke primitives van F3-A waar ze werkelijk algemeen zijn; laat specifieke controles in de bestaande domeinjourney. Vergelijk dezelfde fictieve toestand, maatvoering, hiërarchie, kleuren waar bindend, acties en schermen na interactie. Voeg een negatieve fixture toe die aantoonbaar rood wordt bij materiële afwijking. Gebruik geen nieuw browserframework en verlaag F3-A-assertions niet.
 
-**F5-B — Gedeelde CSS en taken.**
+**Acceptatie:** (a) groene proef op juiste ontwerp; (b) rode proef bij bewust veranderd ontwerp; (c) bewijs op exacte PR-head; (d) geen extra volledige browsermatrix bij ongerelateerde kleine wijziging.
 
-- **Begin met bewijs:** PR #64 heeft de 44×44px-takenmenuknop al geconsolideerd; **datzelfde werk niet opnieuw doen**. Onderzoek uitsluitend nieuw gevonden conflicten in `memento-base-app.css`, `memento-ui.css`, `memento-layout.css` en de relevante inline `index.html`-styles.
-- **Wijziging:** één bewezen duplicatiecluster per PR, behoud de bestaande visuele hiërarchie en dynamische mediaqueries. Gedeelde CSS raakt meerdere schermen; gebruik de door de planner gekozen relevante layout-/domeinroutes.
-- **Gereed:** geen regressie op taken, afspraken, Mijn dag, menu/scroll en Financiën waar door de betreffende selectors geraakt.
+### F3-B3 — Prototypepoort gericht uitbreiden naar overige goedgekeurde routes
 
-### Fase 6 — JS modulariseren zonder opslagrisico
+**Prioriteit:** P1 · **Risico:** per deel-PR volgens planner · **Blokkades:** F3-B2, per scherm een echte goedgekeurde referentie.
 
-**F6-A — Leven: presentatie scheiden van opslag.**
+**Gebruikersresultaat:** nieuwe UI-aanpassingen in alle tabbladen worden automatisch getoetst waar een goedgekeurd ontwerp bestaat.
 
-- **Aanleiding:** `assets/memento-life-app.js` (circa 181 KB op gecontroleerde `main`) is gemengd UI/persistentie en staat expliciet in de `HIGH`-lijst van `tests/ci-plan.cjs`. Dat is een terechte grens zolang de code verweven is.
-- **Eerste PR:** breng één kleine verantwoordelijkheid en haar callsites in kaart (bij voorkeur een pure UI-render/helper zonder storage-mutatie) en extraheer **alleen dat stuk** naar een logische bestaande module of een nieuw goed afgebakend presentatiemodulebestand indien nodig. Maak geen dubbele statekeeper. Behoud exacte runtimevolgorde, publieke calls, eventhandlers en serviceworker assetversies.
-- **Verplicht:** negatieve opslagveiligheidschecks voor lokale taken/afspraken/IDs, herstel en offline herstart waar toepasselijk; bestaande Leven-/followup browserjourney; volledige bestaande high-risk PR-gate inclusief upgrade wanneer `life-app.js` geraakt is. Geen risicodowngrade op basis van een tekstmarker.
-- **Gereed:** één verantwoordelijkheidsgrens aantoonbaar verbeterd met ongewijzigde gegevenscontracten. Pas **na bewezen scheiding** kan een latere afzonderlijke PR veilig een fijnmazigere risicoclassificatie voorstellen met plannerregressie en negatieve tests.
+**Uitvoering:** voeg de resterende domeinen in kleine, onafhankelijk te mergen groepen toe: (1) navigatie/Mijn dag/Taken/Agenda/Instellingen, (2) Kenniscentrum-overzicht/mappen en Leven-boodschappen/wensen/Fitness, (3) de afzonderlijke financiële schermen en modals. Voer per groep relevante states, bestaande domeintests en negatieve regressie uit. **19/19 visuele goedkeuring** is pas haalbaar als er daadwerkelijk 19 goedgekeurde referenties en passende toestanden zijn; zonder die bron blijft de toestand `NIET GEVERIFIEERD`, ook bij functioneel groene CI.
 
-**F6-B — Financiën: bewezen duplicatie of verantwoordelijkheidsgrens.**
+**Acceptatie:** (a) iedere bestaande goedgekeurde referentie is verbonden met gerichte controle; (b) niet-geautoriseerde ontwerpen blijven als ontbrekend aangegeven; (c) ongerelateerde kleine PR's blijven snel; (d) geen materieel verlies van interactiegedrag.
 
-- **Bestanden:** `assets/memento-finance-app.js`, `assets/memento-finance-dashboard-v9.js` en relevante bestaande `*-core.js`-modules/testcontracten; start met alleen de daadwerkelijk gevonden eigenaar.
-- **Wijziging:** één kleine pure helper of dubbele codepad verbeteren, zonder veranderingen in bedragen, overboekingen, validatie, rekeningmutaties of opslagkeys. Geen onnodige herberekening of migration.
-- **Tests:** integriteits- en negatieve tests voor bedragen, interne overboekingen, categorisering, budgetten, restore/offline; volledige toepasselijke hoge-risico releasegate.
-- **Gereed:** aantoonbare afname van onderhoudscomplexiteit zonder gewijzigde financiële resultaten.
+### Fase 4 — Mobiele audit en goedgekeurde UX-verbeteringen
 
-### Fase 7 — Meten, leren en vervolg kiezen
+### F4-A — Echte appbrede Android UX-inventaris en ontwerpdekking
 
-**F7-A — Werkelijke prestatie- en kwaliteitswinst vastleggen.**
+**Prioriteit:** P1 · **Risico:** read-only · **Blokkades:** G0.
 
-- **Bestaande metingen:** `CI_SUITE_DURATION` per suite uit `tests/ci-groups.cjs`, GitHub Actions-jobduur, aantallen herhaalde uitvoeringen op dezelfde PR, tijd tussen eerste PR-head en merge, aantal afwijkingen prototype↔app. Verzamel alleen voor relevante vergelijkbare PR's; schat ontbrekende data niet.
-- **Vergelijk:** duur van geselecteerde groepen, duplicatieaantal, aantal CI-herstarts, aantal gewijzigde bestanden/commits per kleine taak, en aantal na merge gemelde UX-problemen. Houd onderscheid tussen agenttijd, GitHub Actions-tijd en ChatGPT-gebruiks-/rate-limit: deze zijn **niet hetzelfde**.
-- **Afsluitcriteria:** benoem meetbaar verbeterde punten én onopgeloste risico's, werk de statusrijen in dit bestand bij en kies maximaal drie nieuwe onderhoudskandidaten. **Geen nieuwe grote roadmap of nieuwe `main`.**
+**Gebruikersresultaat:** onderbouwde verbeterlijst voor alle **18 hoofdviews plus start/PIN**, inclusief relevante schermtoestanden.
+
+**Uitvoering:** hergebruik bestaande `visual-browser`, domeinjourneys en de in #73/#74 beschreven bron- en route-inventaris. Bekijk per relevante route minstens een concrete 393px staat, primaire acties, menu's, modals, scroll, tekst, tikgebieden, toetsenbordrisico en bestaande goedgekeurde referenties. Scheid echte defecten van ongeteste voorstellen en test/ontwerptekorten; registreer prioriteit, eigenaar, bronbewijs en maximaal tien eerste UX-kandidaten. Herhaal niet automatisch de volledige matrix op 360/412/1280px.
+
+**Acceptatie:** (a) alle hoofdviews en start/PIN geïnventariseerd; (b) bekende uitzonderingen als niet geverifieerd gemarkeerd; (c) rangorde en maximaal tien kandidaten; (d) geen appcode gewijzigd; (e) toekomstige F4-B-kandidaat expliciet gekozen en uitsluitend na werkelijk ontwerpbesluit uitgevoerd.
+
+### F4-B — UX-verbeteringen uitvoeren in kleine goedgekeurde PR's
+
+**Prioriteit:** P1/P2 op basis van audit · **Risico:** per UI-scope · **Blokkades:** F4-A en goedkeuring van de concrete ontwerpwijziging; voor nieuwe getrouwheidsclaims passende F3-B-contracten.
+
+**Gebruikersresultaat:** de tien daadwerkelijk belangrijkste schermproblemen worden opgelost, zonder nieuwe cascades of verborgen functie-uitval.
+
+**Uitvoering:** begin bij de hoogste bewezen fout/goedkeurde verbetering. Eén plaatselijke UI-uitkomst per PR. Behoud touchzones, correcte menu- en editorstatus na actie, alle filters en opgeslagen velden. Vergelijk voor/na bij dezelfde fixture. De lijst is dynamisch: een kandidaat zonder defect of gebruikersgoedkeuring wordt gemotiveerd behouden, niet kunstmatig 'gerepareerd'.
+
+**Acceptatie:** (a) concrete afwijking weg of bewuste behoudbeslissing; (b) 393px browserroute en voor/na; (c) bij risico extra viewport/keyboard; (d) geen ongeautoriseerde scopeuitbreiding.
+
+### Fase 5 — CSS-eigenaarschap op bewijs
+
+### F5-A — Kenniscentrum-CSS-eigenaarschap consolideren
+
+**Prioriteit:** P2 · **Risico:** laag/middel, planner is leidend · **Blokkades:** G0; F3-A is al gemerged.
+
+**Gebruikersresultaat:** toekomstige editor-/mapstijlwijzigingen vereisen minder selectorzoekwerk en overschrijvingen.
+
+**Uitvoering:** bepaal de cascade van aantoonbaar overlappende Kenniscentrum-regels. Consolideer één bewezen conflictcluster per PR en behoud specificity/media/reduced-motion, bestaande DOM en exacte editorreferentie. Geen nieuwe `!important`-patch als vervanging.
+
+**Acceptatie:** (a) één eigenaar van het gekozen gedrag; (b) berekende stijlen en interactiestaten gelijk, tenzij een defect bewust gerepareerd wordt; (c) bestaande prototype- en domeinbrowsercontrole groen; (d) geen andere schermregressie.
+
+### F5-B — Gedeelde CSS, taken en inline styles opruimen op bewijs
+
+**Prioriteit:** P2 · **Risico:** middel voor gedeelde layout, hoog bij grote inline ingrepen · **Blokkades:** F4-A; parallel met F5-A alleen zonder overlappende bestanden.
+
+**Gebruikersresultaat:** kleinere risicozone voor een eenvoudige knop- of kaartaanpassing.
+
+**Uitvoering:** prioriteer frequent gewijzigde schermen; traceer effectieve cascade via bestaande CSS-bestanden en de 28 inline styleblokken. Behoud geldige themascope/mediaregels. Consolideer uitsluitend aantoonbaar redundante overrides, per scope, liefst via bestaande CSS-eigenaar. Geen bulkverplaatsing van alle 28 blokken.
+
+**Acceptatie:** (a) gedocumenteerde regel/eigenaar vóór/na; (b) geen onverwachte pixel-/geometrieverandering; (c) actuele, passende domein-/layoutcheck; (d) CSS-complexiteit aantoonbaar verminderd in geselecteerde cluster.
+
+**Behouden historisch bewijs:** PR #64 consolideerde de 44×44px-takenmenuknop al; voer datzelfde werk niet opnieuw uit. Ook dynamische classes, alternatieve notitievormen, specificiteit, bronvolgorde en mediaqueries blijven onderdeel van de cascadeanalyse.
+
+### Fase 6 — Modulegrenzen met ongewijzigde gegevenscontracten
+
+### F6-A — Leven-module verdiepen zonder opslagcontract te wijzigen
+
+**Prioriteit:** P2 · **Risico:** hoog · **Blokkades:** G1 en stabiliteit van betrokken bestaande tests.
+
+**Gebruikersresultaat:** een kleine Leven-UI-wijziging hoeft minder opslaggerelateerde code te raken.
+
+**Uitvoering:** kies na afhankelijkheidsinspectie één concrete UI-verantwoordelijkheid die van de persistente state/writes kan worden gescheiden zonder duplicate state of tweede adapter. Gebruik een kleine interface met hoge module-depth en goede locality. Bewaak bestaande `MementoStorageGuard`, backup, ID's, conceptnavigatie, scriptsvolgorde, serviceworkerprecache en offline upgrade. Risicoselectie pas verkleinen nadat negatieve regressies bewezen geen gevaar voor opslag/financiën maken.
+
+**Acceptatie:** (a) dezelfde data- en navigatie-uitkomst in fictieve fixture; (b) mislukte write houdt originele opslag en invoer veilig; (c) high-risk planner, data-/upgrade-/offlinechecks passend groen; (d) minder codeconcentratie of meer testbare interface aantoonbaar, geen lege wrapperlaag.
+
+### F6-B — Financiën-module verdiepen met onveranderde berekeningen
+
+**Prioriteit:** P2/P3 · **Risico:** hoog · **Blokkades:** G1 en bestaande financiële veiligheidsregressies.
+
+**Gebruikersresultaat:** financierings- en schermaanpassingen zijn beter te isoleren, zonder veranderd saldo of rapportages.
+
+**Uitvoering:** kies één logisch samenhangende verantwoordelijkheid (bijv. presentatie van één bestaande periodeweergave) die veilig achter een kleine interface kan vallen. Hergebruik `memento-finance-period-core.js` en bestaande validatie; geen dubbele rekenregels. Test overdrachten, saldi, loonperioden, afronding, terugbetalingen, categorisatie, export/import, backup, offline upgrade en mislukte writes conform werkelijk geraakt oppervlak.
+
+**Acceptatie:** (a) uitkomsten vóór/na identiek op gerichte regressiefixtures; (b) bestaande gegevens intact; (c) toepasselijke volledige hoogrisico-CI en upgrade groen; (d) geen toename van parallelle state of code-eigenaren.
+
+### Documentatie en bewijsbronnen
+
+### D1 — Documentatie/evidence gericht lichter en betrouwbaarder maken
+
+**Prioriteit:** P2 · **Risico:** laag voor inventaris, kan hoger zijn bij scripts/tests · **Blokkades:** G0.
+
+**Gebruikersresultaat:** agents weten welke bron geldig is zonder honderd historische documenten te hoeven lezen.
+
+**Uitvoering:** categoriseer grote evidence- en historische documentatiebestanden naar normatief / historisch / testafhankelijk. Verklaar verouderde bronnen niet-normatief waar nog onduidelijk; wijzig alleen gerichte verwijzingen. Verwijder of archiveer pas na referentiezoektocht en bewezen niet-gebruik; pin ontwerp- en bewijsbronnen die bij eerdere acceptatie horen. Doe geen prestatieclaims op basis van enkel bestandenaantal.
+
+**Acceptatie:** (a) één canonieke router; (b) geen verdwijnend referentiebewijs; (c) agent hoeft geen volledig docs-archief meer te lezen; (d) geen wijziging van appdata of schermen.
+
+### Fase 7 — Effectmeting en afsluiting
+
+### F7-A — Effect meten, device controleren en afronden
+
+**Prioriteit:** P1 als afsluitende kwaliteitsborging · **Risico:** read-only + gerichte releasecontrole · **Blokkades:** voltooiing of expliciete behoud-/uitstelbesluiten voor G0–G2, F3-B, F4, F5, F6, D1.
+
+**Gebruikersresultaat:** aantoonbare kwaliteits- en efficiëntiewinst, met restpunten in plaats van losse beloften.
+
+**Uitvoering:** vergelijk representatieve kleine, middelgrote en hoogrisico PR's vóór/na op centrale CI-runtime, aantal werkelijke browserjobs, correctierondes, conflicts, diffomvang en visueel afkeurpercentage. Agent-runtime/gebruikslimiet alleen vergelijken als echte Codex/Work-sessielogs beschikbaar zijn; CI-minuten zijn daar geen proxy voor. Laat de gebruiker op de fysieke Galaxy A54 de voor hem relevante standalone PWA-uitkomsten toetsen (installeerbaarheid, update, offline herstart, touch, toetsenbord, scroll, menu, lokale gegevens); geef daarvoor een kort gericht checklistje.
+
+**Acceptatie:** (a) per doel meetbare vóór/na-data of `NIET GEVERIFIEERD`; (b) open risico's expliciet; (c) laatste relevante main-CI en Pages-status bewezen; (d) apparaatstatus niet automatisch groen zonder echte toesteltest; (e) roadmap en commitverwijzingen actueel.
 
 ---
 
 ## 3. Vaste overdracht naar een nieuwe GPT-, Codex- of Work-chat
 
-Kopieer onderstaande opdracht en vervang uitsluitend de werkpakket-ID. Wanneer dit bestand in GitHub staat, is `docs/TECHNISCHE_ROADMAP.md` de live bron; vóór opname moet het Markdown-bestand in de chat worden toegevoegd.
+Kopieer onderstaande opdracht en vervang uitsluitend de werkpakket-ID. `docs/TECHNISCHE_ROADMAP.md` in de repository is de live bron; lokale bestanden en chatbijlagen zijn tijdsopnames.
 
 ```text
 Memento — voer uitsluitend werkpakket [ID] uit vanuit
@@ -188,7 +287,7 @@ Rapporteer PR-link, SHA, geslaagde/niet geverifieerde tests, gegevensveiligheid,
 visuele status, resterende afwijkingen en deploymentstatus.
 ```
 
-**Eerste uitvoeropdracht (aanbevolen):** `Voer uitsluitend werkpakket F0-A uit volgens Memento_Technische_Roadmap.md. Herstel de bestaande visuele afwijking van de tweede Slim-opvolgen-stap van PR #66 zonder bronrelaties of opslagvelden te verliezen. Maak een PR en stop vóór merge zodat ik de beelden en verschillen kan beoordelen.`
+**Eerstvolgende poort:** G0 opleveren in de canonieke PR #74 en stoppen vóór merge voor expliciete mergeautorisatie. Daarna G1 vanaf opnieuw gecontroleerde `main`; F0-A niet opnieuw uitvoeren.
 
 ## 4. Uitvoerlog — na iedere PR aanvullen, niet vooruit invullen
 
@@ -203,11 +302,17 @@ visuele status, resterende afwijkingen en deploymentstatus.
 
 | 2026-11-02 | F2-B | [PR #71](https://github.com/jaribuijsman/Uitgavenkompas/pull/71) · head `d78d8f88ad246687fe32406a2d902a03ab43f7d1` · merge `55ac17b798a4d54c68a8d4536cb8fa6ef56b89be` | [CI 41475455926](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41475455926): 31 plannerchecks, zes browserversnipperingen, releasegate groen | Verouderde handmatige V1-routes vervangen, originele tests behouden; applicatiecode ongewijzigd | Afzonderlijke nieuwe handmatige dispatchruns niet uitgevoerd, dus die uitvoerbaarheid NIET GEVERIFIEERD. |
 
+| 2026-11-02 | F3-A | [PR #72](https://github.com/jaribuijsman/Uitgavenkompas/pull/72) · head `1bbc4a9723f1f3f62ad852b1fc98bbb85297a4f1` · merge `eca16e1bf59b5a0209114ed8db8aa4b8068d17d3` | [Finale CI 41498366958](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41498366958): 9 parityregressies, 31 plannerchecks, alle zes browsershards en releasegate groen; [prototype-/appscreenshots](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41498366958/artifacts/13168131309) | Scope alleen Kenniscentrum-editor: acht gereproduceerde states; ander UI NIET GEVERIFIEERD | Postmerge [run 41499328108](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41499328108) groen, [Pages 41499326013](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41499326013) groen; fysieke A54 niet getest. |
+
+| 2026-11-02 | G0 | Canonieke [PR #74](https://github.com/jaribuijsman/Uitgavenkompas/pull/74); basis `eca16e1bf59b5a0209114ed8db8aa4b8068d17d3`; consolidatie van #73 en #74 | Volledige beide docdiffs vergeleken; route-ID's met navigatie en browserbronnen vergeleken; F3-A-head-CI, postmerge en Pages opnieuw via GitHub gelezen: success op genoemde SHA's | Alleen dit Markdown-bestand gewijzigd; geen runtime, opslag, browser of toestel gewijzigd/getest | Gereed voor mergebeoordeling, niet gemerged. Docs-only planner: tier none, geen browser/upgrade; huidige workflow triggert geen docs-only PR. G1 moet dit vóór G2 herstellen; geen nieuwe groene CI-claim. |
+
 ## 5. F4-A — read-only scherminventarisatie, prioriteiten en appbrede pariteitsdekking
 
 **Onderzoekspunt:** `main` `eca16e1bf59b5a0209114ed8db8aa4b8068d17d3`, 2 november 2026. Bron: actuele `assets/memento-unified-nav.js`, `memento-life-app.js`, `memento-settings.js`, `memento-start.js`, `memento-finance-app.js`, relevante kennis-/fitnesstests, `tests/visual-browser.cjs`, `tests/helpers/visual-assertions.cjs`, `docs/mijn-dag-v3-acceptance.md`, `docs/taken-v4-acceptance.md`, F3-A-bewijs en historische `docs/design-review`. Dit is **een code-/testcontract-inventarisatie**: géén nieuwe fysieke A54-test, geen live 393px browserinspectie van elke toestand, geen nieuwe gebruikersgoedkeuring of bewijs van actueel visueel defect. Bewaak dit onderscheid bij alle voorstellen.
 
 **Feitelijke routes:** `assets/memento-unified-nav.js` bevat **Leven (8)**: Fitness, Mijn dag, Taken, Agenda, Notities, Boodschappen, Wensen, Instellingen; en **Financiën (10)**: Overzicht, Transacties, Analyse, Budgetten, Rekeningen, Planning, Slim Kopen, Geldcoach, Bonnetjes, Instellingen. De onderste balk toont per gebied vier voorkeursroutes plus Meer; het menu bevat de overige bestemmingen. Dit zijn **18 hoofdviews**, niet 18 onafhankelijke opslaggebieden of 18 reeds goedgekeurde prototypes. Start/PIN, menu's, dialogen en actie-/scrolltoestanden behoren daarnaast tot de appbrede eis.
+
+**Route-ID's en aanvullende brondekking uit #73:** Leven `today`, `tasks`, `groceries`, `wishes`, `agenda`, `notes`, `fitness`, `backup`; Financiën `dashboard`, `transactions`, `analysis`, `accounts`, `budgets`, `planning`, `smartbuy`, `moneycoach`, `receipts`, `settings`. `#mementoStart` is de 19e primaire ingang; PIN en overlays zijn aanvullende staten. `tests/release-acceptance-browser.cjs` en `tests/glass-rendering-browser.cjs` bevatten dezelfde 18 hoofdroutes; `tests/memento-start-browser.cjs` en `tests/global-search-browser.cjs` dekken afzonderlijke start-/zoek-/conceptnavigatie. `docs/mijn-dag-v3-acceptance.md` en `docs/taken-v4-acceptance.md` zijn tekstuele contracten, geen universele vaste HTML-referenties. Ook `tests/visual-layout-browser.cjs` en `tests/calendar-header-browser.cjs` blijven relevant voor agenda/menu/hitbox; `#addTransaction`, `#txForm`, `#ml-receipts [data-ml-tab]` en `#fitnessDialog` zijn aanvullende bestaande interactie-ingangen, geen bewezen defecten.
 
 **Huidige dekking (niet verwarren met prototypepariteit):** `tests/visual-browser.cjs` doorloopt alle 18 genoemde hoofdviews met een fictieve fixture en maakt screenshots; `tests/helpers/visual-assertions.cjs` borgt o.a. 44px-navigatie, boodschappen-/agendacellen, lege transactiefilters en transactiemodals. De huidige centrale high-risk matrix draait zes domeingroepen, **niet standaard de losse volledige `visual-browser.cjs`**, die onder `interface-smoke` voor gerichte/na-merge selectie staat. Domeinsuites controleren o.a. Mijn dag (`day-v3-browser.cjs`), Taken (`taken-v4-browser.cjs`), Kenniscentrum (`knowledge-workspace-browser.cjs`), Fitness (`fitness-browser.cjs`), en financiën/opslag (`app-review-browser.cjs`, `storage-safety-browser.cjs`). **Strikte vastgezette HTML-pariteit bestaat op dit moment alleen voor de Kenniscentrum-editor/vervolgflow in F3-A.** De historische design-review heeft vóór-/na-beelden maar is geen appbreed, definitief door de gebruiker goedgekeurd referentiearchief.
 
@@ -226,5 +331,6 @@ visuele status, resterende afwijkingen en deploymentstatus.
 | 9 · P2 | **Boodschappen/Wensen/Agenda**, `[data-life-view]`, `assets/memento-life-app.js`, `tests/helpers/visual-assertions.cjs` | Navigatie en agenda-/boodschappendoelen hebben reeds domein- en aanraakcontroles; geen bewijs dat overeenkomende knoppen dezelfde werking hebben | **Behouden** aparte handlerketens; let op lange boodschappenlijsten, uitgeklapte acties, selectie/filters en zeven kalenderkolommen bij gerichte F3-B-test |
 | 10 · P2 | **Overig Financiën** (Overzicht, Analyse, Budgetten, Rekeningen, Planning, Slim Kopen, Geldcoach, Bonnetjes), `#view-*`, `assets/memento-finance-app.js`, `assets/memento-tab-layout.js` | Alle routes zitten in de huidige navigatie; optionele uitlegsecties worden deels bewust onder een disclosure geplaatst; geen individuele vastgezette ontwerpvergelijking | **Behouden** onderliggende berekeningen en procedures; route per keer valideren inclusief lege staat, filters en open details, pas daarna `verplaatsen/samenvoegen` voorstellen |
 
-**F4-A-beoordeling:** bronroutes en aanwezige testdekking zijn **GESLAAGD (read-only code-inventaris)**; individuele nieuwe visuele bevindingen, vermeend overbodige controls, echte A54 en 393px browserinspectie voor alle 18 views zijn **NIET GEVERIFIEERD**. **Geen verwijder-/samenvoegopdracht verleend** en geen F4-B-productiewijziging toegestaan zonder een afzonderlijk goedgekeurd voorstel. Eerst aanbevolen vervolg: **F3-B** generieke pariteitsdekking vastleggen op bestaande routes; daarna een gericht UI-verbetertraject kiezen.
+**F4-A-beoordeling:** uitsluitend de bron-/testroute-inventaris is beschikbaar; F4-A blijft **IN UITVOERING**; individuele nieuwe visuele bevindingen, vermeend overbodige controls, echte A54 en 393px browserinspectie voor alle 18 views zijn **NIET GEVERIFIEERD**. **Geen verwijder-/samenvoegopdracht verleend** en geen F4-B-productiewijziging toegestaan zonder een afzonderlijk goedgekeurd voorstel. Volg eerst de uitvoervolgorde hierboven: na G0/G1–G2 de echte F4-A-browseraudit, daarna F3-B1 en de op referenties gebaseerde vervolgstappen.
 
+**Kleine eerste F4-B-kandidaat (nog niet goedgekeurd):** inspecteer uitsluitend het Kenniscentrum-tabblad **Mappen** op 393px met een ingeklapte en uitgeklapte map. Vergelijk een door de gebruiker goedgekeurd compact ontwerp met `.kc-local-tabs`, `.kc-tree-children` en de bestaande mapuitklaphandler. Acceptatie: tabvolgorde/labels en alle map-ID's behouden, 44×44 hitbox, geen horizontale overflow, dezelfde mapuitklap-/terugkeerroute, voor/na-screenshot exact dezelfde fixture. Zonder ontwerpgoedkeuring **geen UI-wijziging**.
