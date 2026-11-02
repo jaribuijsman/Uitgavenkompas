@@ -60,9 +60,11 @@
     root.document.removeEventListener("touchmove",track,true);
     root.document.removeEventListener("mousemove",track,true);
    }
+   // Mijn Dag: Android-style long press on the drag handle; other lists stay immediate.
+   const dayTaskDragDelay=el.matches(".life-day-column .life-list")?500:0;
    const sortable=new root.Sortable(el,{
     draggable:selector,handle,sort:true,animation:150,
-    delay:0,delayOnTouchOnly:false,touchStartThreshold:4,
+    delay:dayTaskDragDelay,delayOnTouchOnly:dayTaskDragDelay>0,touchStartThreshold:4,
     forceFallback:true,fallbackOnBody:true,fallbackTolerance:2,
     scroll:false,
     chosenClass:"memento-sort-chosen",ghostClass:"memento-sort-ghost",
