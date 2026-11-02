@@ -29,8 +29,6 @@ body #lifeApp .memento-calendar-connect{background:var(--mg-surface);box-shadow:
 body #lifeApp .life-horizon{gap:12px}
 body #lifeApp :is(.life-day,.flow-hero){padding:15px!important}
 body #lifeApp .memento-capture-card{padding:12px!important}
-body #lifeApp .memento-diary-shortcut{font-size:12px!important;width:auto!important;min-width:70px!important}
-body #lifeApp .memento-diary-shortcut::before{display:none!important}
 body #lifeApp .kc-collection-card{min-height:76px!important;overflow:hidden}
 body #lifeApp .kc-collection-card :is(.kc-cover,.kc-collection-art,.kc-scene){max-height:88px}
 body #lifeApp .kc-quick{padding:12px!important}
