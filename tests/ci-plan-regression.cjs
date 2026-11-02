@@ -170,6 +170,36 @@ check("mixed Life entrypoint remains high until persistence is separated",()=>{
  const p=planFor(["assets/memento-life-app.js"]);
  assert.equal(p.tier,"high");assert.equal(p.upgrade,true);assert.deepEqual(p.groups,FULL);
 });
+check("full high-risk shards retain all domains, unique knowledge journey and safety tests",()=>{
+ const groups=JSON.parse(require("node:child_process").execFileSync(process.execPath,[require("node:path").join(__dirname,"ci-groups.cjs"),"--list-groups"],{encoding:"utf8"}));
+ function verify(byGroup){
+  assert.equal(FULL.length,6,"six high-risk shards must remain");
+  const fullSuites=FULL.flatMap(name=>{
+   assert(Array.isArray(byGroup[name])&&byGroup[name].length>0,"missing full CI domain "+name);
+   return byGroup[name];
+  });
+  assert.equal(fullSuites.length,21,"only the one proven duplicate may be removed from the full matrix");
+  assert.equal(fullSuites.filter(s=>s==="knowledge-workspace-browser").length,1,"duplicate or missing knowledge journey in full run");
+  assert(byGroup["life-full"].includes("knowledge-workspace-browser"),"life-full must own knowledge journey");
+  assert.deepEqual(byGroup["interface-visual"],["glass-rendering-browser"],"visual shard retains dedicated glass journey");
+  assert.deepEqual(byGroup["life-knowledge"],["knowledge-workspace-browser"],"targeted knowledge journey must remain");
+  const mandatory={
+   "interface-layout":["layout-completion-browser","visual-layout-browser"],
+   "interface-feature":["day-v3-browser"],
+   "interface-acceptance":["release-acceptance-browser"],
+   "interface-visual":["glass-rendering-browser"],
+   "life-full":["followup-browser","taken-v4-browser","knowledge-workspace-browser"],
+   "data-full":["app-review-browser","storage-safety-browser","recovery-browser"]
+  };
+  for(const [owner,required] of Object.entries(mandatory)){
+   for(const suite of required)assert(byGroup[owner].includes(suite),owner+" lost required "+suite);
+  }
+ }
+ verify(groups);
+ assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|21/);
+ assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
+ assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/21|storage-safety-browser/);
+});
 console.log("CI_PLANNER_REGRESSION_PASS "+count+" cases");
 
 
