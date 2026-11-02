@@ -56,8 +56,11 @@ const reports=[];
    assert.equal(await page.locator('.memento-duty-badge').count(),0,'Duplicate shift hours in appointment caption');
    const quickOrder=await page.evaluate(()=>{const q=document.querySelector('#lifeQuickForm'),s=document.querySelector('#mementoUniversalSearchHost'),d=document.querySelector('.memento-day-v3-bar');return Boolean(q&&s&&d&&(s.compareDocumentPosition(q)&Node.DOCUMENT_POSITION_FOLLOWING)&&(q.compareDocumentPosition(d)&Node.DOCUMENT_POSITION_FOLLOWING))});
    assert(quickOrder,'Quick capture must be between universal search and day selector');
-   assert.equal(await quick.locator('[data-life-quick-kind]').count(),2);
-   assert.equal(await quick.locator('[data-life-journal]').count(),1);
+   assert.deepEqual(await quick.locator('[data-life-quick-kind]').allTextContents(),['Notitie','Afspraak','Taak']);
+   assert.equal(await quick.locator('[data-life-journal]').count(),0,'Dagboek was removed from quick capture');
+   for(const selector of ['[data-life-quick-kind="note"]','[data-life-quick-kind="appointment"]','[data-life-quick-kind="task"]','.memento-voice-btn','.memento-capture-submit','.memento-capture-options']){
+    const b=await quick.locator(selector).boundingBox();assert(b&&b.width>=44&&b.height>=44,'Quick action touch area '+selector);
+   }
    await quick.locator('[data-life-quick-kind="note"]').click();
    assert.equal(await page.locator('#lifeQuickTitle').getAttribute('placeholder'),'Wat wil je onthouden?');
    await quick.locator('[data-life-quick-kind="task"]').click();
@@ -139,6 +142,54 @@ const reports=[];
    page.once('dialog',d=>d.accept());await page.locator('[data-memento-delete-event]').click();assert.equal((await stored()).life.appointments.length,0);
    await page.locator('[data-life-action="undo"]').click();assert((await stored()).life.appointments.some(a=>a.id==='v3-event'));
    await page.reload();await require('./helpers/enter-app.cjs')(page);await goToday();assert.equal((await stored()).life.appointments.find(a=>a.id==='v3-event').notes,notes.trim());
+
+   if(width===393&&count===3){
+    // Full quick-capture journey with fictional data only.
+    const capture=page.locator('#lifeQuickForm'),baseline=await stored();
+    await capture.locator('[data-life-quick-kind="note"]').click();
+    await capture.locator('[data-life-quick-options]').click();
+    await page.locator('#lifeQuickCollection').selectOption('projects');
+    await page.locator('#lifeDialog [data-life-close]').last().click();
+    assert((await capture.locator('#lifeQuickCollectionLabel').innerText()).includes('Projecten'));
+    await capture.locator('#lifeQuickTitle').fill('Fictieve projectnotitie');
+    await capture.locator('.memento-capture-submit').click();
+    const afterNote=await stored(),newNote=afterNote.life.notes.find(n=>n.body==='Fictieve projectnotitie');
+    assert(newNote&&newNote.collectionId==='projects','Note stored in selected existing folder');
+    assert.equal(afterNote.finance,baseline.finance,'Quick note must not alter finance');
+    await capture.locator('[data-life-quick-kind="task"]').click();
+    await capture.locator('[data-life-quick-options]').click();
+    await page.locator('#lifeQuickCategory').selectOption('Huishouden');
+    await page.locator('#lifeQuickRoom').selectOption('Keuken');
+    await page.locator('#lifeQuickPriority').check();
+    await page.locator('#lifeQuickOptionsDate').fill('');
+    await page.locator('#lifeDialog [data-life-close]').last().click();
+    await capture.locator('#lifeQuickTitle').fill('Fictieve taak zonder datum');
+    await capture.locator('.memento-capture-submit').click();
+    const afterTask=await stored(),newTask=afterTask.life.tasks.find(t=>t.title==='Fictieve taak zonder datum');
+    assert(newTask&&newTask.category==='Huishouden'&&newTask.room==='Keuken'&&newTask.priority&&newTask.date==='','Task options and empty date persisted');
+    await capture.locator('[data-life-quick-kind="appointment"]').click();
+    await capture.locator('#lifeQuickTitle').fill('Fictieve snelle afspraak');
+    const beforeAppointment=await stored();
+    await capture.locator('.memento-capture-submit').click();
+    assert(await page.locator('#mementoAppointmentForm').isVisible(),'Appointment opens existing editor');
+    assert.equal(await page.locator('#mementoEventTitle').inputValue(),'Fictieve snelle afspraak');
+    assert.deepEqual(await stored(),beforeAppointment,'Opening appointment editor must not write anything');
+    await page.locator('#lifeDialog [data-life-close]').last().click();
+    assert.equal(await capture.locator('#lifeQuickTitle').inputValue(),'Fictieve snelle afspraak','Cancel retains quick draft');
+    await capture.locator('.memento-capture-submit').click();
+    await page.locator('#mementoEventTime').fill('14:30');
+    await page.locator('#mementoEventEnd').fill('15:00');
+    await page.locator('[form="mementoAppointmentForm"]').click();
+    await page.locator('#lifeDialog').waitFor({state:'hidden'});
+    const afterAppointment=await stored(),entry=afterAppointment.life.appointments.find(a=>a.title==='Fictieve snelle afspraak');
+    assert(entry&&entry.time==='14:30'&&entry.endTime==='15:00','Quick appointment uses actual editor save');
+    assert.equal(afterAppointment.finance,baseline.finance,'All quick changes leave finance untouched');
+    assert.equal(afterAppointment.life.notes.length,baseline.life.notes.length+1);
+    assert.equal(afterAppointment.life.tasks.length,baseline.life.tasks.length+1);
+    assert.equal(afterAppointment.life.appointments.length,baseline.life.appointments.length+1);
+    assert.equal(await capture.locator('#lifeQuickTitle').inputValue(),'','Successful save clears draft');
+    await shot('quick-capture-a');
+   }
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}
   finally{await ctx.close();}
