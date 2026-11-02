@@ -1,0 +1,28 @@
+{
+  "phase": "after",
+  "width": 1280,
+  "diagnostics": [
+    {
+      "name": "planning-hitbox",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": ""
+    },
+    {
+      "name": "bill-edit-existing",
+      "clientWidth": 1280,
+      "scrollWidth": 1280,
+      "overflow": [],
+      "smallControls": [],
+      "focus": "billName"
+    }
+  ],
+  "checks": [
+    "PIN unlocked; fixture writer owns Web Lock",
+    "{\"selector\":\"[data-edit-bill]\",\"rect\":{\"x\":1185,\"y\":438,\"width\":44,\"height\":44,\"top\":438,\"right\":1229,\"bottom\":482,\"left\":1185},\"edgeHits\":[true,true]}",
+    "planning-hitbox: captured"
+  ],
+  "errors": []
+}
