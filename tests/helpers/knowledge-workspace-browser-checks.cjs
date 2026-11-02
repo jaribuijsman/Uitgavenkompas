@@ -15,13 +15,19 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('.kc-tree-children').count(),0);const fold=page.locator('[data-kc=ws-fold]').first();const root=await fold.getAttribute('data-id');await fold.click();assert(await page.locator('.kc-tree-children').count()>0);
  await page.locator('.kc-local-tabs [data-kc=home]').click();await page.locator('.kc-local-tabs [data-kc=collections]').click();assert(await page.locator('.kc-tree-children').count()>0);await shot(page,'workspace-tree');
  await page.locator('.kc-local-tabs [data-kc=home]').click();await page.locator('[data-kc=new]').first().click();
- await page.locator('#kc-title').fill('V2 browsercontrole');await page.locator('[data-ws-block]').first().fill('Dit blijft behouden in een visuele notitie.');await page.locator('[data-kc=save]').first().click();
- const n=(await state()).notes.find(n=>n.title==='V2 browsercontrole');assert(n?.document);assert.equal(n.body,'Dit blijft behouden in een visuele notitie.');
+ const fixtureTitle='Projectbespreking: voortgang en actiepunten';
+ const fixtureBody='Besproken tijdens het overleg:\n• De voortgang van het bestaande project.\n• Openstaande vragen en aandachtspunten.\n\nResultaat van de bespreking:\n[Vul hier het ontvangen antwoord in.]\n\nVervolg:\n[Wat wil ik later nog oppakken?]';
+ await page.locator('#kc-title').fill(fixtureTitle);
+ await page.locator('[data-ws-block]').first().fill(fixtureBody);
+ await page.locator('[data-kc=save]').first().click();
+ const n=(await state()).notes.find(n=>n.title===fixtureTitle);assert(n?.document);
+ assert(n.body.includes('Besproken tijdens het overleg:'),'Document text is safely stored');
  assert.equal(await page.locator('.kc-v3-writing-card').count(),1);
  assert.equal(await page.locator('.kc-local-tabs').count(),0,'No redundant tabs above the editor');
  assert.equal(await page.locator('.kc-breadcrumbs').count(),0,'Editor uses exactly one prototype breadcrumb');
  assert.equal(await page.locator('.kc-v3-organization h3').innerText(),'Organiseren');
  assert.equal(await page.locator('.kc-v3-followups h3').innerText(),'Opvolging & koppelingen');
+ await shot(page,'approved-editor-same-fixture');
  const actualGeometry=await require('./knowledge-prototype-geometry.cjs')(page,shot);
  assert.equal(actualGeometry.length,12,'Prototype editor: three scroll positions and four mobile viewport/height combinations');
  checks.push('Prototype parity: sticky editor, compact writing, mobile controls and bottom navigation');
@@ -34,6 +40,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
   page.locator('.kc-v3-writing-card').evaluate(el=>({radius:getComputedStyle(el).borderRadius,background:getComputedStyle(el).backgroundColor}))
  ]);
  assert.deepEqual(actualStyle,referenceStyle,'Writing panel token parity with approved HTML');
+ const [referencePanel,actualPanel]=await Promise.all([reference.locator('.panel').first().boundingBox(),page.locator('.kc-v3-writing-card').boundingBox()]);
+ assert(Math.abs(referencePanel.width-actualPanel.width)<=12,'Writing card width must match reference within 12 CSS px');
+ checks.push('Approved fixture: panel geometry, colors, title/body and primary controls compared on matching viewports');
  await reference.close();
  await page.locator('[data-kc=editor-followup]').click();
  assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
