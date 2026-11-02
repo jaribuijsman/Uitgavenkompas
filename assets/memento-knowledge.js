@@ -428,7 +428,7 @@ function renderEditor(){
  '<section class="kc-v3-followups" aria-labelledby="kc-v3-followups-title"><div class="kc-v3-followups-head"><h3 id="kc-v3-followups-title">Opvolging & koppelingen</h3>'+
  (selectedId?btn("Nieuw vervolg","followup-start",selectedId,true):"")+'</div>'+
  (selectedId?followupLinksForNote(e)+linkedHTML(e)+btn("Notitie koppelen","link",selectedId):'<p class="kc-muted">Sla je kennisitem op om gekoppelde vervolgen toe te voegen.</p>')+
- passageActions()+'</section>'+
+ passageActions(Boolean(e.document))+'</section>'+
  '<details class="kc-v3-attachments"'+((e.attachments||[]).length?' open':'')+'><summary>Bijlagen <span>'+((e.attachments||[]).length||"")+'</span></summary><div class="kc-v3-attachment-body">'+
  '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
  '<p class="kc-muted">Maximaal 25 MB per bestand. Originele bestanden blijven lokaal en gaan mee in de volledige ZIP-back-up.</p>'+attachmentsHTML(e)+'</div></details>'+
@@ -438,7 +438,7 @@ function renderEditor(){
  '<div class="kc-v3-dialog-group"><span>Controleren</span>'+btn("Versiegeschiedenis","versions")+'</div>'+
  '<div class="kc-v3-dialog-group kc-v3-dialog-danger"><span>Voorzichtig</span>'+btn("Concept verwerpen","discard-draft")+(selectedId?btn("Notitie verwijderen","delete",selectedId):"")+'</div></dialog>';
 }
-function passageActions(){return '<details class="kc-v3-passage"><summary>Passage handmatig invoeren</summary><div><label>Passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="3" placeholder="Plak of typ een passage uit de notitie"></textarea></label>'+btn('Taakvoorstel controleren','passage-task')+'</div></details>';}
+function passageActions(includeSelection=true){return (includeSelection?btn('Taak uit selectie','selection-task'):'')+'<details class="kc-v3-passage"><summary>Passage handmatig invoeren</summary><div><label>Passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="3" placeholder="Plak of typ een passage uit de notitie"></textarea></label>'+btn('Taakvoorstel controleren','passage-task')+'</div></details>';}
 function renderVersions(){
  const n=read().notes.find(x=>x.id===selectedId);
  return header("Eerdere versies",true)+
