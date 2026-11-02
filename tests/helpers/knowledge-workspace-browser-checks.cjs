@@ -48,16 +48,45 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const [referencePanel,actualPanel]=await Promise.all([reference.locator('.panel').first().boundingBox(),page.locator('.kc-v3-writing-card').boundingBox()]);
  assert(Math.abs(referencePanel.width-actualPanel.width)<=12,'Writing card width must match reference within 12 CSS px');
  checks.push('Approved fixture: panel geometry, colors, title/body and primary controls compared on matching viewports');
+ const kinds=[['task','follow-task'],['appointment','follow-appointment'],['note','follow-note']];
+ const referenceForms={};
+ for(const [kind,action] of kinds){
+  await reference.locator('[data-action=followup]').click();
+  await reference.locator('[data-action='+action+']').click();
+  await reference.locator('#actTitle').fill(fixtureTitle);
+  if(kind==='appointment')await reference.locator('#actDate').fill('2026-10-27');
+  referenceForms[kind]=await reference.locator('.sheet').boundingBox();
+  await shot(reference,'approved-reference-followup-'+kind);
+  await reference.locator('.sheet [data-action=close]').click();
+ }
  await reference.close();
- await page.locator('[data-kc=editor-followup]').click();
- assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
- assert.equal(await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').count(),3);
- await shot(page,'approved-followup-sheet');
- await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind][data-id=task]').click();
- assert.equal(await page.locator('#followupTarget').inputValue(),'task','Chosen follow-up type reaches the real Memento flow');
- assert(await page.locator('#mementoFollowupForm').isVisible(),'Follow-up form is connected to live UI');
- await shot(page,'approved-followup-form');
- await page.locator('#lifeDialog [data-life-close]').first().click();
+ for(const [kind] of kinds){
+  await page.locator('[data-kc=editor-followup]').click();
+  assert(await page.locator('#kc-v3-followup-sheet').evaluate(dialog=>dialog.open));
+  assert.equal(await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind]').count(),3);
+  if(kind==='task')await shot(page,'approved-followup-sheet');
+  await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind][data-id='+kind+']').click();
+  assert.equal(await page.locator('#followupTarget').inputValue(),kind,'Chosen follow-up type reaches the real Memento flow');
+  assert(await page.locator('#mementoFollowupForm').isVisible(),'Follow-up form is connected to live UI');
+  assert.equal(await page.locator('#followupTitle').inputValue(),fixtureTitle);
+  const form=await page.locator('#lifeDialogPanel').boundingBox(),ref=referenceForms[kind];
+  assert(Math.abs(form.y+form.height-ref.y-ref.height)<=3,'Follow-up sheet must meet viewport bottom: '+kind+' '+JSON.stringify({form,ref}));
+  assert(Math.abs(form.y-ref.y)<=125,'Follow-up sheet should stay near approved compact form: '+kind+' '+JSON.stringify({form,ref}));
+  await shot(page,'approved-followup-form-'+kind);
+  await page.locator('#followupOptionsSummary').click();
+  assert(await page.locator('#followupIntent').isVisible(),'Conversion remains accessible');
+  assert(await page.locator('#followupExtra').isVisible(),'Extra text remains accessible');
+  if(kind==='appointment')assert(await page.locator('#followupTime').isVisible(),'Required start time remains accessible');
+  if(kind==='note')assert(await page.locator('#followupFolder').isVisible(),'Folder choice remains accessible');
+  if(kind==='appointment'){
+   await page.setViewportSize({width:393,height:470});
+   const footer=await page.locator('#lifeDialog .life-dialog-footer button').boundingBox();
+   assert(footer&&footer.y+footer.height<=470,'Save action stays reachable in a short viewport');
+   await shot(page,'approved-followup-short-viewport');
+   await page.setViewportSize({width,height:852});
+  }
+  await page.locator('#lifeDialog [data-life-close]').first().click();
+ }
  await page.locator('[data-kc=editor-attachments]').click();
  const picker=page.locator('#kc-v3-attachments-sheet #kc-file-input');
  assert(await picker.isVisible(),'Native local file picker must remain available');
@@ -95,9 +124,10 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.evaluate(id=>window.MementoKnowledge.showNote(id),n.id);
  await page.evaluate(id=>window.MementoLifeFlow.start('note',id),n.id);
  assert(await page.locator('#mementoFollowupForm').isVisible(),'Linked follow-up creation must be available');
+ await page.locator('#followupOptionsSummary').click();
  await page.locator('#followupTarget').selectOption('note');
  await page.locator('#followupTitle').fill(fixtureTitle);
- await page.getByRole('button',{name:'Opslaan en openen'}).click();
+ await page.getByRole('button',{name:'Vervolg toevoegen'}).click();
  await page.waitForFunction(originId=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes.some(x=>x.mementoFlow?.origin?.id===originId&&x.document==null),n.id);
  const plain=(await state()).notes.find(x=>x.mementoFlow?.origin?.id===n.id&&!x.document);
  assert(plain,'Follow-up note uses the original plain-text storage shape');
@@ -109,5 +139,34 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('.kc-v3-save-btn').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(197, 223, 195)');
  await shot(page,'approved-plain-editor-same-fixture');
  checks.push('Approved plain-text prototype compared independently from preserved visual document; exact title/body and five toolbar actions');
+ for(const kind of ['task','appointment']){
+  await page.locator('#lifeDialog [data-life-close]').first().waitFor({state:'hidden'});
+  await navigate(page,'life','notes');
+  await page.evaluate(id=>window.MementoKnowledge.showNote(id),n.id);
+  if(await page.locator('[data-kc=edit]').count())await page.locator('[data-kc=edit]').first().click();
+  assert(await page.locator('.kc-v3-writing-card').isVisible(),'Source editor opens before follow-up');
+  await page.locator('[data-kc=editor-followup]').click();
+  await page.locator('#kc-v3-followup-sheet [data-kc=editor-followup-kind][data-id='+kind+']').click();
+  await page.locator('#followupOptionsSummary').click();
+  await page.locator('#followupExtra').fill('Fictieve vervolginformatie voor '+kind);
+  if(kind==='appointment'){
+   await page.locator('#followupDate').fill('2026-10-28');
+   await page.locator('#followupTime').fill('10:30');
+  }
+  await page.getByRole('button',{name:'Vervolg toevoegen'}).click();
+  await page.waitForFunction(({id,kind})=>{
+   const s=JSON.parse(localStorage.getItem('compass_life_preview_v1'));
+   return s[kind==='task'?'tasks':'appointments'].some(x=>x.mementoFlow?.origin?.id===id);
+  },{id:n.id,kind});
+  const saved=await state(),created=saved[kind==='task'?'tasks':'appointments'].find(x=>x.mementoFlow?.origin?.id===n.id);
+  assert.equal(created.mementoFlow.origin.kind,'note');
+  assert(created.notes.includes('Fictieve vervolginformatie voor '+kind));
+  if(kind==='appointment'){assert.equal(created.date,'2026-10-28');assert.equal(created.time,'10:30');}
+  assert.equal(saved.notes.find(x=>x.id===n.id).document.blocks[0].text,fixtureBody,'Original document text remains intact');
+  assert.equal(saved.notes.find(x=>x.id===n.id).document.blocks[0].id,n.document.blocks[0].id,'Original document block ID remains intact');
+  await page.locator('#lifeDialog [data-life-close]').first().click();
+  await navigate(page,'life','notes');
+ }
+ checks.push('All three follow-up kinds persisted in fictional storage with origin, extra text, appointment date/time and unchanged source document');
 
 };

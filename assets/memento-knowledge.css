@@ -535,7 +535,7 @@
 #lifeApp[data-life-view="notes"] .kc-v3-management>svg{width:19px;height:19px;flex:none}
 #lifeApp[data-life-view="notes"] .kc-v3-management>svg:last-child{margin-left:0}
 #lifeApp[data-life-view="notes"] .kc-v3-management>small{margin-left:auto;flex:none;white-space:nowrap;font-size:12px;font-weight:400;color:#b5cab7}
-#lifeApp[data-life-view="notes"] .kc-v3-related{display:flex;align-items:start;gap:8px;margin:12px 0 9px;padding:10px 11px;background:#102f25;border:1px solid #8fb48a44;border-radius:12px}
+#lifeApp[data-life-view="notes"] .kc-v3-related{display:flex;align-items:start;gap:8px;width:100%;min-height:44px;text-align:left;color:inherit;font:inherit;margin:12px 0 9px;padding:10px 11px;background:#102f25;border:1px solid #8fb48a44;border-radius:12px}
 #lifeApp[data-life-view="notes"] .kc-v3-related>svg{width:19px;height:19px;flex:none;color:#dcbf83}
 #lifeApp[data-life-view="notes"] .kc-v3-related strong{display:block;color:var(--kp-text);font-size:13px;font-weight:700;overflow-wrap:anywhere}
 #lifeApp[data-life-view="notes"] .kc-v3-related small{display:block;margin-top:2px;color:#b9ccba;font-size:12px}

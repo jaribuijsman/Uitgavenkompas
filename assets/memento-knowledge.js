@@ -448,7 +448,7 @@ function renderEditor(){
   '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+'</textarea></label></div>':"";
  const tagsHTML=e.tags?.length?e.tags.map(t=>'<span class="kc-v3-chip">#'+esc(t)+'</span>').join(""):'Geen labels';
  const origin=e.mementoFlow?.origin,source=origin?.title||"";
- const originHTML=source?'<div class="kc-v3-related">'+kcV3Icon(origin.kind==="appointment"?"calendar":"link")+'<div><strong>Bron: '+esc(source)+'</strong><small>De oorspronkelijke '+(origin.kind==="appointment"?"afspraak":"informatie")+' blijft apart bestaan.</small></div></div>':"";
+ const originHTML=source?'<button type="button" class="kc-v3-related" data-kc="followup-open" data-id="'+esc(origin.kind+'|'+origin.id)+'">'+kcV3Icon(origin.kind==="appointment"?"calendar":"link")+'<span><strong>Bron: '+esc(source)+'</strong><small>De oorspronkelijke '+(origin.kind==="appointment"?"afspraak":"informatie")+' blijft apart bestaan.</small></span></button>':"";
  const actionButtons='<div class="kc-v3-row-actions">'+
  '<button class="kc-v3-primary-action" type="button" data-kc="editor-followup">'+kcV3Icon('plus')+' Nieuw vervolg</button>'+
  '<button type="button" class="kc-v3-secondary-action" data-kc="editor-relations" aria-label="Koppelingen en vervolgacties">'+kcV3Icon('more')+'</button></div>';

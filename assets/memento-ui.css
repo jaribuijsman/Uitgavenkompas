@@ -118,6 +118,23 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
 #lifeDialog .life-dialog-head {flex:none;padding:14px 16px;margin:0;border-bottom:1px solid var(--m-line)}
 #lifeDialog .life-dialog-body {min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px}
 #lifeDialog .life-dialog-footer {flex:none;margin:0;padding:12px 16px;gap:8px;border-top:1px solid var(--m-line);background:var(--m-surface)}
+#lifeDialog:has(#mementoFollowupForm) .life-followup-help {margin:0;color:#afc8b6;font-size:12px;line-height:1.5}
+#lifeDialog:has(#mementoFollowupForm) .life-dialog-description:empty {display:none}
+#lifeDialog:has(#mementoFollowupForm) .life-followup-options {min-width:0}
+#lifeDialog:has(#mementoFollowupForm) .life-followup-options summary {min-height:44px;display:flex;align-items:center;color:#d8e8d5;font-size:13px;font-weight:650;cursor:pointer}
+#lifeDialog:has(#mementoFollowupForm) .life-followup-options-fields {display:grid;gap:14px;padding:8px 0 4px}
+#lifeDialog:has(#mementoFollowupForm) .life-followup-options-fields [hidden],#lifeDialog:has(#mementoFollowupForm) .life-form-field[hidden] {display:none!important}
+@media(max-width:520px){
+ #lifeDialog:has(#mementoFollowupForm) {padding:0;align-items:flex-end}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-panel {width:100%;max-height:87dvh;border-radius:22px 22px 0 0!important;background:#133529!important}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-head {padding:24px 16px 8px;border:0;position:relative}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-head::before {content:"";position:absolute;top:8px;left:calc(50% - 21px);width:42px;height:4px;border-radius:9px;background:#7c9f8b}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-head h2 {font-size:18px}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-body {padding:8px 16px 0}
+ #lifeDialog:has(#mementoFollowupForm) .life-form-grid {gap:12px}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-footer {border:0;padding:6px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#133529!important}
+ #lifeDialog:has(#mementoFollowupForm) .life-dialog-footer .life-btn-primary {width:100%;min-height:48px;border-radius:12px;background:#c5dfc3!important;color:#153b29!important}
+}
 #lifeApp[data-life-view="tasks"] .memento-task-category {margin:12px 0 0;min-width:0}
 #lifeApp[data-life-view="tasks"] .memento-task-category h3 {margin:8px 0;font-size:15px;line-height:1.4}
 #lifeApp[data-life-view="tasks"] .memento-task-category h3 small {font-weight:400}
