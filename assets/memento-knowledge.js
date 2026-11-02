@@ -399,44 +399,98 @@ function renderDetail(){
  (n.deletedAt?"":'<div class="kc-detail-actions">'+(workspaceReady()?btn("Visueel bewerken","ws-convert",n.id)+btn("Mappen koppelen","ws-locations"):"")+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Onderzoeken met AI","ai",n.id))+
  '<details class="kc-note-menu"><summary aria-label="Notitie beheren">⋯</summary><div>'+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+btn("Slim opvolgen","followup-start",n.id)+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
 }
+function kcV3Icon(name){
+ const icons={
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10H3z"/>',
+  branch:'<circle cx="6" cy="4" r="2"/><path d="M6 6v12"/><circle cx="6" cy="20" r="2"/><circle cx="18" cy="6" r="2"/><path d="M18 8a6 6 0 0 1-6 6H6"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.4l3-3a5 5 0 0 0-7-7l-2 2"/><path d="M14 11a5 5 0 0 0-7.5-.4l-3 3a5 5 0 0 0 7 7l2-2"/>',
+  file:'<path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5"/>',
+  paperclip:'<path d="m19 12-7 7a5 5 0 0 1-7-7L13 4a3 3 0 0 1 4 4l-8 8a1 1 0 0 1-2-2l7-7"/>',
+  task:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8 12 3 3 5-6"/>',
+  more:'<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+  right:'<path d="m9 6 6 6-6 6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>'
+ };
+ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(icons[name]||icons.file)+'</svg>';
+}
+function kcV3Sheet(id,title,body){
+ return '<dialog id="'+id+'" class="kc-v3-sheet" aria-label="'+esc(title)+'"><div class="kc-v3-sheet-handle" aria-hidden="true"></div><div class="kc-v3-sheet-head"><h3>'+esc(title)+'</h3><button type="button" class="kc-v3-sheet-close" data-kc="editor-sheet-close" aria-label="Sluiten">×</button></div>'+body+'</dialog>';
+}
 function renderEditor(){
  const e=editing;if(!e)return "";if(e.journal)return renderJournalEditor();
- const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link";
- const tags=(e.tags||[]).join(", ");
+ const type=C.typeOf(e),isRecipe=type==="recipe",isLink=type==="link",life=read();
+ const tags=(e.tags||[]).join(", "),cid=C.collectionOf(life,e);
  const recipe=e.recipe||{ingredients:[],status:"concept",version:1,notes:""};
- const more='<button type="button" class="kc-v3-more-trigger" data-kc="editor-menu" aria-label="Meer kennisitemacties" aria-haspopup="dialog">⋮</button>';
- return '<div class="kc-editor-head kc-v3-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,more+btn("Opslaan","save","",true))+'</div>'+
- '<p class="kc-save-state kc-v3-save-state" id="kc-save-state" role="status">'+(dirty?"Concept":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
- '<section class="kc-v3-writing-card" aria-label="Kennisitem schrijven"><div class="kc-editor-fields">'+
- '<label>Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>"+
- '<label>Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
- '<option value="inbox"'+(e.collectionId==="inbox"?" selected":"")+'>Inbox</option>'+
- collections().map(c=>'<option value="'+esc(c.id)+'"'+(C.collectionOf(read(),e)===c.id?" selected":"")+">"+esc(pathName(c))+"</option>").join("")+"</select></label>"+
- '<label>Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>'+
- (isLink?'<label>Website (https://)<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
- (e.document?renderVisualDocument()+renderTemplateFields(e):'<label for="kc-body">Inhoud</label>'+
- '<div class="kc-format-bar kc-v3-format" role="toolbar" aria-label="Tekst opmaken">'+btn("Kop","format","# ")+btn("Vet","format","**")+btn("Lijst","format","- ")+btn("Citaat","format","> ")+btn("Link","format","[tekst](https://)")+(root.MementoDictation?.button?.("kc-body")||"")+btn("Taak","selection-task")+"</div>"+
- '<textarea id="kc-body" data-kc-edit="body" rows="11" maxlength="20000" placeholder="Begin met schrijven…">'+esc(e.body||"")+"</textarea>")+
- (isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+
- recipeEditRows(recipe)+'<details class="mg-fold"><summary>Tekstinvoer ingrediënten</summary><label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4" placeholder="Ingrediënt | hoeveelheid | eenheid">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+"</textarea></label></details>"+
- '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+"</textarea></label></div>":"")+
- '</div></section>'+
- '<section class="kc-v3-organization" aria-labelledby="kc-v3-organization-title"><div class="kc-v3-section-title"><h3 id="kc-v3-organization-title">Organiseren</h3></div>'+
- '<label class="kc-v3-tags">Labels<input data-kc-edit="tags" maxlength="1000" value="'+esc(tags)+'" placeholder="Bijvoorbeeld: welzijn, project"></label>'+
- (workspaceReady()?'<div class="kc-v3-suggestions">'+(selectedId?btn("Ook tonen in andere mappen","ws-locations"):"")+W.suggestions(read(),e).map(t=>btn("+ #"+esc(t),"ws-tag",t)).join("")+"</div>":"")+
- '</section>'+
- '<section class="kc-v3-followups" aria-labelledby="kc-v3-followups-title"><div class="kc-v3-followups-head"><h3 id="kc-v3-followups-title">Opvolging & koppelingen</h3>'+
- (selectedId?btn("Nieuw vervolg","followup-start",selectedId,true):"")+'</div>'+
- (selectedId?followupLinksForNote(e)+linkedHTML(e)+btn("Notitie koppelen","link",selectedId):'<p class="kc-muted">Sla je kennisitem op om gekoppelde vervolgen toe te voegen.</p>')+
- passageActions(Boolean(e.document))+'</section>'+
- '<details class="kc-v3-attachments"'+((e.attachments||[]).length?' open':'')+'><summary>Bijlagen <span>'+((e.attachments||[]).length||"")+'</span></summary><div class="kc-v3-attachment-body">'+
- '<label class="kc-file-upload kc-v3-file-trigger">Bestand toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple aria-label="PDF of afbeelding toevoegen"></label>'+
- '<p class="kc-muted">Maximaal 25 MB per bestand. Originele bestanden blijven lokaal en gaan mee in de volledige ZIP-back-up.</p>'+attachmentsHTML(e)+'</div></details>'+
- '<div class="kc-v3-preview">'+btn("Voorbeeld","preview")+'</div>'+
- '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-dialog-head"><strong>Meer acties</strong><button type="button" data-kc="editor-menu-close" aria-label="Menu sluiten">×</button></div>'+
+ const more='<button type="button" class="kc-v3-more-trigger" data-kc="editor-menu" aria-label="Meer kennisitemacties" aria-haspopup="dialog">'+kcV3Icon('more')+'</button>';
+ const title='<label class="kc-v3-field-group">Titel<input id="kc-title" data-kc-edit="title" maxlength="180" placeholder="Titel of onderwerp" value="'+esc(e.title==="Naamloze notitie"&&!selectedId?"":e.title)+'"></label>';
+ const kind='<label class="kc-v3-field-group">Type<select data-kc-edit="kind" id="kc-kind">'+Object.entries(kindNames).filter(([key])=>key!=="pdf"&&key!=="image").map(([key,label])=>'<option value="'+key+'"'+(type===key?" selected":"")+">"+label+"</option>").join("")+"</select></label>";
+ const collection='<label class="kc-v3-field-group">Verzameling<select data-kc-edit="collectionId" id="kc-collection">'+
+ '<option value="inbox"'+(cid==="inbox"?" selected":"")+'>Inbox</option>'+
+ collections().map(c=>'<option value="'+esc(c.id)+'"'+(cid===c.id?" selected":"")+">"+esc(pathName(c))+"</option>").join("")+"</select></label>";
+ const toolbar='<div class="kc-v3-format" role="toolbar" aria-label="Tekst bewerken">'+
+ '<button type="button" data-kc="format" data-id="# " title="Kop">H1</button>'+
+ '<button type="button" data-kc="format" data-id="**" title="Vet"><strong>Vet</strong></button>'+
+ '<button type="button" data-kc="format" data-id="- " title="Lijst">☷ Lijst</button>'+
+ '<button type="button" data-kc="format" data-id="[tekst](https://)" title="Link">'+kcV3Icon('link')+' Link</button>'+
+ '<button type="button" class="kc-v3-text-task" data-kc="selection-task" title="Taak van geselecteerde tekst">'+kcV3Icon('task')+' Taak</button></div>';
+ const body=e.document
+  ?'<div class="kc-v3-editor-pane kc-v3-block-pane">'+renderVisualDocument()+'</div>'+renderTemplateFields(e)
+  :'<label class="kc-v3-content-label" for="kc-body">Inhoud</label><div class="kc-v3-editor-pane">'+toolbar+
+    '<textarea id="kc-body" data-kc-edit="body" maxlength="20000" rows="11" placeholder="Schrijf je notitie…">'+esc(e.body||"")+'</textarea></div>'+
+    '<div class="kc-v3-helper-bar"><span>Selecteer tekst en kies Taak om die te verwerken.</span>'+btn("Voorbeeld","preview")+'</div>';
+ const recipeFields=isRecipe?'<div class="kc-recipe-fields"><h3>Receptgegevens</h3><label>Status<select data-kc-edit="recipeStatus"><option value="concept"'+(recipe.status==="concept"?" selected":"")+'>Concept</option><option value="testen"'+(recipe.status==="testen"?" selected":"")+'>Testen</option><option value="definitief"'+(recipe.status==="definitief"?" selected":"")+'>Definitief</option></select></label>'+recipeEditRows(recipe)+
+  '<details class="mg-fold"><summary>Tekstinvoer ingrediënten</summary><label>Ingrediënten (één per regel, met | als scheiding)<textarea data-kc-edit="ingredients" rows="4">'+esc((recipe.ingredients||[]).map(x=>[x.name,x.amount,x.unit].join(" | ")).join("\n"))+'</textarea></label></details>'+
+  '<label>Testnotities<textarea data-kc-edit="recipeNotes" rows="3">'+esc(recipe.notes||"")+'</textarea></label></div>':"";
+ const tagsHTML=e.tags?.length?e.tags.map(t=>'<span class="kc-v3-chip">#'+esc(t)+'</span>').join(""):'Geen labels';
+ const origin=e.mementoFlow?.origin,source=origin?.title||"";
+ const originHTML=source?'<div class="kc-v3-related">'+kcV3Icon(origin.kind==="appointment"?"calendar":"link")+'<div><strong>Bron: '+esc(source)+'</strong><small>De oorspronkelijke '+(origin.kind==="appointment"?"afspraak":"informatie")+' blijft apart bestaan.</small></div></div>':"";
+ const actionButtons='<div class="kc-v3-row-actions">'+
+ '<button class="kc-v3-primary-action" type="button" data-kc="editor-followup">'+kcV3Icon('plus')+' Nieuw vervolg</button>'+
+ '<button type="button" class="kc-v3-secondary-action" data-kc="editor-relations" aria-label="Koppelingen en vervolgacties">'+kcV3Icon('more')+'</button></div>';
+ const folderChoices='<button type="button" class="kc-v3-sheet-item" data-kc="editor-folder-select" data-id="inbox">Inbox</button>'+collections().map(c=>'<button type="button" class="kc-v3-sheet-item" data-kc="editor-folder-select" data-id="'+esc(c.id)+'">'+esc(pathName(c))+'</button>').join("");
+ const locationIds=C.memberships(life,e);
+ const linkedChoices=['inbox',...allCollections().filter(c=>!c.archived).map(c=>c.id)].map(id=>'<label class="kc-v3-sheet-check"><input type="checkbox" data-kc-location="'+esc(id)+'"'+(locationIds.includes(id)?' checked':'')+'><span>'+esc(C.collectionPath(life,id))+'</span></label>').join("");
+ const linksBody='<div class="kc-v3-sheet-group">KOPPELINGEN</div>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-link-note">'+kcV3Icon('link')+'<span>Notitie koppelen<small>Voeg een verwijzing toe, geen kopie</small></span></button>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-linked-folders">'+kcV3Icon('folder')+'<span>Mappen koppelen<small>Dezelfde notitie op meerdere plekken</small></span></button>'+
+ '<button class="kc-v3-sheet-item" data-kc="selection-task">'+kcV3Icon('task')+'<span>Taak uit geselecteerde tekst<small>Selecteer eerst tekst in de editor</small></span></button>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-manual-passage">'+kcV3Icon('file')+'<span>Passage handmatig invoeren<small>Maak een taak uit een passage</small></span></button>';
+ const fileCount=(e.attachments||[]).length;
+ return '<div class="kc-v3-prototype-editor">'+
+ '<div class="kc-v3-eyebrow">Leven <span>›</span> <strong>Notities</strong> <span>›</span> Kenniscentrum</div>'+
+ '<div class="kc-editor-head kc-v3-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,more+btn("Opslaan","save","",true))+'</div>'+
+ '<p class="kc-save-state kc-v3-save-state" id="kc-save-state" role="status">'+(dirty?"Niet opgeslagen wijzigingen":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
+ '<section class="kc-v3-writing-card" aria-label="Kennisitem schrijven">'+title+
+ '<div class="kc-v3-meta-two">'+kind+collection+'</div>'+
+ (isLink?'<label class="kc-v3-field-group">Website<input type="url" id="kc-source" data-kc-edit="sourceUrl" value="'+esc(e.sourceUrl||"")+'" placeholder="https://…"></label>':"")+
+ body+recipeFields+'</section>'+
+ '<section class="kc-v3-organization" aria-label="Organiseren"><div class="kc-v3-section-title">'+
+ '<span class="kc-v3-section-icon">'+kcV3Icon('folder')+'</span><span><h3>Organiseren</h3><small>Waar hoort deze notitie thuis?</small></span></div>'+
+ '<div class="kc-v3-compact-line"><span>Verzameling</span><strong>'+esc(C.collectionPath(life,cid))+'</strong><button type="button" data-kc="editor-folder" aria-label="Verzameling wijzigen">'+kcV3Icon('right')+'</button></div>'+
+ '<div class="kc-v3-compact-line"><span>Labels</span><strong class="kc-v3-chip-row">'+tagsHTML+'</strong><button type="button" data-kc="editor-tags" aria-label="Labels beheren">'+kcV3Icon('right')+'</button></div>'+
+ '<button type="button" class="kc-v3-management" data-kc="editor-linked-folders">'+kcV3Icon('folder')+' Ook tonen in andere mappen <small>Optioneel</small>'+kcV3Icon('right')+'</button></section>'+
+ '<section class="kc-v3-followups" aria-label="Opvolging en koppelingen"><div class="kc-v3-section-title">'+
+ '<span class="kc-v3-section-icon">'+kcV3Icon('branch')+'</span><span><h3>Opvolging &amp; koppelingen</h3><small>Maak een vervolg zonder informatie kwijt te raken.</small></span></div>'+
+ originHTML+(selectedId?followupLinksForNote(e):"")+actionButtons+'</section>'+
+ '<section class="kc-v3-extras" aria-label="Extra mogelijkheden">'+
+ '<button type="button" class="kc-v3-management" data-kc="editor-attachments">'+kcV3Icon('paperclip')+' Bijlagen <small>'+(fileCount?fileCount+' bestand(en)':'Toevoegen')+'</small>'+kcV3Icon('right')+'</button>'+
+ '<button type="button" class="kc-v3-management" data-kc="editor-menu">'+kcV3Icon('more')+' Alle overige acties <small>Beheer en historie</small>'+kcV3Icon('right')+'</button></section>'+
+ kcV3Sheet('kc-v3-folder-sheet','Verzameling kiezen','<p class="kc-v3-sheet-help">Kies de hoofdverzameling van dit item. Andere mapkoppelingen blijven apart.</p>'+folderChoices)+
+ kcV3Sheet('kc-v3-tags-sheet','Labels beheren','<p class="kc-v3-sheet-help">Labels helpen bij zoeken en terugvinden.</p><label class="kc-v3-sheet-label">Labels, gescheiden door komma’s<input id="kc-v3-tags-input" maxlength="1000" value="'+esc(tags)+'"></label>'+btn('Labels toepassen','editor-tags-apply','',true)+(workspaceReady()?'<div class="kc-v3-tag-suggestions">'+W.suggestions(life,e).map(t=>btn('+ #'+esc(t),'ws-tag',t)).join('')+'</div>':""))+
+ kcV3Sheet('kc-v3-locations-sheet','Mappen koppelen','<p class="kc-v3-sheet-help">Eén notitie, dezelfde inhoud op iedere plek.</p>'+linkedChoices+btn('Koppelingen bewaren','editor-locations-save','',true))+
+ kcV3Sheet('kc-v3-followup-sheet','Nieuw vervolg','<p class="kc-v3-sheet-help">De oorspronkelijke notitie blijft bewaard. Kies wat je wilt maken.</p>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-followup-kind" data-id="task">'+kcV3Icon('task')+'<span>Vervolgtaak<small>Een concrete actie voor later</small></span></button>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-followup-kind" data-id="appointment">'+kcV3Icon('calendar')+'<span>Vervolgafspraak<small>Een nieuw moment met datum en tijd</small></span></button>'+
+ '<button class="kc-v3-sheet-item" data-kc="editor-followup-kind" data-id="note">'+kcV3Icon('file')+'<span>Vervolgnotitie<small>Schrijf verder in een aparte notitie</small></span></button>')+
+ kcV3Sheet('kc-v3-relations-sheet','Koppelingen',linksBody)+
+ kcV3Sheet('kc-v3-manual-sheet','Passage invoeren','<p class="kc-v3-sheet-help">Neem een passage over of typ zelf een actie. De brontekst blijft staan.</p><label class="kc-v3-sheet-label">Passage<textarea id="kc-task-passage" maxlength="2500" rows="4" placeholder="Welke actie moet hieruit ontstaan?"></textarea></label>'+btn('Taakvoorstel controleren','passage-task','',true))+
+ kcV3Sheet('kc-v3-attachments-sheet','Bijlagen','<p class="kc-v3-sheet-help">PDF’s en afbeeldingen worden lokaal bewaard en meegenomen in de ZIP-back-up.</p><label class="kc-v3-sheet-label">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple aria-label="PDF of afbeelding toevoegen"></label><p class="kc-v3-sheet-help">Maximaal 25 MB per bestand.</p>'+attachmentsHTML(e))+
+ '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog kc-v3-sheet" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-sheet-handle" aria-hidden="true"></div><div class="kc-v3-sheet-head"><h3>Meer acties</h3><button type="button" data-kc="editor-menu-close" aria-label="Sluiten">×</button></div>'+
  (selectedId?'<div class="kc-v3-dialog-group"><span>Notitie</span>'+btn(e.pinned?"Losmaken":"Vastzetten","pin",selectedId)+btn(e.archived?"Uit archief":"Archiveren","archive-item",selectedId)+'</div>':"")+
- '<div class="kc-v3-dialog-group"><span>Controleren</span>'+btn("Versiegeschiedenis","versions")+'</div>'+
- '<div class="kc-v3-dialog-group kc-v3-dialog-danger"><span>Voorzichtig</span>'+btn("Concept verwerpen","discard-draft")+(selectedId?btn("Notitie verwijderen","delete",selectedId):"")+'</div></dialog>';
+ '<div class="kc-v3-dialog-group"><span>Weergave en geschiedenis</span>'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+'</div>'+
+ '<div class="kc-v3-dialog-group kc-v3-dialog-danger"><span>Concept en gegevens</span>'+btn("Concept verwerpen","discard-draft")+(selectedId?btn("Notitie verwijderen","delete",selectedId):"")+'</div></dialog>'+
+ '</div>';
 }
 function passageActions(includeSelection=true){return (includeSelection?btn('Taak uit selectie','selection-task'):'')+'<details class="kc-v3-passage"><summary>Passage handmatig invoeren</summary><div><label>Passage uit deze notitie<textarea id="kc-task-passage" maxlength="2500" rows="3" placeholder="Plak of typ een passage uit de notitie"></textarea></label>'+btn('Taakvoorstel controleren','passage-task')+'</div></details>';}
 function renderVersions(){
