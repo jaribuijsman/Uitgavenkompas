@@ -84,7 +84,7 @@ body :is(#lifeDialogPanel,#modalContent) :is(.life-dialog-footer,.modal-footer){
 body :is(#lifeApp,.app) :is(input,select,textarea,button,summary):focus-visible{outline:3px solid #f0d895!important;outline-offset:3px}
 body .memento-gold-small{filter:none!important}
 body #mementoQuickNav{background:#0d281fed!important;border-color:var(--mg-line)!important;backdrop-filter:none}
-body #compassAreaBar{background:#102c23e8!important;backdrop-filter:none;border-color:var(--mg-line)!important}
+body #compassAreaBar{background:#102c23!important;backdrop-filter:none;border-color:var(--mg-line)!important}
 body #mementoMenuPanel{background:#102d24f5!important;border-color:var(--mg-line)!important;backdrop-filter:none}
 body .mg-light{animation:mg-arrive .32s ease-out both}
 @keyframes mg-arrive{from{transform:translateY(6px);opacity:.7}to{transform:translateY(0);opacity:1}}

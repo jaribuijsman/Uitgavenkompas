@@ -430,7 +430,7 @@ function renderEditor(){
  (selectedId?followupLinksForNote(e)+linkedHTML(e)+btn("Notitie koppelen","link",selectedId):'<p class="kc-muted">Sla je kennisitem op om gekoppelde vervolgen toe te voegen.</p>')+
  passageActions(Boolean(e.document))+'</section>'+
  '<details class="kc-v3-attachments"'+((e.attachments||[]).length?' open':'')+'><summary>Bijlagen <span>'+((e.attachments||[]).length||"")+'</span></summary><div class="kc-v3-attachment-body">'+
- '<label class="kc-file-upload">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple></label>'+
+ '<label class="kc-file-upload kc-v3-file-trigger">Bestand toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple aria-label="PDF of afbeelding toevoegen"></label>'+
  '<p class="kc-muted">Maximaal 25 MB per bestand. Originele bestanden blijven lokaal en gaan mee in de volledige ZIP-back-up.</p>'+attachmentsHTML(e)+'</div></details>'+
  '<div class="kc-v3-preview">'+btn("Voorbeeld","preview")+'</div>'+
  '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-dialog-head"><strong>Meer acties</strong><button type="button" data-kc="editor-menu-close" aria-label="Menu sluiten">×</button></div>'+

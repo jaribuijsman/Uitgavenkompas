@@ -148,6 +148,15 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Preserve Kenniscentrum mobile editor evidence even on green runs
+        uses: actions/upload-artifact@v4
+        if: always() && (matrix.group == 'life-knowledge' || matrix.group == 'interface-visual' || matrix.group == 'life-full')
+        with:
+          name: memento-knowledge-visual-${{ matrix.group }}
+          path: /tmp/memento-workspace-visual/after
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Keep Taken v4 rendered evidence on success and failure
         uses: actions/upload-artifact@v4
         if: always() && (matrix.group == 'life-full' || matrix.group == 'test-taken-v4-browser')
