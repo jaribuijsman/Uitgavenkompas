@@ -493,7 +493,7 @@ function renderEditor(){
  kcV3Sheet('kc-v3-attachments-sheet','Bijlagen','<p class="kc-v3-sheet-help">PDF’s en afbeeldingen worden lokaal bewaard en meegenomen in de ZIP-back-up.</p><label class="kc-v3-sheet-label">PDF of afbeelding toevoegen<input id="kc-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" multiple aria-label="PDF of afbeelding toevoegen"></label><p class="kc-v3-sheet-help">Maximaal 25 MB per bestand.</p>'+attachmentsHTML(e))+
  '<dialog id="kc-editor-menu" class="kc-v3-editor-dialog kc-v3-sheet" aria-label="Meer acties voor dit kennisitem"><div class="kc-v3-sheet-handle" aria-hidden="true"></div><div class="kc-v3-sheet-head"><h3>Meer acties</h3><button type="button" data-kc="editor-menu-close" aria-label="Sluiten">×</button></div>'+
  (selectedId?'<div class="kc-v3-dialog-group"><span>Notitie</span>'+btn(e.pinned?"Losmaken":"Vastzetten","pin",selectedId)+btn(e.archived?"Uit archief":"Archiveren","archive-item",selectedId)+'</div>':"")+
- '<div class="kc-v3-dialog-group"><span>Weergave en geschiedenis</span>'+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+'</div>'+
+ '<div class="kc-v3-dialog-group"><span>Weergave en geschiedenis</span>'+(e.document?btn("Tekstblokken toevoegen","editor-block-options"):"")+btn("Voorbeeld","preview")+btn("Versiegeschiedenis","versions")+'</div>'+
  '<div class="kc-v3-dialog-group kc-v3-dialog-danger"><span>Concept en gegevens</span>'+btn("Concept verwerpen","discard-draft")+(selectedId?btn("Notitie verwijderen","delete",selectedId):"")+'</div></dialog>'+
  '</div>';
 }
@@ -911,7 +911,7 @@ function click(event){
   return;
  }
  if(op==='editor-relations'){showEditorSheet('kc-v3-relations-sheet');return;}
- if(op==='editor-block-options'){showEditorSheet('kc-v3-block-tools-sheet');return;}
+ if(op==='editor-block-options'){editorMenu?.close();showEditorSheet('kc-v3-block-tools-sheet');return;}
  if(op==='ws-bullets'||op==='ws-insert-link'){
   if(!editing?.document)return;
   let block=editing.document.blocks.find(b=>b.id===workspaceBlock&&!['image','pdf'].includes(b.type));
