@@ -102,7 +102,8 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert(plain,'Follow-up note uses the original plain-text storage shape');
  await page.locator('[data-kc=edit]').first().click();
  assert.equal(await page.locator('#kc-title').inputValue(),fixtureTitle);
- assert.equal(await page.locator('#kc-body').inputValue(),fixtureBody,'Normal note editor shows the same text as the approved prototype');
+ assert.equal(await page.locator('#kc-body').inputValue(),(await state()).notes.find(x=>x.id===n.id).body,'Plain follow-up preserves the exact current source text, including its later added document heading');
+ assert((await page.locator('#kc-body').inputValue()).includes(fixtureBody),'The approved prototype fixture content remains intact');
  assert.equal(await page.locator('.kc-v3-format>button').count(),5,'Normal editor uses the exact five prototype toolbar actions');
  assert.equal(await page.locator('.kc-v3-save-btn').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(197, 223, 195)');
  await shot(page,'approved-plain-editor-same-fixture');
