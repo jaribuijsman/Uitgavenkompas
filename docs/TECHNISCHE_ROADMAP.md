@@ -346,4 +346,3 @@ visuele status, resterende afwijkingen en deploymentstatus.
 | 8 · P2 device | Start/PIN en formulieren; betreffende eigenaar | Browserstates en bereikbare laatste actie vastgelegd; fysieke IME/standalone niet beschikbaar | Bestaand gedrag behouden; F7-A rapporteert devicebeperking en gerichte toestelcheck. |
 
 **F4-B-keuze:** kandidaat 1 herstelt een gemeten overtreding van de bestaande 44×44-norm. Alleen de Planning-editbuttons en bijbehorende hitbox-/annuleercheck veranderen; exacte fictieve bedragen, IDs, betaalregistratie en doelgegevens blijven gelijk. De oudere Mappen-kandidaat uit #73 is onderzocht maar voor deze eerste wijziging bewust behouden: geen defect in open/dicht vastgesteld en geen goedgekeurd compact mapontwerp aanwezig.
-
