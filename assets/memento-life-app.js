@@ -427,7 +427,7 @@ function editAppointment(id=null,date=today(),prefillTitle='',prefillNotes=''){
  '<div class="memento-appt-section wide">Status en beheer</div>'+
  '<label class="memento-appt-check wide"><input id="mementoEventDone" type="checkbox" '+(event.done?'checked':'')+'><span>Afgerond</span></label>'+
  (id?'<details class="memento-appt-manage wide"><summary>Meer opties</summary><button type="button" class="life-btn" data-followup-start="appointment" data-followup-id="'+esc(id)+'">Slim opvolgen</button><button type="button" class="life-btn life-btn-danger" data-memento-delete-event="'+esc(id)+'">Afspraak verwijderen</button></details>':'')+
- '<p id="mementoAppointmentError" class="memento-appt-error wide" role="alert" hidden></p></div></form>',
+ '<p id="mementoAppointmentError" class="memento-appt-error wide" role="alert" hidden></p></div></form>'+(id?followupHistory('appointment',id,event):''),
  '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" class="life-btn life-btn-primary" form="mementoAppointmentForm">Afspraak opslaan</button>');
 }
 function saveAppointment(id){
