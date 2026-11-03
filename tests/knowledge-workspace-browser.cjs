@@ -25,7 +25,7 @@ async function shot(page, name, log = true) {
   await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(80);
   await page.screenshot({ path: path.join(out, name + ".png"), fullPage: true, animations: "disabled" });
   const bytes = await page.screenshot({ path: path.join(out, name + ".jpg"), type: "jpeg", quality: 62, animations: "disabled" });
-  if (log && process.env.MEMENTO_VISUAL_INLINE === "1") { const b64 = bytes.toString("base64"), count = Math.ceil(b64.length / 6000); for (let i = 0; i < count; i++) console.log(`VISUAL_IMAGE ${phase} ${width} ${name} ${i}/${count} ${b64.slice(i * 6000, (i + 1) * 6000)}`); }
+  if (log && (process.env.MEMENTO_VISUAL_INLINE === "1" || width === 393 && ["workspace-home", "headquarters-order-draft", "headquarters-added"].includes(name))) { const b64 = bytes.toString("base64"), count = Math.ceil(b64.length / 6000); for (let i = 0; i < count; i++) console.log(`VISUAL_IMAGE ${phase} ${width} ${name} ${i}/${count} ${b64.slice(i * 6000, (i + 1) * 6000)}`); }
   const measured = await page.evaluate(() => {
     const visible = el => { const r = el.getBoundingClientRect(), s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none"; };
     const overflow = [...document.querySelectorAll("body *")].filter(visible).map(el => ({ tag: el.tagName, id: el.id, class: String(el.className).slice(0, 90), rect: el.getBoundingClientRect().toJSON() })).filter(x => x.rect.right > innerWidth + 2 || x.rect.left < -2).slice(0, 30);

@@ -235,12 +235,19 @@ function validateHierarchy(life){
  const names=new Set();for(const c of k.collections){if(c.parentId===undefined)continue;const key=String(c.parentId)+'\0'+nameKey(c.name);if(names.has(key))throw Error('Dubbele verzamelingsnaam');names.add(key)}
  if(k.hierarchyVersion!==undefined&&k.hierarchyVersion!==1)throw Error('Onbekende hiërarchieversie');
 }
+function notionPageId(value){
+ try{const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||!['notion.so','notion.site'].some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))return '';const match=u.pathname.replace(/-/g,'').match(/([a-f0-9]{32})\/?$/i);return match?match[1].toLowerCase():'';}catch{return '';}
+}
 function saveCollection(life,input){
  const k=ensure(life),old=input.id?k.collections.find(c=>c.id===input.id):null;
  if(input.id&&!old)throw Error('Verzameling ontbreekt');
  const name=String(input.name||'').trim(),parentId=input.parentId||null;
  const externalUrl=String(input.externalUrl||'').trim();
  if(externalUrl){let parsed;try{parsed=new URL(externalUrl);}catch{throw Error('Gebruik een volledige https://-URL');}if(parsed.protocol!=='https:'||!parsed.hostname||parsed.username||parsed.password)throw Error('Gebruik een veilige https://-URL');}
+ const pageId=notionPageId(externalUrl);
+ const duplicate=pageId&&k.collections.find(c=>c.id!==input.id&&notionPageId(c.externalUrl)===pageId);
+ if(duplicate)throw Error(duplicate.archived?'Deze Notion-pagina is al gekoppeld aan een gearchiveerde kaart. Herstel die kaart via Mappen.':'Deze Notion-pagina is al gekoppeld aan '+duplicate.name);
+ if(input.subtitle!==undefined&&(typeof input.subtitle!=='string'||input.subtitle.length>100))throw Error('Gebruik een omschrijving van maximaal 100 tekens');
 
  if(!name||name.length>80)throw Error('Geef een naam van maximaal 80 tekens');
  if(!iconIds.has(input.icon)||!['list','gallery','table'].includes(input.view))throw Error('Ongeldig pictogram of weergave');
@@ -253,6 +260,7 @@ function saveCollection(life,input){
  const previousParent=old?.parentId||null;
  const notes=old?life.notes.filter(n=>collectionOf(life,n)===old.id):[];
  Object.assign(c,{name,icon:input.icon,view:input.view,parentId,externalUrl,updatedAt:timestamp(),revision:(old?.revision||0)+1});
+ if(input.subtitle!==undefined)c.subtitle=input.subtitle.trim();
  if(Object.prototype.hasOwnProperty.call(input,'coverId'))c.coverId=input.coverId||'';
  if(Object.prototype.hasOwnProperty.call(input,'coverFocus'))c.coverFocus=input.coverFocus;
  if(Object.prototype.hasOwnProperty.call(input,'coverFile'))c.coverFile=input.coverFile||null;
@@ -261,9 +269,9 @@ function saveCollection(life,input){
  for(const n of notes){n.collectionId=c.id;n.category=name;}
  k.updatedAt=c.updatedAt;validateHierarchy(life);return c;
 }
-function reorderCollections(life,parentId,orderedIds){
+function reorderCollections(life,parentId,orderedIds,{includeLegacyRoots=false}={}){
  const k=ensure(life),scope=parentId||null;
- const siblings=k.collections.filter(c=>!c.archived&&(scope===null?c.parentId===null:c.parentId===scope));
+ const siblings=k.collections.filter(c=>!c.archived&&(scope===null?(c.parentId===null||includeLegacyRoots&&c.parentId===undefined):c.parentId===scope));
  if(!Array.isArray(orderedIds)||orderedIds.length!==siblings.length||new Set(orderedIds).size!==orderedIds.length||orderedIds.some(id=>!siblings.some(c=>c.id===id)))throw Error('Ongeldige sorteervolgorde');
  orderedIds.forEach((id,order)=>{const c=siblings.find(c=>c.id===id);c.order=order;c.revision=(c.revision||0)+1;c.updatedAt=timestamp()});k.updatedAt=timestamp();
 }
@@ -368,5 +376,5 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {notionPageId,memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
