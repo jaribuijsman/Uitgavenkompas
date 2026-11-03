@@ -144,6 +144,13 @@ function validateNote(life,n,checkDuplicates=true){
 function validate(life){
  const k=ensure(life),ids=new Set();
  validateHierarchy(life);
+ if(k.portal!==undefined){
+  const p=k.portal;if(!p||p.version!==1||!Array.isArray(p.cards)||p.cards.length>200)throw Error('Ongeldig kennisportaal');
+  const seen=new Set(),pages=new Set();for(const card of p.cards){
+   if(!card||!Number.isSafeInteger(card.id)||card.id<1||seen.has(card.id)||typeof card.name!=='string'||!card.name.trim()||card.name.length>60||typeof card.subtitle!=='string'||card.subtitle.length>100||!Number.isInteger(card.cover)||card.cover<0||card.cover>9||typeof card.hidden!=='boolean'||typeof card.link!=='string'||card.link&&!notionPageId(card.link))throw Error('Ongeldige hoofdkwartierkaart');
+   seen.add(card.id);if(card.link){const page=notionPageId(card.link);if(pages.has(page))throw Error('Dubbele Notion-bestemming');pages.add(page);}
+  }
+ }
  for(const c of k.collections){if(typeof c.id!=="string"||!c.id||c.id==="inbox"||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
  const noteIds=new Set();const dates=new Set();for(const n of life.notes){if(noteIds.has(n.id))throw Error('Dubbele notitie-ID');noteIds.add(n.id);validateNote(life,n,false);if(n.journal&&!n.deletedAt){if(dates.has(n.journal.date))throw Error('Voor deze datum bestaat al een dagboeknotitie');dates.add(n.journal.date);}}
  return true;

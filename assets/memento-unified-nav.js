@@ -27,7 +27,7 @@
   settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/>',
   menu:'<path d="M4 6h16M4 12h16M4 18h16"/>'
  };
- const life=[['fitness','Fitness','fitness'],['today','Mijn dag','day'],['tasks','Taken','tasks'],['agenda','Agenda','agenda'],['notes','Notities','notes'],['groceries','Boodschappen','groceries'],['wishes','Wensen','wishes'],['backup','Instellingen','backup']];
+ const life=[['fitness','Fitness','fitness'],['today','Mijn dag','day'],['tasks','Taken','tasks'],['agenda','Agenda','agenda'],['notes','Kennis','notes'],['groceries','Boodschappen','groceries'],['wishes','Wensen','wishes'],['backup','Instellingen','backup']];
  const finance=[['dashboard','Overzicht','dashboard'],['transactions','Transacties','transactions'],['analysis','Analyse','analysis'],['budgets','Budgetten','budgets'],['accounts','Rekeningen','accounts'],['planning','Planning','planning'],['smartbuy','Slim Kopen','smartbuy'],['moneycoach','Geldcoach','moneycoach'],['receipts','Bonnetjes','receipts'],['settings','Instellingen','settings']];
  const sets={life,finance};
  const fav={life:['today','tasks','agenda','notes'],finance:['dashboard','transactions','analysis','budgets']};
@@ -50,7 +50,7 @@
  }
  function paintMenu(){const a=area(),v=active(a);document.getElementById('mementoMenuTitle').textContent=a==='life'?'Leven — alle onderdelen':'Financiën — alle onderdelen';
   layer.querySelectorAll('[data-memento-switch]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mementoSwitch===a)));
-  const groups=a==='life'?[['Dagelijks',['today','tasks','agenda','groceries','wishes']],['Notities',['notes']],['Fitness',['fitness']],['Instellingen',['backup']]]:[['Financiën',finance.map(x=>x[0])]];grid.innerHTML=groups.map(([name,ids])=>'<h3 class="ml-menu-label">'+name+'</h3>'+ids.map(id=>{const [,label,symbol]=sets[a].find(x=>x[0]===id);return '<button type="button" data-memento-dest="'+a+':'+id+'"'+(v===id?' class="active" aria-current="page"':'')+'>'+icon(symbol)+'<span>'+label+'</span></button>';}).join('')).join('');
+  const groups=a==='life'?[['Dagelijks',['today','tasks','agenda','groceries','wishes']],['Kennis',['notes']],['Fitness',['fitness']],['Instellingen',['backup']]]:[['Financiën',finance.map(x=>x[0])]];grid.innerHTML=groups.map(([name,ids])=>'<h3 class="ml-menu-label">'+name+'</h3>'+ids.map(id=>{const [,label,symbol]=sets[a].find(x=>x[0]===id);return '<button type="button" data-memento-dest="'+a+':'+id+'"'+(v===id?' class="active" aria-current="page"':'')+'>'+icon(symbol)+'<span>'+label+'</span></button>';}).join('')).join('');
  }
  function close(){if(layer.hidden)return;layer.hidden=true;document.body.classList.remove('memento-menu-open');lastFocus?.focus?.();lastFocus=null}
  function open(){if(document.body.classList.contains('pin-locked'))return;lastFocus=document.activeElement;paintMenu();layer.hidden=false;document.body.classList.add('memento-menu-open');closeButton.focus()}
