@@ -5,6 +5,7 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const read=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')));
  const original=await read(),notes=JSON.stringify(original.notes),finance=await page.evaluate(()=>localStorage.getItem('uitgavenkompas_v1'));
  assert.equal(await page.locator('.kc-local-tabs,.kc-workspace-shortcuts,.kc-workspace-widgets,.kc-capture,.kc-compact-fold').count(),0,'No retired Notes UI');
+ const transparent=await page.locator('#memento-hq-preview,.mm-phone').evaluateAll(xs=>xs.every(x=>getComputedStyle(x).backgroundColor==='rgba(0, 0, 0, 0)'));assert(transparent,'Portal containers must expose the shared forest background');
  const titles=await page.locator('.mm-open strong').allTextContents();assert.equal(titles.length,10);assert.equal(titles[0],'Ontdekken & bewaren');assert.equal(titles[9],'Persoonlijk & groei');
  assert.equal(await page.locator('[data-action=inbox]').count(),2);await page.locator('[data-open="1"]').click();assert.equal(await page.locator('#mm-form').count(),0,'An unlinked card must not open the editor');assert((await page.locator('#mm-status').innerText()).includes('geen Notion-link'));await page.locator('[data-action=manage]').click();await page.locator('[data-action=home]').click();await shot(page,'portal-overview');
  // Compare real content geometry with the exact approved prototype. Only the
