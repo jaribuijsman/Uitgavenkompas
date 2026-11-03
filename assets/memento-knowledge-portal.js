@@ -13,8 +13,12 @@ const subtitles=['Boeken, podcasts en dingen om uit te zoeken','Inzichten, voedi
 const C=rootWindow.MementoKnowledgeCore,Art=rootWindow.MementoKnowledgeCoverUI;
 const aliases=[['Ideeën & inspiratie','Inspiratie'],['Persoonlijke naslag','Documenten'],['Levenspad'],['Huis & wonen','Huis & Leven'],['Recepten & creaties'],['TATA Steel'],['Projecten & onderzoek'],['Reizen & ervaringen'],['Memento Development'],['Reflecties & inzichten']];
 const sources=aliases.map(group=>(bridge.read().knowledge?.collections||[]).find(c=>group.includes(c.name)));
-const seed=()=>names.map((name,i)=>({id:i+1,name,subtitle:subtitles[i],cover:i,link:C.notionPageId(sources[i]?.externalUrl)?sources[i].externalUrl:i===4?'https://www.notion.so/02f6147c45b14e00b240b02e69536903':'',hidden:false}));
+const recipeTarget='https://www.notion.so/40d8bc13d1af817db914f03400ef8c07';
+const seed=()=>names.map((name,i)=>({id:i+1,name,subtitle:subtitles[i],cover:i,link:i===4?recipeTarget:C.notionURL(sources[i]?.externalUrl),hidden:false}));
 let items=C.clone(bridge.read().knowledge?.portal?.cards||seed());
+// Replace only the obsolete built-in target; keep every user-chosen destination.
+for(const card of items)if(card.name==='Recepten'&&C.notionPageId(card.link)==='02f6147c45b14e00b240b02e69536903')card.link=recipeTarget;
+
 function persist(next){try{if(!bridge.write(life=>{C.ensure(life);life.knowledge.portal={version:1,cards:C.clone(next)};C.validate(life);}))throw Error('Opslaan mislukt. Je invoer blijft behouden.');return true;}catch(e){say(e.message);return false;}}
 function artwork(x){const source=sources[x.cover];return source?'<span class="mm-art">'+Art.cards(source)+'</span>':'';}
 
@@ -44,7 +48,7 @@ screen.addEventListener('click',e=>{
 const b=e.target.closest('button');if(!b)return;
 if(b.dataset.action){say('');({home:overview,manage,add:()=>form(),inbox,'save-order':()=>{if(draft&&!persist(draft))return;if(draft)items=draft.slice();overview();say('Volgorde opgeslagen.');}}[b.dataset.action]||(()=>{}))();}
 if(b.dataset.edit)form(Number(b.dataset.edit));
-if(b.dataset.open)form(Number(b.dataset.open));
+if(b.dataset.open)say('Dit hoofdkwartier heeft nog geen Notion-link. Gebruik ⋯ om de koppeling toe te voegen.');
 if(b.dataset.hide){const x=items.find(x=>x.id===Number(b.dataset.hide)),next=items.map(c=>c===x?{...c,hidden:!c.hidden}:c);if(!persist(next))return;items=next;overview();say(!x.hidden?'Hoofdkwartier verborgen. Je Notion-inhoud blijft bewaard.':'Hoofdkwartier weer zichtbaar.');}
 });
 screen.addEventListener('submit',e=>{
@@ -56,12 +60,12 @@ let error='';let url;
 if(!name)error='Vul een naam in.';
 else if(!link)error='Plak de Notion-link naar dit hoofdkwartier.';
 else if(!C.notionPageId(link))error='Gebruik een geldige Notion-paginalink.';
-else{try{url=new URL(link);if(url.protocol!=='https:'||!['notion.so','notion.site'].some(h=>url.hostname===h||url.hostname.endsWith('.'+h))||url.pathname==='/')error='Gebruik de https-link van een Notion-pagina.';}catch{error='Deze link is niet geldig.';}}
+
 if(!error&&items.some(x=>x.id!==id&&x.name.toLowerCase()===name.toLowerCase()))error='Deze naam bestaat al. Kies een andere naam.';
 if(!error&&items.some(x=>x.id!==id&&C.notionPageId(x.link)===C.notionPageId(link)))error='Deze Notion-pagina is al gekoppeld.';
 if(error){screen.querySelector('#mm-error').textContent=error;return;}
 const next=items.map(c=>({...c}));
-if(id)Object.assign(next.find(x=>x.id===id),{name,link,subtitle,cover});else next.push({id:nextId,name,link,subtitle,cover,hidden:false});
+if(id)Object.assign(next.find(x=>x.id===id),{name,link:C.notionURL(link),subtitle,cover});else next.push({id:nextId,name,link:C.notionURL(link),subtitle,cover,hidden:false});
 if(!persist(next))return;items=next;if(!id)nextId++;
 overview();say('Opgeslagen.');
 });

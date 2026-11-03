@@ -243,8 +243,9 @@ function validateHierarchy(life){
  if(k.hierarchyVersion!==undefined&&k.hierarchyVersion!==1)throw Error('Onbekende hiërarchieversie');
 }
 function notionPageId(value){
- try{const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||!['notion.so','notion.site'].some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))return '';const match=u.pathname.replace(/-/g,'').match(/([a-f0-9]{32})\/?$/i);return match?match[1].toLowerCase():'';}catch{return '';}
+ try{const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||!(u.hostname==='app.notion.com'||['notion.so','notion.site'].some(h=>u.hostname===h||u.hostname.endsWith('.'+h))))return '';const match=decodeURIComponent(u.pathname).replace(/-/g,'').match(/([a-f0-9]{32})\/?$/i);return match?match[1].toLowerCase():'';}catch{return '';}
 }
+function notionURL(value){const id=notionPageId(value);if(!id)return '';const u=new URL(value);return u.hostname==='app.notion.com'?'https://www.notion.so/'+id+u.search+u.hash:u.href;}
 function saveCollection(life,input){
  const k=ensure(life),old=input.id?k.collections.find(c=>c.id===input.id):null;
  if(input.id&&!old)throw Error('Verzameling ontbreekt');
@@ -383,5 +384,5 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {notionPageId,memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {notionURL,notionPageId,memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
