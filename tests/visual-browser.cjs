@@ -57,13 +57,9 @@ async function shot(page, name, log = true) {
     if (pinDisabled) await shot(page, "direct-open", width === 393);
     checks.push((pinDisabled ? "Direct app opening" : "PIN unlocked") + "; fixture writer owns Web Lock");
     for (const [name, area, view] of [["day", "life", "today"], ["tasks", "life", "tasks"], ["groceries", "life", "groceries"], ["wishes", "life", "wishes"], ["agenda", "life", "agenda"], ["finance", "finance", "dashboard"], ["transactions", "finance", "transactions"], ["analysis","finance","analysis"],["accounts","finance","accounts"],["receipts","finance","receipts"],["finance-settings","finance","settings"],["smartbuy","finance","smartbuy"],["moneycoach","finance","moneycoach"],["budgets", "finance", "budgets"], ["planning", "finance", "planning"], ["knowledge", "life", "notes"], ["fitness", "life", "fitness"], ["settings", "life", "backup"]]) { await navigate(page, area, view); await shot(page, name); }
-    await navigate(page, "life", "notes"); await page.locator('[data-kc="all"]').first().click(); await shot(page, "knowledge-list", width === 393);
-    for(const [id,name] of [["visual-checklist","checklist"],["visual-recipe","recipe"],["visual-document","document"]]){
-      await page.locator(`[data-kc="open"][data-id="${id}"]`).first().click();await shot(page,name,false);await page.locator('[data-kc="back"]').click();await page.locator('[data-kc="back"]').click();await page.locator('[data-kc="all"]').first().click();
-    }
-    await page.locator('[data-kc="open"][data-id="visual-note"]').first().click(); await shot(page, "note", width === 393);
-    await page.locator('[data-kc="edit"]').click(); await page.locator("#kc-body").focus(); await shot(page, "editor", width === 393);
-    await page.setViewportSize({ width, height: width > 700 ? 560 : 430 }); await page.locator("#kc-body").scrollIntoViewIfNeeded(); await shot(page, "editor-short", width === 393); await page.setViewportSize({ width, height: width > 700 ? 900 : 852 });
+    await navigate(page,'life','notes');await page.locator('[data-action=inbox]').first().click();await shot(page,'knowledge-inbox',width===393);
+    // Preserved documents are compatibility data, not controls in the retired workspace.
+    for(const [id,name] of [['visual-checklist','checklist'],['visual-recipe','recipe'],['visual-document','document']]){await page.evaluate(id=>window.MementoKnowledge.showNote(id),id);await shot(page,'preserved-'+name,false);}
     await navigate(page, "finance", "transactions"); await page.locator("#addTransaction").click(); await shot(page, "transaction-modal", width === 393); await page.locator("#cancelTx").click();
     await navigate(page, "life", "fitness"); await page.locator('[data-fit="tab"][data-id="plan"]').click(); await shot(page, "fitness-plan", width === 393); await page.locator('[data-fit="tab"][data-id="progress"]').click(); await shot(page, "fitness-progress", width === 393);
     if(await page.locator('[data-memento-menu="open"]').isVisible())await page.locator('[data-memento-menu="open"]').click(); await shot(page, "navigation", width === 393);
