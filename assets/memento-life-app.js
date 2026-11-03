@@ -24,7 +24,7 @@ const safeLink=s=>{try{const u=new URL(s);return ['https:','http:'].includes(u.p
 const repeats={none:'Niet herhalen',daily:'Dagelijks',weekly:'Wekelijks',monthly:'Maandelijks',quarterly:'Iedere 3 maanden',yearly:'Jaarlijks',custom:'Zelf aantal dagen kiezen'};
 const categories=['Huishouden','Huis & klussen','Administratie','Persoonlijk','Samen','Gezondheid','Werk'];
 const rooms=['Keuken','Badkamer & toilet','Slaapkamer','Wasruimte','Hele huis'];
-const views=[['today','☀','Mijn dag'],['tasks','☑','Taken'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Notities'],['agenda','◷','Agenda'],['fitness','↗','Fitness'],['backup','⚙','Back-up & instellingen']];
+const views=[['today','☀','Mijn dag'],['tasks','☑','Taken'],['groceries','🛒','Boodschappen'],['wishes','✦','Aankoopwensen'],['notes','▤','Kennis'],['agenda','◷','Agenda'],['fitness','↗','Fitness'],['backup','⚙','Back-up & instellingen']];
 let quickKind='note',quickDate=null,quickCollectionId='inbox',quickCategory='Persoonlijk',quickRoom='Hele huis',quickPriority=false,daySlide=0;
 const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});

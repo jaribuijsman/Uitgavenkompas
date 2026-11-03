@@ -534,6 +534,7 @@ function renderFile(){
 function render(){
  if(!host)return;
  const life=read();try{C.ensure(life)}catch(e){host.textContent=e.message;return;}
+ if(screen==='home'&&root.MementoKnowledgePortal){root.MementoKnowledgePortal.mount(host,bridge);return;}
  let output="";
  if(screen==="home")workspaceContext="overview";else if(screen==="collection")workspaceContext=collectionId;
  if(screen==="recipe-groceries")output=renderRecipeShop();
@@ -551,7 +552,7 @@ function render(){
  else if(screen==="file")output=renderFile();
  root.MementoSortableUI?.clear(host);
  const prototypeEditorVisible=output.includes('class="kc-v3-prototype-editor"');
- host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+(workspaceReady()&&!["edit","collection-editor"].includes(screen)&&!prototypeEditorVisible?workspaceNavigation():"")+(prototypeEditorVisible?"":breadcrumbs())+output+(workspaceUndo&&JSON.stringify(read())===workspaceUndoAfter?btn("Ongedaan maken","ws-undo"):"")+"</div>";
+ host.innerHTML='<div class="kc-app"><div id="kc-notice" role="status"'+(notice?"":" hidden")+">"+esc(notice)+"</div>"+(prototypeEditorVisible?"":breadcrumbs())+output+(workspaceUndo&&JSON.stringify(read())===workspaceUndoAfter?btn("Ongedaan maken","ws-undo"):"")+"</div>";
  // Handle list search on the current field, before any parent-level listeners
  // can replace the input during bubbling. Native search clear also fires
  // a non-bubbling "search" event in some browsers.
