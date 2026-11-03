@@ -4,6 +4,7 @@ const source='## Ingrediënten\n- [ ] 1,5 liter bouillon\n- [x] 2 tomaten\n- [ ]
 const rows=C.parse(source);assert.equal(rows.length,4);assert.equal(rows[0].quantity,'1,5 liter');assert.equal(rows[1].title,'tomaten');assert.equal(rows[1].selected,true,'A cooking check is not a shopping selection');assert.equal(rows[2].amount,null);assert.equal(rows[3].selected,false);assert.equal(C.scaledQuantity(rows[0],2),'3 liter');
 for(const raw of ['1–2 tomaten','1 blik van 400 g tomaten','Garnalen of Kip','600 - 700 ML volle melk','Olijfolie naar smaak']){const row=C.parse(raw)[0];assert.equal(row.title,raw);assert.equal(row.amount,null);assert.equal(C.scaledQuantity(row,2),'');assert(row.warnings.length);}
 assert.equal(C.scaledQuantity(C.parse('1 1/2 el olie')[0],2),'3 el');assert.equal(C.scaledQuantity(C.parse('1/0 el olie')[0],2),'');
+assert.equal(C.parse('9'.repeat(400)+' g bloem')[0].amount,null,'Overflow must stay literal, never become infinity');
 assert(C.parse('2 tomaten\n2 tomaten').every(r=>r.warnings.some(w=>w.includes('vaker'))));
 assert.throws(()=>C.parse('https://notion.so/private'));assert.throws(()=>C.parse('x'.repeat(20001)));assert.throws(()=>C.parse(Array(101).fill('Tomaat').join('\n')));
 let n=0;const draft={id:'batch',title:'Fictieve soep',sourceUrl:'https://example.test/recept',rows:rows.map(r=>({...r,category:'Overig'}))};

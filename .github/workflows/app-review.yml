@@ -135,6 +135,7 @@ jobs:
         env:
           MEMENTO_CI_TIER: ${{ needs.plan.outputs.tier }}
           MEMENTO_PROTOTYPE_PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          MEMENTO_GROCERY_INLINE: ${{ matrix.group == 'life-full' && '1' || '0' }}
         run: node tests/ci-groups.cjs '${{ matrix.group }}' "$MEMENTO_CI_TIER"
       - uses: actions/upload-artifact@v4
         if: failure()

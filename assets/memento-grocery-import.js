@@ -3,7 +3,7 @@
  'use strict';
  const key=s=>String(s||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('nl-NL');
  const isOneOff=g=>g?.origin==='notion-recipe'&&g?.lifecycle==='one-off';
- const quantityNumber=s=>{const t=String(s).trim().replace(',','.');if(/^\d+(?:\.\d+)?$/.test(t))return Number(t);const f=/^(?:(\d+)\s+)?(\d+)\/(\d+)$/.exec(t);return f&&Number(f[3])>0?Number(f[1]||0)+Number(f[2])/Number(f[3]):null;};
+ const quantityNumber=s=>{const t=String(s).trim().replace(',','.');const f=/^(?:(\d+)\s+)?(\d+)\/(\d+)$/.exec(t),n=/^\d+(?:\.\d+)?$/.test(t)?Number(t):f&&Number(f[3])>0?Number(f[1]||0)+Number(f[2])/Number(f[3]):NaN;return Number.isFinite(n)&&n<=Number.MAX_SAFE_INTEGER/3?n:null;};
  const amountPattern='(?:\\d+\\s+)?\\d+\\/\\d+|\\d+(?:[.,]\\d+)?';
  const units=/^(kg|kilo(?:gram)?|g|gr(?:am)?|mg|ml|cl|dl|l|liter|el|eetlepels?|tl|theelepels?|stuks?|teentjes?|stengels?)\b\.?\s*/i;
  function parse(text){
@@ -45,7 +45,7 @@
  }
  function validateItem(g){
   if(g.origin!=='notion-recipe'&&g.lifecycle!=='one-off')return;
-  if(!isOneOff(g)||g.list!=='groceries'||g.favorite!==false||g.needed!==true||g.bought!==false||g.deletedAt!==''||typeof g.quantity!=='string'||g.quantity.length>180||typeof g.category!=='string'||!g.category.trim()||g.category.length>80||!g.recipeImport||g.recipeImport.version!==1||typeof g.recipeImport.batchId!=='string'||!g.recipeImport.batchId||g.recipeImport.batchId.length>200||typeof g.recipeImport.rawText!=='string'||g.recipeImport.rawText.length>2000||typeof g.recipeImport.title!=='string'||g.recipeImport.title.length>180)throw Error('Ongeldig eenmalig receptingrediënt. De bestaande gegevens zijn behouden.');
+  if(!isOneOff(g)||typeof g.title!=='string'||!g.title.trim()||g.title.length>180||g.list!=='groceries'||g.favorite!==false||g.needed!==true||g.bought!==false||g.deletedAt!==''||typeof g.quantity!=='string'||g.quantity.length>180||typeof g.category!=='string'||!g.category.trim()||g.category.length>80||!g.recipeImport||g.recipeImport.version!==1||typeof g.recipeImport.batchId!=='string'||!g.recipeImport.batchId||g.recipeImport.batchId.length>200||typeof g.recipeImport.rawText!=='string'||!g.recipeImport.rawText.trim()||g.recipeImport.rawText.length>2000||typeof g.recipeImport.title!=='string'||g.recipeImport.title.length>180)throw Error('Ongeldig eenmalig receptingrediënt. De bestaande gegevens zijn behouden.');
  }
  function makeItems(draft,uid){
   const selected=draft.rows.filter(r=>r.selected);if(!selected.length)throw Error('Kies ten minste één ingrediënt.');

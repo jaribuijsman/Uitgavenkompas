@@ -116,7 +116,7 @@ window.addEventListener('pagehide',reviewTaskTimer);
 // Wait for the existing viewport helper to resize the scroll body before
 // exposing a focused task field above the fixed editor actions.
 function revealTaskEditorField(){
- const field=document.activeElement;if(!field?.closest?.('#lifeTaskForm'))return;
+ const field=document.activeElement;if(!field?.closest?.('#lifeTaskForm,#recipeImportForm'))return;
  requestAnimationFrame(()=>requestAnimationFrame(()=>{
   const body=field.closest('.life-dialog-body');if(!body||!field.isConnected)return;
   const input=field.getBoundingClientRect(),bounds=body.getBoundingClientRect();
@@ -1080,7 +1080,7 @@ function submitRecipeImport(){
  const draft=recipeImportDraft;if(!draft||draft.busy)return;
  if(draft.stage==='input'){
   draft.text=$('recipeImportText').value;draft.title=$('recipeImportTitle').value;draft.sourceUrl=$('recipeImportSource').value;
-  try{draft.rows=groceryImport.parse(draft.text).map(r=>({...r,category:shoppingAisleOf({title:r.title,category:''})}));draft.factor=1;draft.stage='review';renderRecipeImport();}catch(e){recipeImportError(e.message)}
+  try{if(draft.parsedText!==draft.text||!draft.rows.length){draft.rows=groceryImport.parse(draft.text).map(r=>({...r,category:shoppingAisleOf({title:r.title,category:''})}));draft.factor=1;draft.parsedText=draft.text;}draft.stage='review';renderRecipeImport();}catch(e){recipeImportError(e.message)}
   return;
  }
  try{
