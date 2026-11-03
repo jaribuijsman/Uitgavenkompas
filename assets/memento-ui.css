@@ -123,6 +123,7 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
 #lifeApp .shopping-recipe-origin {color:var(--m-muted);overflow-wrap:anywhere}
 #lifeDialog:has(#recipeImportForm) .life-dialog-panel {width:min(100%,640px)}
 #recipeImportForm {min-width:0}
+#recipeImportForm .life-form-field>label,#recipeImportForm .shopping-import-tools>label {font-size:14px}
 #recipeImportForm .shopping-import-tools {display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px}
 #recipeImportForm .shopping-import-tools label {flex:1;min-width:0}
 #recipeImportForm .shopping-import-tools p {font-size:14px;white-space:nowrap}
@@ -136,7 +137,7 @@ body[data-compass-area="finance"] .app #view-transactions #txClearQuick {padding
 #recipeImportForm .shopping-import-source summary {display:flex;align-items:center;min-height:44px;font-size:14px;cursor:pointer}
 #recipeImportForm .shopping-import-source p {white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
 #recipeImportForm .shopping-import-error {padding:12px;border:1px solid #e5a695;border-radius:10px;color:#ffd6c9;font-size:14px;line-height:1.5}
-#lifeDialog:has(#recipeImportForm) .life-dialog-footer button {min-height:48px}
+#lifeDialog:has(#recipeImportForm) .life-dialog-footer button {min-height:48px;font-size:14px}
 #lifeDialog:has(#recipeImportForm) .life-dialog-footer {padding-bottom:max(12px,env(safe-area-inset-bottom))}
 #lifeDialog:has(#mementoFollowupForm) .life-followup-help {margin:0;color:#afc8b6;font-size:12px;line-height:1.5}
 #lifeDialog:has(#mementoFollowupForm) .life-dialog-description:empty {display:none}
