@@ -11,6 +11,43 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.mouse.move(box.x+30,box.y+50);await page.mouse.down();await page.mouse.move(box.x+box.width-30,box.y+50,{steps:12});await page.mouse.up();
  await page.waitForFunction(()=>document.querySelector('.kc-topic-status').textContent.includes('Pagina 2'));
  assert.equal(await page.locator('.kc-header h2').innerText(),'Kenniscentrum');await shot(page,'workspace-swiped');
+ const carouselState=await state(),pageCount=await page.locator('.kc-topic-page').count();
+ assert(pageCount>1,'Fixture must exercise multiple carousel pages');
+ const expectPage=async n=>{await page.waitForFunction(n=>document.querySelector('.kc-topic-status')?.textContent.startsWith('Pagina '+n+' van '),n);assert.equal(await page.locator('.kc-topic-page:not([inert])').count(),1);assert.equal(await page.locator('.kc-topic-dots [aria-current="true"]').getAttribute('data-id'),String(n-1));};
+ const mouseSwipe=async direction=>{
+  const b=await slider.boundingBox(),left=b.x+30,right=b.x+b.width-30,y=b.y+50;
+  await page.mouse.move(direction>0?left:right,y);await page.mouse.down();await page.mouse.move(direction>0?right:left,y,{steps:12});await page.mouse.up();
+ };
+ // Keep the original link-origin mouse gesture; moving it would hide native link dragging.
+ for(let i=1;i<=pageCount*2;i++){await mouseSwipe(1);await expectPage((i+1)%pageCount+1);}
+ await page.locator('.kc-topic-dots [data-id="0"]').click();await expectPage(1);
+ await mouseSwipe(-1);await expectPage(pageCount);await shot(page,'workspace-loop-backward');
+ await mouseSwipe(1);await expectPage(1);await shot(page,'workspace-loop-start');
+ await slider.press('ArrowLeft');await expectPage(pageCount);
+ await slider.press('ArrowRight');await expectPage(1);
+ await page.locator('.kc-topic-controls [data-kc="ws-page"]').first().click();await expectPage(pageCount);
+ await page.locator('.kc-topic-controls [data-kc="ws-page"]').last().click();await expectPage(1);
+ if(width<=800){
+  const session=await context.newCDPSession(page);
+  try{
+   for(let i=0;i<pageCount;i++){
+    const b=await slider.boundingBox(),x=b.x+30,y=b.y+50,distance=b.width-60;
+    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:7}]});
+    for(let step=1;step<=12;step++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+distance*step/12,y,id:7}]});await page.waitForTimeout(16);}
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await expectPage((i+1)%pageCount+1);
+   }
+  }finally{await session.detach();}
+  await shot(page,'workspace-touch-loop-start');
+ }
+ assert.deepEqual(await state(),carouselState,'Carousel gestures must not write or change stored data');
+ assert.equal(await page.locator('.kc-topic-page:not([inert]) a.kc-topic-card').getAttribute('href'),'https://www.notion.so/02f6147c45b14e00b240b02e69536903','Recipe link remains intact after mouse and touch swipes');
+ // A fresh tap after a swipe must still open an ordinary folder.
+ const folderCard=page.locator('.kc-topic-page:not([inert]) button.kc-topic-card').first();
+ await folderCard.click();await page.waitForFunction(()=>!document.querySelector('.kc-topic-viewport'));
+ await page.locator('.kc-local-tabs [data-kc=home]').click();await expectPage(1);
+ checks.push('Carousel: repeated mouse loops including external link, touch loop, reverse wrap, keys, dots/arrows, fresh card tap and unchanged storage');
+
  await page.locator('.kc-local-tabs [data-kc=collections]').click();
  assert.equal(await page.locator('.kc-tree-children').count(),0);const fold=page.locator('[data-kc=ws-fold]').first();const root=await fold.getAttribute('data-id');await fold.click();assert(await page.locator('.kc-tree-children').count()>0);
  await page.locator('.kc-local-tabs [data-kc=home]').click();await page.locator('.kc-local-tabs [data-kc=collections]').click();assert(await page.locator('.kc-tree-children').count()>0);await shot(page,'workspace-tree');
