@@ -50,3 +50,5 @@
 #memento-hq-preview .mm-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#08271ff2,#08271f9c 70%,#08271f66)}
 #memento-hq-preview .mm-open,#memento-hq-preview .mm-more{position:relative;z-index:1;text-decoration:none}
 #memento-hq-preview .mm-hq .mm-open{color:#fff6db}
+
+#lifeApp[data-life-view="notes"] #lifeContent{background:#09271f}

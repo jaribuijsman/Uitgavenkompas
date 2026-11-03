@@ -2,7 +2,7 @@
 (function(rootWindow){
 function mount(host,bridge){
 rootWindow.MementoSortableUI?.clear(host);
-host.innerHTML='<div id="memento-hq-preview"><section class="mm-phone" aria-label="Kennis"><div id="mm-status" class="mm-toast" role="status" aria-live="polite"></div><main id="mm-screen"></main></section></div>';
+host.innerHTML='<div id="memento-hq-preview"><section class="mm-phone" aria-label="Kennis"><div id="mm-status" class="mm-toast" role="status" aria-live="polite"></div><div id="mm-screen"></div></section></div>';
 const root=document.getElementById('memento-hq-preview');
 const screen=root.querySelector('#mm-screen');
 const status=root.querySelector('#mm-status');
