@@ -563,8 +563,11 @@
 
 /* External knowledge shortcuts share the same visual language as local folders. */
 #lifeApp[data-life-view="notes"] .kc-hq-list{display:grid;gap:10px;margin-top:12px}
-#lifeApp[data-life-view="notes"] .kc-topic-tile{position:relative;min-width:0;min-height:100px;isolation:isolate;border:1px solid #d2b77d50;border-radius:17px;overflow:hidden;background:#17392e}
-#lifeApp[data-life-view="notes"] .kc-topic-card{position:relative;display:flex;align-items:center;width:100%;min-height:100px;padding:18px 52px 18px 18px;border:0;text-align:left;text-decoration:none;background:#17392e;color:#fff6db;font:inherit}
+#lifeApp[data-life-view="notes"] .kc-topic-tile{position:relative;display:flex;align-items:stretch;min-width:0;min-height:100px;isolation:isolate;border:1px solid #d2b77d50;border-radius:17px;overflow:hidden;background:#17392e}
+#lifeApp[data-life-view="notes"] .kc-topic-card{position:static;display:flex;align-items:center;flex:1;min-width:0;min-height:100px;padding:18px;border:0;text-align:left;text-decoration:none;background:transparent;color:#fff6db;font:inherit}
+#lifeApp[data-life-view="notes"] .kc-topic-scene{position:absolute;inset:0;pointer-events:none}
+#lifeApp[data-life-view="notes"] .kc-topic-title{position:relative;z-index:1;min-width:0;text-shadow:0 1px 8px #000}
+#lifeApp[data-life-view="notes"] .kc-topic-title strong{display:block;font-family:Georgia,serif;font-size:20px;line-height:1.2;overflow-wrap:anywhere;color:#fff6db}
 
 #lifeApp[data-life-view="notes"] .kc-topic-scene .kc-art-wrap{position:absolute;inset:0}
 #lifeApp[data-life-view="notes"] .kc-topic-scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -572,7 +575,7 @@
 
 
 #lifeApp[data-life-view="notes"] .kc-topic-title small{display:block;margin-top:5px;font-size:12px;color:#e0e7da}
-#lifeApp[data-life-view="notes"] .kc-topic-edit{position:absolute;right:3px;top:50%;transform:translateY(-50%);z-index:2;display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;color:#eed5a0;font:22px/1 system-ui;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-topic-edit{position:relative;align-self:center;flex:none;z-index:2;display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;color:#eed5a0;font:22px/1 system-ui;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-topic-edit:focus-visible{outline:3px solid #f7d98c;outline-offset:-4px}
 #lifeApp[data-life-view="notes"] .kc-hq-manage{min-height:44px;padding:6px 0 6px 12px;border:0;background:transparent;color:#d8c08b;font:13px system-ui;cursor:pointer}
 #lifeApp[data-life-view="notes"] .kc-hq-add{width:100%;margin-top:14px}

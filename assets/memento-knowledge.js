@@ -344,7 +344,7 @@ function renderJournalEditor(){
 }
 function renderSort(){
  const list=sortState?.ids||[];
- if(sortState?.deferred)return header('Volgorde bewerken',true,btn('Volgorde opslaan','hq-save-order','',true))+'<p class="kc-muted">Sleep aan de greep om een hoofdkwartier te verplaatsen.</p>'+btn('Annuleren','sort-done')+'<div class="kc-sort-list kc-hq-sort" role="list">'+list.map(id=>{const c=sortState.cards.find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><strong>'+esc(c.name)+'</strong><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'; gebruik pijltjes omhoog en omlaag">⠿</button></div>';}).join('')+'</div>'+btn('Volgorde opslaan','hq-save-order','',true);
+ if(sortState?.deferred)return header('Volgorde bewerken',true)+'<p class="kc-muted">Sleep aan de greep om een hoofdkwartier te verplaatsen.</p><div class="kc-editor-actions">'+btn('Volgorde opslaan','hq-save-order','',true)+btn('Annuleren','sort-done')+'</div><div class="kc-sort-list kc-hq-sort" role="list">'+list.map(id=>{const c=sortState.cards.find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><strong>'+esc(c.name)+'</strong><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'; gebruik pijltjes omhoog en omlaag">⠿</button></div>';}).join('')+'</div>'+btn('Volgorde opslaan','hq-save-order','',true);
  return header('Volgorde wijzigen',true,btn('Klaar','sort-done','',true))+'<p class="kc-muted">Houd de sleepgreep even vast en versleep. Alleen de volgorde in deze verzameling verandert. Je kunt ook de pijlen gebruiken.</p><div class="kc-sort-list" role="list">'+list.map((id,i)=>{const c=allCollections().find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'">⠿</button>'+collectionIcon(c)+'<strong>'+esc(c.name)+'</strong><div><button type="button" class="kc-btn" data-kc="sort-up" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" class="kc-btn" data-kc="sort-down" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omlaag"'+(i===list.length-1?' disabled':'')+'>↓</button></div></div>';}).join('')+'</div>';
 }
 function attachmentsHTML(n){
@@ -640,10 +640,10 @@ function renderHeadquarters(){
 }
 function renderWorkspaceHome(){
  const items=C.search(read()),pinned=items.filter(n=>n.pinned);
- return header('Hoofdkwartieren',false,btn('+ Nieuwe notitie','new','',true))+centralSearchBox()+
+ return header('Hoofdkwartieren')+centralSearchBox()+
  '<form class="kc-capture" id="kc-capture-form"><label class="kc-sr" for="kc-capture">Een gedachte voor Inbox</label><input id="kc-capture" value="'+esc(quickDraft)+'" data-kc-input="quick" maxlength="20000" placeholder="Een gedachte voor later…"><button type="submit" class="kc-btn" aria-label="Bewaar in Inbox">＋</button></form>'+
  '<button class="kc-inbox" data-kc="ws-process"><strong>Inbox</strong><span>'+counts('inbox')+' gedachten om een plek te geven</span><b>›</b></button>'+renderHeadquarters()+
- '<div class="kc-workspace-shortcuts">'+btn('Alle notities · '+items.length,'all')+btn('☆ Belangrijk · '+pinned.length,'pinned')+btn('Sjablonen','ws-templates')+'</div>'+
+ '<div class="kc-workspace-shortcuts">'+btn('+ Nieuwe notitie','new')+btn('Alle notities · '+items.length,'all')+btn('☆ Belangrijk · '+pinned.length,'pinned')+btn('Sjablonen','ws-templates')+'</div>'+
  '<details class="kc-compact-fold"><summary>Recent · '+Math.min(3,items.length)+'</summary>'+workspaceCompact(items.slice(0,3))+'</details>'+
  '<details class="kc-compact-fold"><summary>Vastgezet · '+pinned.length+'</summary>'+workspaceCompact(pinned.slice(0,5))+'</details>'+renderWorkspaceWidgets('overview')+
  '<details class="kc-compact-fold"><summary>Instellingen & back-up</summary><div class="kc-ws-tools">'+btn('Overzicht aanpassen','ws-design')+btn('Achtergrond kiezen','ws-background')+btn('Kenniscentrum-back-up','ws-backup')+btn('Opslaggebruik','ws-storage')+'</div></details>';

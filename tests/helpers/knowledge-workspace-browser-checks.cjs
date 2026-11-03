@@ -10,6 +10,16 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const original=await state(),before=JSON.stringify(original);
  const noteBytes=JSON.stringify(original.notes);
  await shot(page,'workspace-home');
+ if(width===393){
+  const viewport=page.viewportSize();
+  for(const testWidth of [360,412,1280]){
+   await page.setViewportSize({width:testWidth,height:852});
+   const geometry=await page.locator('.kc-topic-tile').evaluateAll(rows=>rows.map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}}));
+   assert(geometry.every((r,i)=>r.left>=0&&r.right<=testWidth&&r.height>=100&&(i===0||r.top>=geometry[i-1].bottom)),testWidth+'px cards fit and remain vertical');
+   await shot(page,'headquarters-width-'+testWidth,false);
+  }
+  await page.setViewportSize(viewport);
+ }
  const recipe=page.locator('a.kc-topic-card').first();
  assert.equal(await recipe.getAttribute('href'),'https://www.notion.so/02f6147c45b14e00b240b02e69536903');
  const cardBoxes=await page.locator('.kc-topic-tile').evaluateAll(rows=>rows.map(r=>r.getBoundingClientRect().toJSON()));
@@ -30,7 +40,7 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.locator('[data-kc=hq-save-order]').first().click();await page.locator('.kc-hq-list').waitFor();
  expected=expected.map(id=>id==='notion-recipes'?(null):id);const savedRecipe=(await state()).knowledge.collections.find(c=>c.externalUrl==='https://www.notion.so/02f6147c45b14e00b240b02e69536903');expected=expected.map(id=>id===null?savedRecipe.id:id);
  assert.equal(JSON.stringify((await state()).notes),noteBytes,'Sorting preserves all note contents');
- await page.reload();await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');await openOrder();
+ await page.reload();await require('./enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');await openOrder();
  assert.deepEqual(await order(),expected,'Saved order survives restart including the recipe card');
  const savedBytes=JSON.stringify(await state());await page.locator('.kc-drag-handle').first().press('ArrowDown');
  await page.evaluate(()=>{window.kcHQSetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='compass_life_preview_v1')throw Error('Fictieve quota');return window.kcHQSetItem.call(this,k,v)}});
