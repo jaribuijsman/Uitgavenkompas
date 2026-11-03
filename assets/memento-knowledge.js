@@ -167,18 +167,7 @@ function quickExpand(){
  quickStop();if(!quickDraft.trim()){quickMsg("Schrijf of spreek eerst iets in.");return;}
  selectedId="";editing=C.makeNote({body:quickDraft,kind:"note",collectionId:"inbox"},read());dirty=true;quickDraft="";screen="edit";render();setSaveIndicator("Nog niet opgeslagen");
 }
-function renderHome(){
- const items=C.search(read(),{sort:'recent'}),pinned=items.filter(n=>n.pinned).slice(0,3);
- return header('Notities',false,btn('+ Nieuw','new','',true))+
- centralSearchBox()+
- '<button type="button" class="kc-inbox" data-kc="inbox">'+symbol('folder')+'<strong>Inbox</strong><span>'+counts('inbox')+' items</span><span aria-hidden="true">›</span></button>'+
- (read().knowledge?.hierarchyVersion!==1?'<p class="kc-muted">Je bestaande verzamelingen zijn behouden.</p>'+btn('Nieuwe indeling toevoegen','migrate'):'')+
- '<div class="kc-section-head"><h3>Verzamelingen</h3><details class="kc-tools"><summary aria-label="Verzamelingen beheren">⋯</summary><div>'+btn('Hoofdverzameling toevoegen','new-collection')+btn('Volgorde wijzigen','sort-roots')+btn('Alle verzamelingen beheren','collections')+'</div></details></div>'+collectionRows(rootCollections(),true)+'<div class="kc-collection-rows"><a class="kc-collection-row kc-art-row" href="https://www.notion.so/02f6147c45b14e00b240b02e69536903" aria-label="Recepten openen in Notion"><span class="kc-collection-icon" aria-hidden="true">'+symbol('book-open')+'</span><span><strong>Recepten</strong><small>Open je recepten in Notion</small></span><span class="kc-card-arrow" aria-hidden="true">↗</span>'+(ArtUI?.cards({name:'Recepten',icon:'book-open',coverId:'recepten'})||'')+'</a></div>'+'<details class="mg-fold kc-quick-optional"'+(quickDraft?' open':'')+'><summary>Snelle notitie</summary><div class="mg-fold-body">'+quickBox()+'</div></details>'+
- (pinned.length?'<div class="kc-section-head"><h3>Vastgezet</h3></div>'+itemRows(pinned):'')+
- '<div class="kc-section-head"><h3>Recent bewaard</h3>'+btn('Alle items','all')+'</div>'+itemRows(items.filter(n=>!pinned.some(p=>p.id===n.id)).slice(0,4))+
- (legacyCollections().length?'<details class="kc-legacy"><summary>Bestaande verzamelingen · '+legacyCollections().length+'</summary><p class="kc-muted">Behouden zonder automatische herindeling. Via Bewerken kies je zelf een bovenliggende verzameling.</p>'+collectionRows(legacyCollections())+'</details>':'')+
- '<details class="mg-fold kc-hub-shortcuts"><summary>Beheer</summary><div class="mg-fold-body">'+btn('Alle items','all')+btn('Archief','archive')+btn('Prullenbak','trash')+btn('Verzamelingen beheren','collections')+'</div></details>';
-}
+
 function centralSearchBox(){return '<label class="kc-central-search">Zoek in notities en taken<input type="search" data-kc-input="central-search" value="'+esc(centralQuery)+'" placeholder="Titel, inhoud of tags…" autocomplete="off"></label>';}
 function highlight(value,query){const text=String(value||""),word=String(query||"").trim();if(!word)return esc(text);const lower=text.toLocaleLowerCase('nl-NL'),q=word.toLocaleLowerCase('nl-NL');let start=0,out='',i;while((i=lower.indexOf(q,start))!==-1){out+=esc(text.slice(start,i))+'<mark>'+esc(text.slice(i,i+word.length))+'</mark>';start=i+word.length;}return out+esc(text.slice(start));}
 function renderCentralSearch(){
@@ -539,7 +528,7 @@ function render(){
  if(screen==="home")workspaceContext="overview";else if(screen==="collection")workspaceContext=collectionId;
  if(screen==="recipe-groceries")output=renderRecipeShop();
  else if(screen==="search")output=renderCentralSearch();
- else if(screen==="home")output=workspaceReady()?renderWorkspaceHome():renderHome();
+ else if(screen==="home")output='<p>Kennis kon niet worden geladen. Vernieuw de app.</p>';
  else if(screen==="sort")output=renderSort();
  else if(screen==="collections")output=workspaceReady()?renderWorkspaceCollections():renderCollections();
  else if(screen==="workspace")output=workspacePanel==="map-template"?header("Standaardsjabloon",true)+templateCards("ws-map-template-set"):workspacePanel==="widget-image"?header("Widgetafbeelding",true)+'<label>Eigen afbeelding<input id="kc-ws-widget-file" type="file" accept="image/png,image/jpeg,image/webp"></label><label>Onderschrift<input id="kc-ws-widget-caption" maxlength="300"></label><label>Uitsnede<input id="kc-ws-widget-focus" type="range" min="0" max="100" value="50"></label>'+btn('Instellingen bewaren','ws-widget-image-settings'):renderWorkspacePanel();
@@ -617,7 +606,7 @@ function workspaceWrite(fn,{undo=false}={}){
  if(ok&&undo){workspaceUndo=before;workspaceUndoAfter=JSON.stringify(read());}
  return ok;
 }
-function workspaceNavigation(){const active=screen==='home'?'home':screen==='collections'?'collections':'all';return '<nav class="kc-local-tabs" aria-label="Kenniscentrum">'+[['home','Overzicht'],['collections','Mappen'],['all','Notities']].map(([id,label])=>'<button class="kc-btn" data-kc="'+id+'" aria-current="'+(active===id?'page':'false')+'">'+label+'</button>').join('')+'</nav>';}
+
 function workspaceCompact(items){return '<div class="kc-compact-list">'+items.map(n=>'<button class="kc-compact-row" type="button" data-kc="open" data-id="'+esc(n.id)+'"><strong>'+esc(n.title)+'</strong><small>'+esc(C.collectionName(read(),C.collectionOf(read(),n)))+'</small><span>›</span></button>').join('')+'</div>';}
 const hqTemplates=[
  ['Ontdekken & bewaren','Boeken, podcasts en dingen om uit te zoeken','lightbulb'],
@@ -636,19 +625,8 @@ function headquarters(){
  const hasRecipes=allCollections().some(c=>String(c.name).toLocaleLowerCase('nl')==='recepten'||C.notionPageId(c.externalUrl)===C.notionPageId('https://www.notion.so/02f6147c45b14e00b240b02e69536903')&&C.notionPageId(c.externalUrl));
  return [...(hasRecipes?[]:[{id:'notion-recipes',name:'Recepten',subtitle:'Koken, mealprep en inspiratie',icon:'book-open',coverId:'recepten',externalUrl:'https://www.notion.so/02f6147c45b14e00b240b02e69536903',starter:true}]),...saved];
 }
-function renderHeadquarters(){
- return '<section class="kc-topics"><div class="kc-section-head"><h3>Jouw hoofdkwartieren</h3><button type="button" class="kc-hq-manage" data-kc="hq-sort">Bewerken</button></div><div class="kc-hq-list">'+headquarters().map(c=>'<div class="kc-topic-tile">'+(c.externalUrl?'<a class="kc-topic-card" href="'+esc(c.externalUrl)+'" aria-label="'+esc(c.name)+' openen">':'<button type="button" class="kc-topic-card" data-kc="collection" data-id="'+esc(c.id)+'">')+'<span class="kc-topic-scene">'+(ArtUI?.cards(c)||collectionIcon(c))+'</span><span class="kc-topic-title"><span><strong>'+esc(c.name)+'</strong><small>'+esc(c.subtitle|| (c.externalUrl?'Open in Notion':'Notities en naslag'))+'</small></span></span>'+(c.externalUrl?'</a>':'</button>')+'<button type="button" class="kc-topic-edit" data-kc="'+(c.starter?'start-recipe-card':'edit-collection')+'" data-id="'+esc(c.id)+'" aria-label="Kaart '+esc(c.name)+' bewerken">⋯</button></div>').join('')+'</div><button type="button" class="kc-btn kc-hq-add" data-kc="new-hq">+ Hoofdkwartier toevoegen</button></section>';
-}
-function renderWorkspaceHome(){
- const items=C.search(read()),pinned=items.filter(n=>n.pinned);
- return header('Hoofdkwartieren')+centralSearchBox()+
- '<form class="kc-capture" id="kc-capture-form"><label class="kc-sr" for="kc-capture">Een gedachte voor Inbox</label><input id="kc-capture" value="'+esc(quickDraft)+'" data-kc-input="quick" maxlength="20000" placeholder="Een gedachte voor later…"><button type="submit" class="kc-btn" aria-label="Bewaar in Inbox">＋</button></form>'+
- '<button class="kc-inbox" data-kc="ws-process"><strong>Inbox</strong><span>'+counts('inbox')+' gedachten om een plek te geven</span><b>›</b></button>'+renderHeadquarters()+
- '<div class="kc-workspace-shortcuts">'+btn('+ Nieuwe notitie','new')+btn('Alle notities · '+items.length,'all')+btn('☆ Belangrijk · '+pinned.length,'pinned')+btn('Sjablonen','ws-templates')+'</div>'+
- '<details class="kc-compact-fold"><summary>Recent · '+Math.min(3,items.length)+'</summary>'+workspaceCompact(items.slice(0,3))+'</details>'+
- '<details class="kc-compact-fold"><summary>Vastgezet · '+pinned.length+'</summary>'+workspaceCompact(pinned.slice(0,5))+'</details>'+renderWorkspaceWidgets('overview')+
- '<details class="kc-compact-fold"><summary>Instellingen & back-up</summary><div class="kc-ws-tools">'+btn('Overzicht aanpassen','ws-design')+btn('Achtergrond kiezen','ws-background')+btn('Kenniscentrum-back-up','ws-backup')+btn('Opslaggebruik','ws-storage')+'</div></details>';
-}
+
+
 function renderFolderTree(parent=null,seen=new Set()){
  return allCollections().filter(c=>C.activeCollection(read(),c.id)&&(c.parentId||null)===parent).sort((a,b)=>(a.order||0)-(b.order||0)).map(c=>{
  if(seen.has(c.id))return '';const next=new Set([...seen,c.id]),has=allCollections().some(x=>x.parentId===c.id),open=ws().expanded.includes(c.id);
@@ -1208,6 +1186,7 @@ function prefillShared({title="",text="",url=""}={}){
  setSaveIndicator("Nog niet opgeslagen");
 }
 function mount(container,b){
+ if(root.MementoKnowledgePortal?.hasPending?.()&&container.querySelector('#mm-screen'))return;
  host=container;bridge=b;
  if(!bridge?.read||!bridge?.write){host.innerHTML='<p>Notities kan niet met Leven verbinden.</p>';return;}
  if(editing&&dirty&&screen==="edit"&&host.querySelector("#kc-body"))return;
@@ -1218,7 +1197,7 @@ function mount(container,b){
  render();
  if(!recoveryChecked){recoveryChecked=true;recoverDraft();}
 }
-function hasPending(){return Boolean(workspaceBusy||editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickListening||diaryDictating);}
+function hasPending(){return Boolean(root.MementoKnowledgePortal?.hasPending?.()||workspaceBusy||editing&&dirty||colDraft?.dirty||ArtUI?.hasDraft()||quickDraft.trim()||quickListening||diaryDictating);}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){quickStop();stopDiaryDictation();if(hasPending())flush();}});
 window.addEventListener("beforeunload",e=>{if(colDraft?.dirty||quickDraft.trim()||hasPending()&&!flush()){e.preventDefault();e.returnValue="";}});
 document.addEventListener("toggle",e=>{if(e.target.id==="kc-filter-drawer")filtersExpanded=e.target.open;},true);

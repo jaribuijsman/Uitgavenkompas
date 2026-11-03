@@ -11,7 +11,7 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  // mock phone chrome is removed; production retains the real app chrome.
  const ref=await context.newPage();await ref.goto(url+'/docs/design-review/headquarters-approved-20261103.html');
  const actualWidth=await page.locator('.mm-phone').evaluate(e=>e.getBoundingClientRect().width);
- await ref.addStyleTag({content:`body{margin:0}#memento-hq-preview{padding:0;width:${actualWidth}px}#memento-hq-preview .mm-phone{padding:0;border-radius:0;box-shadow:none}#memento-hq-preview .mm-top{display:none}`});
+ await ref.addStyleTag({content:`body{margin:0}#memento-hq-preview{padding:0;width:${actualWidth}px}#memento-hq-preview .mm-phone{padding:0!important;border-radius:0;box-shadow:none}#memento-hq-preview .mm-top{display:none}`});
  const geometry=async p=>p.locator('#mm-screen').evaluate(el=>{const top=el.querySelector('h2').getBoundingClientRect().top;return [...el.querySelectorAll('h2,p,.mm-inbox,.mm-row,.mm-hq,.mm-open strong,.mm-more')].map(x=>{const r=x.getBoundingClientRect(),s=getComputedStyle(x);return {text:x.matches('.mm-open strong')?x.textContent:null,w:r.width,h:r.height,y:r.top-top,font:s.fontSize}})});
  const expected=await geometry(ref),actual=await geometry(page);assert.equal(actual.length,expected.length);
  for(let i=0;i<expected.length;i++){assert.equal(actual[i].text,expected[i].text);assert.equal(actual[i].font,expected[i].font);for(const k of ['w','h','y'])assert(Math.abs(actual[i][k]-expected[i][k])<3,`Prototype geometry ${i} ${k}: ${actual[i][k]} vs ${expected[i][k]}`);}

@@ -21,7 +21,7 @@ async function navigationDrafts(page){
  const source=()=>page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1')}));
  const location=()=>page.evaluate(()=>({area:document.body.dataset.compassArea,view:document.getElementById('lifeApp').dataset.lifeView}));
  await page.locator('#cancelTx').click();await menu(page,'life','notes');
- await require('./helpers/reveal.cjs')(page,'#kc-quick-text');
+ await page.locator('[data-action=inbox]').first().click();await page.locator('#kc-quick-text').waitFor({state:'visible'});
  await page.locator('#kc-quick-text').fill('Onopgeslagen navigatieconcept');
  assert(await page.evaluate(()=>window.MementoKnowledge.hasPending()));
  await page.evaluate(()=>{window.__navigationDraftField=document.getElementById('kc-quick-text');});
