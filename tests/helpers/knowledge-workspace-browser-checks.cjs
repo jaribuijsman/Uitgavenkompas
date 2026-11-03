@@ -56,9 +56,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  assert.equal(await page.locator('a.kc-topic-card[href="'+destination+'"]').count(),1);
  await page.locator('[data-kc=edit-collection][data-id="'+added.id+'"]').click();await page.locator('[data-kc-col=subtitle]').fill('Aangepaste omschrijving');await page.locator('[data-kc=save-collection]').click();await page.locator('.kc-hq-list').waitFor();
  assert((await page.locator('a.kc-topic-card[href="'+destination+'"]').innerText()).includes('Aangepaste omschrijving'));
- await shot(page,'headquarters-added');
+ await page.locator('a.kc-topic-card[href="'+destination+'"]').scrollIntoViewIfNeeded();await shot(page,'headquarters-added');
  await page.locator('[data-kc=edit-collection][data-id="'+added.id+'"]').click();await page.locator('[data-kc=archive-collection]').click();
- assert((await state()).knowledge.collections.find(c=>c.id===added.id).archived);await page.locator('[data-kc=restore-collection][data-id="'+added.id+'"]').click();
+ assert((await state()).knowledge.collections.find(c=>c.id===added.id).archived);await page.locator('.kc-compact-fold').filter({hasText:'Gearchiveerde mappen'}).locator('summary').click();await page.locator('[data-kc=restore-collection][data-id="'+added.id+'"]').click();
  assert.equal((await state()).knowledge.collections.find(c=>c.id===added.id).archived,false);assert.equal(JSON.stringify((await state()).notes),noteBytes);
  await page.locator('.kc-local-tabs [data-kc=home]').click();
  const folderCard=page.locator('button.kc-topic-card').first();await folderCard.click();await page.waitForFunction(()=>!document.querySelector('.kc-hq-list'));await page.locator('.kc-local-tabs [data-kc=home]').click();
