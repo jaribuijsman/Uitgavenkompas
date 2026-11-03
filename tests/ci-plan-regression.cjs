@@ -178,7 +178,7 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    assert(Array.isArray(byGroup[name])&&byGroup[name].length>0,"missing full CI domain "+name);
    return byGroup[name];
   });
-  assert.equal(fullSuites.length,21,"only the one proven duplicate may be removed from the full matrix");
+  assert.equal(fullSuites.length,22,"existing full matrix plus the one recipe import journey must remain");
   assert.equal(fullSuites.filter(s=>s==="knowledge-workspace-browser").length,1,"duplicate or missing knowledge journey in full run");
   assert(byGroup["life-full"].includes("knowledge-workspace-browser"),"life-full must own knowledge journey");
   assert.deepEqual(byGroup["interface-visual"],["glass-rendering-browser"],"visual shard retains dedicated glass journey");
@@ -188,7 +188,7 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    "interface-feature":["day-v3-browser"],
    "interface-acceptance":["release-acceptance-browser"],
    "interface-visual":["glass-rendering-browser"],
-   "life-full":["followup-browser","taken-v4-browser","knowledge-workspace-browser"],
+   "life-full":["grocery-import-browser","followup-browser","taken-v4-browser","knowledge-workspace-browser"],
    "data-full":["app-review-browser","storage-safety-browser","recovery-browser"]
   };
   for(const [owner,required] of Object.entries(mandatory)){
@@ -196,9 +196,10 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
   }
  }
  verify(groups);
- assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|21/);
+ assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|22/);
  assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
- assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/21|storage-safety-browser/);
+ assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/22|storage-safety-browser/);
+ assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/22|grocery-import-browser/);
 });
 check("manual workflows reject obsolete V1 browser contracts without losing offline or safety coverage",()=>{
  const fs=require("node:fs"),path=require("node:path");

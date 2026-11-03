@@ -63,6 +63,8 @@ jobs:
           node --check tests/ci-postmerge.cjs
           node tests/ci-postmerge-regression.cjs
           node tests/service-worker-cache.cjs
+          node tests/grocery-import-core.cjs
+          node tests/grocery-import-storage.cjs
           if [ "${{ needs.plan.outputs.tier }}" = "low" ]; then exit 0; fi
           node --check assets/memento-assistant.js
           node --check assets/memento-assistant-core.js
@@ -165,6 +167,15 @@ jobs:
         with:
           name: memento-taken-v4-${{ matrix.group }}
           path: /tmp/memento-taken-v4/after
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Preserve recipe import mobile evidence
+        uses: actions/upload-artifact@v4
+        if: always() && matrix.group == 'life-full'
+        with:
+          name: memento-grocery-import-visual
+          path: /tmp/memento-grocery-import/after
           if-no-files-found: error
           retention-days: 7
 

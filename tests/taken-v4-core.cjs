@@ -26,10 +26,10 @@ vm.runInContext('taskClock={id:"two",base:720,started:0,wall:Date.now()-100000};
 assert.equal(sandbox.api.timerCheckpoint('paused'),true);assert.equal(sandbox.state.tasks[0].timing.session.status,'needsReview');assert.equal(sandbox.state.tasks[0].timing.session.activeSeconds,720);
 const beforeFailure=JSON.stringify(sandbox.state);sandbox.save=()=>false;assert.equal(sandbox.api.timerCheckpoint('stopped'),false);assert.equal(JSON.stringify(sandbox.state),beforeFailure);
 // Task/day presentation remains scoped: no duration or timer is added to Mijn dag.
-const renderToday=source=>source.slice(source.indexOf('function renderToday('),source.indexOf('function renderToday(')+source.slice(source.indexOf('function renderToday(')).indexOf('\nfunction '));
-// Baseline 11a70931c13ae36ec89628e7a6794fadf5c000cd. No Git history is
-// required in a shallow CI checkout to enforce this task's unchanged-day contract.
-assert(renderToday(code).length>100);assert.equal(require('node:crypto').createHash('sha256').update(renderToday(code)).digest('hex'),'cd5e439adf08bae46ffa4d51c845676d8adf5243c6925a14dcc66f2e6faf510c');
+const renderToday=source=>{const start=source.indexOf('function renderToday('),end=source.indexOf('\nconst shoppingListOf=',start);assert(start>=0&&end>start,'Day and grocery boundaries must exist');return source.slice(start,end);};
+// Exact unchanged day renderer from main 6f20b2621b92502cead53b77f85a8bfb6b8b4766.
+// End before grocery declarations: the old boundary accidentally hashed them too.
+assert(renderToday(code).length>100);assert.equal(require('node:crypto').createHash('sha256').update(renderToday(code)).digest('hex'),'b3b994651d121e1844b48540aea541ff37e510f9a6d44b903befd2b6d14e3c7b');
 console.log('PASS Taken v4 metadata validation, invalid imports, reusable copies and unchanged renderToday');
 
 // The same presentation interface used by the live editor works without a DOM or storage.
