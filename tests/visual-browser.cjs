@@ -60,6 +60,7 @@ async function shot(page, name, log = true) {
     await navigate(page,'life','notes');await page.locator('[data-action=inbox]').first().click();await shot(page,'knowledge-inbox',width===393);
     // Preserved documents are compatibility data, not controls in the retired workspace.
     for(const [id,name] of [['visual-checklist','checklist'],['visual-recipe','recipe'],['visual-document','document']]){await page.evaluate(id=>window.MementoKnowledge.showNote(id),id);await shot(page,'preserved-'+name,false);}
+    await page.evaluate(()=>window.MementoKnowledge.open()); // Return from compatibility detail to the public portal.
     await navigate(page, "finance", "transactions"); await page.locator("#addTransaction").click(); await shot(page, "transaction-modal", width === 393); await page.locator("#cancelTx").click();
     await navigate(page, "life", "fitness"); await page.locator('[data-fit="tab"][data-id="plan"]').click(); await shot(page, "fitness-plan", width === 393); await page.locator('[data-fit="tab"][data-id="progress"]').click(); await shot(page, "fitness-progress", width === 393);
     if(await page.locator('[data-memento-menu="open"]').isVisible())await page.locator('[data-memento-menu="open"]').click(); await shot(page, "navigation", width === 393);
