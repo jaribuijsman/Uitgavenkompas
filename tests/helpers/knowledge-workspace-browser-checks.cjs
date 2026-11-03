@@ -5,48 +5,64 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const finance=await page.evaluate(()=>localStorage.getItem('uitgavenkompas_v1'));
  await navigate(page,'life','notes');await page.waitForFunction(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).knowledge?.workspace?.version===2);
  assert.deepEqual(await page.locator('.kc-local-tabs button').allTextContents(),['Overzicht','Mappen','Notities']);
- assert.equal(await page.locator('.kc-topic-page:not([inert]) .kc-topic-card').count(),4);
+ assert(await page.locator('.kc-hq-list .kc-topic-card').count()>4,'All existing categories remain visible in one vertical list');
+ assert.equal(await page.locator('.kc-topic-viewport').count(),0);
+ const original=await state(),before=JSON.stringify(original);
+ const noteBytes=JSON.stringify(original.notes);
  await shot(page,'workspace-home');
- const slider=page.locator('.kc-topic-viewport'),box=await slider.boundingBox();
- await page.mouse.move(box.x+30,box.y+50);await page.mouse.down();await page.mouse.move(box.x+box.width-30,box.y+50,{steps:12});await page.mouse.up();
- await page.waitForFunction(()=>document.querySelector('.kc-topic-status').textContent.includes('Pagina 2'));
- assert.equal(await page.locator('.kc-header h2').innerText(),'Kenniscentrum');await shot(page,'workspace-swiped');
- const carouselState=await state(),pageCount=await page.locator('.kc-topic-page').count();
- assert(pageCount>1,'Fixture must exercise multiple carousel pages');
- const expectPage=async n=>{await page.waitForFunction(n=>document.querySelector('.kc-topic-status')?.textContent.startsWith('Pagina '+n+' van '),n);assert.equal(await page.locator('.kc-topic-page:not([inert])').count(),1);assert.equal(await page.locator('.kc-topic-dots [aria-current="true"]').getAttribute('data-id'),String(n-1));};
- const mouseSwipe=async direction=>{
-  const b=await slider.boundingBox(),left=b.x+30,right=b.x+b.width-30,y=b.y+50;
-  await page.mouse.move(direction>0?left:right,y);await page.mouse.down();await page.mouse.move(direction>0?right:left,y,{steps:12});await page.mouse.up();
- };
- // Keep the original link-origin mouse gesture; moving it would hide native link dragging.
- for(let i=1;i<=pageCount*2;i++){await mouseSwipe(1);await expectPage((i+1)%pageCount+1);}
- await page.locator('.kc-topic-dots [data-id="0"]').click();await expectPage(1);
- await mouseSwipe(-1);await expectPage(pageCount);await shot(page,'workspace-loop-backward');
- await mouseSwipe(1);await expectPage(1);await shot(page,'workspace-loop-start');
- await slider.press('ArrowLeft');await expectPage(pageCount);
- await slider.press('ArrowRight');await expectPage(1);
- await page.locator('.kc-topic-controls [data-kc="ws-page"]').first().click();await expectPage(pageCount);
- await page.locator('.kc-topic-controls [data-kc="ws-page"]').last().click();await expectPage(1);
- if(width<=800){
-  const session=await context.newCDPSession(page);
-  try{
-   for(let i=0;i<pageCount;i++){
-    const b=await slider.boundingBox(),x=b.x+30,y=b.y+50,distance=b.width-60;
-    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:7}]});
-    for(let step=1;step<=12;step++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+distance*step/12,y,id:7}]});await page.waitForTimeout(16);}
-    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    await expectPage((i+1)%pageCount+1);
-   }
-  }finally{await session.detach();}
-  await shot(page,'workspace-touch-loop-start');
+ if(width===393){
+  const viewport=page.viewportSize();
+  for(const testWidth of [360,412,1280]){
+   await page.setViewportSize({width:testWidth,height:852});
+   const geometry=await page.locator('.kc-topic-tile').evaluateAll(rows=>rows.map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}}));
+   assert(geometry.every((r,i)=>r.left>=0&&r.right<=testWidth&&r.height>=100&&(i===0||r.top>=geometry[i-1].bottom)),testWidth+'px cards fit and remain vertical');
+   await shot(page,'headquarters-width-'+testWidth,false);
+  }
+  await page.setViewportSize(viewport);
  }
- assert.deepEqual(await state(),carouselState,'Carousel gestures must not write or change stored data');
- assert.equal(await page.locator('.kc-topic-page:not([inert]) a.kc-topic-card').getAttribute('href'),'https://www.notion.so/02f6147c45b14e00b240b02e69536903','Recipe link remains intact after mouse and touch swipes');
- // A fresh tap after a swipe must still open an ordinary folder.
- const folderCard=page.locator('.kc-topic-page:not([inert]) button.kc-topic-card').first();
- await folderCard.click();await page.waitForFunction(()=>!document.querySelector('.kc-topic-viewport'));
- await page.locator('.kc-local-tabs [data-kc=home]').click();await expectPage(1);
- checks.push('Carousel: repeated mouse loops including external link, touch loop, reverse wrap, keys, dots/arrows, fresh card tap and unchanged storage');
+ const recipe=page.locator('a.kc-topic-card').first();
+ assert.equal(await recipe.getAttribute('href'),'https://www.notion.so/02f6147c45b14e00b240b02e69536903');
+ const cardBoxes=await page.locator('.kc-topic-tile').evaluateAll(rows=>rows.map(r=>r.getBoundingClientRect().toJSON()));
+ assert(cardBoxes.every((r,i)=>i===0||r.top>=cardBoxes[i-1].bottom),'Cards stack without overlap');
+ const hit=await page.locator('.kc-topic-edit').first().boundingBox();assert(hit.width>=44&&hit.height>=44);
+ const editStyle=await page.locator('.kc-topic-edit').first().evaluate(el=>({background:getComputedStyle(el).backgroundColor,border:getComputedStyle(el).borderTopWidth}));assert.equal(editStyle.border,'0px');assert.equal(editStyle.background,'rgba(0, 0, 0, 0)');
+ const openOrder=async()=>{await page.locator('[data-kc=hq-sort]').click();await page.locator('.kc-hq-sort').waitFor();};
+ const order=()=>page.locator('.kc-sort-row').evaluateAll(rows=>rows.map(r=>r.dataset.sortId));
+ await openOrder();const ids=await order();
+ // Trusted drag changes the draft, never durable data until explicit save.
+ const h=page.locator('.kc-drag-handle').first();await h.scrollIntoViewIfNeeded();const a=await h.boundingBox(),b=await page.locator('.kc-sort-row').nth(2).boundingBox();
+ if(width<=800){const touch=await context.newCDPSession(page);try{await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:a.x+a.width/2,y:a.y+a.height/2,id:1}]});for(let step=1;step<=12;step++){await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:a.x+a.width/2,y:a.y+a.height/2+(b.y+b.height-5-a.y-a.height/2)*step/12,id:1}]});await page.waitForTimeout(20);}await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}finally{await touch.detach();}}
+ else{await page.mouse.move(a.x+a.width/2,a.y+a.height/2);await page.mouse.down();await page.mouse.move(a.x+a.width/2,b.y+b.height-5,{steps:12});await page.mouse.up();}
+ await page.waitForFunction(first=>document.querySelector('.kc-sort-row')?.dataset.sortId!==first,ids[0]);
+ assert.equal(JSON.stringify(await state()),before,'Drag must not persist');await shot(page,'headquarters-order-draft');
+ await page.locator('[data-kc=sort-done]').click();await openOrder();assert.deepEqual(await order(),ids,'Cancel discards draft');
+ await page.locator('.kc-drag-handle').first().press('ArrowDown');let expected=await order();assert.notDeepEqual(expected,ids);assert.equal(JSON.stringify(await state()),before,'Keyboard reorder is also provisional');
+ await page.locator('[data-kc=hq-save-order]').first().click();await page.locator('.kc-hq-list').waitFor();
+ expected=expected.map(id=>id==='notion-recipes'?(null):id);const savedRecipe=(await state()).knowledge.collections.find(c=>c.externalUrl==='https://www.notion.so/02f6147c45b14e00b240b02e69536903');expected=expected.map(id=>id===null?savedRecipe.id:id);
+ assert.equal(JSON.stringify((await state()).notes),noteBytes,'Sorting preserves all note contents');
+ await page.reload();await require('./enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');await openOrder();
+ assert.deepEqual(await order(),expected,'Saved order survives restart including the recipe card');
+ const savedBytes=JSON.stringify(await state());await page.locator('.kc-drag-handle').first().press('ArrowDown');
+ await page.evaluate(()=>{window.kcHQSetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='compass_life_preview_v1')throw Error('Fictieve quota');return window.kcHQSetItem.call(this,k,v)}});
+ await page.locator('[data-kc=hq-save-order]').first().click();assert.equal(JSON.stringify(await state()),savedBytes);assert.equal(await page.locator('.kc-hq-sort').count(),1,'Failure retains draft for retry');
+ await page.evaluate(()=>{Storage.prototype.setItem=window.kcHQSetItem});if(await page.locator('#mementoStorageNotice:not([hidden])').count())await page.locator('[data-storage-dismiss]').click();
+ await page.locator('[data-kc=sort-done]').click();
+ await page.locator('[data-kc=new-hq]').click();await page.locator('[data-kc-hq-template]').selectOption('0');
+ assert.equal(await page.locator('#kc-col-name').inputValue(),'Ontdekken & bewaren');
+ await page.locator('[data-kc-col=externalUrl]').fill('https://example.com/invalid');await page.locator('[data-kc=save-collection]').click();assert.equal(await page.locator('#kc-collection-form').count(),1);
+ const destination='https://www.notion.so/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+ await page.locator('[data-kc-col=externalUrl]').fill(destination);await page.locator('[data-kc=save-collection]').click();await page.locator('.kc-hq-list').waitFor();
+ const added=(await state()).knowledge.collections.find(c=>c.externalUrl===destination);assert(added);assert.equal(added.subtitle,'Boeken, podcasts en dingen om uit te zoeken');
+ assert.equal(await page.locator('a.kc-topic-card[href="'+destination+'"]').count(),1);
+ await page.locator('[data-kc=edit-collection][data-id="'+added.id+'"]').click();await page.locator('[data-kc-col=subtitle]').fill('Aangepaste omschrijving');await page.locator('[data-kc=save-collection]').click();await page.locator('.kc-hq-list').waitFor();
+ assert((await page.locator('a.kc-topic-card[href="'+destination+'"]').innerText()).includes('Aangepaste omschrijving'));
+ await page.locator('a.kc-topic-card[href="'+destination+'"]').scrollIntoViewIfNeeded();await shot(page,'headquarters-added');
+ await page.locator('[data-kc=edit-collection][data-id="'+added.id+'"]').click();await page.locator('[data-kc=archive-collection]').click();
+ assert((await state()).knowledge.collections.find(c=>c.id===added.id).archived);await page.locator('.kc-compact-fold').filter({hasText:'Gearchiveerde mappen'}).locator('summary').click();await page.locator('[data-kc=restore-collection][data-id="'+added.id+'"]').click();
+ assert.equal((await state()).knowledge.collections.find(c=>c.id===added.id).archived,false);assert.equal(JSON.stringify((await state()).notes),noteBytes);
+ await page.locator('.kc-local-tabs [data-kc=home]').click();
+ const folderCard=page.locator('button.kc-topic-card').first();await folderCard.click();await page.waitForFunction(()=>!document.querySelector('.kc-hq-list'));await page.locator('.kc-local-tabs [data-kc=home]').click();
+ checks.push('Headquarters: vertical cards, compact edit targets, trusted drag, cancel, keyboard, explicit save, reload, quota failure, add/edit/archive/restore, recipe href and preserved notes');
 
  await page.locator('.kc-local-tabs [data-kc=collections]').click();
  assert.equal(await page.locator('.kc-tree-children').count(),0);const fold=page.locator('[data-kc=ws-fold]').first();const root=await fold.getAttribute('data-id');await fold.click();assert(await page.locator('.kc-tree-children').count()>0);
@@ -237,3 +253,4 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  checks.push('All three follow-up kinds persisted in fictional storage with origin, extra text, appointment date/time and unchanged source document');
 
 };
+

@@ -59,6 +59,7 @@ const btn=(text,action,id="",primary=false)=>'<button type="button" class="kc-bt
 let centralQuery="",centralType="",centralCollection="",centralStatus="active",searchReturn=null;
 let focusWriting=false,journalSearch="",recipeFactor=1;
 const recipeChecks=new Map();
+let collectionReturnHome=false;
 let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExpanded=false;
 let quickDraft="",quickListening=false;
 let diaryDictating=false;
@@ -227,15 +228,18 @@ function renderCollections(){
  '<p class="kc-muted">Archiveren verbergt een verzameling; alle inhoud en subverzamelingen blijven bewaard. Er worden geen verzamelingen definitief verwijderd.</p><div class="kc-manage-collections">'+allCollections().map(c=>'<div class="kc-manage-row"><span class="kc-manage-name">'+collectionIcon(c)+'<span><strong>'+esc(pathName(c))+'</strong><small>'+(c.archived?'Gearchiveerd':c.parentId?'Subverzameling':c.parentId===null?'Hoofdverzameling':'Nog in te delen')+'</small></span></span>'+btn(c.archived?'Herstellen':'Bewerk',c.archived?'restore-collection':'edit-collection',c.id)+'</div>').join('')+'</div>';
 }
 function openCollectionEditor(id='',parentId=null){
- const c=allCollections().find(c=>c.id===id);collectionId=id;ArtUI?.start(c);colDraft={id,name:c?.name||'',icon:iconAliases[c?.icon]||c?.icon||'folder',view:c?.view||'list',parentId:c?.parentId||parentId||'',coverFile:c?.coverFile||null,externalUrl:c?.externalUrl||'',dirty:false};screen='collection-editor';render();
+ collectionReturnHome=screen==='home';
+ const c=allCollections().find(c=>c.id===id);collectionId=id;ArtUI?.start(c);colDraft={id,name:c?.name||'',subtitle:c?.subtitle||'',icon:iconAliases[c?.icon]||c?.icon||'folder',view:c?.view||'list',parentId:c?.parentId||parentId||'',coverFile:c?.coverFile||null,externalUrl:c?.externalUrl||'',dirty:false};screen='collection-editor';render();
 }
 function renderCollectionEditor(){
  const d=colDraft;if(!d)return '';const c=allCollections().find(c=>c.id===d.id);
- return '<div class="kc-editor-head">'+header(c?'Verzameling bewerken':'Nieuwe verzameling',true,btn('Opslaan','save-collection','',true))+'</div>'+
+ return '<div class="kc-editor-head">'+header(collectionReturnHome?(c?'Hoofdkwartier bewerken':'Hoofdkwartier toevoegen'):(c?'Verzameling bewerken':'Nieuwe verzameling'),true,btn('Opslaan','save-collection','',true))+'</div>'+
  '<form id="kc-collection-form" class="kc-editor-fields"><label>Naam<input maxlength="80" id="kc-col-name" data-kc-col="name" value="'+esc(d.name)+'" required></label>'+
- '<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+collections().filter(x=>x.id!==d.id&&C.collectionPath(read(),x.id).split(' / ').length<3&&(!d.id||!C.descendants(read(),d.id).has(x.id))).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>'+
- '<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>'+
- '<label>Externe koppeling (optioneel)<input type="url" inputmode="url" placeholder="https://www.notion.so/..." maxlength="2048" data-kc-col="externalUrl" value="'+esc(d.externalUrl||'')+'"></label><p class="kc-muted">Vul een volledige https://-link in. Een kaart met link opent de externe app of website; via Bewerken pas je de afbeelding en link aan.</p>'+ '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+collectionIconChoices(d)+'</div></fieldset>'+(ArtUI?.render(d,allCollections().find(x=>x.id===d.parentId)?.name||'')||'')+
+ '<label>Korte omschrijving<input maxlength="100" data-kc-col="subtitle" value="'+esc(d.subtitle||'')+'"></label>'+
+ (d.hq?'<label>Begin met een categorie<select data-kc-hq-template><option value="">Eigen hoofdkwartier</option>'+hqTemplates.map((t,i)=>'<option value="'+i+'">'+esc(t[0])+'</option>').join('')+'</select></label>':'')+
+ (d.hq?'':'<label>Bovenliggende verzameling<select id="kc-col-parent" data-kc-col="parentId"><option value="">Geen · hoofdverzameling</option>'+collections().filter(x=>x.id!==d.id&&C.collectionPath(read(),x.id).split(' / ').length<3&&(!d.id||!C.descendants(read(),d.id).has(x.id))).map(x=>'<option value="'+esc(x.id)+'"'+(d.parentId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label>')+
+ (d.hq?'':'<label>Standaardweergave<select id="kc-col-view" data-kc-col="view">'+[['list','Lijst'],['gallery','Galerij'],['table','Tabel']].map(([id,label])=>'<option value="'+id+'"'+(d.view===id?' selected':'')+'>'+label+'</option>').join('')+'</select></label>')+
+ '<label>'+(d.hq?'Notion-link':'Externe koppeling (optioneel)')+'<input type="url" inputmode="url" placeholder="https://www.notion.so/..." maxlength="2048" data-kc-col="externalUrl" value="'+esc(d.externalUrl||'')+'"></label><p class="kc-muted">Vul een volledige https://-link in. Een kaart met link opent de externe app of website; via Bewerken pas je de afbeelding en link aan.</p>'+ '<fieldset class="kc-icon-picker"><legend>Pictogram</legend><div role="group" aria-label="Kies een pictogram">'+collectionIconChoices(d)+'</div></fieldset>'+(ArtUI?.render(d,allCollections().find(x=>x.id===d.parentId)?.name||'')||'')+
  '<div class="kc-editor-actions">'+btn('Annuleren','cancel-collection')+(c?btn('Archiveren','archive-collection',c.id):'')+'</div></form>';
 }
 
@@ -340,6 +344,7 @@ function renderJournalEditor(){
 }
 function renderSort(){
  const list=sortState?.ids||[];
+ if(sortState?.deferred)return header('Volgorde bewerken',true)+'<p class="kc-muted">Sleep aan de greep om een hoofdkwartier te verplaatsen.</p><div class="kc-editor-actions">'+btn('Volgorde opslaan','hq-save-order','',true)+btn('Annuleren','sort-done')+'</div><div class="kc-sort-list kc-hq-sort" role="list">'+list.map(id=>{const c=sortState.cards.find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><strong>'+esc(c.name)+'</strong><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'; gebruik pijltjes omhoog en omlaag">⠿</button></div>';}).join('')+'</div>'+btn('Volgorde opslaan','hq-save-order','',true);
  return header('Volgorde wijzigen',true,btn('Klaar','sort-done','',true))+'<p class="kc-muted">Houd de sleepgreep even vast en versleep. Alleen de volgorde in deze verzameling verandert. Je kunt ook de pijlen gebruiken.</p><div class="kc-sort-list" role="list">'+list.map((id,i)=>{const c=allCollections().find(c=>c.id===id);return '<div class="kc-sort-row" role="listitem" data-sort-id="'+esc(id)+'"><button type="button" class="kc-drag-handle" data-drag-id="'+esc(id)+'" aria-label="Versleep '+esc(c.name)+'">⠿</button>'+collectionIcon(c)+'<strong>'+esc(c.name)+'</strong><div><button type="button" class="kc-btn" data-kc="sort-up" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" class="kc-btn" data-kc="sort-down" data-id="'+esc(id)+'" aria-label="'+esc(c.name)+' omlaag"'+(i===list.length-1?' disabled':'')+'>↓</button></div></div>';}).join('')+'</div>';
 }
 function attachmentsHTML(n){
@@ -585,7 +590,7 @@ function render(){
  }
 }
 // Kenniscentrum Visueel workspace: the existing guarded bridge remains the only writer.
-let workspaceEditorDesign=false,workspaceBusy=false,workspacePanel='',workspacePage=0,workspaceUndo=null,workspaceUndoAfter='',workspaceContext='overview',workspaceDesign=false,workspaceBlock='',workspaceConvert=null,workspacePendingImport=null,workspaceSuppressClick=false;
+let workspaceEditorDesign=false,workspaceBusy=false,workspacePanel='',workspaceUndo=null,workspaceUndoAfter='',workspaceContext='overview',workspaceDesign=false,workspaceBlock='',workspaceConvert=null,workspacePendingImport=null;
 const W=root.MementoKnowledgeWorkspace,KB=root.MementoKnowledgeBackup;
 const ws=()=>W?.workspace(read());
 function workspaceReady(){return read().knowledge?.workspace?.version===2;}
@@ -602,7 +607,6 @@ async function activateWorkspace(){
   const snapshot={id:'kc-workspace-before-v2',noteId:'kc-system-snapshot',name:'Kenniscentrum voor V2',type:'application/json',size:raw.size,hash:await S.sha256(raw),blob:raw,files:[...W.fileReferences(before).keys()].map(id=>byId.get(id)),createdAt:C.timestamp()};
   await S.putRecord(snapshot,token);
   if(!write(life=>{life.knowledge=next.knowledge;W.validate(life);},token))throw Error('V2 kon niet worden geactiveerd. De eerdere gegevens blijven behouden.');
-  workspacePage=0;
  }catch(e){notify('Kenniscentrum V2 niet geactiveerd: '+e.message);}
  finally{if(token)root.MementoStorageGuard.endOperation(token);workspaceBusy=false;render();}
 }
@@ -614,17 +618,32 @@ function workspaceWrite(fn,{undo=false}={}){
 }
 function workspaceNavigation(){const active=screen==='home'?'home':screen==='collections'?'collections':'all';return '<nav class="kc-local-tabs" aria-label="Kenniscentrum">'+[['home','Overzicht'],['collections','Mappen'],['all','Notities']].map(([id,label])=>'<button class="kc-btn" data-kc="'+id+'" aria-current="'+(active===id?'page':'false')+'">'+label+'</button>').join('')+'</nav>';}
 function workspaceCompact(items){return '<div class="kc-compact-list">'+items.map(n=>'<button class="kc-compact-row" type="button" data-kc="open" data-id="'+esc(n.id)+'"><strong>'+esc(n.title)+'</strong><small>'+esc(C.collectionName(read(),C.collectionOf(read(),n)))+'</small><span>›</span></button>').join('')+'</div>';}
-function topicCarousel(){
- const saved=[...rootCollections(),...legacyCollections()],hasRecipes=saved.some(c=>String(c.name).toLocaleLowerCase('nl')==='recepten');
- const roots=[...(hasRecipes?[]:[{id:'notion-recipes',name:'Recepten',icon:'book-open',coverId:'recepten',externalUrl:'https://www.notion.so/02f6147c45b14e00b240b02e69536903',starter:true}]),...saved],pages=Math.max(1,Math.ceil(roots.length/4));workspacePage=Math.min(workspacePage,pages-1);
- return '<section class="kc-topics"><div class="kc-section-head"><h3>Jouw onderwerpen</h3>'+btn('Alle mappen','collections')+'</div><div class="kc-topic-viewport" tabindex="0" aria-label="Onderwerpen: swipe rechts voor de volgende vier mappen" aria-roledescription="carrousel"><div class="kc-topic-track" style="transform:translateX('+workspacePage*100+'%)">'+Array.from({length:pages},(_,page)=>'<div class="kc-topic-page"'+(page!==workspacePage?' inert aria-hidden="true"':'')+'>'+roots.slice(page*4,page*4+4).map(c=>'<div class="kc-topic-tile">'+(c.externalUrl?'<a class="kc-topic-card" href="'+esc(c.externalUrl)+'" aria-label="'+esc(c.name)+' openen"><span class="kc-topic-scene">'+(ArtUI?.cards(c)||collectionIcon(c))+'</span><span class="kc-topic-title"><span><strong>'+esc(c.name)+'</strong><small>Open externe koppeling</small></span><span>↗</span></span></a>':'<button class="kc-topic-card" data-kc="collection" data-id="'+esc(c.id)+'"><span class="kc-topic-scene">'+(ArtUI?.cards(c)||collectionIcon(c))+'</span><span class="kc-topic-title"><span><strong>'+esc(c.name)+'</strong><small>'+counts(c.id)+' notities</small></span><span>↗</span></span></button>')+'<button type="button" class="kc-topic-edit" data-kc="'+(c.starter?'start-recipe-card':'edit-collection')+'" data-id="'+esc(c.id)+'" aria-label="Kaart '+esc(c.name)+' bewerken">Bewerken</button></div>').join('')+'</div>').join('')+'</div></div><div class="kc-topic-controls">'+btn('←','ws-page',String((workspacePage-1+pages)%pages))+'<div class="kc-topic-dots">'+Array.from({length:pages},(_,i)=>'<button type="button" data-kc="ws-page" data-id="'+i+'" aria-label="Onderwerppagina '+(i+1)+'" aria-current="'+(workspacePage===i)+'"><span></span></button>').join('')+'</div>'+btn('→','ws-page',String((workspacePage+1)%pages))+'</div><p class="kc-topic-status" role="status">Pagina '+(workspacePage+1)+' van '+pages+' · swipe naar rechts voor meer</p></section>';
+const hqTemplates=[
+ ['Ontdekken & bewaren','Boeken, podcasts en dingen om uit te zoeken','lightbulb'],
+ ['Gezondheid & welzijn','Inzichten, voeding en beter slapen','heart'],
+ ['Sport & training','Trainingskennis en verdieping','fitness'],
+ ['Huis & spullen','Wonen, onderhoud en slimme aankopen','house'],
+ ['Recepten','Koken, mealprep en inspiratie','book-open'],
+ ['Werk & leren','Werkkennis en nieuwe vaardigheden','tools'],
+ ['Geld & administratie','Naslag, regelzaken en geldkennis','document'],
+ ['Vrije tijd & reizen','Plannen, plekken en ervaringen','travel'],
+ ['AI & digitaal','Tools, ideeën en Memento','devices'],
+ ['Persoonlijk & groei','Reflecties en persoonlijke ontwikkeling','person']
+];
+function headquarters(){
+ const saved=[...rootCollections(),...legacyCollections()].sort((a,b)=>(a.order||0)-(b.order||0));
+ const hasRecipes=allCollections().some(c=>String(c.name).toLocaleLowerCase('nl')==='recepten'||C.notionPageId(c.externalUrl)===C.notionPageId('https://www.notion.so/02f6147c45b14e00b240b02e69536903')&&C.notionPageId(c.externalUrl));
+ return [...(hasRecipes?[]:[{id:'notion-recipes',name:'Recepten',subtitle:'Koken, mealprep en inspiratie',icon:'book-open',coverId:'recepten',externalUrl:'https://www.notion.so/02f6147c45b14e00b240b02e69536903',starter:true}]),...saved];
+}
+function renderHeadquarters(){
+ return '<section class="kc-topics"><div class="kc-section-head"><h3>Jouw hoofdkwartieren</h3><button type="button" class="kc-hq-manage" data-kc="hq-sort">Bewerken</button></div><div class="kc-hq-list">'+headquarters().map(c=>'<div class="kc-topic-tile">'+(c.externalUrl?'<a class="kc-topic-card" href="'+esc(c.externalUrl)+'" aria-label="'+esc(c.name)+' openen">':'<button type="button" class="kc-topic-card" data-kc="collection" data-id="'+esc(c.id)+'">')+'<span class="kc-topic-scene">'+(ArtUI?.cards(c)||collectionIcon(c))+'</span><span class="kc-topic-title"><span><strong>'+esc(c.name)+'</strong><small>'+esc(c.subtitle|| (c.externalUrl?'Open in Notion':'Notities en naslag'))+'</small></span></span>'+(c.externalUrl?'</a>':'</button>')+'<button type="button" class="kc-topic-edit" data-kc="'+(c.starter?'start-recipe-card':'edit-collection')+'" data-id="'+esc(c.id)+'" aria-label="Kaart '+esc(c.name)+' bewerken">⋯</button></div>').join('')+'</div><button type="button" class="kc-btn kc-hq-add" data-kc="new-hq">+ Hoofdkwartier toevoegen</button></section>';
 }
 function renderWorkspaceHome(){
  const items=C.search(read()),pinned=items.filter(n=>n.pinned);
- return header('Kenniscentrum',false,btn('+ Nieuwe notitie','new','',true))+centralSearchBox()+
- '<form class="kc-capture" id="kc-capture-form"><label class="kc-sr" for="kc-capture">Een gedachte voor Inbox</label><input id="kc-capture" value="'+esc(quickDraft)+'" data-kc-input="quick" maxlength="20000" placeholder="Een gedachte voor later…"><button type="submit" class="kc-btn" aria-label="Bewaar in Inbox">＋</button></form>'+topicCarousel()+
- '<button class="kc-inbox" data-kc="ws-process"><strong>Inbox</strong><span>'+counts('inbox')+' gedachten om een plek te geven</span><b>›</b></button>'+
- '<div class="kc-workspace-shortcuts">'+btn('Alle notities · '+items.length,'all')+btn('☆ Belangrijk · '+pinned.length,'pinned')+btn('Sjablonen','ws-templates')+'</div>'+
+ return header('Hoofdkwartieren')+centralSearchBox()+
+ '<form class="kc-capture" id="kc-capture-form"><label class="kc-sr" for="kc-capture">Een gedachte voor Inbox</label><input id="kc-capture" value="'+esc(quickDraft)+'" data-kc-input="quick" maxlength="20000" placeholder="Een gedachte voor later…"><button type="submit" class="kc-btn" aria-label="Bewaar in Inbox">＋</button></form>'+
+ '<button class="kc-inbox" data-kc="ws-process"><strong>Inbox</strong><span>'+counts('inbox')+' gedachten om een plek te geven</span><b>›</b></button>'+renderHeadquarters()+
+ '<div class="kc-workspace-shortcuts">'+btn('+ Nieuwe notitie','new')+btn('Alle notities · '+items.length,'all')+btn('☆ Belangrijk · '+pinned.length,'pinned')+btn('Sjablonen','ws-templates')+'</div>'+
  '<details class="kc-compact-fold"><summary>Recent · '+Math.min(3,items.length)+'</summary>'+workspaceCompact(items.slice(0,3))+'</details>'+
  '<details class="kc-compact-fold"><summary>Vastgezet · '+pinned.length+'</summary>'+workspaceCompact(pinned.slice(0,5))+'</details>'+renderWorkspaceWidgets('overview')+
  '<details class="kc-compact-fold"><summary>Instellingen & back-up</summary><div class="kc-ws-tools">'+btn('Overzicht aanpassen','ws-design')+btn('Achtergrond kiezen','ws-background')+btn('Kenniscentrum-back-up','ws-backup')+btn('Opslaggebruik','ws-storage')+'</div></details>';
@@ -677,7 +696,6 @@ function workspaceAction(op,id,el){
  if(op==='ws-conflict'){clearTimeout(timer);workspacePanel='conflict';screen='workspace';render();return true;}
  if(op==='ws-copy'){const text=editing?.body||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>notify('Tekst gekopieerd')).catch(()=>notify('Selecteer en kopieer de tekst handmatig.'));return true;}
  if(!workspaceReady())return false;
- if(op==='ws-page'){workspacePage=Number(id);render();return true;}
  if(op==='ws-fold'){workspaceWrite(life=>{const w=W.workspace(life);w.expanded=w.expanded.includes(id)?w.expanded.filter(x=>x!==id):[...w.expanded,id];});render();return true;}
  if(op==='ws-undo'){if(!workspaceUndo||JSON.stringify(read())!==workspaceUndoAfter){notify('Ongedaan maken kan niet na een nieuwere wijziging.');return true;}const prior=workspaceUndo;workspaceUndo=null;if(write(life=>{life.notes=prior.notes;life.knowledge=prior.knowledge;})){notice='Wijziging teruggedraaid.';render();}return true;}
  if(op==='ws-templates'){workspacePanelOpen('templates');return true;}
@@ -748,17 +766,7 @@ function hydrateWorkspace(){
  if(!workspaceReady())return;
  const app=host.querySelector('.kc-app'),bg=ws().background;
  if(screen==='home'&&bg?.file){const img=document.createElement('img');img.className='kc-workspace-bg';img.dataset.kcCoverFile=bg.file.id;img.alt='';img.style.objectPosition=(bg.focus??50)+'% center';app.prepend(img);app.style.setProperty('--kc-background-opacity',String(1-(bg.dim||75)/100));}
- const vp=host.querySelector('.kc-topic-viewport');if(!vp)return;let start=null;
- const movePage=delta=>{const pages=vp.querySelectorAll('.kc-topic-page').length;if(!pages)return;workspacePage=(workspacePage+delta+pages)%pages;render();};
- // External links and artwork must swipe instead of starting native HTML drag.
- vp.addEventListener('dragstart',e=>e.preventDefault());
- vp.addEventListener('pointerdown',e=>{if(e.button===0){workspaceSuppressClick=false;start={x:e.clientX,y:e.clientY,id:e.pointerId};}});
- vp.addEventListener('pointermove',e=>{if(!start||e.pointerId!==start.id)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dy)>20&&Math.abs(dy)>Math.abs(dx)){start=null;return;}if(Math.abs(dx)>15&&Math.abs(dx)>Math.abs(dy)*1.3)vp.setPointerCapture(e.pointerId);});
- vp.addEventListener('pointerup',e=>{if(!start||e.pointerId!==start.id)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3){workspaceSuppressClick=true;setTimeout(()=>{workspaceSuppressClick=false},400);movePage(dx>0?1:-1);}});
- vp.addEventListener('pointercancel',()=>{start=null});
- // The viewport is replaced by render(); its successor must suppress the swipe click too.
- vp.addEventListener('click',e=>{if(workspaceSuppressClick){e.preventDefault();e.stopPropagation();}},true);
- vp.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();movePage(e.key==='ArrowRight'?1:-1);host.querySelector('.kc-topic-viewport')?.focus();}});
+
 }
 
 const DRAFT_KEY="memento_note_draft_v1";
@@ -1030,15 +1038,33 @@ function click(event){
 }
 function cancelCollection(){
  if(colDraft?.dirty&&!confirm('Wijzigingen aan deze verzameling annuleren?'))return;
- const id=colDraft?.id;ArtUI?.clearPending();colDraft=null;screen=id?'collection':'home';if(id)collectionId=id;render();
+ const id=colDraft?.id;ArtUI?.clearPending();colDraft=null;screen=collectionReturnHome?'home':id?'collection':'home';if(id)collectionId=id;render();
 }
 function startSort(parentId){sortState={parentId:parentId||null,ids:children(parentId||null).map(c=>c.id)};screen='sort';render();}
 function persistSort(ids){
+ if(sortState?.deferred){if(!root.MementoSortableUI.sameMembers(sortState.ids,ids))return false;sortState.ids=ids.slice();render();return true;}
  const before=children(sortState.parentId).map(c=>c.id);
  const ok=write(s=>C.reorderCollections(s,sortState.parentId,ids));
  sortState.ids=ok?ids:before;notice=ok?'Volgorde opgeslagen.':'Volgorde niet opgeslagen. De eerdere volgorde is teruggezet.';render();return ok;
 }
 function kc2Action(op,id,el){
+ if(op==='new-hq'){openCollectionEditor();colDraft.hq=true;render();return true;}
+ if(op==='hq-sort'){const cards=headquarters();sortState={parentId:null,deferred:true,cards,ids:cards.map(c=>c.id)};screen='sort';render();return true;}
+ if(op==='hq-save-order'){
+  if(!sortState?.deferred)return true;
+  const ids=sortState.ids.slice();
+  const ok=write(life=>{
+   const current=headquarters().map(c=>c.id);
+   if(!root.MementoSortableUI.sameMembers(current,ids))throw Error('De lijst is ondertussen gewijzigd. Annuleer en probeer opnieuw.');
+   const starter=sortState.cards.find(c=>c.starter);
+   if(starter){const real=C.saveCollection(life,{name:starter.name,icon:starter.icon,view:'list',parentId:null,externalUrl:starter.externalUrl,subtitle:starter.subtitle,coverId:starter.coverId});ids[ids.indexOf(starter.id)]=real.id;}
+   C.reorderCollections(life,null,ids,{includeLegacyRoots:true});
+  });
+  if(ok){sortState=null;screen='home';notice='Volgorde opgeslagen.';render();}
+  else notify('Volgorde niet opgeslagen. Je kunt opnieuw proberen of annuleren.');
+  return true;
+ }
+
  if(op==='migrate'){tryMigration();render();return true;}
  if(op==='home'){if(historyBackTo('home'))return true;screen='home';resetListFilters();journalFilter='';render();return true;}
  if(op==='new-sub'){openCollectionEditor('',id);return true;}
@@ -1050,9 +1076,10 @@ function kc2Action(op,id,el){
  if(op==='cancel-collection'){cancelCollection();return true;}
  if(op==='save-collection'){
   if(!colDraft)return true;
+  if(colDraft.hq&&!C.notionPageId(colDraft.externalUrl)){notify('Plak een geldige Notion-paginalink.');return true;}
   if(colDraft.externalUrl&&!/^https:\/\/[^\s/?#]+/i.test(colDraft.externalUrl)){notify('Gebruik een volledige https://-URL.');return true;}
-  if(ArtUI)ArtUI.save(colDraft,{store:S,core:C,guard:root.MementoStorageGuard,write,onSaved:id=>{collectionId=id;colDraft=null;screen='collection';notice='Verzameling en illustratie opgeslagen.';render();},notify});
-  else {let id=colDraft.id;if(write(state=>{id=C.saveCollection(state,colDraft).id;})){collectionId=id;colDraft=null;screen='collection';render();}}
+  if(ArtUI)ArtUI.save(colDraft,{store:S,core:C,guard:root.MementoStorageGuard,write,onSaved:id=>{collectionId=id;colDraft=null;screen=collectionReturnHome?'home':'collection';notice='Kaart en illustratie opgeslagen.';render();},notify});
+  else {let id=colDraft.id;if(write(state=>{id=C.saveCollection(state,colDraft).id;})){collectionId=id;colDraft=null;screen=collectionReturnHome?'home':'collection';render();}}
   return true;
  }
  if(op==='archive-collection'||op==='restore-collection'){
@@ -1108,6 +1135,7 @@ function updateDiaryKeyboard(){
 
 function onInput(event){
  const field=event.target,change=field.dataset.kcEdit;
+ if(field.dataset.kcHqTemplate!==undefined&&colDraft){const t=hqTemplates[Number(field.value)];if(field.value!==''&&t){colDraft.name=t[0];colDraft.subtitle=t[1];colDraft.icon=t[2];colDraft.dirty=true;render();}return;}
  if(field.dataset.wsProperty&&editing){editing.properties||={};editing.properties[field.dataset.wsProperty]=field.value;schedule();return;}
  if(field.dataset.wsBlock&&editing?.document){const block=editing.document.blocks.find(b=>b.id===field.dataset.wsBlock);if(block){block.text=field.innerText.replace(/\r/g,'');editing.body=C.documentText(editing.document);workspaceBlock=block.id;schedule();}return;}
  if(field.dataset.kcInput==='journal-search'){journalSearch=field.value;const cursor=field.selectionStart;render();const next=host.querySelector('[data-kc-input="journal-search"]');next?.focus();next?.setSelectionRange(cursor,cursor);return;}
@@ -1214,3 +1242,4 @@ document.addEventListener("input",e=>{if(host?.contains(e.target)&&e.target.data
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
 root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";activateWorkspace();render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
 })(window);
+

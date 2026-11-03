@@ -405,24 +405,7 @@
 #lifeApp[data-life-view="notes"] .kc-capture{display:flex;gap:8px;margin:12px 0 20px}
 #lifeApp[data-life-view="notes"] .kc-capture input{flex:1;width:0;min-width:0}
 #lifeApp[data-life-view="notes"] .kc-capture button{width:48px;min-width:48px}
-#lifeApp[data-life-view="notes"] .kc-topic-viewport{overflow:hidden;touch-action:pan-y;border-radius:18px;user-select:none;cursor:grab}
-#lifeApp[data-life-view="notes"] .kc-topic-track{display:flex;flex-direction:row-reverse;transition:transform .25s ease}
-#lifeApp[data-life-view="notes"] .kc-topic-page{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;flex:0 0 100%;min-width:0;padding:1px}
-#lifeApp[data-life-view="notes"] .kc-topic-card{display:block;min-width:0;overflow:hidden;padding:0;border:1px solid #a9bd8a44;border-radius:17px;background:#1b3d2e;color:#eef4e8;text-align:left}
-#lifeApp[data-life-view="notes"] .kc-topic-scene{display:block;height:115px;position:relative;overflow:hidden;background:#294b35;pointer-events:none}
-#lifeApp[data-life-view="notes"] .kc-topic-scene .kc-art-wrap{position:absolute;inset:0;display:block}
-#lifeApp[data-life-view="notes"] .kc-topic-scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:auto}
-#lifeApp[data-life-view="notes"] .kc-topic-title{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;min-height:70px}
-#lifeApp[data-life-view="notes"] .kc-topic-title strong{font-size:14px;line-height:1.35;display:block;overflow-wrap:anywhere}
-#lifeApp[data-life-view="notes"] .kc-topic-title small{font-size:11px;display:block;margin-top:4px;color:#b7c9b3}
-#lifeApp[data-life-view="notes"] .kc-topic-title>span:last-child{color:#e0c58d;font-size:20px}
-#lifeApp[data-life-view="notes"] .kc-topic-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:5px}
-#lifeApp[data-life-view="notes"] .kc-topic-controls>.kc-btn{width:44px;min-width:44px;background:none;border:0;font-size:20px}
-#lifeApp[data-life-view="notes"] .kc-topic-dots{display:flex;max-width:65%;overflow:auto}
-#lifeApp[data-life-view="notes"] .kc-topic-dots button{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0;background:none;border:0}
-#lifeApp[data-life-view="notes"] .kc-topic-dots span{width:7px;height:7px;background:#b4c7a655;border-radius:8px}
-#lifeApp[data-life-view="notes"] .kc-topic-dots [aria-current="true"] span{width:22px;background:#e0c58d}
-#lifeApp[data-life-view="notes"] .kc-topic-status{font-size:11px;color:#b8c7ad;text-align:center;margin:0 0 20px}
+
 #lifeApp[data-life-view="notes"] .kc-workspace-shortcuts,#lifeApp[data-life-view="notes"] .kc-ws-tools{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
 #lifeApp[data-life-view="notes"] .kc-workspace-shortcuts button{font-size:12px}
 #lifeApp[data-life-view="notes"] .kc-compact-fold{border:1px solid #abc49830;border-radius:13px;margin:9px 0;background:#18362880}
@@ -472,8 +455,8 @@
 #lifeApp[data-life-view="notes"] .kc-compare pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.7 inherit;background:#163626;padding:14px;border:1px solid #abc49830;border-radius:12px;min-width:0}
 #lifeApp[data-life-view="notes"] .kc-location-check{display:flex;align-items:center;gap:12px;min-height:48px;font-size:14px}
 #lifeApp[data-life-view="notes"] .kc-location-check input{min-width:22px;min-height:22px;max-width:22px}
-@media(max-width:700px){#lifeApp[data-life-view="notes"] .kc-topic-page{gap:10px}#lifeApp[data-life-view="notes"] .kc-topic-scene{height:95px}#lifeApp[data-life-view="notes"] .kc-topic-title{padding:10px;min-height:66px}#lifeApp[data-life-view="notes"] .kc-topic-title strong{font-size:13px}#lifeApp[data-life-view="notes"] .kc-widget-grid,#lifeApp[data-life-view="notes"] .kc-compare{grid-template-columns:1fr}#lifeApp[data-life-view="notes"] .kc-tree-children{margin-left:10px;padding-left:5px}#lifeApp[data-life-view="notes"] .kc-tree-toggle,#lifeApp[data-life-view="notes"] .kc-tree-spacer{width:44px;min-width:44px}#lifeApp[data-life-view="notes"] .kc-tree-open .kc-collection-icon{display:none}#lifeApp[data-life-view="notes"] .kc-visual-toolbar{position:static}#lifeApp[data-life-view="notes"] .kc-editor-head .kc-header{flex-wrap:wrap}}
-@media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="notes"] .kc-topic-track{transition:none}}
+@media(max-width:700px){#lifeApp[data-life-view="notes"] .kc-widget-grid,#lifeApp[data-life-view="notes"] .kc-compare{grid-template-columns:1fr}#lifeApp[data-life-view="notes"] .kc-tree-children{margin-left:10px;padding-left:5px}#lifeApp[data-life-view="notes"] .kc-tree-toggle,#lifeApp[data-life-view="notes"] .kc-tree-spacer{width:44px;min-width:44px}#lifeApp[data-life-view="notes"] .kc-tree-open .kc-collection-icon{display:none}#lifeApp[data-life-view="notes"] .kc-visual-toolbar{position:static}#lifeApp[data-life-view="notes"] .kc-editor-head .kc-header{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){}
 @media(max-width:700px){#lifeApp[data-life-view="notes"] .kc-widget{grid-column:auto!important;grid-row:auto!important}}
 
 /* Knowledge editor: approved prototype parity (SHA-256 8fe95983...), scoped to non-journal editor.
@@ -579,7 +562,23 @@
 }
 
 /* External knowledge shortcuts share the same visual language as local folders. */
-#lifeApp[data-life-view="notes"] .kc-topic-tile{position:relative;min-width:0}
-#lifeApp[data-life-view="notes"] .kc-topic-tile .kc-topic-card{width:100%;height:100%;text-decoration:none;font:inherit;cursor:pointer}
-#lifeApp[data-life-view="notes"] .kc-topic-edit{position:absolute;right:8px;top:8px;z-index:3;min-height:36px;padding:7px 11px;border:1px solid #cedac4;background:#173a2fe8;color:#fff;border-radius:11px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
-#lifeApp[data-life-view="notes"] .kc-topic-edit:focus-visible{outline:3px solid #f7d98c;outline-offset:2px}
+#lifeApp[data-life-view="notes"] .kc-hq-list{display:grid;gap:10px;margin-top:12px}
+#lifeApp[data-life-view="notes"] .kc-topic-tile{position:relative;display:flex;align-items:stretch;min-width:0;min-height:100px;isolation:isolate;border:1px solid #d2b77d50;border-radius:17px;overflow:hidden;background:#17392e}
+#lifeApp[data-life-view="notes"] .kc-topic-card{position:static;display:flex;align-items:center;flex:1;min-width:0;min-height:100px;padding:18px;border:0;text-align:left;text-decoration:none;background:transparent;color:#fff6db;font:inherit}
+#lifeApp[data-life-view="notes"] .kc-topic-scene{position:absolute;inset:0;pointer-events:none}
+#lifeApp[data-life-view="notes"] .kc-topic-title{position:relative;z-index:1;min-width:0;text-shadow:0 1px 8px #000}
+#lifeApp[data-life-view="notes"] .kc-topic-title strong{display:block;font-family:Georgia,serif;font-size:20px;line-height:1.2;overflow-wrap:anywhere;color:#fff6db}
+
+#lifeApp[data-life-view="notes"] .kc-topic-scene .kc-art-wrap{position:absolute;inset:0}
+#lifeApp[data-life-view="notes"] .kc-topic-scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#lifeApp[data-life-view="notes"] .kc-topic-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#08271ff2,#08271f9c 70%,#08271f66)}
+
+
+#lifeApp[data-life-view="notes"] .kc-topic-title small{display:block;margin-top:5px;font-size:12px;color:#e0e7da}
+#lifeApp[data-life-view="notes"] .kc-topic-edit{position:relative;align-self:center;flex:none;z-index:2;display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;color:#eed5a0;font:22px/1 system-ui;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-topic-edit:focus-visible{outline:3px solid #f7d98c;outline-offset:-4px}
+#lifeApp[data-life-view="notes"] .kc-hq-manage{min-height:44px;padding:6px 0 6px 12px;border:0;background:transparent;color:#d8c08b;font:13px system-ui;cursor:pointer}
+#lifeApp[data-life-view="notes"] .kc-hq-add{width:100%;margin-top:14px}
+#lifeApp[data-life-view="notes"] .kc-hq-sort .kc-sort-row{display:flex;gap:10px;padding:10px 0;min-height:64px}
+#lifeApp[data-life-view="notes"] .kc-hq-sort .kc-sort-row strong{flex:1;min-width:0;overflow-wrap:anywhere}
+#lifeApp[data-life-view="notes"] .kc-hq-sort .kc-drag-handle{width:44px;min-width:44px;height:44px;padding:0;background:transparent;border:0;color:#d8c08b;font-size:24px;touch-action:none}
