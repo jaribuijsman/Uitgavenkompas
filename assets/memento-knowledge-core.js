@@ -141,6 +141,7 @@ function validateNote(life,n,checkDuplicates=true){
  if(n.links&&n.links.some(l=>!l||typeof l.kind!=="string"||typeof l.id!=="string"))throw Error("Ongeldige koppeling");
  return true;
 }
+function validCoverFileMeta(f){return !!f&&typeof f==='object'&&/^[a-z0-9-]{8,120}$/i.test(f.id||'')&&typeof f.name==='string'&&f.name.length<=200&&Number.isFinite(f.size)&&f.size>0&&f.size<=8*1024*1024&&['image/jpeg','image/png','image/webp'].includes(f.type)&&typeof f.hash==='string'&&/^[a-f0-9]{64}$/.test(f.hash);}
 function validate(life){
  const k=ensure(life),ids=new Set();
  validateHierarchy(life);
@@ -148,7 +149,9 @@ function validate(life){
   const p=k.portal;if(!p||p.version!==1||!Array.isArray(p.cards)||p.cards.length>200)throw Error('Ongeldig kennisportaal');
   const seen=new Set(),pages=new Set();for(const card of p.cards){
    if(!card||!Number.isSafeInteger(card.id)||card.id<1||seen.has(card.id)||typeof card.name!=='string'||!card.name.trim()||card.name.length>60||typeof card.subtitle!=='string'||card.subtitle.length>100||!Number.isInteger(card.cover)||card.cover<0||card.cover>9||typeof card.hidden!=='boolean'||typeof card.link!=='string'||card.link&&!notionPageId(card.link))throw Error('Ongeldige hoofdkwartierkaart');
-   seen.add(card.id);if(card.link){const page=notionPageId(card.link);if(pages.has(page))throw Error('Dubbele Notion-bestemming');pages.add(page);}
+   if(card.coverFile!==undefined&&card.coverFile!==null&&!validCoverFileMeta(card.coverFile))throw Error('Ongeldige hoofdkwartierafbeelding');
+    if(card.coverFocus!==undefined&&(!Number.isInteger(card.coverFocus)||card.coverFocus<0||card.coverFocus>100))throw Error('Ongeldige hoofdkwartieruitsnede');
+    seen.add(card.id);if(card.link){const page=notionPageId(card.link);if(pages.has(page))throw Error('Dubbele Notion-bestemming');pages.add(page);}
   }
  }
  for(const c of k.collections){if(typeof c.id!=="string"||!c.id||c.id==="inbox"||ids.has(c.id)||typeof c.name!=="string"||!c.name.trim()||c.name.length>80||!["list","gallery","table"].includes(c.view))throw Error("Ongeldige verzameling");ids.add(c.id);}
@@ -235,7 +238,7 @@ function validateHierarchy(life){
   if(c.special!==undefined&&c.special!=='journal')throw Error('Onbekende speciale verzameling');
   if(c.coverId!==undefined&&(typeof c.coverId!=='string'||!/^(?:|[a-z][a-z0-9-]{0,40})$/.test(c.coverId)))throw Error('Ongeldige illustratie-ID');
   if(c.coverFocus!==undefined&&(!Number.isInteger(c.coverFocus)||c.coverFocus<0||c.coverFocus>100))throw Error('Ongeldige afbeeldingsuitsnede');
-  if(c.coverFile!==undefined&&c.coverFile!==null){const f=c.coverFile;if(!f||typeof f!=='object'||!/^[a-z0-9-]{8,120}$/i.test(f.id||'')||typeof f.name!=='string'||f.name.length>200||!Number.isFinite(f.size)||f.size<=0||f.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(f.type)||typeof f.hash!=='string'||!/^[a-f0-9]{64}$/.test(f.hash))throw Error('Ongeldige categorieafbeelding');}
+   if(c.coverFile!==undefined&&c.coverFile!==null&&!validCoverFileMeta(c.coverFile))throw Error('Ongeldige categorieafbeelding');
 
  }
  if(ids.size!==k.collections.length)throw Error('Dubbele verzamelings-ID');
