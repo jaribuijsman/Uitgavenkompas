@@ -64,7 +64,7 @@ let colDraft=null,sortState=null,journalFilter="",migrationBusy=false,filtersExp
 let quickDraft="",quickListening=false;
 let diaryDictating=false;
 let diaryKeyboardBase=0;
-let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
+let host=null,bridge=null,screen="home",collectionId="inbox",selectedId="",query="",kindFilter="",tagFilter="",sort="recent",listing="active",viewOverride="",editing=null,dirty=false,aiEditMode=false,timer=0,notice="",fileUrl="",fileId="",fileRecord=null,linkQuery="";
 let newNoteReturn=null,lastRenderedRoute="";
 // Browser history contains only view identifiers, never note bodies or stored data.
 const historySession=String(Date.now()),notesTrail=[];
@@ -389,8 +389,8 @@ function renderDetail(){
  (C.typeOf(n)==="recipe"?recipeHTML(n.recipe):"")+
  (direct?'<div class="kc-editor-fields kc-direct-editor"><label>Titel · optioneel<input id="kc-title" data-kc-edit="title" maxlength="180" value="'+esc(n.body?.trim()===n.title.trim()?"":editing.title)+'"></label><label>Verzameling<select id="kc-collection" data-kc-edit="collectionId"><option value="inbox"'+(editing.collectionId==="inbox"?' selected':'')+'>Inbox</option>'+collections().map(c=>'<option value="'+esc(c.id)+'"'+(editing.collectionId===c.id?' selected':'')+'>'+esc(pathName(c))+'</option>').join('')+'</select></label><label for="kc-body">Inhoud</label><textarea id="kc-body" data-kc-edit="body" maxlength="20000">'+esc(editing.body)+'</textarea><p id="kc-save-state" class="kc-save-state" role="status">'+(dirty?'Concept':'Opgeslagen')+'</p>'+btn('Opslaan','save','',true)+'</div>':check||'<div class="kc-readable">'+markdown(n.body)+"</div>")+
  (original?'<a class="kc-source" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':"")+
- attachmentsHTML(n)+(workspaceReady()&&n.document?renderDocumentRead(n.document):"")+linkedHTML(n)+followupLinksForNote(n)+(n.deletedAt?'':passageActions())+
- (n.deletedAt?"":'<div class="kc-detail-actions">'+(workspaceReady()?btn("Visueel bewerken","ws-convert",n.id)+btn("Mappen koppelen","ws-locations"):"")+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Onderzoeken met AI","ai",n.id))+
+ (safeURL(n.notionUrl)?'<a class="kc-source" href="'+esc(safeURL(n.notionUrl))+'" target="_blank" rel="noopener noreferrer">Notion-pagina openen ↗</a>':'')+attachmentsHTML(n)+(workspaceReady()&&n.document?renderDocumentRead(n.document):"")+linkedHTML(n)+followupLinksForNote(n)+(n.deletedAt?'':passageActions())+
+ (n.deletedAt?"":'<div class="kc-detail-actions">'+(workspaceReady()?btn("Visueel bewerken","ws-convert",n.id)+btn("Mappen koppelen","ws-locations"):"")+btn(n.pinned?"Losmaken":"Vastzetten","pin",n.id)+btn(n.archived?"Terug uit archief":"Archiveren","archive-item",n.id)+btn("Koppelen","link",n.id)+(n.journal?"":btn("Verwerken met AI","ai",n.id))+
  '<details class="kc-note-menu"><summary aria-label="Notitie beheren">⋯</summary><div>'+btn("Versiegeschiedenis","versions")+btn("Concept verwerpen","discard-draft")+btn("Slim opvolgen","followup-start",n.id)+btn("Als taak","convert-task",n.id)+btn("Als afspraak","convert-appointment",n.id)+btn("Als aankoopwens","convert-wish",n.id)+btn("Verwijderen","delete",n.id)+'</div></details></div>');
 }
 function kcV3Icon(name){
@@ -457,7 +457,7 @@ function renderEditor(){
  const fileCount=(e.attachments||[]).length;
  return '<div class="kc-v3-prototype-editor">'+
  '<div class="kc-v3-eyebrow">Leven <span>›</span> <strong>Notities</strong> <span>›</span> Kenniscentrum</div>'+
- '<div class="kc-editor-head kc-v3-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,more+'<button type="button" class="kc-v3-save-btn" data-kc="save">Opslaan</button>')+'</div>'+
+ '<div class="kc-editor-head kc-v3-editor-head">'+header(selectedId?"Kennisitem bewerken":"Nieuw kennisitem",true,(aiEditMode?btn('Annuleren','cancel-ai-edit'):'')+more+'<button type="button" class="kc-v3-save-btn" data-kc="save">Opslaan</button>')+'</div>'+
  '<p class="kc-save-state kc-v3-save-state" id="kc-save-state" role="status">'+(dirty?"Niet opgeslagen wijzigingen":selectedId?"Opgeslagen":"Concept · nog niet opgeslagen")+'</p>'+
  '<section class="kc-v3-writing-card" aria-label="Kennisitem schrijven">'+title+
  '<div class="kc-v3-meta-two">'+kind+collection+'</div>'+
@@ -788,7 +788,7 @@ function flush(){
  setSaveIndicator("Opgeslagen");root.MementoFeedback?.success(host?.querySelector("#kc-save-state"));return true;
 }
 function setSaveIndicator(label){const el=host?.querySelector("#kc-save-state");if(el){el.textContent=label;if(/mislukt|nieuwere versie/i.test(label)){el.insertAdjacentHTML?.('beforeend',btn('Opnieuw proberen','save')+btn('Tekst kopiëren','ws-copy')+btn('Versies vergelijken','ws-conflict'));}}}
-function schedule(){dirty=true;rememberDraft();setSaveIndicator("Concept");clearTimeout(timer);timer=setTimeout(()=>flush(),850);}
+function schedule(){dirty=true;rememberDraft();setSaveIndicator("Concept");clearTimeout(timer);if(!aiEditMode)timer=setTimeout(()=>flush(),850);}
 function leave(next,id=""){
  stopDiaryDictation();
  clearTimeout(timer);if(!flush())return false;
@@ -799,15 +799,20 @@ function beginNew(cid){
  newNoteReturn={screen,collectionId};
  stopDiaryDictation();selectedId="";const state=read();editing=C.makeNote({title:"",body:"",collectionId:cid||"inbox",kind:"note"},state);dirty=false;screen="edit";rememberBase();render();
 }
-function startEdit(id){
- stopDiaryDictation();const note=read().notes.find(x=>x.id===id);if(!note)return;
+function startEdit(id,fromAI=false){
+ aiEditMode=fromAI;stopDiaryDictation();const note=read().notes.find(x=>x.id===id);if(!note)return;
  selectedId=id;editing=C.clone(note);editing.kind=C.typeOf(note);editing.collectionId=C.collectionOf(read(),note);
  if(!editing.tags)editing.tags=[];
  if(!editing.attachments)editing.attachments=[];
  if(!editing.recipe&&editing.kind==="recipe")editing.recipe={ingredients:[],status:"concept",rating:0,version:1,notes:""};
  dirty=false;screen="edit";rememberBase();render();
 }
+function cancelAIEdit(){
+ if(dirty&&!confirm('Niet opgeslagen wijzigingen annuleren? De opgeslagen notitie blijft behouden.'))return;
+ clearTimeout(timer);forgetDraft();dirty=false;editing=null;aiEditMode=false;screen='detail';render();
+}
 function back(){
+ if(screen==="edit"&&aiEditMode){cancelAIEdit();return;}
  if(screen==="detail"&&searchReturn){const y=searchReturn.y;searchReturn=null;screen="search";render();requestAnimationFrame(()=>window.scrollTo(0,y));return;}
  if(screen==='sort'){screen=sortState.parentId?'collection':'home';if(sortState.parentId)collectionId=sortState.parentId;sortState=null;render();return;}
  if(screen==='collection-editor'){cancelCollection();return;}
@@ -945,7 +950,7 @@ function click(event){
   if(!flush())return;bridge.convert?.(selectedId,"task",passage);return;
  }
  if(op==="recover-draft"){recoverDraft();return;}
- if(op==="discard-draft"){if(!confirm("Niet opgeslagen concept verwerpen? Opgeslagen tekst blijft behouden."))return;clearTimeout(timer);forgetDraft();dirty=false;editing=null;screen=selectedId?"detail":"home";render();return;}
+ if(op==="discard-draft"){if(!confirm("Niet opgeslagen concept verwerpen? Opgeslagen tekst blijft behouden."))return;clearTimeout(timer);forgetDraft();dirty=false;aiEditMode=false;editing=null;screen=selectedId?"detail":"home";render();return;}
  if(op==="writing-mode"){focusWriting=!focusWriting;host.classList.toggle("kc-focus-writing",focusWriting);el.textContent=focusWriting?"Normaal":"Schrijfstand";return;}
  if(screen==="detail"&&dirty&&!flush())return;
  if(workspaceAction(op,id,el))return;
@@ -977,7 +982,8 @@ function click(event){
  if(op==="mode"){filtersExpanded=true;viewOverride=id;preferenceSave();render();return}
  if(op==="open"){if(selectedId!==id)recipeFactor=1;selectedId=id;screen="detail";render();return}
  if(op==="edit"){startEdit(id);return}
- if(op==="save"){stopDiaryDictation();const journalDate=editing?.journal?.date||"";clearTimeout(timer);if(flush()){screen=journalDate?"collection":selectedId?"detail":"collection";if(journalDate)journalFilter=journalDate;editing=null;render();}return}
+ if(op==="cancel-ai-edit"){cancelAIEdit();return}
+ if(op==="save"){stopDiaryDictation();const journalDate=editing?.journal?.date||"";clearTimeout(timer);if(flush()){aiEditMode=false;screen=journalDate?"collection":selectedId?"detail":"collection";if(journalDate)journalFilter=journalDate;editing=null;render();}return}
  if(op==="preview"){clearTimeout(timer);if(flush()){screen="detail";editing=null;render();}return}
  if(op==="versions"){if(flush()){screen="versions";render();}return}
  if(op==="restore-version"){
@@ -1219,6 +1225,6 @@ document.addEventListener("click",e=>{
 
 document.addEventListener("input",e=>{if(host?.contains(e.target)&&e.target.dataset.kcInput!=="search")onInput(e);});
 document.addEventListener("change",e=>{if(host?.contains(e.target))onChange(e);});
-root.MementoKnowledge={mount,hasPending,prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
+root.MementoKnowledge={mount,hasPending,editNote:id=>{if(!flush())return false;startEdit(id,true);return true;},prefillShared,open:()=>{if(hasPending()){notify("Sla eerst je concept op of annuleer het.");return;}screen="home";editing=null;notice="";render();},newNote:()=>{if(!flush())return;beginNew("inbox");},showJournal:day=>{if(!flush())return;tryMigration();openJournal(day);},showNote:id=>{if(!flush())return;if(selectedId!==id)recipeFactor=1;selectedId=id;editing=null;screen="detail";render();}};
 })(window);
 

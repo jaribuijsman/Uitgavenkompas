@@ -1,0 +1,59 @@
+/* AI Hub: scoped to the existing Life dialog; no new navigation or editor. */
+#lifeDialog .ai-hero{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #51735b;border-radius:14px;background:#19382b;color:#edf5eb}
+#lifeDialog .ai-hero>span,#lifeDialog .ai-icon{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;background:#385d43;color:#e6c979;font-size:22px}
+#lifeDialog .ai-hero div,#lifeDialog .ai-card span:nth-child(2){display:grid;min-width:0;gap:3px}
+#lifeDialog .ai-hero strong,#lifeDialog .ai-card strong{font-size:13px;line-height:1.35}
+#lifeDialog .ai-hero small,#lifeDialog .ai-card small,#lifeDialog .ai-selected small{color:#c5dec9;font-size:12px;line-height:1.4}
+#lifeDialog .ai-hero small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lifeDialog .ai-edit,#lifeDialog .ai-back{justify-self:start;background:transparent;border:0;color:#d6e9d6;text-decoration:underline;min-height:44px;padding:8px 4px;font:inherit;cursor:pointer}
+#lifeDialog .ai-group{margin:14px 0 0;color:#d6e9d6;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+#lifeDialog .ai-card{display:flex;align-items:center;width:100%;min-height:64px;gap:12px;text-align:left;padding:10px;border:1px solid #496a51;border-radius:16px;background:#1d3b2d;color:#f0f6ed;font:inherit;cursor:pointer}
+#lifeDialog .ai-card>b{margin-left:auto;font-size:23px;color:#d8e9d8}
+#lifeDialog .ai-selected{display:grid;gap:3px;padding:12px;border:1px solid #658870;border-radius:12px;background:#315540;color:#f3f7f0}
+#lifeDialog .ai-field{display:grid;gap:8px;margin:0;color:#e4efe3;font-size:13px}
+#lifeDialog .ai-field p,#lifeDialog .ai-hint{font-size:12px;line-height:1.5;color:#c5dec9;margin:0}
+#lifeDialog .ai-field textarea,#lifeDialog .ai-field input,#lifeDialog .ai-field select,#lifeDialog .ai-source-picker textarea,#lifeDialog .ai-source-picker input,#lifeDialog .ai-source-picker select{box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid #71957a;border-radius:10px;background:#1b3426;color:#f2f8f1;font:inherit}
+#lifeDialog .ai-field textarea{min-height:84px}
+#lifeDialog .ai-field input[type=radio]{width:auto;min-height:0}
+#lifeDialog .ai-field:has(input[type=radio]){display:flex;flex-wrap:wrap;gap:10px}
+#lifeDialog .ai-check{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #658870;border-radius:10px;color:#e4efe3;font-size:13px;line-height:1.4}
+#lifeDialog .ai-check input{width:22px;height:22px;flex:none}
+#lifeDialog .ai-check span{display:grid;gap:2px}
+#lifeDialog .ai-check small{color:#c5dec9}
+#lifeDialog .ai-source-picker{border:1px solid #587960;border-radius:10px;padding:10px}
+#lifeDialog .ai-source-picker summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+#lifeDialog .ai-source-picker label{display:grid;gap:6px;margin:8px 0;color:#e4efe3}
+#lifeDialog .ai-source-picker button,#lifeDialog .ai-hint button{min-height:44px;border:1px solid #87a98d;border-radius:9px;background:#315540;color:#f4f8f1;padding:8px 12px;font:inherit}
+#lifeDialog .ai-sources{display:flex;flex-wrap:wrap;gap:6px}
+#lifeDialog .ai-source{border-radius:20px;background:#365b41;color:#f2f8f1;padding:2px 4px 2px 10px;font-size:12px}
+#lifeDialog .ai-source button{border:0;background:none;color:inherit;min-width:36px;min-height:36px;font-size:18px}
+#lifeDialog #mementoNoteAIPreview{box-sizing:border-box;width:100%;min-height:190px;max-height:40dvh;padding:12px;border:1px solid #71957a;border-radius:12px;background:#193026;color:#f0f8f1;font-family:inherit;font-size:13px;line-height:1.55;resize:vertical}
+#lifeDialog #mementoNoteAIStatus{margin:0;color:#c5dec9;font-size:12px;line-height:1.5}
+#lifeDialog #mementoNoteAIStatus[data-error=true]{color:#ffbdc0}
+#lifeDialog .life-dialog-footer:has([data-hub]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#lifeDialog .life-dialog-footer [data-hub=open],#lifeDialog .life-dialog-footer [data-hub=archive]{grid-column:1/-1;grid-row:1;min-height:48px}
+#lifeDialog .life-dialog-footer [data-hub=confirm-screen]{grid-column:1/-1}
+
+#lifeDialog .ai-prompt-label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#e4efe3;font-size:13px;font-weight:700}
+#lifeDialog .ai-prompt-label span{border-radius:10px;padding:4px 8px;background:#365b41;color:#dbeadd;font-size:11px;font-weight:600}
+/* The approved v0.3 Hub uses a full-screen sheet; the existing Life dialog owns focus and close behavior. */
+#lifeDialog:has([data-hub]){padding:0;overflow:hidden;align-items:stretch;justify-content:stretch;background:#102c20}
+#lifeDialog:has([data-hub]) .life-dialog-panel{display:flex;flex-direction:column;width:100%;max-width:none;height:100dvh;max-height:100dvh;overflow:hidden;border:0;border-radius:0;box-shadow:none;padding:0;background:#102c20}
+#lifeDialog:has([data-hub]) .life-dialog-head{flex:none;align-items:center;gap:10px;margin:0;padding:15px;background:#183a2b;min-height:90px}
+#lifeDialog:has([data-hub]) .life-dialog-head>div{display:flex;flex:1;min-width:0;flex-direction:column}
+#lifeDialog:has([data-hub]) .life-dialog-description{order:-1;margin:0 0 2px;color:#bad3bd;text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+#lifeDialog:has([data-hub]) h2{font:normal 25px/1.15 Georgia,serif;letter-spacing:0}
+#lifeDialog:has([data-hub]) .life-close,#lifeDialog:has([data-hub]) .ai-header-back{display:grid;place-items:center;flex:none;width:44px;height:44px;min-width:44px;min-height:44px;border:1px solid #66816d;border-radius:12px;background:transparent;color:#f1f5ed;font-size:22px;cursor:pointer}
+#lifeDialog:has([data-hub]) .life-dialog-body{flex:1;min-height:0;max-height:none;overflow-y:auto;display:block;padding:16px 15px 24px}
+#lifeDialog:has([data-hub]) .life-dialog-footer{flex:none;padding:12px 15px max(12px,env(safe-area-inset-bottom));background:#173629;border-top:1px solid #56735d}
+#lifeDialog:has([data-hub]) .ai-card .ai-icon,#lifeDialog:has([data-hub]) .ai-hero>span{background:#315740;color:#d9eee0}
+#lifeDialog:has([data-hub]) .ai-card strong{font-size:13px}
+#lifeDialog:has([data-hub]) .ai-card small{font-size:11px}
+#lifeDialog:has([data-hub]) #mementoNoteAIPreview{min-height:205px;background:#173c2b!important;border-color:#65836c!important;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace!important}
+#lifeDialog:has([data-hub]) .life-dialog-footer [data-hub=open],#lifeDialog:has([data-hub]) .life-dialog-footer [data-hub=archive]{background:#b7dfc3!important;border-color:#b7dfc3!important;color:#173b26!important}
+#lifeDialog:has([data-hub]) .ai-card.primary{background:#1e3f2f!important;border-color:#789f7f;color:#f0f6ed!important}
+#lifeDialog:has([data-hub]) .ai-card.primary strong,#lifeDialog:has([data-hub]) .ai-card.primary small,#lifeDialog:has([data-hub]) .ai-card.primary>b{color:#f0f6ed!important}
+#lifeDialog:has([data-hub]) .ai-card .ai-icon,#lifeDialog:has([data-hub]) .ai-hero>span{background:#315740;color:#d9eee0}
+#lifeDialog:has([data-hub]) .ai-card small{font-size:11px}
+#lifeDialog:has([data-hub]) .ai-edit{margin-top:4px}
+#lifeDialog:has([data-hub]) .life-dialog-body>*+*{margin-top:8px}

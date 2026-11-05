@@ -44,6 +44,11 @@ async function seed(page,data,url){
   // not just a cache directory, before assessing an offline upgrade.
   await page.waitForFunction(async({name,required})=>{const r=await navigator.serviceWorker.getRegistration();if(r?.active?.state!=='activated'||r.installing||r.waiting||navigator.serviceWorker.controller!==r.active||navigator.serviceWorker.controller===window.__previousMementoController)return false;const c=await caches.open(name);return(await Promise.all(required.map(p=>c.match(new URL(p,location.href))))).every(Boolean);},{name:cache,required});await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoFitnessCore?.duty);await upgradeTrace('online-new-worker');
   await ctx.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoFitnessCore?.duty);await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();
+  // Enter the actual note workspace before asserting its additive migration.
+  await page.evaluate(()=>window.MementoKnowledge.showNote('visual-note'));
+  await page.locator('#mementoQuickNav [data-memento-dest="life:tasks"]').click();
+  await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();
+  await page.waitForFunction(()=>window.MementoKnowledgeBridge.read().knowledge?.workspace?.version===2);
   await upgradeTrace('offline');const after=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));
   // V2 adds a workspace to Knowledge metadata. Compare the original user-owned payload,
   // not its serialized byte string: additive migrations must not erase or alter any
