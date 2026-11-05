@@ -47,6 +47,7 @@ const json=(map,name)=>{const bytes=map.get(name);if(!bytes)throw Error("Bestand
 function fileReferences(life){
  const refs=new Map();for(const n of life.notes||[])for(const a of n.attachments||[])refs.set(a.id,a);
  for(const c of life.knowledge?.collections||[])if(c.coverFile?.id)refs.set(c.coverFile.id,c.coverFile);
+  for(const card of life.knowledge?.portal?.cards||[])if(card.coverFile?.id)refs.set(card.coverFile.id,card.coverFile);
  const w=life.knowledge?.workspace;if(w?.background?.file?.id)refs.set(w.background.file.id,w.background.file);
  for(const widgets of Object.values(w?.dashboards||{}))for(const item of widgets)if(item.image?.id)refs.set(item.image.id,item.image);
  return refs;
