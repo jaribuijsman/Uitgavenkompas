@@ -55,7 +55,7 @@ if(coverDraft&&b.dataset.kc&&Art?.interact(b.dataset.kc,b.dataset.id,coverDraft,
 if(b.dataset.open)say('Dit hoofdkwartier heeft nog geen Notion-link. Gebruik ⋯ om de koppeling toe te voegen.');
 if(b.dataset.hide){const x=items.find(x=>x.id===Number(b.dataset.hide)),next=items.map(c=>c===x?{...c,hidden:!c.hidden}:c);if(!persist(next))return;items=next;overview();say(!x.hidden?'Hoofdkwartier verborgen. Je Notion-inhoud blijft bewaard.':'Hoofdkwartier weer zichtbaar.');}
 });
-screen.addEventListener('input',e=>{if(coverDraft&&e.target.name==='name'){const old=coverDraft.name;coverDraft.name=e.target.value;const prompt=screen.querySelector('#kc-cover-prompt');if(prompt&&prompt.value.includes('Categorie: '+old+'.'))prompt.value=prompt.value.replace('Categorie: '+old+'.','Categorie: '+coverDraft.name+'.');}Art?.changed(e.target,screen);});
+screen.addEventListener('input',e=>{if(coverDraft&&e.target.name==='name'){const old=coverDraft.name||'Nieuwe verzameling';coverDraft.name=e.target.value;const title=screen.querySelector('.kc-cover-preview strong');if(title)title.textContent=coverDraft.name||'Nieuwe verzameling';const prompt=screen.querySelector('#kc-cover-prompt');if(prompt&&prompt.value.includes('Categorie: '+old+'.'))prompt.value=prompt.value.replace('Categorie: '+old+'.','Categorie: '+(coverDraft.name||'Nieuwe verzameling')+'.');}Art?.changed(e.target,screen);});
 screen.addEventListener('change',e=>{if(!coverDraft)return;if(e.target.id==='kc-cover-file-input'){Art?.fileChanged(e.target.files?.[0],coverDraft,rootWindow.MementoKnowledgeStore,renderCover,say);return;}});
 screen.addEventListener('submit',e=>{
 e.preventDefault();const f=e.target;
