@@ -56,3 +56,8 @@
 #memento-hq-preview .mm-note-actions{display:flex;flex-wrap:wrap;gap:8px}
 #memento-hq-preview .mm-note-actions button{min-height:44px;padding:9px 12px;border:1px solid #66886d;border-radius:10px;background:#244936;color:#f0f6ee;font-family:inherit;font-size:12px;font-weight:600;line-height:1.3;cursor:pointer}
 #memento-hq-preview .mm-note-actions .mm-note-ai{background:#b8ddc0;color:#173b26;border-color:#b8ddc0}
+
+/* Reuse the existing pixel-art editor inside the Notion headquarters form. */
+#memento-hq-preview .mm-cover-area{min-width:0;margin:8px 0 4px}
+#memento-hq-preview .kc-cover-ai>summary{min-height:44px;display:flex;align-items:center}
+#memento-hq-preview .kc-cover-preview img{image-rendering:pixelated}
