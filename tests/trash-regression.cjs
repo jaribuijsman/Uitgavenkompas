@@ -6,6 +6,7 @@ const before=JSON.stringify({life,finance}),summary=T.summary(life,finance);
 a.equal(summary.total,5);
 a.equal(summary.lifeTotal,3);a.equal(summary.financeTotal,2);
 a.deepEqual(summary.attachmentIds,["deleted123"]);
+a.deepEqual(T.summary({...life,knowledge:{portal:{cards:[{coverFile:{id:'deleted123'}}]}}},finance).attachmentIds,[],'Do not purge an attachment also used as a portal banner');
 const cleaned=T.purge(life,finance);
 a.equal(JSON.stringify({life,finance}),before);
 a.deepEqual(cleaned.life.notes.map(n=>n.id),["active"]);
