@@ -24,16 +24,17 @@ async function hydrate(host,store){if(!host||!store)return;
   if(el.isConnected&&el.dataset.kcCoverFile===id)el.src=url;
  }catch(e){/* fallback scene remains visible */}}
 }
-function render(d,parent=""){
+function render(d,parent="",options={}){
+ const customOnly=options.customOnly===true;
  if(!A)return "";const automatic=A.choose(d.name,d.icon,parent),id=mode==="library"&&A.valid(picked)?picked:automatic;
  const image=mode==="custom"&&pendingUrl?'<img class="kc-cover-pending" alt="" src="'+esc(pendingUrl)+'">':scene({coverId:id,coverFile:mode==="custom"?d.coverFile:null,coverFocus:focus});
  const prompt=editedPrompt||A.prompt({name:d.name||"Nieuwe verzameling",parent,scene:id,variant});
  return '<section class="kc-cover-editor"><h3>Illustratie op de kaart</h3>'+
  '<div class="kc-cover-preview">'+image+'<small>VOORBEELD</small><strong>'+esc(d.name||"Nieuwe verzameling")+'</strong></div>'+
- '<div class="kc-cover-modes" role="group" aria-label="Afbeeldingsbron">'+[["auto","Automatisch"],["library","Bibliotheek"],["custom","Eigen afbeelding"]].map(([id,label])=>'<button type="button" class="kc-btn" data-kc="cover-mode" data-id="'+id+'" aria-pressed="'+(mode===id)+'">'+label+'</button>').join("")+'</div>'+
- (mode==="auto"?'<p class="kc-muted">Een gratis passend landschap, automatisch geselecteerd op basis van de naam en het pictogram.</p>':"")+
- (mode==="library"?'<details class="kc-cover-library" open><summary>Kies uit '+A.SCENES.length+' pixel-artlandschappen</summary><div class="kc-cover-grid">'+A.SCENES.map(x=>'<button type="button" class="kc-cover-tile" data-kc="cover-select" data-id="'+esc(x.id)+'" aria-pressed="'+(picked===x.id)+'" aria-label="'+esc(x.title)+'"><img src="'+esc(A.url(x.id))+'" alt="" loading="lazy"><span>'+esc(x.title.split(" · ").at(-1))+'</span></button>').join("")+'</div></details>':"")+
- (mode==="custom"?'<label class="kc-cover-file-label">Afbeelding kiezen · PNG, JPG of WebP (maximaal 8 MB)<input type="file" id="kc-cover-file-input" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"></label>'+
+  (customOnly?"":('<div class="kc-cover-modes" role="group" aria-label="Afbeeldingsbron">'+[["auto","Automatisch"],["library","Bibliotheek"],["custom","Eigen afbeelding"]].map(([id,label])=>'<button type="button" class="kc-btn" data-kc="cover-mode" data-id="'+id+'" aria-pressed="'+(mode===id)+'">'+label+'</button>').join("")+'</div>'))+
+ (!customOnly&&mode==="auto"?'<p class="kc-muted">Een gratis passend landschap, automatisch geselecteerd op basis van de naam en het pictogram.</p>':"")+
+ (!customOnly&&mode==="library"?'<details class="kc-cover-library" open><summary>Kies uit '+A.SCENES.length+' pixel-artlandschappen</summary><div class="kc-cover-grid">'+A.SCENES.map(x=>'<button type="button" class="kc-cover-tile" data-kc="cover-select" data-id="'+esc(x.id)+'" aria-pressed="'+(picked===x.id)+'" aria-label="'+esc(x.title)+'"><img src="'+esc(A.url(x.id))+'" alt="" loading="lazy"><span>'+esc(x.title.split(" · ").at(-1))+'</span></button>').join("")+'</div></details>':"")+
+ (customOnly||mode==="custom"?'<label class="kc-cover-file-label">Afbeelding kiezen · PNG, JPG of WebP (maximaal 8 MB)<input type="file" id="kc-cover-file-input" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"></label>'+
  '<p class="kc-muted">'+(pending?esc(pending.name)+" · nog niet opgeslagen":d.coverFile?"Bestaande eigen afbeelding.":"Kies een bestand op je telefoon.")+'</p>'+
  '<label class="kc-cover-focus">Uitsnede <input type="range" min="0" max="100" step="5" id="kc-cover-focus" value="'+focus+'"></label>':"")+
  '<details class="kc-cover-ai"><summary>Maak nieuwe pixel art met ChatGPT</summary><p class="kc-muted">Kopieer de prompt, open de ChatGPT-app, maak een afbeelding en voeg die vervolgens hierboven toe. Geen betaalde API of automatische overdracht.</p>'+
@@ -64,7 +65,7 @@ async function fileChanged(file,d,store,rerender,notify){
  }catch(e){notify(e.message||"Afbeelding kan niet worden geopend.");}
 }
 function changed(el,host){if(el.id==="kc-cover-prompt"){editedPrompt=el.value;return true;}if(el.id==="kc-cover-focus"){focus=Number(el.value);host.querySelectorAll(".kc-cover-custom,.kc-cover-pending").forEach(img=>img.style.objectPosition=focus+"% center");return true;}return false;}
-async function save(d,{store,core,guard,write,onSaved,notify}){
+async function save(d,{store,core,guard,write,onSaved,notify,saveCard}){
  if(saving||!d)return;
  if(mode==="custom"&&!pending&&!d.coverFile){notify("Selecteer een eigen afbeelding of kies een van de landschappen.");return;}
  let token,meta=null,id="";saving=true;
@@ -72,7 +73,7 @@ async function save(d,{store,core,guard,write,onSaved,notify}){
   if(!guard?.writable)throw Error("Opslag is tijdelijk alleen-lezen.");
   if(mode==="custom"&&pending){token=guard.beginOperation();meta=await store.save("collection-cover-"+core.uid(),pending,token);}
   const data={...d,coverId:mode==="library"?(A.valid(picked)?picked:A.choose(d.name,d.icon)):"",coverFile:mode==="custom"?(meta||d.coverFile):null,coverFocus:focus};
-  if(!write(state=>{id=core.saveCollection(state,data).id;},token))throw Error("Opslaan mislukt. Je invoer is behouden.");
+  if(!write(state=>{id=saveCard?saveCard(state,data):core.saveCollection(state,data).id;},token))throw Error("Opslaan mislukt. Je invoer is behouden.");
   clearPending();onSaved(id);
  }catch(e){if(meta&&token)try{await store.remove(meta.id,token)}catch{}notify(e.message||"Afbeelding is niet opgeslagen.");}
  finally{saving=false;if(token)guard.endOperation(token);}
