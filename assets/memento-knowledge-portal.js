@@ -42,11 +42,13 @@ draw(`<h2>Volgorde bewerken</h2><p>Sleep aan de greep om een hoofdkwartier te ve
 rootWindow.MementoSortableUI?.mountAll(screen,[{element:screen.querySelector('#mm-order-list'),itemSelector:'.mm-manage-row',idAttr:'data-order-id',handleSelector:'.mm-drag',injectHandle:false,onOrder:ids=>{draft=ids.map(id=>draft.find(c=>String(c.id)===id));manage();return true;}}]);
 
 }
-function inbox(){draw(`<h2>Inbox</h2><p>Snel opslaan. Later indelen met AI.</p><form id="mm-note-form"><label>Nieuwe notitie<textarea id="kc-quick-text" name="note" required placeholder="Een idee, link of iets om uit te zoeken…"></textarea></label><button class="mm-action mm-full cursor-interaction" style="margin-top:12px">In inbox bewaren</button></form>${notes.map(n=>`<div class="mm-destination">${esc(n.body||n.title)}</div>`).join('')}<p class="mm-note">Notities blijven hier tot de overdracht naar Notion is bevestigd.</p><button class="mm-action mm-secondary" data-action="home">Terug naar overzicht</button>`);}
+function inbox(){draw(`<h2>Inbox</h2><p>Snel opslaan. Later indelen met AI.</p><form id="mm-note-form"><label>Nieuwe notitie<textarea id="kc-quick-text" name="note" required placeholder="Een idee, link of iets om uit te zoeken…"></textarea></label><button class="mm-action mm-full cursor-interaction" style="margin-top:12px">In inbox bewaren</button></form>${notes.map(n=>`<article class="mm-destination"><strong>${esc(n.title||'Naamloze notitie')}</strong><p>${esc(n.body||'')}</p><div class="mm-note-actions"><button type="button" class="mm-note-ai" data-note-ai="${esc(n.id)}">✧ Verwerken met AI</button><button type="button" class="mm-note-edit" data-note-edit="${esc(n.id)}">Bewerken</button></div></article>`).join('')}<p class="mm-note">Notities blijven hier tot de overdracht naar Notion is bevestigd.</p><button class="mm-action mm-secondary" data-action="home">Terug naar overzicht</button>`);}
 
 screen.addEventListener('click',e=>{
 const b=e.target.closest('button');if(!b)return;
 if(b.dataset.action){say('');({home:overview,manage,add:()=>form(),inbox,'save-order':()=>{if(draft&&!persist(draft))return;if(draft)items=draft.slice();overview();say('Volgorde opgeslagen.');}}[b.dataset.action]||(()=>{}))();}
+if(b.dataset.noteAi){bridge.openAI?.(b.dataset.noteAi);return;}
+if(b.dataset.noteEdit){rootWindow.MementoKnowledge?.editNote?.(b.dataset.noteEdit);return;}
 if(b.dataset.edit)form(Number(b.dataset.edit));
 if(b.dataset.open)say('Dit hoofdkwartier heeft nog geen Notion-link. Gebruik ⋯ om de koppeling toe te voegen.');
 if(b.dataset.hide){const x=items.find(x=>x.id===Number(b.dataset.hide)),next=items.map(c=>c===x?{...c,hidden:!c.hidden}:c);if(!persist(next))return;items=next;overview();say(!x.hidden?'Hoofdkwartier verborgen. Je Notion-inhoud blijft bewaard.':'Hoofdkwartier weer zichtbaar.');}

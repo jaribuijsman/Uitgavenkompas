@@ -49,3 +49,10 @@
 #memento-hq-preview .mm-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#08271ff2,#08271f9c 70%,#08271f66)}
 #memento-hq-preview .mm-open,#memento-hq-preview .mm-more{position:relative;z-index:1;text-decoration:none}
 #memento-hq-preview .mm-hq .mm-open{color:#fff6db}
+
+#memento-hq-preview .mm-destination{padding:15px;margin:12px 0}
+#memento-hq-preview .mm-destination>strong{display:block;color:#f0f4e8;font-size:14px;line-height:1.4}
+#memento-hq-preview .mm-destination>p{margin:6px 0 12px;color:#c5dac9;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;max-height:4.5em;overflow:hidden}
+#memento-hq-preview .mm-note-actions{display:flex;flex-wrap:wrap;gap:8px}
+#memento-hq-preview .mm-note-actions button{min-height:44px;padding:9px 12px;border:1px solid #66886d;border-radius:10px;background:#244936;color:#f0f6ee;font-family:inherit;font-size:12px;font-weight:600;line-height:1.3;cursor:pointer}
+#memento-hq-preview .mm-note-actions .mm-note-ai{background:#b8ddc0;color:#173b26;border-color:#b8ddc0}
