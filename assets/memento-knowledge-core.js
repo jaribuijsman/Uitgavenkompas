@@ -249,6 +249,8 @@ function notionPageId(value){
  try{const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||!(u.hostname==='app.notion.com'||['notion.so','notion.site'].some(h=>u.hostname===h||u.hostname.endsWith('.'+h))))return '';const match=decodeURIComponent(u.pathname).replace(/-/g,'').match(/([a-f0-9]{32})\/?$/i);return match?match[1].toLowerCase():'';}catch{return '';}
 }
 function notionURL(value){const id=notionPageId(value);if(!id)return '';const u=new URL(value);return u.hostname==='app.notion.com'?'https://www.notion.so/'+id+u.search+u.hash:u.href;}
+// Android PWA links need an explicit app intent; retain the exact HTTPS page as fallback.
+function notionOpenURL(value,android=false){const web=notionURL(value);if(!web)return '';if(!android)return web;return 'intent://www.notion.so/'+notionPageId(web)+'#Intent;scheme=https;package=notion.id;S.browser_fallback_url='+encodeURIComponent(web)+';end';}
 function saveCollection(life,input){
  const k=ensure(life),old=input.id?k.collections.find(c=>c.id===input.id):null;
  if(input.id&&!old)throw Error('Verzameling ontbreekt');
@@ -387,5 +389,5 @@ function saveJournal(life,{id,date,title='',body='',mood='',tags=[],collectionId
  const n=makeNote({title:title.trim()||date,body,collectionId},life);n.journal=journal;n.tags=clone(tags);validateNote(life,n);life.notes.push(n);return n;
 }
 
-return {notionURL,notionPageId,memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
+return {notionURL,notionOpenURL,notionPageId,memberships,descendants,activeCollection,validateDocument,documentText,collectionCounts,collectionPath,centralSearch,migrateHierarchy,saveCollection,reorderCollections,setCollectionArchived,journalDate,saveJournal,findJournal,journalCheckinValid,journalSelfCareValid,journalHealthValid,journalManualHealthValid,journalHasContent,iconIds,clone,uid,timestamp,builtins,ensure,validKind,typeOf,collectionOf,collectionName,checklistItems,reconcileItems,makeNote,updateNote,restoreRevision,toggleItem,addCollection,renameCollection,validate,validateNote,search};
 });
