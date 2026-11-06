@@ -47,6 +47,9 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  const androidHref=await page.evaluate(()=>{
    const originalUserAgent=Object.getOwnPropertyDescriptor(navigator,'userAgent');
    const originalHasPending=window.MementoKnowledgePortal.hasPending;
+   const existing=document.getElementById('memento-hq-preview');
+   const parent=existing?.parentNode, next=existing?.nextSibling;
+   existing?.remove(); // Avoid duplicate portal IDs while testing a standalone render.
    const sandbox=document.createElement('div');document.body.append(sandbox);
    try{
      Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/132 Mobile Safari/537.36'});
@@ -56,6 +59,7 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
      return sandbox.querySelector('a.mm-open')?.getAttribute('href');
    }finally{
      sandbox.remove();
+     if(parent)parent.insertBefore(existing,next);
      if(originalUserAgent)Object.defineProperty(navigator,'userAgent',originalUserAgent);
      else delete navigator.userAgent;
      window.MementoKnowledgePortal.hasPending=originalHasPending;
