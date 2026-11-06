@@ -44,4 +44,23 @@ module.exports=async(page,navigate,shot,context,url,width,checks)=>{
  await page.reload();await require('./enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');assert.equal((await read()).knowledge.portal.cards[0].id,Number(ordered[0]));
  await page.waitForFunction(()=>document.querySelector('.mm-hq .kc-cover-custom')?.src.startsWith('blob:'));
  const final=await read();assert.equal(final.knowledge.portal.cards.find(c=>c.id===1).coverFile.id,savedBanner.coverFile.id,'Banner survives restart');assert.equal(JSON.stringify(final.notes.filter(n=>n.body!=='Fictieve snelle inboxnotitie')),notes);assert.equal(await page.evaluate(()=>localStorage.getItem('uitgavenkompas_v1')),finance);assert.deepEqual(final.knowledge.collections,original.knowledge.collections,'Legacy artwork and collections are untouched');await page.evaluate(()=>window.MementoKnowledgeBridge.write(life=>{const card=life.knowledge.portal.cards.find(c=>c.name==='Recepten');card.link='https://www.notion.so/02f6147c45b14e00b240b02e69536903';}));await page.reload();await require('./enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await navigate(page,'life','notes');assert.equal(await page.locator('a.mm-open[href="https://www.notion.so/40d8bc13d1af817db914f03400ef8c07"]').count(),1,'Old built-in recipe destination is replaced');assert.equal(await page.locator('a.mm-open[href="https://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa?source=copy_link"]').count(),1,'Custom destination is preserved');checks.push('Portal: isolated config, staged order, cancel/save/restart, real Notion href, Inbox persistence and legacy data preservation');
+ const androidHref=await page.evaluate(()=>{
+   const originalUserAgent=Object.getOwnPropertyDescriptor(navigator,'userAgent');
+   const originalHasPending=window.MementoKnowledgePortal.hasPending;
+   const sandbox=document.createElement('div');document.body.append(sandbox);
+   try{
+     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/132 Mobile Safari/537.36'});
+     const card={id:1,name:'Fictief hoofdkwartier',subtitle:'Test',cover:0,hidden:false,link:'https://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'};
+     const state={notes:[],knowledge:{collections:[],portal:{version:1,cards:[card]}}};
+     window.MementoKnowledgePortal.mount(sandbox,{read:()=>state,write:()=>true});
+     return sandbox.querySelector('a.mm-open')?.getAttribute('href');
+   }finally{
+     sandbox.remove();
+     if(originalUserAgent)Object.defineProperty(navigator,'userAgent',originalUserAgent);
+     else delete navigator.userAgent;
+     window.MementoKnowledgePortal.hasPending=originalHasPending;
+   }
+ });
+ assert.equal(androidHref,'intent://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa#Intent;scheme=https;package=notion.id;S.browser_fallback_url='+encodeURIComponent('https://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')+';end','Android headquarters must offer native Notion app with web fallback');
+ checks.push('Android Notion intent anchor is rendered from a user-tappable headquarters card (physical-device handoff not covered)');
 };
