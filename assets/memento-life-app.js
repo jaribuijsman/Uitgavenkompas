@@ -191,7 +191,7 @@ function save(token){
   status(e.message||'Opslaan is niet gelukt. Bewaar je invoer en probeer opnieuw.',false,true);return false;
  }
 }
-function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;return false}undo=allowUndo?before:null;render();window.dispatchEvent(new Event('memento-day-rhythm-update'));if(text)status(text,allowUndo);return true}
+function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;return false}undo=allowUndo?before:null;render();window.MementoStart?.refreshDay?.();if(text)status(text,allowUndo);return true}
 function nextDate(base,repeat,days=4){if(repeat==='none')return '';const d=parseDate(base),day=d.getDate();if(['daily','weekly','custom'].includes(repeat)){d.setDate(day+(repeat==='daily'?1:repeat==='weekly'?7:days));return formatISO(d)}const n={monthly:1,quarterly:3,yearly:12}[repeat];d.setDate(1);d.setMonth(d.getMonth()+n);const end=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,end));return formatISO(d)}
 function sourceLink(t){const u=safeLink(t.sourceUrl||'');return u?'<a class="life-source" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':''}
 // Navigation returns true only when the requested destination is accepted.
@@ -885,19 +885,19 @@ function appointmentInterval(row){
 function paintDayTimeline(){
  for(const host of root.querySelectorAll('[data-memento-date]')){
   const day=host.dataset.mementoDate,remote=window.MementoGoogleCalendar?.getUpcomingForDay?.(day)||[];
-  const events=appointmentItemsForDay(day,remote).filter(x=>!x.done&&!x.carried);
+  const events=appointmentItemsForDay(day,remote).filter(x=>!x.done);
   const tasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&t.daySlot?.date===day&&!(t.date&&t.date<today()));
-  const entries=[...events.map(e=>({interval:appointmentInterval(e),html:renderUnifiedAppointmentItem(e.x,e.source,{dayCard:true})})),
+  const entries=[...events.map(e=>({interval:appointmentInterval(e),html:renderUnifiedAppointmentItem(e.x,e.source,{dayCard:true,carried:e.carried})})),
    ...tasks.map(t=>({interval:{begin:slotMinutes(t.daySlot.time),end:slotMinutes(t.daySlot.time)+t.daySlot.minutes},html:'<div class="dr-planned-task"><span class="dr-clock">'+esc(t.daySlot.time)+'</span>'+taskRow(t)+'<button type="button" class="dr-move" data-dr-plan="'+esc(t.id)+'">Verplaats</button></div>'}))];
   const timed=entries.filter(x=>x.interval).sort((a,b)=>a.interval.begin-b.interval.begin),other=entries.filter(x=>!x.interval);
-  let cursor=480,markup='<div class="memento-day-caption"><strong>Tijdlijn</strong><span>'+entries.length+'</span><button class="memento-inline-add" type="button" data-memento-new-event="'+day+'">＋ Afspraak</button></div><div class="dr-timeline">';
+  let cursor=480,markup='<div class="memento-day-caption"><strong>Tijdlijn</strong><span>'+entries.length+'</span>'+(day===today()?'<button class="memento-calendar-connect" type="button" data-memento-gcal-connect="true" aria-label="Google-agenda verbinden" title="Google-agenda verbinden">G</button>':'')+'<button class="memento-inline-add" type="button" data-memento-new-event="'+day+'">＋ Afspraak</button></div><div class="dr-timeline">';
   for(const item of timed){
    const {begin,end}=item.interval;
    if(begin>cursor+14)markup+='<div class="dr-free"><span>'+clockFromMinutes(cursor)+'–'+clockFromMinutes(begin)+'</span><button type="button" data-dr-free="'+day+'" data-dr-free-time="'+clockFromMinutes(cursor)+'" data-dr-free-end="'+clockFromMinutes(begin)+'">Plan taak ＋</button></div>';
    markup+=item.html;cursor=Math.max(cursor,end);
   }
   if(cursor<1320)markup+='<div class="dr-free"><span>'+clockFromMinutes(cursor)+'–22:00</span><button type="button" data-dr-free="'+day+'" data-dr-free-time="'+clockFromMinutes(cursor)+'" data-dr-free-end="22:00">Plan taak ＋</button></div>';
-  markup+='</div>'+other.map(x=>x.html).join('');
+  markup+='</div>'+(other.length?'<div class="dr-other-events">'+other.map(x=>x.html).join('')+'</div>':'');
   host.innerHTML=markup+(window.MementoFitnessBridge?.dayHTML(day,day===today())||'');
  }
  syncDayHeight();
@@ -954,7 +954,7 @@ window.MementoDayRhythm={
  start:()=>activeChecklists().filter(c=>c.pinned),
  toggle:(id,step)=>{const c=state.checklists.find(x=>x.id===id&&!x.deletedAt);if(!c||!c.steps.some(s=>s.id===step))return false;return mutate(()=>{const day=today(),done=new Set(checklistDone(c,day));if(done.has(step))done.delete(step);else done.add(step);c.days[day]=[...done]},'Checklist bijgewerkt.');},
  open:()=>openLifeView('checklists'),
- refresh:()=>window.dispatchEvent(new Event('memento-day-rhythm-update'))
+ refresh:()=>window.MementoStart?.refreshDay?.()
 };
 function renderToday(){
  const now=today(),open=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done),overdue=open.filter(t=>t.date&&t.date<now).sort((a,b)=>compareManual(a,b,(x,y)=>x.date.localeCompare(y.date)));
@@ -962,7 +962,7 @@ function renderToday(){
  const overdueMarkup=overdue.length?'<details open class="memento-future-day life-overdue-group"><summary><span class="memento-overdue-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span><span class="memento-overdue-title">Te laat — nog te doen</span><span class="memento-overdue-count" aria-label="'+overdue.length+' '+(overdue.length===1?'taak':'taken')+'">'+overdue.length+'</span></summary><div class="life-list life-overdue">'+overdue.map(taskRow).join('')+'</div></details>':'';
  const days=dayKeys.map((key,i)=>{
   const list=open.filter(t=>!(t.date&&t.date<now)&&(t.focusDate===now?now:t.date)===key).sort((a,b)=>compareManual(a,b,(x,y)=>Number(y.priority)-Number(x.priority)||x.title.localeCompare(y.title,'nl')));
-  const unscheduled=list.filter(t=>t.daySlot?.date!==key);
+  const unscheduled=list.filter(t=>!t.daySlot);
   const completedTasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&t.done&&(t.lastDone===key||(!t.lastDone&&t.date===key)));
   return '<section class="life-day-column" data-life-day="'+key+'" role="group" aria-label="'+labels[i]+' '+fmt(key)+'">'+
    '<div class="memento-day-appointments" data-memento-date="'+key+'"></div>'+
@@ -1710,7 +1710,7 @@ document.addEventListener('click',e=>{const menu=root.querySelector('.memento-ta
 root.addEventListener('toggle',e=>{if(e.target.id==='shoppingBought'&&e.target.isConnected)groceryBoughtOpen=e.target.open;if(e.target.open&&e.target.matches('.life-task-menu,.memento-day-note,.memento-day-add-menu'))closeLifePopovers(e.target);},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLifePopovers();});
 scheduleDayRefresh();
-render();window.MementoStart?.refreshDay?.();setArea(area);if(!blocked&&storageGuard?.writable)save();else if(blocked){$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Herstel een back-up';$('lifeSaveStatus').dataset.error='true';status('De bestaande Leven-opslag kon niet worden gelezen en is niet overschreven.',false,true)}
+render();setArea(area);window.MementoStart?.refreshDay?.();if(!blocked&&storageGuard?.writable)save();else if(blocked){$('lifeSaveStatus').hidden=false;$('lifeSaveStatus').textContent='Herstel een back-up';$('lifeSaveStatus').dataset.error='true';status('De bestaande Leven-opslag kon niet worden gelezen en is niet overschreven.',false,true)}
 storageGuard?.ready.then(ok=>{if(ok&&!blocked)save();});
 try{
  const shared=new URLSearchParams(window.location.search);

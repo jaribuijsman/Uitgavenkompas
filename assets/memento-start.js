@@ -133,7 +133,6 @@
  }
  root.querySelectorAll('[data-ms-moment]').forEach(button=>button.addEventListener('click',()=>{selectedMoment=button.dataset.msMoment;root.querySelectorAll('[data-ms-moment]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));refreshDay()}));
  root.addEventListener('change',e=>{const input=e.target;if(input.dataset.msCheck&&window.MementoDayRhythm?.toggle(input.dataset.msCheck,input.dataset.msStep))refreshDay()});
- window.addEventListener('memento-day-rhythm-update',()=>{if(lock.classList.contains('memento-welcome-mode'))refreshDay()});
  function weatherIcon(code,isDay){
   if(code===0||code===1)return isDay?'☀':'☾';
   if(code===2)return '⛅';if(code===3)return '☁';
