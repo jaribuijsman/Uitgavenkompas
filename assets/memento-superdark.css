@@ -1,6 +1,6 @@
-/* Memento Super Dark — independent, opt-in night material.
+/* Memento Super Dark — independent, opt-in moonlit material.
    Keep page structure, icons, data charts and original pixel artwork intact.
-   Artwork is color-graded only while this theme is active; no expensive live blur. */
+   The shared app scene fades out in the first viewport; no live blur. */
 
 /* Super Dark uses Memento's existing moonlit pixel-art scene rather than
    veiling the sunny ruins artwork. Preserve night detail without live blur. */
@@ -17,10 +17,17 @@ html[data-memento-theme="superdark"] body[data-compass-area="finance"] {
 }
 html[data-memento-theme="superdark"] body #lifeApp,
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] > .app {
-  background:
-    radial-gradient(ellipse at 74% 9%,#afc7c111 0%,transparent 43%),
-    linear-gradient(180deg,#0206086b 0%,#030a0bb8 50%,#030806ec 100%),
-    url('./pin-forests/maanmeer.webp') center top / cover scroll!important;
+  /* Portrait artwork used to be scaled with cover against the *entire*
+     scrolling page. On tall views this crops away the moon and magnifies
+     bright cloud areas. Size it to the viewport width, then fade to ink. */
+  background-color:var(--mg-night-bg)!important;
+  background-image:
+    linear-gradient(180deg,#080e11a8 0px,#080e11b0 300px,#080e11ed 690px,#080e11 960px),
+    url('./pin-forests/maanmeer.webp')!important;
+  background-size:100% 100%,min(100%,720px) auto!important;
+  background-position:center top,center 145px!important;
+  background-repeat:no-repeat!important;
+  background-attachment:scroll!important;
   color:var(--mg-ink)!important;
 }
 html[data-memento-theme="superdark"] body #compassAreaBar,
@@ -139,14 +146,13 @@ html[data-memento-theme="superdark"] #mementoStart .ms-continue {
   box-shadow:inset 0 1px 0 #ffffff7a,0 7px 22px #000a;
 }
 
-/* Day V3 has hard-coded medium-green card colors in memento-ui.css.
-   Super Dark alone repaints them; time, late accent, controls and geometry stay. */
+/* Day V3 retains its geometry and overdue markers; night material is shared. */
 html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] :is(.memento-unified-event.memento-v3-card,.life-day-column .life-list>.life-task.memento-v3-card,.life-overdue>.life-task.memento-v3-card) {
-  background:#13201a!important;
-  border-color:#3b5143!important;
+  background:var(--mg-night-card)!important;
+  border-color:var(--mg-night-border)!important;
 }
 html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-v3-card.memento-appointment-card {
-  background:linear-gradient(115deg,#16241d,#101b16)!important;
+  background:linear-gradient(115deg,#192a21,#101c17)!important;
 }
 html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late {
   border-left-color:#e0a0a6!important;
@@ -157,7 +163,7 @@ html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .meme
 }
 /* Compact capture uses a separate hard-coded green material on Mijn Dag. */
 html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card {
-  background:linear-gradient(145deg,#16251d,#101b16)!important;
+  background:linear-gradient(145deg,#182920,#101b17)!important;
   border-color:#3e5746!important;
   box-shadow:0 9px 24px #0008!important;
 }
@@ -168,6 +174,43 @@ html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card .mement
 html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card .memento-capture-kinds button:not([aria-pressed="true"]) {
   background:#1a2b22;
   color:#e7f0e9;
+}
+
+/* Day-specific hard-coded surfaces; leave action sizes and selected sage intact. */
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .life-day-tabs {
+  background:#101d17;
+  border-color:var(--mg-night-border);
+}
+html[data-memento-theme="superdark"] body #lifeApp :is(.memento-day-summary,.memento-day-note-content) {
+  background:var(--mg-night-card);
+  border-color:var(--mg-night-border);
+}
+html[data-memento-theme="superdark"] body #lifeApp .memento-day-note-content button,
+html[data-memento-theme="superdark"] body #lifeApp .dr-actions button:not(.dr-delete) {
+  background:var(--mg-control-bg);
+  color:var(--mg-night-text);
+  border-color:var(--mg-night-border);
+}
+html[data-memento-theme="superdark"] body #lifeApp .dr-timeline {
+  border-left-color:#607c6b;
+}
+/* Keep calendar duty/appointment dots and the active day legible. */
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="agenda"] button.memento-cal-day:not(.selected):not(.is-today):not(.muted) {
+  background:var(--mg-night-card);
+  border-color:var(--mg-night-border);
+}
+/* Fitness declares local --ft-* tokens; theme those, not every exercise row. */
+html[data-memento-theme="superdark"] :is(#mementoFitness,.ft-day,#fitnessDialog) {
+  --ft-bg:#101c17;
+  --ft-surface:#14231c;
+  --ft-line:#405849;
+  --ft-ink:#eff5ef;
+  --ft-muted:#bacbbf;
+  --ft-accent:#c7e3bc;
+}
+html[data-memento-theme="superdark"] body #lifeApp #mementoFitness .ft-timer {
+  background:var(--mg-night-raised)!important;
+  border-color:var(--mg-night-border)!important;
 }
 
 /* Selected app cards remain distinguishable from midnight canvas.
@@ -216,12 +259,39 @@ html[data-memento-theme="superdark"] body :is(.memento-gcal-popover,.memento-tas
   border-color:#425a46!important;
 }
 
+/* The dashboard has fixed medium-green cards outside the shared token system.
+   Repaint only these surfaces; keep financial amounts and status accents. */
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-dashboard.dashboard-redesign {
+  --dash-line:#405849!important;
+  --dash-panel:var(--mg-surface)!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-dashboard .dashboard-core-stats>.stat-card {
+  background:var(--mg-night-card)!important;
+  border-color:var(--mg-night-border)!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-dashboard .dashboard-core-stats>.stat-card:first-child {
+  background:linear-gradient(115deg,#192a21,#101c17)!important;
+  border-color:#55745f!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-dashboard :is(.salary-period-card-modern,.dashboard-accounts-modern,.dashboard-trend-card,.dashboard-lower-grid>.card) {
+  background:var(--mg-surface)!important;
+  border-color:var(--mg-night-border)!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-dashboard .salary-period-modern-metrics .account-period-card {
+  background:var(--mg-night-raised);
+  border-color:var(--mg-night-border);
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .m9-chart-tabs button:not([aria-current="true"]) {
+  background:var(--mg-control-bg);
+  border-color:var(--mg-night-border);
+}
+
 /* The financial app has its own scoped palette and a few explicitly light
    subviews; fix these without mutating chart colors, amounts or status badges. */
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app {
   --bg:#070b09;
-  --surface:#101915;
-  --surface2:#16241d;
+  --surface:#121f19;
+  --surface2:#1c3025;
   --ink:#edf5ec;
   --muted:#b9cdbd;
   --line:#395344;
