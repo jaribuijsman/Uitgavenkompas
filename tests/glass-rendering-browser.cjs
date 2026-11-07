@@ -32,7 +32,9 @@ async function inspect(page,screen,width,report){
  if(width===393){
   assert.equal(metrics.theme,'superdark',screen+' retains the selected night theme');
   assert.equal(metrics.bodyColor,'rgb(7, 11, 9)',screen+' uses the night shell');
-  assert.match(metrics.appArt,/bosruines\.webp/,screen+' preserves original pixel forest');
+  assert.match(metrics.appArt,/maanmeer\.webp/,screen+' uses existing moonlit pixel-art in Super Dark');
+ }else{
+  assert.match(metrics.appArt,/bosruines\.webp/,screen+' retains original daylight forest outside Super Dark');
  }
 }
 (async()=>{let browser;const report=[],errors=[];try{
