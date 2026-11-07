@@ -3,7 +3,7 @@
  const $=(s,r=document)=>r.querySelector(s);
  // One presentation preference for both settings entry points. Never touch app records.
  const THEME_KEY='memento_card_theme_v1';
- const validTheme=value=>value==='glass'?'glass':'forest';
+ const validTheme=value=>['forest','glass','superdark'].includes(value)?value:'forest';
  function syncThemeChoices(theme){
   document.querySelectorAll('button[data-ms-theme]').forEach(button=>{
    button.setAttribute('aria-pressed',String(button.dataset.msTheme===theme));
@@ -12,6 +12,8 @@
  function applyTheme(value,save=false){
   const theme=validTheme(value);
   document.documentElement.dataset.mementoTheme=theme;
+  const chrome=document.querySelector('meta[name="theme-color"]');
+  if(chrome)chrome.content=theme==='superdark'?'#070b09':'#102b22';
   if(save){try{localStorage.setItem(THEME_KEY,theme);}catch(_error){/* Private browsing: session choice still works. */}}
   syncThemeChoices(theme);
   return theme;
@@ -51,10 +53,11 @@
   const themePicker=document.createElement('section');
   themePicker.className='ms-theme-picker';
   themePicker.setAttribute('aria-label','Kaartstijl');
-  themePicker.innerHTML='<h3>Kaartstijl</h3><p>Kies hoe de groene kaarten en vensters in heel Memento worden weergegeven.</p>'+
+  themePicker.innerHTML='<h3>Kaartstijl</h3><p>Kies de uitstraling van heel Memento, inclusief het landschap en alle vensters.</p>'+
    '<div class="ms-theme-choices" role="group" aria-label="Kaartstijl kiezen">'+
    '<button type="button" class="ms-theme-choice" data-ms-theme="forest" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-forest" aria-hidden="true"><span></span></span><strong>Bosgroen</strong><small>Dekkend · beter leesbaar</small></button>'+
    '<button type="button" class="ms-theme-choice" data-ms-theme="glass" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-glass" aria-hidden="true"><span></span></span><strong>Glas</strong><small>Transparant · meer achtergrond</small></button>'+
+   '<button type="button" class="ms-theme-choice" data-ms-theme="superdark" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-superdark" aria-hidden="true"><span></span></span><strong>Super Dark</strong><small>Nachtlandschap · maximaal contrast</small></button>'+
    '</div><p class="ms-theme-footnote">Geldt voor Start, Leven, Financiën, kaarten en vensters. Je keuze blijft bewaard op dit apparaat.</p>';
   body('appearance').append(themePicker);
   message('life','Jouw Leven-onderdelen','Open een onderdeel direct via de bestaande navigatie. Je gegevens en instellingen blijven behouden.');
