@@ -23,6 +23,7 @@ const reports=[];
   data.life.appointments=count?[{...fixture.life.appointments[0],id:'v3-event',title:'Fictieve afspraak met notitie',date:'2026-10-31',time:'12:00',endTime:'13:00',notes:'Dit is een geïsoleerde notitie.',location:''}]:[];
   data.life.googleAppointments=[];data.life.appointmentChecks={};
   if(count){data.life.tasks.push({...task('v3-tomorrow','Fictieve taak voor morgen'),date:'2026-11-01'});}
+  if(count===3){data.life.tasks.push({...task('v3-overdue','Fictieve taak die te laat is'),date:'2026-10-30'});}
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(12000);
   const tag=width+'-'+count;
   const shot=label=>page.screenshot({path:path.join(out,tag+'-'+label+'.png'),animations:'disabled'});
@@ -35,6 +36,12 @@ const reports=[];
     else await page.locator('#lifeNavigation [data-life-view="today"]').click();
    };
    await goToday();
+   if(count===3){
+    const overdue=page.locator('[data-life-day="2026-10-31"] .life-overdue-group');
+    assert(await overdue.isVisible(),'Overdue tasks retain a visible place on Mijn dag');
+    assert.match(await overdue.innerText(),/Te laat — nog te doen/);
+    assert(await overdue.locator('[data-life-edit-task="v3-overdue"]').count(),'Overdue task remains actionable');
+   }
    const stored=()=>page.evaluate(()=>({life:JSON.parse(localStorage.getItem('compass_life_preview_v1')),finance:localStorage.getItem('uitgavenkompas_v1')}));
    const original=await stored();
    const measure=()=>page.evaluate(()=>{
@@ -195,6 +202,34 @@ const reports=[];
     assert.equal(afterAppointment.life.appointments.length,baseline.life.appointments.length+1);
     assert.equal(await capture.locator('#lifeQuickTitle').inputValue(),'','Successful save clears draft');
     await shot('quick-capture-a');
+    // Time allocation is separate from the original task date and fails closed on overlap.
+    await page.locator('[data-life-day="2026-10-31"] [data-dr-free]').first().click();
+    await page.locator('#drPlanTask').selectOption('v3-task-0');
+    await page.locator('#drPlanDate').fill('2026-10-31');
+    await page.locator('#drPlanTime').fill('11:00');
+    await page.locator('#drPlanMinutes').fill('30');
+    await page.locator('[form="drPlanForm"]').click();
+    assert.deepEqual((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,{date:'2026-10-31',time:'11:00',minutes:30});
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').date,'2026-10-31');
+    await page.locator('[data-life-day="2026-10-31"] .dr-planned-task .dr-move').first().click();
+    await page.locator('#drPlanTime').fill('12:00');
+    await page.locator('[form="drPlanForm"]').click();
+    assert.match(await page.locator('#drPlanError').innerText(),/overlapt/);
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot.time,'11:00');
+    await page.locator('[data-dr-unplan="v3-task-0"]').click();
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,undefined);
+    await page.evaluate(()=>window.MementoNavigation.setView('checklists'));
+    await page.locator('[data-dr-new]').click();
+    await page.locator('#drTitle').fill('Fictieve avondzorg');
+    await page.locator('#drMoment').selectOption('evening');
+    await page.locator('#drPinned').check();
+    await page.locator('#drSteps').fill('Water drinken\nTanden poetsen');
+    await page.locator('[form="drChecklistForm"]').click();
+    await page.locator('#lifeDialog').waitFor({state:'hidden'});
+    await shot('checklists');
+    await page.evaluate(()=>window.MementoStart.showWelcome());
+    await page.locator('[data-ms-moment="evening"]').click();
+    await shot('start-rhythm');
    }
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}

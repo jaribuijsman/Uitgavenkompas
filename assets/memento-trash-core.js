@@ -2,12 +2,13 @@
 (function(root,factory){const api=factory();if(typeof module==="object"&&module.exports)module.exports=api;else root.MementoTrashCore=api;})(globalThis,()=>{
 "use strict";
 const copy=value=>JSON.parse(JSON.stringify(value));
-const lifeKinds={tasks:"Taken",notes:"Notities",groceries:"Boodschappen",wishes:"Aankoopwensen",templates:"Bewaarde taken"};
+const lifeKinds={tasks:"Taken",notes:"Notities",groceries:"Boodschappen",wishes:"Aankoopwensen",templates:"Bewaarde taken",checklists:"Checklisten"};
 const financeKinds={transactions:"Transacties",bills:"Vaste lasten",goals:"Spaardoelen",receipts:"Bonnen",research:"Onderzoeksdossiers"};
 const isTrashed=item=>Boolean(item&&typeof item==="object"&&item.deletedAt);
 function summary(life,finance){
  if(!life||!finance||!Array.isArray(life.notes)||!Array.isArray(finance.transactions)||!Array.isArray(finance.categories))throw Error("Leven of Financiën is niet veilig leesbaar.");
  const counts={},liveFiles=new Set(),oldFiles=new Set();
+ if(life.checklists===undefined)life={...life,checklists:[]};
  for(const [key,label] of Object.entries(lifeKinds)){
   if(!Array.isArray(life[key]))throw Error("De lijst "+label+" kan niet veilig worden gelezen.");
   counts[label]=life[key].filter(isTrashed).length;
@@ -38,7 +39,7 @@ function summary(life,finance){
 }
 function purge(life,finance){
  const overview=summary(life,finance),nextLife=copy(life),nextFinance=copy(finance);
- for(const key of Object.keys(lifeKinds))nextLife[key]=nextLife[key].filter(x=>!isTrashed(x));
+ for(const key of Object.keys(lifeKinds))nextLife[key]=(nextLife[key]||[]).filter(x=>!isTrashed(x));
  if(nextLife.fitness)nextLife.fitness.sessions=nextLife.fitness.sessions.filter(x=>!isTrashed(x));
  if(nextFinance.trash)for(const key of Object.keys(nextFinance.trash))nextFinance.trash[key]=[];
  // Do not modify active transactions, receipts, tasks, linked entries, historical sessions or IDs.

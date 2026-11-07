@@ -98,6 +98,7 @@ jobs:
             node tests/journal-upgrade-core.cjs
             node tests/fitness-regression.cjs
             node tests/trash-regression.cjs
+            node tests/day-rhythm-storage.cjs
             node tests/pin-disabled-regression.cjs
             node tests/illustrative-icons-core.cjs
           fi
