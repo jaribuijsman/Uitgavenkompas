@@ -174,7 +174,6 @@ function validate(s){
 }
 try{const raw=localStorage.getItem(KEY);state=raw?validate(JSON.parse(raw)):clone(seed)}catch(e){state=clone(seed);blocked=true}
 if(window.MementoFitnessCore&&state.fitness===undefined)state.fitness=window.MementoFitnessCore.empty();
-if(!Array.isArray(state.checklists))state.checklists=[];
 if(!Array.isArray(state.appointments))state.appointments=[];if(!Array.isArray(state.googleAppointments))state.googleAppointments=[];if(!state.appointmentChecks)state.appointmentChecks={};
 function status(text,canUndo=false,error=false){clearTimeout(messageTimer);window.MementoNoticeLayout?.();$('lifeMessage').innerHTML='<span>'+esc(text)+'</span>'+(canUndo?'<button type="button" data-life-action="undo">Ongedaan maken</button>':'');$('lifeMessage').setAttribute('role',error?'alert':'status');messageTimer=setTimeout(()=>{$('lifeMessage').textContent=''},3000)}
 function savedStatus(){$('lifeSaveStatus').textContent='';$('lifeSaveStatus').hidden=true;$('lifeSaveStatus').dataset.error='false'}
@@ -937,7 +936,7 @@ function renderChecklists(){
 }
 let checklistTrash=false;
 function editChecklist(id){
- const c=state.checklists.find(x=>x.id===id&&!x.deletedAt);
+ const c=(state.checklists||[]).find(x=>x.id===id&&!x.deletedAt);
  modal={mode:'checklist',id:id||''};
  showDialog(c?'Checklist bewerken':'Nieuwe checklist','Stappen blijven per dag afzonderlijk afgevinkt.',
  '<form id="drChecklistForm"><label class="life-form-field">Naam<input id="drTitle" required maxlength="180" value="'+esc(c?.title||'')+'"></label>'+
@@ -950,14 +949,14 @@ function editChecklist(id){
 function saveChecklist(id){
  const title=$('drTitle').value.trim(),lines=$('drSteps').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
  if(!title||lines.some(x=>x.length>300)||lines.length>60){status('Controleer de naam en stappen (maximaal 60 stappen, 300 tekens per stap).',false,true);return}
- const old=state.checklists.find(x=>x.id===id),available=[...(old?.steps||[])],steps=lines.map(text=>{const at=available.findIndex(s=>s.text===text);return at>=0?available.splice(at,1)[0]:{id:uid(),text}});
+ const old=(state.checklists||[]).find(x=>x.id===id),available=[...(old?.steps||[])],steps=lines.map(text=>{const at=available.findIndex(s=>s.text===text);return at>=0?available.splice(at,1)[0]:{id:uid(),text}});
  const value={...(old||{id:uid(),deletedAt:'',days:{}}),title,moment:$('drMoment').value,repeat:$('drRepeat').value,pinned:$('drPinned').checked,steps};
- if(mutate(()=>{if(old)state.checklists[state.checklists.indexOf(old)]=value;else state.checklists.push(value)},'Checklist opgeslagen.'))closeDialog();
+ if(mutate(()=>{state.checklists||=[];if(old)state.checklists[state.checklists.indexOf(old)]=value;else state.checklists.push(value)},'Checklist opgeslagen.'))closeDialog();
 }
 window.MementoDayRhythm={
  start:()=>activeChecklists().filter(c=>c.pinned),
  day:checklistCycleDay,
- toggle:(id,step)=>{const c=state.checklists.find(x=>x.id===id&&!x.deletedAt);if(!c||!c.steps.some(s=>s.id===step))return false;return mutate(()=>{const day=checklistCycleDay(c),done=new Set(checklistDone(c,day));if(done.has(step))done.delete(step);else done.add(step);c.days[day]=[...done]},'Checklist bijgewerkt.');},
+ toggle:(id,step)=>{const c=(state.checklists||[]).find(x=>x.id===id&&!x.deletedAt);if(!c||!c.steps.some(s=>s.id===step))return false;return mutate(()=>{const day=checklistCycleDay(c),done=new Set(checklistDone(c,day));if(done.has(step))done.delete(step);else done.add(step);c.days[day]=[...done]},'Checklist bijgewerkt.');},
  open:()=>openLifeView('checklists'),
  refresh:()=>window.MementoStart?.refreshDay?.()
 };
