@@ -203,6 +203,19 @@ const server=http.createServer((req,res)=>{
    await page.locator('#mementoStart').waitFor({state:'visible'});
    assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'superdark','Card theme survives app relaunch');
    assert.equal(await page.locator('#pinForm').isVisible(),false);
+   // After scrolling to the last quick action, the separate footer must not
+   // cover it at the target Samsung A54 CSS viewport width.
+   await page.locator('#mementoStart .ms-shell').evaluate(shell=>{shell.scrollTop=shell.scrollHeight;});
+   await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+   const nightGeometry=await page.evaluate(()=>{
+    const rect=selector=>document.querySelector(selector).getBoundingClientRect().toJSON();
+    return {quick:rect('#mementoStart .ms-quickbutton:last-child'),footer:rect('#mementoStart .ms-footer'),
+      width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
+      material:getComputedStyle(document.documentElement).getPropertyValue('--mg-surface').trim()};
+   });
+   assert(nightGeometry.quick.bottom<=nightGeometry.footer.top-6,'Super Dark quick action must clear the bottom CTA: '+JSON.stringify(nightGeometry));
+   assert(nightGeometry.scrollWidth<=nightGeometry.width+1,'Super Dark start has horizontal overflow');
+   assert.match(nightGeometry.material,/#13201a/i,'Dark content cards must use the calmer night material');
    assert.deepEqual(errors,[],'No page errors');
    console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');
    await context.close();
