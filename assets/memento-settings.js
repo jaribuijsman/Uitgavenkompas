@@ -57,7 +57,6 @@
    '<button type="button" class="ms-theme-choice" data-ms-theme="glass" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-glass" aria-hidden="true"><span></span></span><strong>Glas</strong><small>Transparant · meer achtergrond</small></button>'+
    '</div><p class="ms-theme-footnote">Geldt voor Start, Leven, Financiën, kaarten en vensters. Je keuze blijft bewaard op dit apparaat.</p>';
   body('appearance').append(themePicker);
-  syncThemeChoices(window.MementoTheme.get());
   message('life','Jouw Leven-onderdelen','Open een onderdeel direct via de bestaande navigatie. Je gegevens en instellingen blijven behouden.');
   message('finance','Financiële instellingen','Beheer je categorieën en financiële standaardwaarden, zonder nieuwe gegevensopslag.');
   if(area==='life'){
@@ -83,6 +82,7 @@
    openPage(shell,id);
   });
   host.prepend(shell);
+  syncThemeChoices(window.MementoTheme.get());
   return {shell,body};
  }
  function openPage(shell,id){
