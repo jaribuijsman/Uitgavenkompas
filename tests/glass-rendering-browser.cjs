@@ -23,12 +23,17 @@ async function inspect(page,screen,width,report){
  const metrics=await page.evaluate(()=>{
   const shown=[...document.querySelectorAll('body *')].filter(n=>!n.closest('#pinLock,#mementoStart')&&n.checkVisibility({opacityProperty:true,visibilityProperty:true})&&n.getBoundingClientRect().width>0&&n.getBoundingClientRect().height>0);
   const blur=shown.filter(n=>getComputedStyle(n).backdropFilter!=='none').map(n=>({tag:n.tagName,id:n.id,classes:n.className,value:getComputedStyle(n).backdropFilter}));
-  return {blur,background:getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app')).backgroundAttachment,clientWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth};
+  return {blur,theme:document.documentElement.dataset.mementoTheme,bodyColor:getComputedStyle(document.body).backgroundColor,appArt:getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app')).backgroundImage,background:getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app')).backgroundAttachment,clientWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth};
  });report.push({width,screen,...metrics});
  await page.screenshot({path:path.join(out,width+'-'+screen+'.jpg'),type:'jpeg',quality:75,animations:'disabled'});
  assert.deepEqual(metrics.blur,[],screen+' must not create live backdrop surfaces');
  if(width<800)assert(!metrics.background.split(',').some(v=>v.trim()==='fixed'),screen+' mobile background must scroll with the page');
  assert(metrics.scrollWidth<=width+1,screen+' horizontal overflow');
+ if(width===393){
+  assert.equal(metrics.theme,'superdark',screen+' retains the selected night theme');
+  assert.equal(metrics.bodyColor,'rgb(7, 11, 9)',screen+' uses the night shell');
+  assert.match(metrics.appArt,/bosruines\.webp/,screen+' preserves original pixel forest');
+ }
 }
 (async()=>{let browser;const report=[],errors=[];try{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({args:['--no-sandbox','--disable-dev-shm-usage']});const data=await require('./helpers/visual-fixture.cjs').fixture(),url='http://127.0.0.1:'+server.address().port;
@@ -43,6 +48,9 @@ async function inspect(page,screen,width,report){
   await page.goto(url);await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
   await nav(page,'life','notes');
   const stored=()=>page.evaluate(()=>({finance:localStorage.getItem('uitgavenkompas_v1'),life:localStorage.getItem('compass_life_preview_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')})),before=await stored();
+  // Full-screen visual matrix in Super Dark at the target 393px width.
+  // Other widths retain the baseline forest-theme regression coverage.
+  if(width===393)await page.evaluate(()=>window.MementoTheme.set('superdark'));
   for(const [name,area,view]of routes){await nav(page,area,view);await inspect(page,name,width,report);}
   if(width<800){await page.locator('[data-memento-menu=open]').click();await inspect(page,'navigation-open',width,report);await page.locator('#mementoMenuClose').first().click();}
   await nav(page,'finance','dashboard');await page.locator('#m9-accounts').click();await inspect(page,'account-sheet-open',width,report);await page.locator('.m9-sheet-head [data-m9-close]').click();
