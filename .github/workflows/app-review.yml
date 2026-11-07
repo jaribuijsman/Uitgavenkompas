@@ -154,6 +154,15 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Keep Super Dark screen evidence on successful rendering checks
+        uses: actions/upload-artifact@v4
+        if: always() && matrix.group == 'test-glass-rendering-browser'
+        with:
+          name: memento-superdark-screen-review
+          path: /tmp/memento-glass-rendering
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Preserve Kenniscentrum mobile editor evidence even on green runs
         uses: actions/upload-artifact@v4
         if: always() && (matrix.group == 'life-knowledge' || matrix.group == 'life-full')
