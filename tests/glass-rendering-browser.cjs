@@ -23,7 +23,12 @@ async function inspect(page,screen,width,report){
  const metrics=await page.evaluate(()=>{
   const shown=[...document.querySelectorAll('body *')].filter(n=>!n.closest('#pinLock,#mementoStart')&&n.checkVisibility({opacityProperty:true,visibilityProperty:true})&&n.getBoundingClientRect().width>0&&n.getBoundingClientRect().height>0);
   const blur=shown.filter(n=>getComputedStyle(n).backdropFilter!=='none').map(n=>({tag:n.tagName,id:n.id,classes:n.className,value:getComputedStyle(n).backdropFilter}));
-  return {blur,theme:document.documentElement.dataset.mementoTheme,bodyColor:getComputedStyle(document.body).backgroundColor,appArt:getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app')).backgroundImage,background:getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app')).backgroundAttachment,clientWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth};
+  const app=getComputedStyle(document.querySelector(document.body.dataset.compassArea==='life'?'#lifeApp':'body>.app'));
+  const token=getComputedStyle(document.documentElement);
+  const dayMarker=document.querySelector('#lifeApp .dr-marker');
+  const fitness=document.querySelector('#mementoFitness');
+  const dashboard=document.querySelector('#view-dashboard .dashboard-core-stats>.stat-card');
+  return {blur,theme:document.documentElement.dataset.mementoTheme,bodyColor:getComputedStyle(document.body).backgroundColor,appArt:app.backgroundImage,sceneSize:app.backgroundSize,scenePosition:app.backgroundPosition,background:app.backgroundAttachment,nightCard:token.getPropertyValue('--mg-night-card').trim(),checklistToken:token.getPropertyValue('--mg-checklist-bg').trim(),dayMarkerBg:dayMarker?getComputedStyle(dayMarker).backgroundColor:null,fitnessSurface:fitness?getComputedStyle(fitness).getPropertyValue('--ft-surface').trim():null,dashboardCard:dashboard?getComputedStyle(dashboard).backgroundColor:null,clientWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth};
  });report.push({width,screen,...metrics});
  await page.screenshot({path:path.join(out,width+'-'+screen+'.jpg'),type:'jpeg',quality:75,animations:'disabled'});
  assert.deepEqual(metrics.blur,[],screen+' must not create live backdrop surfaces');
@@ -33,6 +38,11 @@ async function inspect(page,screen,width,report){
   assert.equal(metrics.theme,'superdark',screen+' retains the selected night theme');
   assert.equal(metrics.bodyColor,'rgb(7, 11, 9)',screen+' uses the night shell');
   assert.match(metrics.appArt,/maanmeer\.webp/,screen+' uses existing moonlit pixel-art in Super Dark');
+  assert.match(metrics.scenePosition,/145px/,screen+' positions moonlit scenery independently of document height');
+  assert(!/cover/.test(metrics.sceneSize),screen+' portrait artwork must not scale to the full document');
+  assert.equal(metrics.nightCard,'#121f19',screen+' uses consistent dark card token');
+  assert.equal(metrics.checklistToken,'#17291f',screen+' uses a subdued checklist material');
+  if(screen==='fitness')assert.equal(metrics.fitnessSurface,'#14231c','Fitness shares night surfaces');
  }else{
   assert.match(metrics.appArt,/bosruines\.webp/,screen+' retains original daylight forest outside Super Dark');
  }
