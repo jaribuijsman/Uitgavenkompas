@@ -1,6 +1,27 @@
 /* Memento settings navigation: presentation only. Existing controls keep their original event handlers. */
 (()=>{'use strict';
  const $=(s,r=document)=>r.querySelector(s);
+ // One presentation preference for both settings entry points. Never touch app records.
+ const THEME_KEY='memento_card_theme_v1';
+ const validTheme=value=>value==='glass'?'glass':'forest';
+ function syncThemeChoices(theme){
+  document.querySelectorAll('button[data-ms-theme]').forEach(button=>{
+   button.setAttribute('aria-pressed',String(button.dataset.msTheme===theme));
+  });
+ }
+ function applyTheme(value,save=false){
+  const theme=validTheme(value);
+  document.documentElement.dataset.mementoTheme=theme;
+  if(save){try{localStorage.setItem(THEME_KEY,theme);}catch(_error){/* Private browsing: session choice still works. */}}
+  syncThemeChoices(theme);
+  return theme;
+ }
+ let storedTheme='forest';
+ try{storedTheme=localStorage.getItem(THEME_KEY);}catch(_error){/* Storage may be blocked. */}
+ applyTheme(storedTheme);
+ window.addEventListener('storage',event=>{if(event.key===THEME_KEY)applyTheme(event.newValue);});
+ window.MementoTheme={get:()=>validTheme(document.documentElement.dataset.mementoTheme),set:theme=>applyTheme(theme,true)};
+
  const selected={life:null,finance:null};
  const pages=['appearance','personal','assistant','backup','privacy','trash','life','finance'];
  const labels={appearance:'Weergave',personal:'Persoonlijke instellingen',assistant:'Memento-assistent',backup:'Back-up en herstel',privacy:'Privacy en beveiliging',trash:'Prullenbak',life:'Leven',finance:'Financiën'};
@@ -27,7 +48,16 @@
    pages.map(id=>'<section class="ms-page" data-ms-page="'+id+'" id="ms-'+area+'-'+id+'" aria-label="'+labels[id]+'" hidden><header class="ms-detail-head"><button type="button" class="ms-back" data-ms-back aria-label="Terug naar instellingen"><span aria-hidden="true">‹</span> Terug</button><h2 tabindex="-1">'+labels[id]+'</h2></header><div class="ms-page-body"></div></section>').join('');
   const body=id=>$('.ms-page[data-ms-page="'+id+'"] .ms-page-body',shell);
   const message=(id,title,text)=>{const node=document.createElement('div');node.className='ms-info';node.innerHTML='<strong>'+title+'</strong><p>'+text+'</p>';body(id).append(node);};
-  message('appearance','Bos-thema','Memento gebruikt momenteel de bestaande bosachtergrond. De instellingenlijsten zijn bewust rustiger en beter leesbaar gemaakt. Andere app-thema’s zijn nog niet beschikbaar.');
+  const themePicker=document.createElement('section');
+  themePicker.className='ms-theme-picker';
+  themePicker.setAttribute('aria-label','Kaartstijl');
+  themePicker.innerHTML='<h3>Kaartstijl</h3><p>Kies hoe de groene kaarten en vensters in heel Memento worden weergegeven.</p>'+
+   '<div class="ms-theme-choices" role="group" aria-label="Kaartstijl kiezen">'+
+   '<button type="button" class="ms-theme-choice" data-ms-theme="forest" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-forest" aria-hidden="true"><span></span></span><strong>Bosgroen</strong><small>Dekkend · beter leesbaar</small></button>'+
+   '<button type="button" class="ms-theme-choice" data-ms-theme="glass" aria-pressed="false"><span class="ms-theme-sample ms-theme-sample-glass" aria-hidden="true"><span></span></span><strong>Glas</strong><small>Transparant · meer achtergrond</small></button>'+
+   '</div><p class="ms-theme-footnote">Geldt voor Start, Leven, Financiën, kaarten en vensters. Je keuze blijft bewaard op dit apparaat.</p>';
+  body('appearance').append(themePicker);
+  syncThemeChoices(window.MementoTheme.get());
   message('life','Jouw Leven-onderdelen','Open een onderdeel direct via de bestaande navigatie. Je gegevens en instellingen blijven behouden.');
   message('finance','Financiële instellingen','Beheer je categorieën en financiële standaardwaarden, zonder nieuwe gegevensopslag.');
   if(area==='life'){
@@ -40,7 +70,8 @@
   if(area==='life'){appendLinks('personal',[['Open financiële voorkeuren','finance:personal']]);appendLinks('finance',[['Open financiële instellingen','finance:finance']]);}
   else{appendLinks('assistant',[['Open Memento-assistent','life:assistant']]);appendLinks('life',[['Open Leven','life:life']]);appendLinks('finance',[['Persoonlijke instellingen','finance:personal'],['Back-up en herstel','finance:backup']]);}
   shell.addEventListener('click',e=>{
-   const target=e.target.closest('[data-ms-target],[data-ms-back],[data-ms-go]');
+   const target=e.target.closest('[data-ms-theme],[data-ms-target],[data-ms-back],[data-ms-go]');
+   if(target?.dataset.msTheme){window.MementoTheme.set(target.dataset.msTheme);return;}
    if(!target)return;
    if(target.hasAttribute('data-ms-back')){openPage(shell,null);return;}
    if(target.dataset.msGo){navigate(target.dataset.msGo);return;}
