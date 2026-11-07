@@ -51,6 +51,13 @@ const server=http.createServer((req,res)=>{
    await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
    await page.locator('#mementoStart').waitFor({state:'visible'});
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'forest','Bosgroen is the default');
+   const forestMaterial=await page.evaluate(()=>{
+    const style=selector=>getComputedStyle(document.querySelector(selector)).backgroundImage;
+    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought'),rhythm:style('#mementoStart .ms-day')};
+   });
+   assert.equal(forestMaterial.weather,forestMaterial.quote,'Weather and quote must use the same card material');
+   assert.equal(forestMaterial.weather,forestMaterial.rhythm,'Day rhythm uses the same material');
    await page.waitForFunction(()=>document.querySelectorAll('#ms-hourly .ms-hour').length===6);
    assert.equal(await page.locator('#mementoStart .ms-day').count(),1);
    assert.equal(await page.locator('#mementoStart .ms-cardrow').count(),0);
@@ -115,6 +122,20 @@ const server=http.createServer((req,res)=>{
    await page.locator('#ms-continue').click();
    await page.locator('#pinLock').waitFor({state:'hidden'});
    await page.evaluate(()=>{document.querySelector('#compassAreaBar [data-compass-area="finance"]').click();document.querySelector('#sideNav [data-view="settings"]').click();});
+   await page.locator('#mementoSettingsFinance [data-ms-target=appearance]').click();
+   assert.equal(await page.locator('#mementoSettingsFinance [data-ms-theme="forest"]').getAttribute('aria-pressed'),'true');
+   await page.locator('#mementoSettingsFinance [data-ms-theme="glass"]').click();
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'glass');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('memento_card_theme_v1')),'glass');
+   assert.equal(await page.locator('#mementoSettingsFinance [data-ms-theme="glass"]').getAttribute('aria-pressed'),'true');
+   const glassMaterial=await page.evaluate(()=>{
+    const style=selector=>getComputedStyle(document.querySelector(selector)).backgroundImage;
+    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought'),rhythm:style('#mementoStart .ms-day')};
+   });
+   assert.notEqual(glassMaterial.weather,forestMaterial.weather,'Changing theme must alter the real portal material');
+   assert.equal(glassMaterial.weather,glassMaterial.quote);
+   assert.equal(glassMaterial.weather,glassMaterial.rhythm);
+   await page.locator('#mementoSettingsFinance [data-ms-page="appearance"] [data-ms-back]').click();
    await page.locator('#mementoSettingsFinance [data-ms-target=privacy]').click();
    await require('./helpers/reveal.cjs')(page,'#view-settings [data-memento-pin-lock-now]');await page.locator('#view-settings [data-memento-pin-lock-now]').click();
    await page.locator('#pinForm').waitFor({state:'visible'});
@@ -137,6 +158,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('#pinLock').waitFor({state:'hidden'});
    await page.reload({waitUntil:'domcontentloaded'});
    await page.locator('#mementoStart').waitFor({state:'visible'});
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'glass','Card theme survives app relaunch');
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.deepEqual(errors,[],'No page errors');
    console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');
