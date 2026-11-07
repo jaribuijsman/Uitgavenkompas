@@ -18,8 +18,8 @@ body #lifeApp :is(.life-title,.life-page-head h1,.kc-head h2),body[data-compass-
 body #lifeApp :is(h2,h3),body[data-compass-area=finance] .app :is(h2,h3,.card-title){color:var(--mg-ink)!important}
 body #lifeApp :is(input,textarea,select):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),
 body[data-compass-area=finance] .app :is(input,textarea,select):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),
-body :is(#modalBackdrop,#lifeDialog,.ft-modal) :is(input,select,textarea):not([type=checkbox]):not([type=range]){background:#102d24f5!important;border:1px solid #9cc09561!important;color:#f0f6e7!important;border-radius:11px!important;font-size:16px!important;min-height:46px!important;box-shadow:none!important;max-width:100%;min-width:0}
-body #lifeApp :is(.life-btn,.kc-btn,.ft-tab,.ft-choices button),body[data-compass-area=finance] .app :is(.btn,.m9-filter){min-height:46px!important;border-radius:12px!important;border-color:var(--mg-line)!important;background:#173d2de0!important;color:var(--mg-ink)!important}
+body :is(#modalBackdrop,#lifeDialog,.ft-modal) :is(input,select,textarea):not([type=checkbox]):not([type=range]){background:var(--mg-dialog-bg)!important;border:1px solid #9cc09561!important;color:#f0f6e7!important;border-radius:11px!important;font-size:16px!important;min-height:46px!important;box-shadow:none!important;max-width:100%;min-width:0}
+body #lifeApp :is(.life-btn,.kc-btn,.ft-tab,.ft-choices button),body[data-compass-area=finance] .app :is(.btn,.m9-filter){min-height:46px!important;border-radius:12px!important;border-color:var(--mg-line)!important;background:var(--mg-control-bg)!important;color:var(--mg-ink)!important}
 body #lifeApp :is(.life-btn-primary,.kc-primary),body[data-compass-area=finance] .app .btn.primary,body :is(#modalBackdrop,#lifeDialog) :is(.primary,.life-btn-primary){background:linear-gradient(120deg,#d6e9bd,#aad8b6)!important;color:#143723!important;border-color:#c6dfb9!important;box-shadow:none!important}
 body #lifeApp :is(.life-segments,.kc-view-switch,.ft-tabs){background:transparent!important;gap:5px}
 body #lifeApp :is(.life-segments,.ft-tabs) button[aria-pressed=true]{background:#c9dfbb!important;color:#1b3825!important;border-color:#c9dfbb!important}
@@ -37,13 +37,13 @@ body #lifeApp .kc-diary-write{padding:16px!important}
 body #lifeApp .kc-diary-health>summary{min-height:50px}
 body #lifeApp .kc-diary-hero{max-height:110px!important;overflow:hidden}
 body #lifeApp .kc-central-result mark{background:#edcc813b;color:#fff0c5;padding:0 2px}
-body :is(.mg-fold,.mg-context-tools){border:1px solid var(--mg-line);border-radius:14px;background:#15332799;margin:12px 0;overflow:visible}
+body :is(.mg-fold,.mg-context-tools){border:1px solid var(--mg-line);border-radius:14px;background:var(--mg-aux-bg);margin:12px 0;overflow:visible}
 body :is(.mg-fold,.mg-context-tools)>summary{display:flex;align-items:center;gap:8px;min-height:48px;padding:11px 13px;color:#d6e3c9;font-size:13px;list-style:none;cursor:pointer;overflow-wrap:anywhere}
 body :is(.mg-fold,.mg-context-tools)>summary::before{content:'＋';color:var(--mg-gold)}
 body :is(.mg-fold,.mg-context-tools)[open]>summary::before{content:'−'}
 body .mg-fold-body{padding:13px;display:grid;gap:11px;min-width:0}
 body .mg-filter-chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 12px}
-body .mg-filter-chips button,body .mg-chip{min-height:44px;border:1px solid var(--mg-line);border-radius:10px;background:#1b3929da;color:#d7e4cb;padding:7px 10px;font-size:12px}
+body .mg-filter-chips button,body .mg-chip{min-height:44px;border:1px solid var(--mg-line);border-radius:10px;background:var(--mg-control-bg);color:#d7e4cb;padding:7px 10px;font-size:12px}
 body .mg-chip{display:inline-flex;align-items:center;min-height:32px}
 body .mg-filter-chips button:is([data-mg-clear-task],[data-mg-clear-finance])::after{content:' ×';margin-left:5px}
 body #lifeApp .mg-day-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
@@ -77,13 +77,13 @@ body[data-compass-area=finance] .app .tx-page-head p{display:none}
 body[data-compass-area=finance] .app .tx-row,body[data-compass-area=finance] .app .tx-list-item{background:transparent!important}
 body .mg-receipt-steps,body .mg-research-steps{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0;color:var(--mg-muted);font-size:12px}
 body .mg-receipt-steps span,body .mg-research-steps span{border-bottom:2px solid #c4dfbb;padding:7px 6px}
-body :is(#lifeDialogPanel,#modalContent,.ft-dialog,.kc-cover-dialog){background:#102d24f5!important;border-color:#7f9f805c!important;color:#edf4e9!important;backdrop-filter:none;border-radius:22px!important}
-body :is(#lifeDialogPanel,#modalContent) :is(.life-dialog-footer,.modal-footer){background:#102d24f5!important;border-color:var(--mg-line)!important}
+body :is(#lifeDialogPanel,#modalContent,.ft-dialog,.kc-cover-dialog){background:var(--mg-dialog-bg)!important;border-color:#7f9f805c!important;color:#edf4e9!important;backdrop-filter:none;border-radius:22px!important}
+body :is(#lifeDialogPanel,#modalContent) :is(.life-dialog-footer,.modal-footer){background:var(--mg-dialog-bg)!important;border-color:var(--mg-line)!important}
 body :is(#lifeApp,.app) :is(input,select,textarea,button,summary):focus-visible{outline:3px solid #f0d895!important;outline-offset:3px}
 body .memento-gold-small{filter:none!important}
 body #mementoQuickNav{background:#0d281f!important;border-color:var(--mg-line)!important;backdrop-filter:none}
 body #compassAreaBar{background:#102c23!important;backdrop-filter:none;border-color:var(--mg-line)!important}
-body #mementoMenuPanel{background:#102d24f5!important;border-color:var(--mg-line)!important;backdrop-filter:none}
+body #mementoMenuPanel{background:var(--mg-dialog-bg)!important;border-color:var(--mg-line)!important;backdrop-filter:none}
 body .mg-light{animation:mg-arrive .32s ease-out both}
 @keyframes mg-arrive{from{transform:translateY(6px);opacity:.7}to{transform:translateY(0);opacity:1}}
 @keyframes mg-lightfall{from{transform:translateX(-110%)}to{transform:translateX(110%)}}
@@ -133,7 +133,7 @@ body #lifeApp .mg-exercise-fold>summary{font-size:15px;font-weight:650;min-heigh
 body #lifeApp .mg-exercise-fold[open]>summary{border-bottom:1px solid var(--mg-line);margin-bottom:12px;padding-bottom:10px}
 body #view-transactions #txSummary{display:flex;gap:10px;flex-wrap:wrap;margin:9px 0}
 body #view-transactions #txSummary .tx-summary-card{display:none}
-body #view-transactions #txSummary .tx-summary-net{display:flex;flex-direction:row;align-items:center;gap:12px;flex:1;padding:11px 14px;min-height:48px;background:#153d2b99;border:1px solid var(--mg-line);border-radius:12px}
+body #view-transactions #txSummary .tx-summary-net{display:flex;flex-direction:row;align-items:center;gap:12px;flex:1;padding:11px 14px;min-height:48px;background:var(--mg-stats-bg);border:1px solid var(--mg-line);border-radius:12px}
 body #view-transactions #txSummary .tx-summary-net small{display:none}
 
 body :is(.form-grid,.life-form-grid)>.mg-fold.wide{grid-column:1/-1}
@@ -153,16 +153,16 @@ body #lifeApp.mg-menu-ancestor,body #lifeApp .mg-menu-ancestor{backdrop-filter:n
 body #lifeApp .memento-task-tabs{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.35fr)!important;gap:6px;flex-wrap:nowrap;position:relative;z-index:auto;overflow:visible}
 body #lifeApp .memento-task-tabs:has(.memento-task-overview-menu[open]){z-index:20}
 body #lifeApp[data-life-view=tasks] .memento-task-category:has(.life-task-menu[open]){position:relative;z-index:30}
-body #lifeApp .memento-task-tabs>button,body #lifeApp .memento-task-overview-menu>summary{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:48px;box-sizing:border-box;padding:9px 6px;font-size:13px;font-weight:700;border-radius:12px;border:1px solid #456b51;background:#1e3326;color:#e2f0e4;cursor:pointer}
+body #lifeApp .memento-task-tabs>button,body #lifeApp .memento-task-overview-menu>summary{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:48px;box-sizing:border-box;padding:9px 6px;font-size:13px;font-weight:700;border-radius:12px;border:1px solid #456b51;background:var(--mg-control-bg);color:#e2f0e4;cursor:pointer}
 body #lifeApp .memento-task-overview-menu{min-width:0;position:relative}
 body #lifeApp .memento-task-overview-menu>summary{list-style:none;white-space:nowrap}
 body #lifeApp .memento-task-overview-menu>summary::-webkit-details-marker{display:none}
 body #lifeApp .memento-task-overview-menu[open]>summary{background:#294c37;border-color:#80a68b}
-body #lifeApp .memento-task-overview-items{position:absolute;z-index:40;right:0;top:calc(100% + 7px);width:min(236px,calc(100vw - 42px));box-sizing:border-box;display:grid;gap:5px;padding:7px;background:#152f22;border:1px solid #54775e;border-radius:15px;box-shadow:0 14px 34px #00150cad}
-body #lifeApp .memento-task-overview-items>button{width:100%;min-height:48px;white-space:normal;text-align:left;padding:9px 13px;font-size:14px;border-radius:10px;border:1px solid transparent;background:#203c2b;color:#edf6ed}
+body #lifeApp .memento-task-overview-items{position:absolute;z-index:40;right:0;top:calc(100% + 7px);width:min(236px,calc(100vw - 42px));box-sizing:border-box;display:grid;gap:5px;padding:7px;background:var(--mg-dialog-bg);border:1px solid #54775e;border-radius:15px;box-shadow:0 14px 34px #00150cad}
+body #lifeApp .memento-task-overview-items>button{width:100%;min-height:48px;white-space:normal;text-align:left;padding:9px 13px;font-size:14px;border-radius:10px;border:1px solid transparent;background:var(--mg-control-bg);color:#edf6ed}
 body #lifeApp .memento-task-overview-items>button[aria-pressed=true]{background:#c9dfbb!important;color:#1b3825!important}
 body #lifeApp .memento-task-tabs :is(button,summary):focus-visible{outline:2px solid #d9f2dc;outline-offset:2px}
-body #lifeApp[data-life-view=tasks] .memento-task-category{margin:12px 0 0;min-width:0;border:1px solid var(--mg-line);border-radius:16px;overflow:visible;background:#183a2cad}
+body #lifeApp[data-life-view=tasks] .memento-task-category{margin:12px 0 0;min-width:0;border:1px solid var(--mg-line);border-radius:16px;overflow:visible;background:var(--mg-aux-bg)}
 body #lifeApp[data-life-view=tasks] .memento-task-category>summary{display:flex;align-items:center;gap:9px;min-height:48px;padding:8px 14px;list-style:none;color:#ecf4ed;font-size:15px;font-weight:700;cursor:pointer}
 body #lifeApp[data-life-view=tasks] .memento-task-category>summary::-webkit-details-marker{display:none}
 body #lifeApp[data-life-view=tasks] .memento-task-category>summary small{margin-left:auto;font-size:12px;font-weight:500;color:#bcd0be}
