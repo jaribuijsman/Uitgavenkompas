@@ -1106,7 +1106,7 @@ function renderStock(){
  host.innerHTML='<div class="shopping-section-head"><h2>Mijn voorraad</h2><span>'+rows.length+' '+(rows.length===1?'voorraadregel':'voorraadregels')+'</span></div>'+
  (rows.length?'<div class="shopping-stock-products">'+[...grouped.values()].map(({product,rows})=>{
   const id=esc(product.id);
-  return '<section class="shopping-stock-product"><div class="shopping-stock-product-head"><h3>'+esc(product.title)+'</h3><button type="button" class="shopping-stock-add" data-stock-add="'+id+'" aria-label="'+esc('Meer voorraad voor '+product.title)+'">＋ Toevoegen</button></div>'+
+  return '<section class="shopping-stock-product"><div class="shopping-stock-product-head"><h3>'+esc(product.title)+'</h3><div class="shopping-stock-product-actions"><button type="button" class="shopping-stock-add" data-stock-to-list="'+id+'" aria-label="'+esc('Op boodschappenlijst zetten: '+product.title)+'">＋ Lijst</button><button type="button" class="shopping-stock-add" data-stock-add="'+id+'" aria-label="'+esc('Meer voorraad voor '+product.title)+'">＋ Voorraad</button></div></div>'+
   rows.map(row=>{
    const rid=esc(row.id),hint=stockDateHint(row),details=[stockLocations[row.location],row.openedAt?'Geopend: '+fmt(row.openedAt):'',row.frozenAt?'Ingevroren: '+fmt(row.frozenAt):'',row.expiresAt?'Houdbaarheid: '+fmt(row.expiresAt):''].filter(Boolean);
    return '<div class="shopping-stock-row" data-stock-id="'+rid+'"><div class="shopping-stock-details"><strong>'+esc(new Intl.NumberFormat('nl-NL',{maximumFractionDigits:2}).format(row.amount)+' '+row.unit)+'</strong><small>'+esc(details.join(' · '))+'</small>'+(hint?'<small class="shopping-stock-warning">'+esc(hint)+'</small>':'')+(row.notes?'<small class="shopping-stock-note">'+esc(row.notes)+'</small>':'')+'</div>'+
@@ -1200,8 +1200,8 @@ function renderShopping(){
  '<details class="life-task-menu shopping-list-menu"><summary aria-label="Boodschappenopties">⋮</summary><div class="life-task-actions">'+
  (groceryList==='purchases'?'<button type="button" data-life-grocery-tab="saved">Bewaarde aankopen</button>':'')+
  '<button type="button" data-life-grocery-tab="trash">Prullenbak</button>'+
- (!isList&&groceryTab!=='trash'?'<button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button>':'')+
- (groceryTab!=='trash'&&!(isList&&groceryMode==='shop')?'<button type="button" data-shopping-sort="true" aria-pressed="'+grocerySortOpen+'">'+(grocerySortOpen?'Sorteren stoppen':'Handmatig sorteren')+'</button>':'')+
+ (!isList&&!isStock&&groceryTab!=='trash'?'<button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button>':'')+
+ (!isStock&&groceryTab!=='trash'&&!(isList&&groceryMode==='shop')?'<button type="button" data-shopping-sort="true" aria-pressed="'+grocerySortOpen+'">'+(grocerySortOpen?'Sorteren stoppen':'Handmatig sorteren')+'</button>':'')+
  '<button type="button" data-shopping-new="true">Product met details toevoegen</button></div></details></div>'+
  '<div class="shopping-library-filters"'+(isLibrary?'':' hidden')+' role="group" aria-label="Producten filteren"><button type="button" data-life-grocery-tab="saved" aria-pressed="'+(groceryTab==='saved')+'">Alle producten</button><button type="button" data-life-grocery-tab="favorites" aria-pressed="'+(groceryTab==='favorites')+'">Favorieten</button></div>'+
  (isList?'<button type="button" class="life-btn shopping-import-entry" data-shopping-import>＋ Ingrediënten uit Notion</button>':'')+
@@ -1289,7 +1289,7 @@ function changeShoppingItem(id,action,value){
  if(oneOff(g)){if(action!=='bought')return false;const ok=mutate(()=>{state.groceries=state.groceries.filter(x=>x.id!==id)},'Receptingrediënt afgevinkt.',true);if(!ok)renderShopping();return ok;}
  if(action==='bought'&&!g.needed)return false;
  if(action==='move'&&g.stock?.length){status('Verbruik of verwijder eerst je voorraad voordat je dit product naar Aankopen verplaatst.',false,true);return false;}
- return mutate(()=>{if(action==='bought'){if(shoppingListOf(g)==='groceries'){g.needed=!Boolean(value);g.bought=false}else g.bought=Boolean(value)}else if(action==='favorite')g.favorite=!g.favorite;else if(action==='move')g.list=shoppingListOf(g)==='purchases'?'groceries':'purchases';else if(action==='needed'){g.needed=!g.needed;g.bought=false}},action==='move'?'Verplaatst naar '+shoppingName(shoppingListOf(g)==='purchases'?'groceries':'purchases')+'.':action==='bought'&&shoppingListOf(g)==='groceries'?'Bewaard bij Producten.':'',true);
+ return mutate(()=>{if(action==='bought'){if(shoppingListOf(g)==='groceries'){g.needed=!Boolean(value);g.bought=false}else g.bought=Boolean(value)}else if(action==='favorite')g.favorite=!g.favorite;else if(action==='move'){if(Array.isArray(g.stock)&&!g.stock.length)delete g.stock;g.list=shoppingListOf(g)==='purchases'?'groceries':'purchases';}else if(action==='needed'){g.needed=!g.needed;g.bought=false}},action==='move'?'Verplaatst naar '+shoppingName(shoppingListOf(g)==='purchases'?'groceries':'purchases')+'.':action==='bought'&&shoppingListOf(g)==='groceries'?'Bewaard bij Producten.':'',true);
 }
 function clearShoppingBought(){
  return mutate(()=>shoppingItems().filter(shoppingMatches).forEach(g=>{if(!g.deletedAt&&g.needed&&g.bought){g.needed=false;g.bought=false}}),'Gekochte producten opgeruimd.',true);
@@ -1306,10 +1306,12 @@ function saveShoppingProduct(id){
  const budget=budgetText===''?'':Number(budgetText);if(budget!==''&&(!Number.isFinite(budget)||budget<0)){status('Vul een geldig budget in.',false,true);return false}
  const old=existing;if(id&&!old||old?.deletedAt)return false;
  if(oneOff(old)&&list!=='groceries'){status('Een receptingrediënt blijft een eenmalige boodschap.',false,true);return false}
+ if(old?.stock?.length&&list!=='groceries'){status('Dit product heeft nog voorraad. Verbruik of verwijder die eerst.',false,true);return false}
  const selected=$('lifeProductCategory').value,category=selected==='__new__'?$('lifeProductCustomCategory').value.trim():selected;
  if(!category){status('Kies of benoem een categorie.',false,true);return false}
  const obj={...(old||{id:uid(),bought:false,deletedAt:'',sourceUrl:''}),title,quantity:$('lifeProductQuantity').value.trim(),category,notes:$('lifeProductNotes').value.trim(),list,favorite:$('lifeProductFavorite').checked,needed:$('lifeProductNeeded').value==='yes',budget};
  if(oneOff(old)){obj.favorite=false;obj.needed=true;obj.bought=false;}
+ if(list==='purchases'&&Array.isArray(obj.stock)&&obj.stock.length===0)delete obj.stock;
  if(!obj.needed)obj.bought=false;
  if(mutate(()=>{if(old)state.groceries[state.groceries.indexOf(old)]=obj;else state.groceries.push(obj)},'Product opgeslagen.')){groceryList=list;groceryTab=obj.needed?'list':'saved';groceryDraft='';render();closeDialog();return true}return false;
 }
@@ -1696,6 +1698,7 @@ root.addEventListener('click',e=>{
  if(d.lifeSourceNote){if(setView('notes'))window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
  if(d.shoppingSection){groceryCategoryChoice='';groceryList=d.shoppingSection==='purchases'?'purchases':'groceries';groceryTab=d.shoppingSection==='stock'?'stock':d.shoppingSection==='saved'?'saved':'list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
  if(d.stockNew!==undefined){editStock();return}
+ if(d.stockToList){addShoppingItem(d.stockToList);return}
  if(d.stockAdd){editStock(d.stockAdd);return}
  if(d.stockFromPurchase){const g=state.groceries.find(x=>x.id===d.stockFromPurchase&&x.list==='purchases'&&!x.deletedAt);if(g)editStock('','',g.title);return}
  if(d.stockEdit){editStock(d.stockEdit,d.stockId);return}
