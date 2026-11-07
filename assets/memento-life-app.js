@@ -140,10 +140,9 @@ function paintTaskSteps(){
 }
 
 function validate(s){
- if(s.checklists===undefined)s.checklists=[];
- if(!Array.isArray(s.checklists))throw Error('Ongeldige checklists.');
+ if(s.checklists!==undefined&&!Array.isArray(s.checklists))throw Error('Ongeldige checklists.');
  const checklistIds=new Set();
- for(const c of s.checklists){
+ for(const c of s.checklists||[]){
   if(!c||typeof c.id!=='string'||checklistIds.has(c.id)||typeof c.title!=='string'||!c.title.trim()||c.title.length>180||!['morning','afternoon','evening','wake','night','sleep'].includes(c.moment)||!['daily','free','manual'].includes(c.repeat)||typeof c.pinned!=='boolean'||typeof c.deletedAt!=='string'||!Array.isArray(c.steps)||!c.steps.every(x=>x&&typeof x.id==='string'&&typeof x.text==='string'&&x.text.trim()&&x.text.length<=300)||new Set(c.steps.map(x=>x.id)).size!==c.steps.length||!c.days||typeof c.days!=='object'||Array.isArray(c.days))throw Error('Ongeldige checklistgegevens.');
   for(const [day,ids] of Object.entries(c.days))if(!validDate(day)||!day||!Array.isArray(ids)||ids.some(x=>typeof x!=='string'))throw Error('Ongeldige checklistgeschiedenis.');
   checklistIds.add(c.id);
@@ -854,6 +853,8 @@ function showDaySlide(index){
 }
 const checklistMoments=[['morning','Ochtend'],['afternoon','Middag'],['evening','Avond'],['wake','Na het opstaan'],['night','Tijdens je nacht'],['sleep','Voor het slapen']];
 const momentName=id=>checklistMoments.find(x=>x[0]===id)?.[1]||'Dagmoment';
+// Night checklists use the wake cycle that started before midnight.
+const checklistCycleDay=c=>{const d=new Date();if(['wake','night','sleep'].includes(c.moment)&&d.getHours()<12)d.setDate(d.getDate()-1);return formatISO(d)};
 const checklistDone=(c,day)=>c.days[day]||[];
 const activeChecklists=()=>state.checklists.filter(c=>!c.deletedAt);
 function checklistCard(c,day,compact=false){
@@ -863,7 +864,7 @@ function checklistCard(c,day,compact=false){
  (compact?'':'<div class="dr-actions"><button type="button" data-dr-edit="'+esc(c.id)+'">Bewerken</button><button type="button" data-dr-duplicate="'+esc(c.id)+'">Kopiëren</button><button type="button" class="dr-delete" data-dr-delete="'+esc(c.id)+'" aria-label="Verwijder '+esc(c.title)+'">Prullenbak</button></div>')+'</article>';
 }
 function checklistMarker(){
- const count=activeChecklists().filter(c=>c.repeat!=='manual'&&c.steps.some(s=>!checklistDone(c,today()).includes(s.id))).length;
+ const count=activeChecklists().filter(c=>c.repeat==='daily'&&c.steps.some(s=>!checklistDone(c,checklistCycleDay(c)).includes(s.id))).length;
  return '<div class="dr-marker"><span>'+count+' '+(count===1?'checklist':'checklists')+' open</span><button type="button" data-life-view="checklists">Open checklists</button></div>';
 }
 const slotMinutes=time=>Number(time.slice(0,2))*60+Number(time.slice(3,5));
@@ -874,7 +875,7 @@ function appointmentInterval(row){
  if(row.source==='local'){
   if(!e.time)return null;
   const begin=slotMinutes(e.time),end=e.endTime?slotMinutes(e.endTime):begin+30;
-  return {begin,end:end>begin?end:begin+30};
+  return {begin,end:end>begin?end:e.endTime?end+1440:begin+30};
  }
  const start=new Date(e.start?.dateTime||''),end=new Date(e.end?.dateTime||'');
  if(Number.isNaN(start.valueOf()))return null;
@@ -888,9 +889,10 @@ function paintDayTimeline(){
   const events=appointmentItemsForDay(day,remote).filter(x=>!x.done);
   const tasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&t.daySlot?.date===day&&!(t.date&&t.date<today()));
   const entries=[...events.map(e=>({interval:appointmentInterval(e),html:renderUnifiedAppointmentItem(e.x,e.source,{dayCard:true,carried:e.carried})})),
-   ...tasks.map(t=>({interval:{begin:slotMinutes(t.daySlot.time),end:slotMinutes(t.daySlot.time)+t.daySlot.minutes},html:'<div class="dr-planned-task"><span class="dr-clock">'+esc(t.daySlot.time)+'</span>'+taskRow(t)+'<button type="button" class="dr-move" data-dr-plan="'+esc(t.id)+'">Verplaats</button></div>'}))];
+   ...tasks.map(t=>({interval:{begin:slotMinutes(t.daySlot.time),end:slotMinutes(t.daySlot.time)+t.daySlot.minutes},html:'<div class="dr-planned-task"><span class="dr-clock">'+esc(t.daySlot.time)+(slotMinutes(t.daySlot.time)+t.daySlot.minutes>1440?' → volgende dag':'')+'</span>'+taskRow(t)+'<button type="button" class="dr-move" data-dr-plan="'+esc(t.id)+'">Verplaats</button></div>'}))];
   const timed=entries.filter(x=>x.interval).sort((a,b)=>a.interval.begin-b.interval.begin),other=entries.filter(x=>!x.interval);
-  let cursor=480,markup='<div class="memento-day-caption"><strong>Tijdlijn</strong><span>'+entries.length+'</span>'+(day===today()?'<button class="memento-calendar-connect" type="button" data-memento-gcal-connect="true" aria-label="Google-agenda verbinden" title="Google-agenda verbinden">G</button>':'')+'<button class="memento-inline-add" type="button" data-memento-new-event="'+day+'">＋ Afspraak</button></div><div class="dr-timeline">';
+  const calendarStatus=window.MementoGoogleCalendar?.todayState?.()||{},connectLabel=calendarStatus.connected||calendarStatus.previous?'Google-agenda opnieuw verbinden':'Google-agenda verbinden';
+  let cursor=480,markup='<div class="memento-day-caption"><strong>Tijdlijn</strong><span>'+entries.length+'</span>'+(day===today()?'<button class="memento-calendar-connect" type="button" data-memento-gcal-connect="true" aria-label="'+connectLabel+'" title="'+connectLabel+'">G</button>':'')+'<button class="memento-inline-add" type="button" data-memento-new-event="'+day+'">＋ Afspraak</button></div><div class="dr-timeline">';
   for(const item of timed){
    const {begin,end}=item.interval;
    if(begin>cursor+14)markup+='<div class="dr-free"><span>'+clockFromMinutes(cursor)+'–'+clockFromMinutes(begin)+'</span><button type="button" data-dr-free="'+day+'" data-dr-free-time="'+clockFromMinutes(cursor)+'" data-dr-free-end="'+clockFromMinutes(begin)+'">Plan taak ＋</button></div>';
@@ -911,24 +913,26 @@ function planTask(id,day=dayKeysForPlan(),suggested='',end=''){
  showDialog('Taak inplannen','De bestaande plandatum en deadline blijven staan.',
  '<form id="drPlanForm"><label class="life-form-field">Taak<select id="drPlanTask">'+option(choices.map(t=>[t.id,t.title]),selected.id)+'</select></label><label class="life-form-field">Dag<input id="drPlanDate" type="date" required value="'+esc(defaults?.date||day)+'"></label><label class="life-form-field">Begintijd<input id="drPlanTime" type="time" required value="'+esc(suggested||defaults?.time||'09:00')+'"></label><label class="life-form-field">Duur in minuten<input id="drPlanMinutes" type="number" min="1" max="1440" required value="'+esc(minutes)+'"></label><p id="drPlanError" role="alert"></p></form>',
  '<button type="button" class="life-btn" data-life-close>Annuleren</button>'+(defaults?'<button type="button" class="life-btn" data-dr-unplan="'+esc(selected.id)+'">Tijd weghalen</button>':'')+'<button type="submit" form="drPlanForm" class="life-btn life-btn-primary">Inplannen</button>');
- if(end)$('drPlanMinutes').max=Math.max(1,slotMinutes(end)-slotMinutes(suggested));
 }
 function dayKeysForPlan(){const column=root.querySelectorAll('.life-day-column')[daySlide];return column?.dataset.lifeDay||today()}
 function saveTaskSlot(){
  const t=state.tasks.find(x=>x.id===$('drPlanTask').value),date=$('drPlanDate').value,time=$('drPlanTime').value,minutes=Number($('drPlanMinutes').value),error=$('drPlanError');
  if(!t||!validDate(date)||!date||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)||!Number.isInteger(minutes)||minutes<1||minutes>1440){error.textContent='Controleer dag, tijd en duur.';return}
  if(t.date&&t.date<today()){error.textContent='Deze taak is te laat. Behandel haar eerst vanuit de sectie Te laat.';return}
- const begin=slotMinutes(time),end=begin+minutes,events=appointmentItemsForDay(date,window.MementoGoogleCalendar?.getUpcomingForDay?.(date)||[]);
- const occupied=[...events.map(appointmentInterval).filter(Boolean),...state.tasks.filter(x=>x.id!==t.id&&!x.done&&!x.archived&&!x.deletedAt&&x.daySlot?.date===date).map(x=>({begin:slotMinutes(x.daySlot.time),end:slotMinutes(x.daySlot.time)+x.daySlot.minutes}))];
+ const begin=slotMinutes(time),end=begin+minutes,prior=parseDate(date);prior.setDate(prior.getDate()-1);
+ const previous=formatISO(prior),following=parseDate(date);following.setDate(following.getDate()+1);const next=formatISO(following);
+ const events=appointmentItemsForDay(date,window.MementoGoogleCalendar?.getUpcomingForDay?.(date)||[]).map(appointmentInterval).filter(Boolean);
+ const previousEvents=appointmentItemsForDay(previous,window.MementoGoogleCalendar?.getUpcomingForDay?.(previous)||[]).map(appointmentInterval).filter(x=>x&&x.end>1440).map(x=>({begin:x.begin-1440,end:x.end-1440}));
+ const nextEvents=appointmentItemsForDay(next,window.MementoGoogleCalendar?.getUpcomingForDay?.(next)||[]).map(appointmentInterval).filter(Boolean).map(x=>({begin:x.begin+1440,end:x.end+1440}));
+ const occupied=[...events,...previousEvents,...nextEvents,...state.tasks.filter(x=>x.id!==t.id&&!x.done&&!x.archived&&!x.deletedAt&&x.daySlot&&Math.abs(calendarDays(date,x.daySlot.date))<=1).map(x=>{const offset=calendarDays(date,x.daySlot.date)*1440,b=offset+slotMinutes(x.daySlot.time);return {begin:b,end:b+x.daySlot.minutes}})];
  if(occupied.some(x=>begin<x.end&&end>x.begin)){error.textContent='Dit tijdvak overlapt een afspraak of geplande taak. Kies een ander tijdstip.';return}
- if(end>1440){error.textContent='Een tijdvak over middernacht vraagt een afzonderlijke planning op de volgende dag.';return}
  if(mutate(()=>{t.daySlot={date,time,minutes}},'Taak ingepland.'))closeDialog();
 }
 function renderChecklists(){
  const deleted=state.checklists.filter(c=>c.deletedAt),active=activeChecklists();
  content.innerHTML='<div class="dr-manager"><div class="dr-manager-head"><button type="button" class="life-btn life-btn-primary" data-dr-new>＋ Nieuwe checklist</button><button type="button" class="life-btn" data-dr-trash>Prullenbak ('+deleted.length+')</button></div>'+
  (checklistTrash?'<div class="dr-group"><h2>Prullenbak</h2>'+(deleted.length?deleted.map(c=>'<article class="dr-checklist"><strong>'+esc(c.title)+'</strong><div class="dr-actions"><button data-dr-restore="'+esc(c.id)+'">Herstellen</button><button class="dr-delete" data-dr-purge="'+esc(c.id)+'">Definitief verwijderen</button></div></article>').join(''):'<p>De prullenbak is leeg.</p>')+'</div>':
- checklistMoments.map(([key,label])=>{const list=active.filter(c=>c.moment===key);return list.length?'<section class="dr-group"><h2>'+label+'</h2>'+list.map(c=>checklistCard(c,today())).join('')+'</section>':''}).join('')+
+ checklistMoments.map(([key,label])=>{const list=active.filter(c=>c.moment===key);return list.length?'<section class="dr-group"><h2>'+label+'</h2>'+list.map(c=>checklistCard(c,checklistCycleDay(c))).join('')+'</section>':''}).join('')+
  (!active.length?'<p>Maak je eerste checklist voor een dagmoment.</p>':''))+'</div>';
 }
 let checklistTrash=false;
@@ -952,7 +956,8 @@ function saveChecklist(id){
 }
 window.MementoDayRhythm={
  start:()=>activeChecklists().filter(c=>c.pinned),
- toggle:(id,step)=>{const c=state.checklists.find(x=>x.id===id&&!x.deletedAt);if(!c||!c.steps.some(s=>s.id===step))return false;return mutate(()=>{const day=today(),done=new Set(checklistDone(c,day));if(done.has(step))done.delete(step);else done.add(step);c.days[day]=[...done]},'Checklist bijgewerkt.');},
+ day:checklistCycleDay,
+ toggle:(id,step)=>{const c=state.checklists.find(x=>x.id===id&&!x.deletedAt);if(!c||!c.steps.some(s=>s.id===step))return false;return mutate(()=>{const day=checklistCycleDay(c),done=new Set(checklistDone(c,day));if(done.has(step))done.delete(step);else done.add(step);c.days[day]=[...done]},'Checklist bijgewerkt.');},
  open:()=>openLifeView('checklists'),
  refresh:()=>window.MementoStart?.refreshDay?.()
 };

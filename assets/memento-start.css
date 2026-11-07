@@ -32,6 +32,7 @@
 #mementoStart .ms-day{flex:1;min-height:240px;display:flex;flex-direction:column;gap:9px;padding:12px;background:linear-gradient(135deg,#173e2c98,#0a281d98)}
 #mementoStart .ms-dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;font-size:17px}
 #mementoStart .ms-overview{font:inherit;text-align:right;font-size:13px;font-weight:650;min-height:44px;color:#dceacb;border:0;background:none;padding:0 8px}
+#mementoStart .ms-night-switch{align-self:flex-start;min-height:44px;border:0;background:transparent;color:#dbe9cb;font:inherit;font-size:12px;text-decoration:underline;text-underline-offset:3px}
 #mementoStart .ms-moments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
 #mementoStart .ms-moments button{font:inherit;font-size:12px;color:#e5efde;background:#18392e;border:1px solid #8cad9370;border-radius:12px;min-height:44px}
 #mementoStart .ms-moments button[aria-pressed=true]{background:#d0e4c2;color:#173e2c;font-weight:700}

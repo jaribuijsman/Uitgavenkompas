@@ -124,7 +124,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('#mementoStart').waitFor({state:'visible'});
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.deepEqual(errors,[],'No page errors');
-   console.log('PASS real create routes, glass dayline, weather, overdue date and manual PIN at '+width+'px');
+   console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');
    await context.close();
   }
  }finally{if(browser)await browser.close();await new Promise(done=>server.close(done))}

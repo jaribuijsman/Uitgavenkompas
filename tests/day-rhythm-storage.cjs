@@ -1,0 +1,28 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {tab,emptyLife,task,clone}=require('./helpers/storage-fixture.cjs');
+(async()=>{
+ const s=await tab(),base=emptyLife(),c={id:'check-1',title:'Ochtendzorg',moment:'morning',repeat:'daily',pinned:true,deletedAt:'',steps:[{id:'step-1',text:'Tanden flossen'}],days:{'2026-11-06':['step-1']}};
+ base.checklists=[c];base.tasks=[{...task('task-1','Oude taak'),date:'2026-11-06',daySlot:{date:'2026-11-07',time:'10:00',minutes:30}}];
+ assert.equal(s.life.validate(clone(base)).tasks[0].date,'2026-11-06','Slot preserves overdue date');
+ s.life.state=clone(base);
+ const day=new Date(),key=[day.getFullYear(),String(day.getMonth()+1).padStart(2,'0'),String(day.getDate()).padStart(2,'0')].join('-');
+ assert.equal(s.MementoDayRhythm.toggle('check-1','step-1'),true);
+ let saved=JSON.parse(s.storage.get('compass_life_preview_v1'));
+ assert(saved.checklists[0].days[key].includes('step-1'));
+ assert.deepEqual(saved.checklists[0].days['2026-11-06'],['step-1'],'Prior day remains intact');
+ assert.equal(saved.tasks[0].date,'2026-11-06');
+ assert.equal(s.MementoDayRhythm.toggle('check-1','step-1'),true);
+ saved=JSON.parse(s.storage.get('compass_life_preview_v1'));
+ assert.deepEqual(saved.checklists[0].days[key],[]);
+ assert.equal(s.MementoDayRhythm.toggle('check-1','unknown'),false);
+ const night={...c,id:'check-night',moment:'night',days:{}};s.life.state.checklists.push(night);
+ const cycle=s.MementoDayRhythm.day(night);
+ assert.equal(s.MementoDayRhythm.toggle('check-night','step-1'),true);
+ assert(JSON.parse(s.storage.get('compass_life_preview_v1')).checklists[1].days[cycle].includes('step-1'));
+ assert(/^\d{4}-\d{2}-\d{2}$/.test(cycle));
+ assert.throws(()=>s.life.validate({...clone(base),checklists:[c,c]}),/dubbel|checklist/i);
+ assert.throws(()=>s.life.validate({...clone(base),tasks:[{...base.tasks[0],daySlot:{date:'2026-11-07',time:'25:00',minutes:30}}]}),/taakplanning/i);
+ s.MementoStorageGuard.close();
+ console.log('PASS day rhythm daily history, task date, invalid IDs and slot validation');
+})().catch(e=>{console.error(e);process.exitCode=1});
