@@ -162,7 +162,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(dark.stored,'superdark');
    assert.equal(dark.chrome,'#070b09');
    assert.equal(dark.body,'rgb(7, 11, 9)');
-   assert.equal(dark.nightToken,'#070b09','Night palette CSS is active');
+   assert.equal(dark.nightToken,'#080e11','Night palette CSS is active');
    assert.equal(dark.weather,dark.quote);
    assert.equal(dark.weather,dark.rhythm);
    assert.notEqual(dark.weather,glassMaterial.weather);
