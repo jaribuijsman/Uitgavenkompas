@@ -2,8 +2,8 @@
    Keep page structure, icons, data charts and original pixel artwork intact.
    Artwork is color-graded only while this theme is active; no expensive live blur. */
 
-/* Keep detail in the original landscape: a faint cool highlight above a
-   near-black foreground, without a uniform green film or mobile blur. */
+/* Super Dark uses Memento's existing moonlit pixel-art scene rather than
+   veiling the sunny ruins artwork. Preserve night detail without live blur. */
 html[data-memento-theme="superdark"] body {
   background:#070b09!important;
   color:var(--mg-ink);
@@ -18,9 +18,9 @@ html[data-memento-theme="superdark"] body[data-compass-area="finance"] {
 html[data-memento-theme="superdark"] body #lifeApp,
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] > .app {
   background:
-    radial-gradient(ellipse at 72% 5%,#b4c5b90e 0%,transparent 53%),
-    linear-gradient(180deg,#040b0ab5 0%,#030a09d4 48%,#030806f0 100%),
-    url('./pin-forests/bosruines.webp') center top / cover scroll!important;
+    radial-gradient(ellipse at 74% 9%,#afc7c111 0%,transparent 43%),
+    linear-gradient(180deg,#0206086b 0%,#030a0bb8 50%,#030806ec 100%),
+    url('./pin-forests/maanmeer.webp') center top / cover scroll!important;
   color:var(--mg-ink)!important;
 }
 html[data-memento-theme="superdark"] body #compassAreaBar,
