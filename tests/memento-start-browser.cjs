@@ -162,7 +162,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(dark.stored,'superdark');
    assert.equal(dark.chrome,'#070b09');
    assert.equal(dark.body,'rgb(7, 11, 9)');
-   assert.equal(dark.nightToken,'#070b09','Night palette CSS is active');
+   assert.equal(dark.nightToken,'#080e11','Night palette CSS is active');
    assert.equal(dark.weather,dark.quote);
    assert.equal(dark.weather,dark.rhythm);
    assert.notEqual(dark.weather,glassMaterial.weather);
@@ -215,7 +215,7 @@ const server=http.createServer((req,res)=>{
    });
    assert(nightGeometry.quick.bottom<=nightGeometry.footer.top-6,'Super Dark quick action must clear the bottom CTA: '+JSON.stringify(nightGeometry));
    assert(nightGeometry.scrollWidth<=nightGeometry.width+1,'Super Dark start has horizontal overflow');
-   assert.match(nightGeometry.material,/#13201a/i,'Dark content cards must use the calmer night material');
+   assert.match(nightGeometry.material,/#121f19/i,'Dark content cards must use the calmer night material');
    assert.deepEqual(errors,[],'No page errors');
    console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');
    await context.close();
