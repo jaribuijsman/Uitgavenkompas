@@ -8,6 +8,13 @@ html[data-memento-theme="superdark"] body {
   background:#070b09!important;
   color:var(--mg-ink);
 }
+/* The old finance shell has its own global !important background.
+   Target both area states explicitly so switching the area cannot restore it. */
+html[data-memento-theme="superdark"] body[data-compass-area="life"],
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] {
+  background-color:#070b09!important;
+  background-image:none!important;
+}
 html[data-memento-theme="superdark"] body #lifeApp,
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] > .app {
   background:
