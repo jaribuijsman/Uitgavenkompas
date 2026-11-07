@@ -1087,7 +1087,89 @@ function paintShoppingSuggestions(){
  const el=$('shoppingSuggestions');if(!el)return;
  el.innerHTML=query&&suggestions.length?'<div class="shopping-suggestions" aria-label="Bewaarde producten">'+suggestions.map(g=>{const active=g.needed&&!g.bought;return '<button type="button" data-shopping-add="'+esc(g.id)+'"'+(active?' disabled':'')+'><span>'+esc(g.title)+(g.quantity?'<small>'+esc(g.quantity)+'</small>':'')+'</span><span>'+ (active?'Op je lijst':'+')+'</span></button>'}).join('')+'</div>':'';
 }
+
+function stockProducts(){return state.groceries.filter(g=>g.list==='groceries'&&!g.deletedAt&&!oneOff(g))}
+function stockRows(){
+ const query=shoppingKey(groceryDraft);
+ return stockProducts().flatMap(g=>(g.stock||[]).filter(row=>(stockFilter==='all'||row.location===stockFilter)&&
+  (!query||shoppingKey([g.title,row.notes,stockLocations[row.location]].join(' ')).includes(query))).map(row=>({product:g,row})));
+}
+function stockDateHint(row){
+ if(!row.expiresAt)return '';
+ const days=calendarDays(today(),row.expiresAt);
+ return days<0?'Houdbaarheidsdatum verstreken':days<=2?'Controleer houdbaarheid':'';
+}
+function renderStock(){
+ const host=$('lifeGroceryResults');if(!host)return;
+ const rows=stockRows(),grouped=new Map();
+ for(const item of rows){if(!grouped.has(item.product.id))grouped.set(item.product.id,{product:item.product,rows:[]});grouped.get(item.product.id).rows.push(item.row);}
+ host.innerHTML='<div class="shopping-section-head"><h2>Mijn voorraad</h2><span>'+rows.length+' '+(rows.length===1?'voorraadregel':'voorraadregels')+'</span></div>'+
+ (rows.length?'<div class="shopping-stock-products">'+[...grouped.values()].map(({product,rows})=>{
+  const id=esc(product.id);
+  return '<section class="shopping-stock-product"><div class="shopping-stock-product-head"><h3>'+esc(product.title)+'</h3><button type="button" class="shopping-stock-add" data-stock-add="'+id+'" aria-label="'+esc('Meer voorraad voor '+product.title)+'">＋ Toevoegen</button></div>'+
+  rows.map(row=>{
+   const rid=esc(row.id),hint=stockDateHint(row),details=[stockLocations[row.location],row.openedAt?'Geopend: '+fmt(row.openedAt):'',row.frozenAt?'Ingevroren: '+fmt(row.frozenAt):'',row.expiresAt?'Houdbaarheid: '+fmt(row.expiresAt):''].filter(Boolean);
+   return '<div class="shopping-stock-row" data-stock-id="'+rid+'"><div class="shopping-stock-details"><strong>'+esc(new Intl.NumberFormat('nl-NL',{maximumFractionDigits:2}).format(row.amount)+' '+row.unit)+'</strong><small>'+esc(details.join(' · '))+'</small>'+(hint?'<small class="shopping-stock-warning">'+esc(hint)+'</small>':'')+(row.notes?'<small class="shopping-stock-note">'+esc(row.notes)+'</small>':'')+'</div>'+
+   '<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+product.title+', '+stockLocations[row.location])+'">⋮</summary><div class="life-task-actions"><button type="button" data-stock-use="'+id+'" data-stock-id="'+rid+'">Verbruiken</button><button type="button" data-stock-edit="'+id+'" data-stock-id="'+rid+'">Bewerken</button><button type="button" class="life-task-delete" data-stock-delete="'+id+'" data-stock-id="'+rid+'">Verwijderen</button></div></details></div>';
+  }).join('')+'</section>';
+ }).join('')+'</div>':empty(groceryDraft||stockFilter!=='all'?'Geen voorraad gevonden':'Je voorraad is nog leeg',groceryDraft||stockFilter!=='all'?'Pas de zoekterm of bewaarlocatie aan.':'Voeg een product toe om bij te houden wat je in huis hebt.'));
+}
+function editStock(productId='',stockId='',prefillTitle=''){
+ const g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);
+ if(stockId&&!row)return;
+ modal={mode:'stock',productId:g?.id||'',stockId:row?.id||''};
+ const title=g?.title||prefillTitle,locations=Object.entries(stockLocations);
+ const choices=stockProducts().map(p=>'<option value="'+esc(p.title)+'"></option>').join('');
+ showDialog(row?'Voorraad bewerken':'Voorraad toevoegen','','<form id="lifeStockForm"><div class="life-form-grid">'+
+ '<div class="life-form-field wide"><label for="lifeStockTitle">Product *</label><input id="lifeStockTitle" list="lifeStockProducts" required maxlength="180" value="'+esc(title)+'"'+(g?' readonly':'')+'><datalist id="lifeStockProducts">'+choices+'</datalist></div>'+
+ '<div class="life-form-field"><label for="lifeStockLocation">Bewaarlocatie</label><select id="lifeStockLocation">'+option(locations,row?.location||'pantry')+'</select></div>'+
+ '<div class="life-form-field"><label for="lifeStockAmount">Hoeveelheid *</label><input type="number" id="lifeStockAmount" inputmode="decimal" required min="0.01" max="1000000" step="0.01" value="'+esc(row?.amount??1)+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockUnit">Eenheid</label><select id="lifeStockUnit">'+option(stockUnits,row?.unit||'stuks')+'</select></div>'+
+ '<div class="life-form-field"><label for="lifeStockOpened">Geopend op (optioneel)</label><input id="lifeStockOpened" type="date" value="'+esc(row?.openedAt||'')+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockFrozen">Ingevroren op (optioneel)</label><input id="lifeStockFrozen" type="date" value="'+esc(row?.frozenAt||'')+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockExpiry">Houdbaarheidsdatum (optioneel)</label><input id="lifeStockExpiry" type="date" value="'+esc(row?.expiresAt||'')+'"></div>'+
+ '<div class="life-form-field wide"><label for="lifeStockNotes">Notitie (optioneel)</label><textarea id="lifeStockNotes" maxlength="500" rows="2" placeholder="Bijv. halfvol, achterste plank">'+esc(row?.notes||'')+'</textarea></div>'+
+ '</div><p class="life-footnote">Datums zijn geheugensteuntjes. Controleer bij openen de bewaarinstructies op de verpakking.</p></form>',
+ '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="lifeStockForm" class="life-btn life-btn-primary">Opslaan</button>');
+}
+function saveStock(productId,stockId){
+ const title=$('lifeStockTitle').value.trim(),amount=Number($('lifeStockAmount').value),unit=$('lifeStockUnit').value,location=$('lifeStockLocation').value;
+ const openedAt=$('lifeStockOpened').value,frozenAt=$('lifeStockFrozen').value,expiresAt=$('lifeStockExpiry').value,notes=$('lifeStockNotes').value.trim();
+ if(!title||title.length>180||!$('lifeStockAmount').value||!Number.isFinite(amount)||amount<=0||amount>1000000||Math.abs(Math.round(amount*100)-amount*100)>1e-6||!stockUnits.includes(unit)||!Object.hasOwn(stockLocations,location)||[openedAt,frozenAt,expiresAt].some(d=>!validDate(d))){
+  status('Controleer de productnaam, hoeveelheid en datums.',false,true);return false;
+ }
+ const old=stockProducts().find(p=>p.id===productId),existing=old?.stock?.find(r=>r.id===stockId);
+ if(stockId&&!existing)return false;
+ const row={id:existing?.id||uid(),location,amount:Math.round(amount*100)/100,unit,openedAt,frozenAt,expiresAt,notes};
+ const ok=mutate(()=>{
+  let g=old||stockProducts().find(p=>shoppingKey(p.title)===shoppingKey(title));
+  if(!g){g={id:uid(),title,quantity:'',category:shoppingAisleOf({title,category:''}),notes:'',list:'groceries',favorite:false,needed:false,bought:false,deletedAt:'',sourceUrl:''};state.groceries.push(g);}
+  g.stock||=[];if(existing)g.stock[g.stock.findIndex(r=>r.id===stockId)]=row;else g.stock.push(row);
+ },'Voorraad opgeslagen.',true);
+ if(ok){groceryList='groceries';groceryTab='stock';groceryDraft='';stockFilter='all';closeDialog();render();}
+ return ok;
+}
+function useStock(productId,stockId){
+ const g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);if(!row)return;
+ modal={mode:'stock-use',productId,stockId};
+ showDialog('Voorraad verbruiken',g.title+' · '+stockLocations[row.location],
+  '<form id="lifeStockUseForm"><div class="life-form-field"><label for="lifeStockUsed">Verbruikte hoeveelheid ('+esc(row.unit)+')</label><input id="lifeStockUsed" type="number" min="0.01" max="'+row.amount+'" step="0.01" inputmode="decimal" required value="'+esc(row.amount)+'"></div><p class="life-footnote">Bij volledig verbruik verdwijnt deze voorraadregel. Je kunt dit direct ongedaan maken.</p></form>',
+  '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="lifeStockUseForm" class="life-btn life-btn-primary">Verbruiken</button>');
+}
+function saveStockUse(productId,stockId){
+ const amount=Number($('lifeStockUsed').value),g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);
+ if(!row||!$('lifeStockUsed').value||!Number.isFinite(amount)||amount<=0||amount>row.amount||Math.abs(Math.round(amount*100)-amount*100)>1e-6){status('Vul een geldige verbruikte hoeveelheid in.',false,true);return false;}
+ const remaining=Math.round((row.amount-amount)*100)/100;
+ if(mutate(()=>{if(remaining===0)g.stock=g.stock.filter(r=>r.id!==stockId);else row.amount=remaining;},'Voorraad bijgewerkt.',true)){closeDialog();return true;}return false;
+}
+function deleteStock(productId,stockId){
+ const g=stockProducts().find(p=>p.id===productId);if(!g?.stock?.some(r=>r.id===stockId))return;
+ if(!confirm('Deze voorraadregel verwijderen?'))return;
+ mutate(()=>{g.stock=g.stock.filter(r=>r.id!==stockId)},'Voorraadregel verwijderd.',true);
+}
+
 function renderGroceries(){
+ if(groceryTab==='stock'){renderStock();return;}
  const all=shoppingItems(),visible=all.filter(g=>groceryTab==='trash'?g.deletedAt:!g.deletedAt).filter(shoppingMatches).sort((a,b)=>compareManual(a,b,()=>0));
  const list=visible.filter(g=>g.needed&&!g.bought),bought=groceryList==='purchases'?visible.filter(g=>g.needed&&g.bought):[];
  const favorites=all.filter(g=>!g.deletedAt&&g.favorite&&!g.needed).slice(0,4);
