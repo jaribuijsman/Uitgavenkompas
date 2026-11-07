@@ -19,11 +19,43 @@
   --m-checkbox:22px;
   --m-checkbox-inset:13px;
   --m-notice-gap:0px;
-  --mg-surface:linear-gradient(135deg,rgba(36,75,54,.86),rgba(10,48,37,.88));
+  --mg-surface:linear-gradient(140deg,rgba(36,76,50,.96),rgba(23,44,32,.97));
   --mg-line:rgba(187,217,184,.25);
   --mg-ink:#edf4e9;
   --mg-muted:#c1d3c4;
   --mg-gold:#edcc81;
   --mg-sage:#c4dfbb;
   --mg-shadow:inset 0 1px 0 #ecffc31c,0 8px 20px #00160d20;
+  /* One material choice shared by the start portal, Life, Finance, settings and dialogs. */
+  --mg-control-bg:#173d2df5;
+  --mg-aux-bg:#153a2cf2;
+  --mg-dialog-bg:#102d24fc;
+  --mg-stats-bg:#153d2bf2;
+  --mg-settings-bg:rgba(19,53,39,.97);
+  --mg-settings-list:rgba(20,52,40,.97);
+  --mg-settings-info:rgba(23,53,40,.97);
+  --mg-start-card:linear-gradient(140deg,rgba(36,76,50,.93),rgba(23,44,32,.96));
+  --mg-start-quick:linear-gradient(130deg,#30513ae8,#103225f0);
+  --mg-start-rhythm:#183a2df0;
+  --mg-start-filter:none;
+  --mg-start-quick-filter:none;
+}
+
+/* Opt-in translucent material. Painted tint for scrolling app cards: no global live blur. */
+:root[data-memento-theme="glass"] {
+  --m-surface:#1b3024d9;
+  --m-surface-raised:#223c2cd9;
+  --mg-surface:linear-gradient(135deg,rgba(36,75,54,.72),rgba(10,48,37,.74));
+  --mg-control-bg:#173d2dbb;
+  --mg-aux-bg:#153a2caa;
+  --mg-dialog-bg:#102d24e8;
+  --mg-stats-bg:#153d2baa;
+  --mg-settings-bg:rgba(19,53,39,.76);
+  --mg-settings-list:rgba(20,52,40,.74);
+  --mg-settings-info:rgba(23,53,40,.75);
+  --mg-start-card:linear-gradient(135deg,rgba(28,65,46,.50),rgba(9,39,29,.50));
+  --mg-start-quick:linear-gradient(130deg,#30513a80,#10322580);
+  --mg-start-rhythm:#183a2db5;
+  --mg-start-filter:blur(11px) saturate(1.15);
+  --mg-start-quick-filter:blur(8px);
 }
