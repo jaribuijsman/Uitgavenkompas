@@ -30,6 +30,7 @@ const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title','manual'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
 
+let stockFilter='all';
 let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false,groceryMode='compact',grocerySortOpen=false,groceryCategoryChoice='';
 let recipeImportDraft=null;
 const collapsedTaskCategories=new Set();
@@ -139,6 +140,20 @@ function paintTaskSteps(){
  host.innerHTML=presentation.taskSteps(modal.steps);
 }
 
+const stockLocations={pantry:'Voorraadkast',fridge:'Koelkast',freezer:'Vriezer'};
+const stockUnits=['stuks','verpakkingen','pakken','potten','gram','kg','ml','liter'];
+function validateStock(g){
+ if(g.stock===undefined)return;
+ if(g.list!=='groceries'||oneOff(g)||!Array.isArray(g.stock))throw Error('Ongeldige productvoorraad.');
+ const ids=new Set();
+ for(const row of g.stock){
+  if(!row||typeof row.id!=='string'||!row.id||ids.has(row.id)||!Object.hasOwn(stockLocations,row.location)||
+   typeof row.amount!=='number'||!Number.isFinite(row.amount)||row.amount<=0||row.amount>1000000||Math.abs(Math.round(row.amount*100)-row.amount*100)>1e-6||
+   !stockUnits.includes(row.unit)||typeof row.notes!=='string'||row.notes.length>500||
+   ['openedAt','frozenAt','expiresAt'].some(k=>typeof row[k]!=='string'||!validDate(row[k])))throw Error('Ongeldige voorraadregel.');
+  ids.add(row.id);
+ }
+}
 function validate(s){
  if(s.checklists!==undefined&&!Array.isArray(s.checklists))throw Error('Ongeldige checklists.');
  const checklistIds=new Set();
@@ -154,7 +169,7 @@ function validate(s){
  for(const key of ['tasks','groceries','wishes','notes','templates']){
   const ids=new Set();for(const x of s[key]){if(!x||typeof x.id!=='string'||ids.has(x.id)||typeof x.title!=='string'||!x.title.trim())throw Error('De back-up bevat een ongeldig of dubbel item.');ids.add(x.id)}
  }
- for(const g of s.groceries){if(g.list===undefined)g.list='groceries';if(g.favorite===undefined)g.favorite=false;if(!['groceries','purchases'].includes(g.list)||typeof g.favorite!=='boolean')throw Error('Ongeldige boodschappenlijst of favorietstatus.');if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}}
+ for(const g of s.groceries){if(g.list===undefined)g.list='groceries';if(g.favorite===undefined)g.favorite=false;if(!['groceries','purchases'].includes(g.list)||typeof g.favorite!=='boolean')throw Error('Ongeldige boodschappenlijst of favorietstatus.');validateStock(g);if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}}
  if(s.appointments===undefined)s.appointments=[];if(s.googleAppointments===undefined)s.googleAppointments=[];if(s.appointmentChecks===undefined)s.appointmentChecks={};if(!Array.isArray(s.googleAppointments)||!s.appointmentChecks||typeof s.appointmentChecks!=='object'||Array.isArray(s.appointmentChecks))throw Error('Ongeldige afspraakstatussen.');for(const e of s.googleAppointments){if(!e||typeof e.id!=='string'||!e.start||typeof e.start!=='object'||!(e.start.date||e.start.dateTime))throw Error('Ongeldige bewaarde Google-afspraak.')}for(const r of Object.values(s.appointmentChecks)){if(!r||typeof r.done!=='boolean'||typeof r.completedAt!=='string')throw Error('Ongeldige afvinkstatus.');}
  if(!Array.isArray(s.appointments))throw Error('Ongeldige afsprakenlijst.');
  const appointmentIds=new Set();
@@ -181,6 +196,7 @@ function save(token){
  if(blocked){status('De opgeslagen gegevens konden niet worden gelezen. Herstel eerst een back-up; de bestaande opslag is behouden.',false,true);return false}
  try{
   if(!storageGuard)throw Error('Veilige opslag is niet geladen. Vernieuw Memento.');
+  for(const g of state.groceries)validateStock(g);
   for(const g of state.groceries)if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}
   for(const t of [...state.tasks,...state.templates])validateTaskPlanning(t,state.templates.includes(t));
   storageGuard.commit({life:JSON.stringify(state)},{token});savedStatus();return true;
