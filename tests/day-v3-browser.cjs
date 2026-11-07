@@ -211,6 +211,18 @@ const reports=[];
     assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot.time,'11:00');
     await page.locator('[data-dr-unplan="v3-task-0"]').click();
     assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,undefined);
+    await page.evaluate(()=>window.MementoNavigation.setView('checklists'));
+    await page.locator('[data-dr-new]').click();
+    await page.locator('#drTitle').fill('Fictieve avondzorg');
+    await page.locator('#drMoment').selectOption('evening');
+    await page.locator('#drPinned').check();
+    await page.locator('#drSteps').fill('Water drinken\nTanden poetsen');
+    await page.locator('[form="drChecklistForm"]').click();
+    await page.locator('#lifeDialog').waitFor({state:'hidden'});
+    await shot('checklists');
+    await page.evaluate(()=>window.MementoStart.showWelcome());
+    await page.locator('[data-ms-moment="evening"]').click();
+    await shot('start-rhythm');
    }
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}
