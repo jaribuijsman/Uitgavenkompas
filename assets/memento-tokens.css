@@ -39,6 +39,11 @@
   --mg-start-rhythm:#183a2df0;
   --mg-start-filter:none;
   --mg-start-quick-filter:none;
+  --mg-checklist-bg:#214c37;
+  --mg-checklist-ink:#f7f7e9;
+  --mg-checklist-border:transparent;
+  --mg-checklist-button-bg:#d9e8cc;
+  --mg-checklist-button-ink:#214c37;
 }
 
 /* Opt-in translucent material. Painted tint for scrolling app cards: no global live blur. */
@@ -65,36 +70,42 @@
 :root[data-memento-theme="superdark"] {
   color-scheme:dark;
   --m-bg:#070b09;
-  --m-surface:#0f1714;
-  --m-surface-raised:#16241d;
+  --m-surface:#121f19;
+  --m-surface-raised:#1c3025;
   --m-ink:#eff5ef;
   --m-muted:#bacbbf;
-  --m-line:#34483b;
+  --m-line:#384e41;
   --m-sage:#c7e3bc;
   --m-on-sage:#13261a;
   --m-danger:#f1b6aa;
-  --mg-surface:linear-gradient(145deg,#13201a,#0f1714);
-  --mg-line:rgba(176,210,182,.20);
+  --mg-surface:linear-gradient(145deg,#121f19,#0d1714);
+  --mg-line:rgba(176,210,190,.20);
   --mg-ink:#f0f5ee;
   --mg-muted:#bbcbbf;
   --mg-gold:#e8cf94;
   --mg-sage:#c7e3bc;
   --mg-shadow:inset 0 1px 0 #e1f0d00c,0 12px 26px #00000055;
-  --mg-control-bg:#16241d;
-  --mg-aux-bg:#111c17;
-  --mg-dialog-bg:#0e1813;
-  --mg-stats-bg:#17251c;
-  --mg-settings-bg:#0e1913;
-  --mg-settings-list:#111e17;
-  --mg-settings-info:#101b15;
-  --mg-start-card:linear-gradient(135deg,#13201a,#0f1714);
+  --mg-control-bg:#17271f;
+  --mg-aux-bg:#122019;
+  --mg-dialog-bg:#101c18;
+  --mg-stats-bg:#14231c;
+  --mg-settings-bg:#101c17;
+  --mg-settings-list:#14221b;
+  --mg-settings-info:#122019;
+  --mg-start-card:linear-gradient(135deg,#121f19,#0d1714);
   --mg-start-quick:linear-gradient(130deg,#26382b,#192a21);
   --mg-start-rhythm:#111c17;
   --mg-start-filter:none;
   --mg-start-quick-filter:none;
-  --mg-night-bg:#070b09;
-  --mg-night-raised:#16241d;
-  --mg-night-border:#395044;
+  --mg-night-bg:#080e11;
+  --mg-night-card:#121f19;
+  --mg-night-raised:#1c3025;
+  --mg-night-border:#405849;
   --mg-night-text:#eff5ef;
   --mg-night-subtle:#bacbbf;
+  --mg-checklist-bg:#17291f;
+  --mg-checklist-ink:#e6f0e7;
+  --mg-checklist-border:#425e4b;
+  --mg-checklist-button-bg:#c7e3bc;
+  --mg-checklist-button-ink:#13261a;
 }
