@@ -1579,7 +1579,6 @@ root.addEventListener('click',e=>{
  if(d.drPurge){const c=state.checklists.find(x=>x.id===d.drPurge);if(c&&confirm('Checklist en alle afvinkgeschiedenis definitief verwijderen?'))mutate(()=>{state.checklists=state.checklists.filter(x=>x.id!==c.id)},'Checklist definitief verwijderd.');return}
  if(d.drPlan){planTask(d.drPlan);return}
  if(d.drFree){const candidates=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&!(t.date&&t.date<today())&&t.daySlot?.date!==d.drFree);planTask(candidates[0]?.id,d.drFree,d.drFreeTime,d.drFreeEnd);return}
- if(d.drUnplan){const t=state.tasks.find(x=>x.id===d.drUnplan);if(t&&mutate(()=>{delete t.daySlot},'Taak weer zonder tijd.'))closeDialog();return}
  if(d.shoppingImport!==undefined){openRecipeImport();return}
   if(d.followupStart&&d.followupId){startFollowup(d.followupStart,d.followupId);return;}
   if(d.followupOpen&&d.followupId){followupOpen(d.followupOpen,d.followupId);return;}
@@ -1651,6 +1650,7 @@ root.addEventListener('change',e=>{
 });
 root.addEventListener('submit',e=>{if(e.target.id==='lifeShoppingForm'){e.preventDefault();addShoppingItem();return}if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.drUnplan){const t=state.tasks.find(x=>x.id===b.dataset.drUnplan);if(t&&mutate(()=>{delete t.daySlot},'Taak weer zonder tijd.'))closeDialog();return}
  if(b.hasAttribute('data-recipe-import-back')&&recipeImportDraft){recipeImportDraft.stage='input';renderRecipeImport();return}
  if(b.dataset.followupStart&&b.dataset.followupId){startFollowup(b.dataset.followupStart,b.dataset.followupId);return;}
   if(b.dataset.followupOpen&&b.dataset.followupId){closeDialog();followupOpen(b.dataset.followupOpen,b.dataset.followupId);return;}

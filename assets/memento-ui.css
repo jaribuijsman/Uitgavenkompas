@@ -444,8 +444,8 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#214c37;color:#f7f7e9;border-radius:13px;padding:5px 7px 5px 14px;box-shadow:0 6px 15px #092c1f66}
 #lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:#d9e8cc;color:#214c37;font-weight:700;padding:8px 12px}
 #lifeApp .dr-timeline{display:grid;gap:8px;border-left:2px solid #a1bda2;margin:8px 0 14px 9px;padding-left:13px}
-#lifeApp .dr-free{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px dashed #9fbcaa;border-radius:12px;min-height:48px;padding:3px 8px;color:var(--m-ink);font-size:12px}
-#lifeApp .dr-free button{min-height:44px;border:0;background:transparent;color:#306448;font-weight:700;white-space:nowrap}
+#lifeApp .dr-free{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px dashed #9fbcaa;border-radius:12px;min-height:48px;padding:3px 8px;background:#173a2b;color:#e7efe7;font-size:12px}
+#lifeApp .dr-free button{min-height:44px;border:0;background:transparent;color:#d8eacc;font-weight:700;white-space:nowrap}
 #lifeApp .dr-planned-task{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center}
 #lifeApp .dr-clock{grid-column:1/-1;color:var(--m-ink);font-size:12px;font-weight:700}
 #lifeApp .dr-planned-task .life-task{min-width:0}

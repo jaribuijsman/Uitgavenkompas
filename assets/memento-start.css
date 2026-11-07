@@ -36,8 +36,8 @@
 #mementoStart .ms-moments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
 #mementoStart .ms-moments button{font:inherit;font-size:12px;color:#e5efde;background:#18392e;border:1px solid #8cad9370;border-radius:12px;min-height:44px}
 #mementoStart .ms-moments button[aria-pressed=true]{background:#d0e4c2;color:#173e2c;font-weight:700}
-#mementoStart .ms-rhythm{flex:1;min-height:0;overflow-y:auto}
-#mementoStart .ms-rhythm-card{border:1px solid #9abb9d70;border-radius:16px;padding:14px;margin-bottom:8px;background:#183a2d}
+#mementoStart .ms-rhythm{display:flex;gap:8px;flex:1;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
+#mementoStart .ms-rhythm-card{flex:0 0 100%;min-width:0;max-height:100%;overflow-y:auto;scroll-snap-align:start;border:1px solid #9abb9d70;border-radius:16px;padding:14px;background:#183a2d}
 #mementoStart .ms-rhythm-card small{color:#c6d9c3;font-size:11px;letter-spacing:.06em}
 #mementoStart .ms-rhythm-card h2{font-size:20px;font-weight:600;margin:5px 0 12px}
 #mementoStart .ms-rhythm-steps{display:grid;gap:3px}
