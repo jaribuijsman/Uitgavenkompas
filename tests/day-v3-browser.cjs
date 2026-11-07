@@ -195,6 +195,22 @@ const reports=[];
     assert.equal(afterAppointment.life.appointments.length,baseline.life.appointments.length+1);
     assert.equal(await capture.locator('#lifeQuickTitle').inputValue(),'','Successful save clears draft');
     await shot('quick-capture-a');
+    // Time allocation is separate from the original task date and fails closed on overlap.
+    await page.locator('[data-life-day="2026-10-31"] [data-dr-free]').first().click();
+    await page.locator('#drPlanTask').selectOption('v3-task-0');
+    await page.locator('#drPlanDate').fill('2026-10-31');
+    await page.locator('#drPlanTime').fill('11:00');
+    await page.locator('#drPlanMinutes').fill('30');
+    await page.locator('[form="drPlanForm"]').click();
+    assert.deepEqual((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,{date:'2026-10-31',time:'11:00',minutes:30});
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').date,'2026-10-31');
+    await page.locator('[data-life-day="2026-10-31"] .dr-planned-task .dr-move').first().click();
+    await page.locator('#drPlanTime').fill('12:00');
+    await page.locator('[form="drPlanForm"]').click();
+    assert.match(await page.locator('#drPlanError').innerText(),/overlapt/);
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot.time,'11:00');
+    await page.locator('[data-dr-unplan="v3-task-0"]').click();
+    assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,undefined);
    }
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}

@@ -856,7 +856,7 @@ const momentName=id=>checklistMoments.find(x=>x[0]===id)?.[1]||'Dagmoment';
 // Night checklists use the wake cycle that started before midnight.
 const checklistCycleDay=c=>{const d=new Date();if(['wake','night','sleep'].includes(c.moment)&&d.getHours()<12)d.setDate(d.getDate()-1);return formatISO(d)};
 const checklistDone=(c,day)=>c.days[day]||[];
-const activeChecklists=()=>state.checklists.filter(c=>!c.deletedAt);
+const activeChecklists=()=>(state.checklists||[]).filter(c=>!c.deletedAt);
 function checklistCard(c,day,compact=false){
  const done=checklistDone(c,day),total=c.steps.length,checked=c.steps.filter(s=>done.includes(s.id)).length;
  return '<article class="dr-checklist" data-dr-id="'+esc(c.id)+'"><div class="dr-checklist-head"><strong>'+esc(c.title)+'</strong><small>'+checked+'/'+total+' afgevinkt</small></div>'+
@@ -929,7 +929,7 @@ function saveTaskSlot(){
  if(mutate(()=>{t.daySlot={date,time,minutes}},'Taak ingepland.'))closeDialog();
 }
 function renderChecklists(){
- const deleted=state.checklists.filter(c=>c.deletedAt),active=activeChecklists();
+ const deleted=(state.checklists||[]).filter(c=>c.deletedAt),active=activeChecklists();
  content.innerHTML='<div class="dr-manager"><div class="dr-manager-head"><button type="button" class="life-btn life-btn-primary" data-dr-new>＋ Nieuwe checklist</button><button type="button" class="life-btn" data-dr-trash>Prullenbak ('+deleted.length+')</button></div>'+
  (checklistTrash?'<div class="dr-group"><h2>Prullenbak</h2>'+(deleted.length?deleted.map(c=>'<article class="dr-checklist"><strong>'+esc(c.title)+'</strong><div class="dr-actions"><button data-dr-restore="'+esc(c.id)+'">Herstellen</button><button class="dr-delete" data-dr-purge="'+esc(c.id)+'">Definitief verwijderen</button></div></article>').join(''):'<p>De prullenbak is leeg.</p>')+'</div>':
  checklistMoments.map(([key,label])=>{const list=active.filter(c=>c.moment===key);return list.length?'<section class="dr-group"><h2>'+label+'</h2>'+list.map(c=>checklistCard(c,checklistCycleDay(c))).join('')+'</section>':''}).join('')+

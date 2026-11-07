@@ -438,7 +438,9 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp .dr-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 #lifeApp .dr-actions button,#lifeApp .dr-move{min-height:44px;border:1px solid #acc4a9;border-radius:10px;background:#e7efe4;color:#254d37;padding:6px 12px;font:inherit}
 #lifeApp .dr-actions .dr-delete{color:#963b40}
-#lifeApp .dr-marker-host{position:sticky;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:5}
+#lifeApp .dr-marker-host{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 24px),700px);transform:translateX(-50%);z-index:5}
+#lifeApp[data-life-view="today"] #lifeContent{padding-bottom:70px}
+@media(min-width:801px){#lifeApp .dr-marker-host{bottom:16px}}
 #lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#214c37;color:#f7f7e9;border-radius:13px;padding:5px 7px 5px 14px;box-shadow:0 6px 15px #092c1f66}
 #lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:#d9e8cc;color:#214c37;font-weight:700;padding:8px 12px}
 #lifeApp .dr-timeline{display:grid;gap:8px;border-left:2px solid #a1bda2;margin:8px 0 14px 9px;padding-left:13px}
