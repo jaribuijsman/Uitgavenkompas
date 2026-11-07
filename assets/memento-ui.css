@@ -434,8 +434,8 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp .dr-marker-host{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 24px),700px);transform:translateX(-50%);z-index:5}
 #lifeApp[data-life-view="today"] #lifeContent{padding-bottom:70px}
 @media(min-width:801px){#lifeApp .dr-marker-host{bottom:16px}}
-#lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#214c37;color:#f7f7e9;border-radius:13px;padding:5px 7px 5px 14px;box-shadow:0 6px 15px #092c1f66}
-#lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:#d9e8cc;color:#214c37;font-weight:700;padding:8px 12px}
+#lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--mg-checklist-bg,#214c37);color:var(--mg-checklist-ink,#f7f7e9);border-radius:13px;padding:5px 7px 5px 14px;box-shadow:inset 0 0 0 1px var(--mg-checklist-border,transparent),0 6px 15px #092c1f66}
+#lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:var(--mg-checklist-button-bg,#d9e8cc);color:var(--mg-checklist-button-ink,#214c37);font-weight:700;padding:8px 12px}
 #lifeApp .dr-timeline{display:grid;gap:8px;border-left:2px solid #a1bda2;margin:8px 0 14px 9px;padding-left:13px}
 #lifeApp .dr-timeline:empty{display:none}
 #lifeApp .dr-pin{display:flex;align-items:center;gap:8px;min-height:48px}
