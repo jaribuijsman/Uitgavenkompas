@@ -137,6 +137,8 @@ const server=http.createServer((req,res)=>{
    assert.equal(glassMaterial.weather,glassMaterial.rhythm);
    // Super Dark is a third, independent and persistent whole-app theme.
    await page.locator('#mementoSettingsFinance [data-ms-theme="superdark"]').click();
+   // Observe the final painted state after the live material switch.
+   await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
    const dark=await page.evaluate(()=>{
     const css=selector=>getComputedStyle(document.querySelector(selector));
     const bg=selector=>css(selector).backgroundImage;
@@ -150,6 +152,8 @@ const server=http.createServer((req,res)=>{
      nightArt:css('#pinLock .mf-image').filter,
      sceneShade:bg('#pinLock .memento-scene-shade'),
      body:css('body').backgroundColor,
+     area:document.body.dataset.compassArea,
+     nightToken:css('html').getPropertyValue('--mg-night-bg').trim(),
      scrollWidth:document.documentElement.scrollWidth,
      width:innerWidth
     };
@@ -158,6 +162,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(dark.stored,'superdark');
    assert.equal(dark.chrome,'#070b09');
    assert.equal(dark.body,'rgb(7, 11, 9)');
+   assert.equal(dark.nightToken,'#070b09','Night palette CSS is active');
    assert.equal(dark.weather,dark.quote);
    assert.equal(dark.weather,dark.rhythm);
    assert.notEqual(dark.weather,glassMaterial.weather);
