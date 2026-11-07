@@ -1155,7 +1155,7 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <link rel="stylesheet" href="./assets/memento-knowledge-portal.css?v=20261105-portal-pixelart-v1">
 <script src="./assets/memento-knowledge-portal.js?v=20261106-notion-intent-v1"></script>
 <script src="./assets/memento-knowledge.js?v=20261105-ai-hub-v1"></script>
-<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><link rel="stylesheet" href="./assets/memento-ai-hub.css?v=20261105-ai-hub-v1"><script src="./assets/memento-ai-hub-prompts.js?v=20261105-ai-hub-v1"></script><script src="./assets/memento-ai-hub.js?v=20261105-ai-hub-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261107-day-ux-v1"></script>
+<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><link rel="stylesheet" href="./assets/memento-ai-hub.css?v=20261105-ai-hub-v1"><script src="./assets/memento-ai-hub-prompts.js?v=20261105-ai-hub-v1"></script><script src="./assets/memento-ai-hub.js?v=20261105-ai-hub-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261107-voorraad-v1"></script>
 <script src="./assets/memento-global-search-core.js?v=20261031-global-search-v1"></script>
 <script src="./assets/memento-global-search.js?v=20261031-navigation-contract-v1"></script>
 
@@ -1701,7 +1701,7 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeApp .shopping-app{max-width:760px;margin:0 auto;color:#edf5ef}
 #lifeApp .shopping-primary-head{display:flex;align-items:center;gap:7px;margin:0 0 10px}
 #lifeApp .shopping-primary-nav{display:flex;flex:1;min-width:0;gap:3px;padding:3px;border:1px solid #425e4b;border-radius:14px;background:#15271c}
-#lifeApp .shopping-primary-nav button{flex:1;min-width:0;min-height:44px;border:0;border-radius:10px;background:transparent;color:#bfd1c3;font-size:13px;font-weight:700;padding:7px 3px}
+#lifeApp .shopping-primary-nav button{flex:1;min-width:0;min-height:44px;border:0;border-radius:10px;background:transparent;color:#bfd1c3;font-size:12px;font-weight:700;padding:7px 3px}
 #lifeApp .shopping-primary-nav button[aria-pressed=true]{background:#bdd3c2;color:#14261a}
 #lifeApp .shopping-primary-head .shopping-list-menu{flex:none}
 #lifeApp .shopping-primary-head .shopping-list-menu>summary{min-width:44px;min-height:44px;display:grid;place-items:center}
@@ -1765,6 +1765,30 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 #lifeDialog .shopping-research-result{margin-top:12px}
 #lifeDialog .shopping-research-result summary{font-size:14px;cursor:pointer}
 #lifeDialog .shopping-research-result .life-note-text{white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto;color:#d7e9dc}
+/* Voorraad lives with the existing grocery layout: no global theme overrides. */
+#lifeApp .shopping-stock-tools{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+#lifeApp .shopping-stock-new{min-height:48px;justify-self:start;padding:10px 14px;border:1px solid #587460;border-radius:11px;background:#21382b;color:#edf5ef;font-weight:650}
+#lifeApp .shopping-stock-search{display:grid;gap:6px;color:#bfd1c3;font-size:13px}
+#lifeApp .shopping-stock-search input{box-sizing:border-box;width:100%;min-height:48px;padding:10px 12px;border:1px solid #647b6a;border-radius:11px;background:#15271c;color:#edf5ef;font-size:16px}
+#lifeApp .shopping-stock-search input::placeholder{color:#b3cbb9}
+#lifeApp .shopping-stock-filters{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+#lifeApp .shopping-stock-filters button{min-height:44px;padding:8px 12px;border:1px solid #526d59;border-radius:22px;background:#15271c;color:#cbded0;font-size:13px;font-weight:600}
+#lifeApp .shopping-stock-filters button[aria-pressed=true]{background:#bdd3c2;border-color:#bdd3c2;color:#14261a}
+#lifeApp .shopping-stock-products{display:grid;gap:12px}
+#lifeApp .shopping-stock-product{border:1px solid #3b5142;border-radius:14px;background:#1c3024;padding:11px 13px}
+#lifeApp .shopping-stock-product-head{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:4px}
+#lifeApp .shopping-stock-product-head h3{min-width:0;margin:0;color:#edf5ef;font-size:16px;font-weight:700;overflow-wrap:anywhere}
+#lifeApp .shopping-stock-add{flex:none;min-height:44px;padding:8px;border:0;border-radius:9px;background:transparent;color:#c9dfcf;font-size:12px;font-weight:700}
+#lifeApp .shopping-stock-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:8px;min-height:64px;padding:8px 0;border-top:1px solid #3b5142}
+#lifeApp .shopping-stock-details{min-width:0;display:grid;gap:3px}
+#lifeApp .shopping-stock-details strong{font-size:15px;font-weight:650;color:#edf5ef}
+#lifeApp .shopping-stock-details small{color:#bfd1c3;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+#lifeApp .shopping-stock-details .shopping-stock-warning{color:#f0d19a;font-weight:700}
+#lifeApp .shopping-stock-details .shopping-stock-note{color:#dbe9dc}
+#lifeApp .shopping-stock-row .shopping-item-menu>summary{box-sizing:border-box;min-height:44px;min-width:44px;display:grid;place-items:center}
+#lifeApp .shopping-stock-add:focus-visible,#lifeApp .shopping-stock-filters button:focus-visible,#lifeApp .shopping-stock-search input:focus-visible{outline:2px solid #bdd3c2;outline-offset:3px}
+@media(max-width:370px){#lifeApp .shopping-primary-nav button{font-size:11px;letter-spacing:-.2px;padding-inline:1px}#lifeApp .shopping-stock-product{padding-inline:10px}}
+
 
 </style>
 
