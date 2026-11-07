@@ -135,6 +135,49 @@ const server=http.createServer((req,res)=>{
    assert.notEqual(glassMaterial.weather,forestMaterial.weather,'Changing theme must alter the real portal material');
    assert.equal(glassMaterial.weather,glassMaterial.quote);
    assert.equal(glassMaterial.weather,glassMaterial.rhythm);
+   // Super Dark is a third, independent and persistent whole-app theme.
+   await page.locator('#mementoSettingsFinance [data-ms-theme="superdark"]').click();
+   // Observe the final painted state after the live material switch.
+   await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+   const dark=await page.evaluate(()=>{
+    const css=selector=>getComputedStyle(document.querySelector(selector));
+    const bg=selector=>css(selector).backgroundImage;
+    return {
+     theme:document.documentElement.dataset.mementoTheme,
+     stored:localStorage.getItem('memento_card_theme_v1'),
+     chrome:document.querySelector('meta[name="theme-color"]').content,
+     weather:bg('#mementoStart .ms-weather'),
+     quote:bg('#mementoStart .ms-thought'),
+     rhythm:bg('#mementoStart .ms-day'),
+     nightArt:css('#pinLock .mf-image').filter,
+     sceneShade:bg('#pinLock .memento-scene-shade'),
+     body:css('body').backgroundColor,
+     area:document.body.dataset.compassArea,
+     nightToken:css('html').getPropertyValue('--mg-night-bg').trim(),
+     scrollWidth:document.documentElement.scrollWidth,
+     width:innerWidth
+    };
+   });
+   assert.equal(dark.theme,'superdark');
+   assert.equal(dark.stored,'superdark');
+   assert.equal(dark.chrome,'#070b09');
+   assert.equal(dark.body,'rgb(7, 11, 9)');
+   assert.equal(dark.nightToken,'#070b09','Night palette CSS is active');
+   assert.equal(dark.weather,dark.quote);
+   assert.equal(dark.weather,dark.rhythm);
+   assert.notEqual(dark.weather,glassMaterial.weather);
+   assert.notEqual(dark.weather,forestMaterial.weather);
+   assert.match(dark.nightArt,/brightness\(0\.(39|48|60)\)/,'Original landscape should be night-graded');
+   assert.match(dark.sceneShade,/linear-gradient/,'Night scenery has a dark veil');
+   assert(dark.scrollWidth<=dark.width+1,'No horizontal overflow in Super Dark');
+   assert.equal(await page.locator('#mementoSettingsFinance [data-ms-theme="superdark"]').getAttribute('aria-pressed'),'true');
+   // Switching existing styles must not inherit any night-only treatment.
+   await page.locator('#mementoSettingsFinance [data-ms-theme="forest"]').click();
+   assert.equal(await page.evaluate(()=>document.querySelector('meta[name="theme-color"]').content),'#102b22');
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'forest');
+   await page.locator('#mementoSettingsFinance [data-ms-theme="glass"]').click();
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'glass');
+   await page.locator('#mementoSettingsFinance [data-ms-theme="superdark"]').click();
    await page.locator('#mementoSettingsFinance [data-ms-page="appearance"] [data-ms-back]').click();
    await page.locator('#mementoSettingsFinance [data-ms-target=privacy]').click();
    await require('./helpers/reveal.cjs')(page,'#view-settings [data-memento-pin-lock-now]');await page.locator('#view-settings [data-memento-pin-lock-now]').click();
@@ -158,7 +201,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('#pinLock').waitFor({state:'hidden'});
    await page.reload({waitUntil:'domcontentloaded'});
    await page.locator('#mementoStart').waitFor({state:'visible'});
-   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'glass','Card theme survives app relaunch');
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'superdark','Card theme survives app relaunch');
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.deepEqual(errors,[],'No page errors');
    console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');

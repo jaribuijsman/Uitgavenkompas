@@ -1,0 +1,297 @@
+/* Memento Super Dark — independent, opt-in night material.
+   Keep page structure, icons, data charts and original pixel artwork intact.
+   Artwork is color-graded only while this theme is active; no expensive live blur. */
+
+/* Shell and the forest under the app: retain the original landscape, but put it
+   under a genuine midnight-green veil. Scroll attachment is mobile-friendly. */
+html[data-memento-theme="superdark"] body {
+  background:#070b09!important;
+  color:var(--mg-ink);
+}
+/* The old finance shell has its own global !important background.
+   Target both area states explicitly so switching the area cannot restore it. */
+html[data-memento-theme="superdark"] body[data-compass-area="life"],
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] {
+  background-color:#070b09!important;
+  background-image:none!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp,
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] > .app {
+  background:
+    linear-gradient(180deg,#030a07d7 0%,#030906e5 52%,#030805f2 100%),
+    url('./pin-forests/bosruines.webp') center top / cover scroll!important;
+  color:var(--mg-ink)!important;
+}
+html[data-memento-theme="superdark"] body #compassAreaBar,
+html[data-memento-theme="superdark"] body #mementoQuickNav,
+html[data-memento-theme="superdark"] body #mementoMenuPanel,
+html[data-memento-theme="superdark"] body #lifeApp .life-sidebar,
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .sidebar,
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .topbar {
+  background:#0a120e!important;
+  color:var(--mg-ink)!important;
+  border-color:var(--mg-line)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+html[data-memento-theme="superdark"] body #mementoQuickNav button:not([aria-current="page"]):not(.is-active) {
+  color:#c0d0c3!important;
+}
+
+/* Welcome/night landscape: the existing six scenes, user-selected forest,
+   atmospheric weather and festive lights continue to work. Only art is
+   color-graded, never the readable app content or photographs. */
+html[data-memento-theme="superdark"] #pinLock {
+  background:#030806!important;
+}
+html[data-memento-theme="superdark"] #pinLock .pin-forest-bg {
+  background-color:#030806;
+}
+html[data-memento-theme="superdark"] #pinLock .mf-image,
+html[data-memento-theme="superdark"] #pinLock[data-mf-night="true"] .mf-image {
+  filter:brightness(.39) saturate(.70) hue-rotate(12deg) contrast(1.14)!important;
+}
+html[data-memento-theme="superdark"] #pinLock[data-mf-scene="maanmeer"] .mf-image {
+  filter:brightness(.60) saturate(.82) contrast(1.13)!important;
+}
+html[data-memento-theme="superdark"] #pinLock[data-mf-scene="schemermeer"] .mf-image {
+  filter:brightness(.48) saturate(.74) contrast(1.16)!important;
+}
+html[data-memento-theme="superdark"] #pinLock .memento-scene-shade,
+html[data-memento-theme="superdark"] #pinLock[data-mf-kind="snow"] .memento-scene-shade,
+html[data-memento-theme="superdark"] #pinLock[data-mf-kind="fog"] .memento-scene-shade {
+  background:linear-gradient(180deg,#030a1049 0%,#030b0a7e 35%,#030a08b9 72%,#020806eb 100%)!important;
+}
+html[data-memento-theme="superdark"] #pinLock .mf-rays {opacity:0!important}
+html[data-memento-theme="superdark"] #pinLock .mf-fog {opacity:.12!important}
+html[data-memento-theme="superdark"] #pinLock .pin-forest-bg::after {
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    radial-gradient(circle 1px at 13% 11%,#f8e3b8c2 95%,transparent),
+    radial-gradient(circle 1px at 29% 6%,#e6f2e0ae 95%,transparent),
+    radial-gradient(circle 1px at 49% 17%,#f8e3b899 95%,transparent),
+    radial-gradient(circle 1px at 72% 10%,#e6f2e0aa 95%,transparent),
+    radial-gradient(circle 1px at 90% 21%,#f8e3b896 95%,transparent);
+  opacity:.65;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 46%);
+  mask-image:linear-gradient(180deg,#000 0%,transparent 46%);
+}
+
+/* The welcome cards share one superdark material, including the quote,
+   timeline and quick actions. This overrides decorative light without
+   altering dimensions, dates, text or any control behaviors. */
+html[data-memento-theme="superdark"] #mementoStart .ms-glass {
+  border-color:#738f7966;
+  box-shadow:inset 0 1px 0 #e1f0d012,0 16px 32px #0009;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-hour {
+  background:#1a2b2166;
+  border-color:#536b542e;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-hour.now {
+  background:#26392b;
+  border-color:#dec992b5;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-hour b,
+html[data-memento-theme="superdark"] #mementoStart .ms-overline {
+  color:#ebd49d;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-condition,
+html[data-memento-theme="superdark"] #mementoStart .ms-summary,
+html[data-memento-theme="superdark"] #mementoStart .ms-source {
+  color:#d7e5d8;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-moments button:not([aria-pressed="true"]) {
+  background:#0d1b14;
+  color:#e7f0e5;
+  border-color:#506d5682;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-moments button[aria-pressed="true"] {
+  background:#c7e3bc;
+  color:#13261a;
+  border-color:#c7e3bc;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-quickbutton {
+  border-color:#59745b8a;
+  box-shadow:inset 0 1px #d9e7c21a,0 7px 18px #0007;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+html[data-memento-theme="superdark"] #mementoStart .ms-continue {
+  background:linear-gradient(110deg,#d3e7bc,#a8cfb2);
+  color:#142b1b;
+}
+
+/* Selected app cards remain distinguishable from midnight canvas.
+   Existing structural CSS and the shared material token own their geometry. */
+html[data-memento-theme="superdark"] body #lifeApp :is(.life-panel,.ft-panel,.life-day,.flow-hero,.kc-item,.kc-inbox,.kc-collection-card),
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app :is(.card,.stat-card,.m9-card,.budget-card,.account-card,.goal-card) {
+  border-color:var(--mg-line)!important;
+  color:var(--mg-ink)!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp :is(.life-btn,.kc-btn,.ft-tab,.ft-choices button),
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app :is(.btn,.m9-filter) {
+  background:var(--mg-control-bg)!important;
+  border-color:var(--mg-night-border)!important;
+  color:#eaf3ea!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp :is(.life-btn-primary,.kc-primary),
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .btn.primary,
+html[data-memento-theme="superdark"] body :is(#modalBackdrop,#lifeDialog) :is(.primary,.life-btn-primary) {
+  background:#c7e3bc!important;
+  color:#13261a!important;
+  border-color:#c7e3bc!important;
+}
+html[data-memento-theme="superdark"] body :is(#modalBackdrop,#lifeDialog,.ft-modal) :is(input,select,textarea):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),
+html[data-memento-theme="superdark"] body #lifeApp :is(input,textarea,select):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app :is(input,textarea,select):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]) {
+  background:#0b1711!important;
+  color:#edf5eb!important;
+  border-color:#46624b!important;
+  caret-color:#c7e3bc;
+}
+html[data-memento-theme="superdark"] body :is(input,textarea)::placeholder {
+  color:#afc3b1!important;
+  opacity:1;
+}
+html[data-memento-theme="superdark"] body :is(#lifeDialogPanel,#modalContent,.ft-dialog,.kc-cover-dialog) {
+  background:#0d1712!important;
+  color:#eef5ee!important;
+  border-color:#455c48!important;
+}
+html[data-memento-theme="superdark"] body :is(#lifeDialogPanel,#modalContent) :is(.life-dialog-footer,.modal-footer) {
+  background:#0d1712!important;
+}
+html[data-memento-theme="superdark"] body :is(.memento-gcal-popover,.memento-task-overview-items,.memento-filter-drawer) {
+  background:#121e17!important;
+  color:#eff5ee!important;
+  border-color:#425a46!important;
+}
+
+/* The financial app has its own scoped palette and a few explicitly light
+   subviews; fix these without mutating chart colors, amounts or status badges. */
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app {
+  --bg:#070b09;
+  --surface:#101915;
+  --surface2:#15231b;
+  --ink:#edf5ec;
+  --muted:#b9cdbd;
+  --line:#395344;
+  --green:#b6ddbc;
+  --green2:#16291f;
+  --shadow:0 10px 24px #0006;
+  color:#edf5ec;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app :is(.smartbuy-intro,.moneycoach-intro,.tx-more-filters,.analysis-controls) {
+  background:#111e17!important;
+  color:#e9f2e7!important;
+  border-color:#3d5645!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-transactions :is(.tx-card-title,.tx-card-date,.tx-card-date span,.tx-card-meta,.tx-card-note) {
+  color:#dbe9dc!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-transactions :is(.tx-card-date,.tx-card-note,.tx-more-toggle,.tx-list-empty) {
+  background:#18251c!important;
+  border-color:#3c5644!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-transactions .tx-card-amount.positive {color:#9be1b2!important}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-transactions .tx-card-amount.negative {color:#f0b9ac!important}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] #view-transactions .tx-page-head {
+  background:linear-gradient(120deg,#10251a,#162b1e)!important;
+  border-color:#486046!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app :is(.tx-filter-select,.tx-more-toggle,.field-search.tx-search) {
+  background:#101e16!important;
+  color:#e3eee4!important;
+  border-color:#3d5845!important;
+}
+html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .tx-filter-select option {
+  background:#111e17;color:#edf5ec;
+}
+
+/* Kennis, inbox and personal headquarters use their own local materials.
+   Scenic banners are dimmed with a pseudo-layer, not by filtering text/photos. */
+html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-app {
+  --kc-bg:#08120d;
+  --kc-panel:#111f17;
+  --kc-panel-alt:#192b20;
+  --kc-border:#3b5845;
+  --kc-text:#edf5ed;
+  --kc-muted:#b9cbbb;
+  --kc-sage:#c7e3bc;
+}
+html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] :is(.kc-collection,.kc-item,.kc-capture,.kc-folder-row,.kc-inbox,.kc-collection-row) {
+  background:#132119!important;
+  border-color:#3b5742!important;
+  color:#edf5ed!important;
+}
+html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-mark,
+html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-collection-icon {
+  background:#1d3124;
+  color:#d0e7cb;
+}
+html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-art-row .kc-art-wrap::after {
+  background:linear-gradient(90deg,#030906f7 0%,#07140deb 38%,#08160dc0 69%,#08160d58 100%);
+}
+html[data-memento-theme="superdark"] #memento-hq-preview .mm-hq {
+  position:relative;
+  background-color:#0b1711;
+}
+html[data-memento-theme="superdark"] #memento-hq-preview .mm-hq::before {
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,#020805b7 0%,#05110a9e 48%,#06130b75 100%);
+}
+html[data-memento-theme="superdark"] #memento-hq-preview .mm-hq > * {position:relative}
+html[data-memento-theme="superdark"] #memento-hq-preview :is(.mm-icon,.mm-secondary) {
+  background:#14251b;color:#e8cf94;
+}
+html[data-memento-theme="superdark"] #memento-hq-preview .mm-inbox {
+  border-color:#3f5845;
+}
+
+/* The Material-like settings and picker stay readable at 360-393 CSS px.
+   The third preview is a prominent, compact full-width night swatch. */
+html[data-memento-theme="superdark"] .ms-shell {color:#eff5ee}
+html[data-memento-theme="superdark"] .ms-icon {background:#1c3023;color:#e8cf94}
+html[data-memento-theme="superdark"] .ms-row:active {background:#1e3325!important}
+html[data-memento-theme="superdark"] :is(.ms-theme-picker,.ms-info,.ms-list) {
+  border-color:#3b5542;
+}
+.ms-theme-choice[data-ms-theme="superdark"] {
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:minmax(0,40%) minmax(0,1fr);
+  grid-template-rows:auto auto;
+  align-items:center;
+  gap:5px 12px;
+  min-height:106px;
+}
+.ms-theme-choice[data-ms-theme="superdark"] .ms-theme-sample {
+  grid-row:1/3;
+  grid-column:1;
+  height:81px;
+}
+.ms-theme-choice[data-ms-theme="superdark"] strong {grid-column:2;align-self:end}
+.ms-theme-choice[data-ms-theme="superdark"] small {grid-column:2;align-self:start}
+.ms-theme-sample-superdark {
+  background:
+    radial-gradient(ellipse at 70% 18%,#d6c28970 0 2%,transparent 7%),
+    linear-gradient(160deg,#111d19,#030805 77%);
+}
+.ms-theme-sample-superdark > span {
+  background:linear-gradient(145deg,#14231b,#0a1510);
+  border-color:#687d644f;
+  box-shadow:0 2px 12px #0008;
+}
+html[data-memento-theme="superdark"] .ms-theme-choice[data-ms-theme="superdark"][aria-pressed="true"] {
+  border-color:#dbc990!important;
+  outline-color:#dbc990;
+}
+@media(max-width:360px) {
+  .ms-theme-choice[data-ms-theme="superdark"] {gap:5px 8px;grid-template-columns:minmax(0,38%) minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-memento-theme="superdark"] #pinLock .pin-forest-bg::after {opacity:.45}
+}
