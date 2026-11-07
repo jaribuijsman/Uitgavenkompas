@@ -10,7 +10,7 @@
 #mementoStart .ms-brand{display:flex;align-items:center;justify-content:space-between;gap:12px;height:65px;min-height:65px;flex-shrink:0}
 #mementoStart .ms-logo{display:block;width:185px;max-width:56%;height:auto;max-height:65px;object-fit:contain;filter:drop-shadow(0 3px 14px #071a12a8)}
 #mementoStart .ms-date{max-width:130px;margin:0;color:#f4dfaa;text-align:right;text-transform:uppercase;font-size:11px;font-weight:650;line-height:1.5;letter-spacing:1.2px;text-shadow:0 2px 7px #05180f}
-#mementoStart .ms-glass{position:relative;isolation:isolate;border-radius:23px;background:linear-gradient(135deg,rgba(28,65,46,.5),rgba(9,39,29,.5));border:1px solid #dfd5a347;box-shadow:inset 0 1px #fcebc336,inset 0 -1px #10271940,0 12px 30px #031c1545;backdrop-filter:blur(11px) saturate(1.15);-webkit-backdrop-filter:blur(11px) saturate(1.15);overflow:hidden}
+#mementoStart .ms-glass{position:relative;isolation:isolate;border-radius:23px;background:var(--mg-start-card);border:1px solid #dfd5a347;box-shadow:inset 0 1px #fcebc336,inset 0 -1px #10271940,0 12px 30px #031c1545;backdrop-filter:var(--mg-start-filter);-webkit-backdrop-filter:var(--mg-start-filter);overflow:hidden}
 #mementoStart .ms-weather{padding:12px 13px 0;flex-shrink:0}
 #mementoStart .ms-overline{display:block;font-size:11px;font-weight:650;letter-spacing:1px;text-transform:uppercase;color:#f0dfb5}
 #mementoStart .ms-topweather{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 0 4px}
@@ -29,15 +29,15 @@
 #mementoStart .ms-source>span:last-child{display:flex;align-items:center;flex-shrink:0}
 #mementoStart .ms-source a{color:#dcebd1;text-decoration:underline;text-underline-offset:2px;display:flex;align-items:center;min-height:44px}
 #mementoStart .ms-refresh{font:inherit;font-size:19px;min-width:44px;min-height:44px;border:0;border-radius:10px;background:none;color:#e3edcf;padding:0}
-#mementoStart .ms-day{flex:1;min-height:240px;display:flex;flex-direction:column;gap:9px;padding:12px;background:linear-gradient(135deg,#173e2c98,#0a281d98)}
+#mementoStart .ms-day{flex:1;min-height:240px;display:flex;flex-direction:column;gap:9px;padding:12px;background:var(--mg-start-card)}
 #mementoStart .ms-dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;font-size:17px}
 #mementoStart .ms-overview{font:inherit;text-align:right;font-size:13px;font-weight:650;min-height:44px;color:#dceacb;border:0;background:none;padding:0 8px}
 #mementoStart .ms-night-switch{align-self:flex-start;min-height:44px;border:0;background:transparent;color:#dbe9cb;font:inherit;font-size:12px;text-decoration:underline;text-underline-offset:3px}
 #mementoStart .ms-moments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
-#mementoStart .ms-moments button{font:inherit;font-size:12px;color:#e5efde;background:#18392e;border:1px solid #8cad9370;border-radius:12px;min-height:44px}
+#mementoStart .ms-moments button{font:inherit;font-size:12px;color:#e5efde;background:var(--mg-control-bg);border:1px solid #8cad9370;border-radius:12px;min-height:44px}
 #mementoStart .ms-moments button[aria-pressed=true]{background:#d0e4c2;color:#173e2c;font-weight:700}
 #mementoStart .ms-rhythm{display:flex;gap:8px;flex:1;min-height:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
-#mementoStart .ms-rhythm-card{flex:0 0 100%;min-width:0;max-height:100%;overflow-y:auto;scroll-snap-align:start;border:1px solid #9abb9d70;border-radius:16px;padding:14px;background:#183a2d}
+#mementoStart .ms-rhythm-card{flex:0 0 100%;min-width:0;max-height:100%;overflow-y:auto;scroll-snap-align:start;border:1px solid #9abb9d70;border-radius:16px;padding:14px;background:var(--mg-start-rhythm)}
 #mementoStart .ms-rhythm-card small{color:#c6d9c3;font-size:11px;letter-spacing:.06em}
 #mementoStart .ms-rhythm-card h2{font-size:20px;font-weight:600;margin:5px 0 12px}
 #mementoStart .ms-rhythm-steps{display:grid;gap:3px}
@@ -45,9 +45,9 @@
 #mementoStart .ms-rhythm-steps input{width:23px;height:23px;accent-color:#91b598;flex:none;margin:10px}
 #mementoStart .ms-rhythm-steps span{min-width:0;overflow-wrap:anywhere}
 #mementoStart .ms-rhythm-empty{padding:22px 10px;line-height:1.5;color:#dfebd8}
-#mementoStart .ms-rhythm-empty button{display:block;min-height:44px;margin-top:10px;border:1px solid #9abb9d;border-radius:12px;background:#234936;color:#f4f6e6;padding:8px 14px}
+#mementoStart .ms-rhythm-empty button{display:block;min-height:44px;margin-top:10px;border:1px solid #9abb9d;border-radius:12px;background:var(--mg-control-bg);color:#f4f6e6;padding:8px 14px}
 #mementoStart .ms-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;flex-shrink:0}
-#mementoStart .ms-quickbutton{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:53px;font:inherit;font-size:12px;color:#f2f5df;white-space:nowrap;padding:0 4px;border:1px solid #e9d5a052;border-radius:15px;background:linear-gradient(130deg,#30513a80,#10322580);box-shadow:inset 0 1px #ffedbd28,0 4px 12px #03160f28;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow:hidden}
+#mementoStart .ms-quickbutton{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:53px;font:inherit;font-size:12px;color:#f2f5df;white-space:nowrap;padding:0 4px;border:1px solid #e9d5a052;border-radius:15px;background:var(--mg-start-quick);box-shadow:inset 0 1px #ffedbd28,0 4px 12px #03160f28;backdrop-filter:var(--mg-start-quick-filter);-webkit-backdrop-filter:var(--mg-start-quick-filter);overflow:hidden}
 #mementoStart .ms-quickbutton span{font-size:16px;color:#ead49c}
 #mementoStart .ms-footer{flex:0 0 auto;width:100%;display:flex;align-items:center;justify-content:center;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,#081c1770);z-index:3}
 #mementoStart .ms-continue{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,440px);min-height:54px;border:1px solid #eaf5ce70;border-radius:17px;background:linear-gradient(110deg,#d5e9bd,#a9d4b7);color:#1a3d29;font-size:17px;font-weight:700;box-shadow:inset 0 1px #f0ffd260,0 6px 18px #061b1345;padding:0 18px;overflow:hidden}
@@ -79,7 +79,7 @@ body.memento-start-open{overflow:hidden!important}
 #mementoStart .ms-feature-slide{flex:0 0 100%;min-width:0;width:100%;scroll-snap-align:start;scroll-snap-stop:always}
 #mementoStart .ms-thought{display:flex;flex-direction:column;color:#f0f7f2}
 #mementoStart .ms-thought #ms-quote-host{display:flex;flex:1;min-width:0}
-#mementoStart .ms-thought .flow-hero{flex:1;min-width:0;min-height:100%;border:0;border-radius:22px;padding:16px;background:linear-gradient(140deg,#244c32e8,#172c20e8)}
+#mementoStart .ms-thought .flow-hero{flex:1;min-width:0;min-height:100%;border:0;border-radius:22px;padding:16px;background:transparent}
 #mementoStart .ms-thought .flow-hero-top{margin-bottom:14px;gap:8px}
 #mementoStart .ms-thought .flow-eyebrow{font-size:11px}
 #mementoStart .ms-thought .flow-date{font-size:12px}
