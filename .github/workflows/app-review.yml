@@ -156,7 +156,7 @@ jobs:
 
       - name: Keep Super Dark screen evidence on successful rendering checks
         uses: actions/upload-artifact@v4
-        if: always() && matrix.group == 'test-glass-rendering-browser'
+        if: always() && (matrix.group == 'test-glass-rendering-browser' || matrix.group == 'interface-visual')
         with:
           name: memento-superdark-screen-review
           path: /tmp/memento-glass-rendering
