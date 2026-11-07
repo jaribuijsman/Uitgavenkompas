@@ -30,6 +30,7 @@ const viewContexts={};
 const taskFilterSnapshot=()=>({search,taskScope,categoryFilter,roomFilter,repeatFilter,taskSort,taskTab});
 function restoreTaskFilter(f){search=String(f.search||'');taskScope=['all','household','recurring','oneoff'].includes(f.taskScope)?f.taskScope:'all';categoryFilter=['all',...categories].includes(f.categoryFilter)?f.categoryFilter:'all';roomFilter=['all',...rooms].includes(f.roomFilter)?f.roomFilter:'all';repeatFilter=['all',...Object.keys(repeats)].includes(f.repeatFilter)?f.repeatFilter:'all';taskSort=['priority','date','title','manual'].includes(f.taskSort)?f.taskSort:'priority';taskTab=['open','done','archived','saved','trash'].includes(f.taskTab)?f.taskTab:'open';}
 
+let stockFilter='all';
 let groceryList='groceries',groceryDraft='',groceryGrouped=false,groceryBoughtOpen=false,groceryMode='compact',grocerySortOpen=false,groceryCategoryChoice='';
 let recipeImportDraft=null;
 const collapsedTaskCategories=new Set();
@@ -139,6 +140,20 @@ function paintTaskSteps(){
  host.innerHTML=presentation.taskSteps(modal.steps);
 }
 
+const stockLocations={pantry:'Voorraadkast',fridge:'Koelkast',freezer:'Vriezer'};
+const stockUnits=['stuks','verpakkingen','pakken','potten','gram','kg','ml','liter'];
+function validateStock(g){
+ if(g.stock===undefined)return;
+ if(g.list!=='groceries'||oneOff(g)||!Array.isArray(g.stock))throw Error('Ongeldige productvoorraad.');
+ const ids=new Set();
+ for(const row of g.stock){
+  if(!row||typeof row.id!=='string'||!row.id||ids.has(row.id)||!Object.hasOwn(stockLocations,row.location)||
+   typeof row.amount!=='number'||!Number.isFinite(row.amount)||row.amount<=0||row.amount>1000000||Math.abs(Math.round(row.amount*100)-row.amount*100)>1e-6||
+   !stockUnits.includes(row.unit)||typeof row.notes!=='string'||row.notes.length>500||
+   ['openedAt','frozenAt','expiresAt'].some(k=>typeof row[k]!=='string'||!validDate(row[k])))throw Error('Ongeldige voorraadregel.');
+  ids.add(row.id);
+ }
+}
 function validate(s){
  if(s.checklists!==undefined&&!Array.isArray(s.checklists))throw Error('Ongeldige checklists.');
  const checklistIds=new Set();
@@ -154,7 +169,7 @@ function validate(s){
  for(const key of ['tasks','groceries','wishes','notes','templates']){
   const ids=new Set();for(const x of s[key]){if(!x||typeof x.id!=='string'||ids.has(x.id)||typeof x.title!=='string'||!x.title.trim())throw Error('De back-up bevat een ongeldig of dubbel item.');ids.add(x.id)}
  }
- for(const g of s.groceries){if(g.list===undefined)g.list='groceries';if(g.favorite===undefined)g.favorite=false;if(!['groceries','purchases'].includes(g.list)||typeof g.favorite!=='boolean')throw Error('Ongeldige boodschappenlijst of favorietstatus.');if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}}
+ for(const g of s.groceries){if(g.list===undefined)g.list='groceries';if(g.favorite===undefined)g.favorite=false;if(!['groceries','purchases'].includes(g.list)||typeof g.favorite!=='boolean')throw Error('Ongeldige boodschappenlijst of favorietstatus.');validateStock(g);if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}}
  if(s.appointments===undefined)s.appointments=[];if(s.googleAppointments===undefined)s.googleAppointments=[];if(s.appointmentChecks===undefined)s.appointmentChecks={};if(!Array.isArray(s.googleAppointments)||!s.appointmentChecks||typeof s.appointmentChecks!=='object'||Array.isArray(s.appointmentChecks))throw Error('Ongeldige afspraakstatussen.');for(const e of s.googleAppointments){if(!e||typeof e.id!=='string'||!e.start||typeof e.start!=='object'||!(e.start.date||e.start.dateTime))throw Error('Ongeldige bewaarde Google-afspraak.')}for(const r of Object.values(s.appointmentChecks)){if(!r||typeof r.done!=='boolean'||typeof r.completedAt!=='string')throw Error('Ongeldige afvinkstatus.');}
  if(!Array.isArray(s.appointments))throw Error('Ongeldige afsprakenlijst.');
  const appointmentIds=new Set();
@@ -181,6 +196,7 @@ function save(token){
  if(blocked){status('De opgeslagen gegevens konden niet worden gelezen. Herstel eerst een back-up; de bestaande opslag is behouden.',false,true);return false}
  try{
   if(!storageGuard)throw Error('Veilige opslag is niet geladen. Vernieuw Memento.');
+  for(const g of state.groceries)validateStock(g);
   for(const g of state.groceries)if(g.origin==='notion-recipe'||g.lifecycle==='one-off'){if(!groceryImport)throw Error('Receptimportcontrole ontbreekt.');groceryImport.validateItem(g);}
   for(const t of [...state.tasks,...state.templates])validateTaskPlanning(t,state.templates.includes(t));
   storageGuard.commit({life:JSON.stringify(state)},{token});savedStatus();return true;
@@ -1050,7 +1066,7 @@ function shoppingItemRow(g,mode='list'){
  const trash=mode==='trash',active=Boolean(g.needed&&!g.bought),bought=mode==='bought';
  const title=esc(g.title),id=esc(g.id),target=shoppingListOf(g)==='purchases'?'groceries':'purchases',showNotes=mode==='shop'||shoppingListOf(g)==='purchases';
  const action=trash?'<button type="button" class="shopping-icon-button" data-life-grocery-restore="'+id+'" aria-label="'+esc('Terugzetten: '+g.title)+'" title="Terugzetten">↶</button>':mode==='list'||mode==='shop'||bought?'<label class="shopping-check" title="'+(bought?'Weer nodig':'Gekocht')+'"><input type="checkbox" data-life-bought="'+id+'" aria-label="'+esc((bought?'Weer nodig: ':'Gekocht: ')+g.title)+'"'+(bought?' checked':'')+'><span aria-hidden="true"></span></label>':'<button type="button" class="shopping-icon-button" data-shopping-add="'+id+'" aria-label="'+esc((active?'Staat op je lijst: ':'Op mijn lijst: ')+g.title)+'"'+(active?' disabled':'')+'>'+(active?'✓':'+')+'</button>';
- const menu=oneOff(g)?'<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+g.title)+'">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-edit="'+id+'">Bewerken</button><button type="button" class="life-task-delete" data-life-grocery-delete="'+id+'">Verwijderen</button></div></details>':trash?'':'<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+g.title)+'">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-edit="'+id+'">Bewerken</button><button type="button" data-shopping-favorite="'+id+'">'+(g.favorite?'Uit favorieten halen':'Favoriet maken')+'</button>'+(g.needed?'<button type="button" data-life-needed="'+id+'">Van deze lijst halen</button>':'')+'<button type="button" data-shopping-move="'+id+'">Naar '+shoppingName(target)+'</button><button type="button" class="life-task-delete" data-life-grocery-delete="'+id+'">Verwijderen</button></div></details>';
+ const menu=oneOff(g)?'<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+g.title)+'">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-edit="'+id+'">Bewerken</button><button type="button" class="life-task-delete" data-life-grocery-delete="'+id+'">Verwijderen</button></div></details>':trash?'':'<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+g.title)+'">⋮</summary><div class="life-task-actions"><button type="button" data-life-grocery-edit="'+id+'">Bewerken</button><button type="button" data-shopping-favorite="'+id+'">'+(g.favorite?'Uit favorieten halen':'Favoriet maken')+'</button>'+(shoppingListOf(g)==='groceries'?'<button type="button" data-stock-add="'+id+'">In voorraad zetten</button>':'<button type="button" data-stock-from-purchase="'+id+'">In voorraad zetten</button>')+(g.needed?'<button type="button" data-life-needed="'+id+'">Van deze lijst halen</button>':'')+'<button type="button" data-shopping-move="'+id+'">Naar '+shoppingName(target)+'</button><button type="button" class="life-task-delete" data-life-grocery-delete="'+id+'">Verwijderen</button></div></details>';
  return '<article data-order-id="'+id+'" class="shopping-row'+(bought?' shopping-row-bought':'')+'">'+action+'<div class="shopping-row-body">'+(trash?'<span class="shopping-row-title">'+title+'</span>':'<button type="button" class="shopping-row-title" data-life-grocery-edit="'+id+'">'+title+'</button>')+(oneOff(g)?'<small class="shopping-recipe-origin">Recept'+(g.recipeImport.title?' · '+esc(g.recipeImport.title):'')+'</small>':'')+(g.quantity?'<small class="shopping-row-quantity">'+esc(g.quantity)+'</small>':'')+(shoppingListOf(g)==='purchases'&&g.budget?'<small class="ml-purchase-budget">Budget € '+esc(g.budget)+'</small>':'')+(shoppingListOf(g)==='purchases'?'<small class="shopping-row-note">'+(g.researchSummary?'Uitkomst bewaard':g.researchId?'Onderzoeksdossier':'Nog geen onderzoek')+'</small>':'')+(showNotes&&g.notes&&!shoppingNormal(g.notes).startsWith('bewaard product uit notion')?'<small class="shopping-row-note">'+esc(g.notes)+'</small>':'')+'</div>'+(!trash&&shoppingListOf(g)==='purchases'?'<button type="button" class="shopping-icon-button shopping-ai" data-shopping-research="'+id+'" aria-label="'+esc('Onderzoek '+g.title+' met Slim Kopen')+'" title="Slim Kopen">'+shoppingIcon+'</button>':'')+menu+'</article>';
 }
 function shoppingRows(items,mode){
@@ -1071,7 +1087,89 @@ function paintShoppingSuggestions(){
  const el=$('shoppingSuggestions');if(!el)return;
  el.innerHTML=query&&suggestions.length?'<div class="shopping-suggestions" aria-label="Bewaarde producten">'+suggestions.map(g=>{const active=g.needed&&!g.bought;return '<button type="button" data-shopping-add="'+esc(g.id)+'"'+(active?' disabled':'')+'><span>'+esc(g.title)+(g.quantity?'<small>'+esc(g.quantity)+'</small>':'')+'</span><span>'+ (active?'Op je lijst':'+')+'</span></button>'}).join('')+'</div>':'';
 }
+
+function stockProducts(){return state.groceries.filter(g=>g.list==='groceries'&&!g.deletedAt&&!oneOff(g))}
+function stockRows(){
+ const query=shoppingKey(groceryDraft);
+ return stockProducts().flatMap(g=>(g.stock||[]).filter(row=>(stockFilter==='all'||row.location===stockFilter)&&
+  (!query||shoppingKey([g.title,row.notes,stockLocations[row.location]].join(' ')).includes(query))).map(row=>({product:g,row})));
+}
+function stockDateHint(row){
+ if(!row.expiresAt)return '';
+ const days=calendarDays(today(),row.expiresAt);
+ return days<0?'Houdbaarheidsdatum verstreken':days<=2?'Controleer houdbaarheid':'';
+}
+function renderStock(){
+ const host=$('lifeGroceryResults');if(!host)return;
+ const rows=stockRows(),grouped=new Map();
+ for(const item of rows){if(!grouped.has(item.product.id))grouped.set(item.product.id,{product:item.product,rows:[]});grouped.get(item.product.id).rows.push(item.row);}
+ host.innerHTML='<div class="shopping-section-head"><h2>Mijn voorraad</h2><span>'+rows.length+' '+(rows.length===1?'voorraadregel':'voorraadregels')+'</span></div>'+
+ (rows.length?'<div class="shopping-stock-products">'+[...grouped.values()].map(({product,rows})=>{
+  const id=esc(product.id);
+  return '<section class="shopping-stock-product"><div class="shopping-stock-product-head"><h3>'+esc(product.title)+'</h3><div class="shopping-stock-product-actions"><button type="button" class="shopping-stock-add" data-stock-to-list="'+id+'" aria-label="'+esc('Op boodschappenlijst zetten: '+product.title)+'">＋ Lijst</button><button type="button" class="shopping-stock-add" data-stock-add="'+id+'" aria-label="'+esc('Meer voorraad voor '+product.title)+'">＋ Voorraad</button></div></div>'+
+  rows.map(row=>{
+   const rid=esc(row.id),hint=stockDateHint(row),details=[stockLocations[row.location],row.openedAt?'Geopend: '+fmt(row.openedAt):'',row.frozenAt?'Ingevroren: '+fmt(row.frozenAt):'',row.expiresAt?'Houdbaarheid: '+fmt(row.expiresAt):''].filter(Boolean);
+   return '<div class="shopping-stock-row" data-stock-id="'+rid+'"><div class="shopping-stock-details"><strong>'+esc(new Intl.NumberFormat('nl-NL',{maximumFractionDigits:2}).format(row.amount)+' '+row.unit)+'</strong><small>'+esc(details.join(' · '))+'</small>'+(hint?'<small class="shopping-stock-warning">'+esc(hint)+'</small>':'')+(row.notes?'<small class="shopping-stock-note">'+esc(row.notes)+'</small>':'')+'</div>'+
+   '<details class="life-task-menu shopping-item-menu"><summary aria-label="'+esc('Opties voor '+product.title+', '+stockLocations[row.location])+'">⋮</summary><div class="life-task-actions"><button type="button" data-stock-use="'+id+'" data-stock-id="'+rid+'">Verbruiken</button><button type="button" data-stock-edit="'+id+'" data-stock-id="'+rid+'">Bewerken</button><button type="button" class="life-task-delete" data-stock-delete="'+id+'" data-stock-id="'+rid+'">Verwijderen</button></div></details></div>';
+  }).join('')+'</section>';
+ }).join('')+'</div>':empty(groceryDraft||stockFilter!=='all'?'Geen voorraad gevonden':'Je voorraad is nog leeg',groceryDraft||stockFilter!=='all'?'Pas de zoekterm of bewaarlocatie aan.':'Voeg een product toe om bij te houden wat je in huis hebt.'));
+}
+function editStock(productId='',stockId='',prefillTitle=''){
+ const g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);
+ if(stockId&&!row)return;
+ modal={mode:'stock',productId:g?.id||'',stockId:row?.id||''};
+ const title=g?.title||prefillTitle,locations=Object.entries(stockLocations);
+ const choices=stockProducts().map(p=>'<option value="'+esc(p.title)+'"></option>').join('');
+ showDialog(row?'Voorraad bewerken':'Voorraad toevoegen','','<form id="lifeStockForm"><div class="life-form-grid">'+
+ '<div class="life-form-field wide"><label for="lifeStockTitle">Product *</label><input id="lifeStockTitle" list="lifeStockProducts" required maxlength="180" value="'+esc(title)+'"'+(g?' readonly':'')+'><datalist id="lifeStockProducts">'+choices+'</datalist></div>'+
+ '<div class="life-form-field"><label for="lifeStockLocation">Bewaarlocatie</label><select id="lifeStockLocation">'+option(locations,row?.location||'pantry')+'</select></div>'+
+ '<div class="life-form-field"><label for="lifeStockAmount">Hoeveelheid *</label><input type="number" id="lifeStockAmount" inputmode="decimal" required min="0.01" max="1000000" step="0.01" value="'+esc(row?.amount??1)+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockUnit">Eenheid</label><select id="lifeStockUnit">'+option(stockUnits.map(u=>[u,u]),row?.unit||'stuks')+'</select></div>'+
+ '<div class="life-form-field"><label for="lifeStockOpened">Geopend op (optioneel)</label><input id="lifeStockOpened" type="date" value="'+esc(row?.openedAt||'')+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockFrozen">Ingevroren op (optioneel)</label><input id="lifeStockFrozen" type="date" value="'+esc(row?.frozenAt||'')+'"></div>'+
+ '<div class="life-form-field"><label for="lifeStockExpiry">Houdbaarheidsdatum (optioneel)</label><input id="lifeStockExpiry" type="date" value="'+esc(row?.expiresAt||'')+'"></div>'+
+ '<div class="life-form-field wide"><label for="lifeStockNotes">Notitie (optioneel)</label><textarea id="lifeStockNotes" maxlength="500" rows="2" placeholder="Bijv. halfvol, achterste plank">'+esc(row?.notes||'')+'</textarea></div>'+
+ '</div><p class="life-footnote">Datums zijn geheugensteuntjes. Controleer bij openen de bewaarinstructies op de verpakking.</p></form>',
+ '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="lifeStockForm" class="life-btn life-btn-primary">Opslaan</button>');
+}
+function saveStock(productId,stockId){
+ const title=$('lifeStockTitle').value.trim(),amount=Number($('lifeStockAmount').value),unit=$('lifeStockUnit').value,location=$('lifeStockLocation').value;
+ const openedAt=$('lifeStockOpened').value,frozenAt=$('lifeStockFrozen').value,expiresAt=$('lifeStockExpiry').value,notes=$('lifeStockNotes').value.trim();
+ if(!title||title.length>180||!$('lifeStockAmount').value||!Number.isFinite(amount)||amount<=0||amount>1000000||Math.abs(Math.round(amount*100)-amount*100)>1e-6||!stockUnits.includes(unit)||!Object.hasOwn(stockLocations,location)||[openedAt,frozenAt,expiresAt].some(d=>!validDate(d))){
+  status('Controleer de productnaam, hoeveelheid en datums.',false,true);return false;
+ }
+ const old=stockProducts().find(p=>p.id===productId),existing=old?.stock?.find(r=>r.id===stockId);
+ if(stockId&&!existing)return false;
+ const row={id:existing?.id||uid(),location,amount:Math.round(amount*100)/100,unit,openedAt,frozenAt,expiresAt,notes};
+ const ok=mutate(()=>{
+  let g=old||stockProducts().find(p=>shoppingKey(p.title)===shoppingKey(title));
+  if(!g){g={id:uid(),title,quantity:'',category:shoppingAisleOf({title,category:''}),notes:'',list:'groceries',favorite:false,needed:false,bought:false,deletedAt:'',sourceUrl:''};state.groceries.push(g);}
+  g.stock||=[];if(existing)g.stock[g.stock.findIndex(r=>r.id===stockId)]=row;else g.stock.push(row);
+ },'Voorraad opgeslagen.',true);
+ if(ok){groceryList='groceries';groceryTab='stock';groceryDraft='';stockFilter='all';closeDialog();render();}
+ return ok;
+}
+function useStock(productId,stockId){
+ const g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);if(!row)return;
+ modal={mode:'stock-use',productId,stockId};
+ showDialog('Voorraad verbruiken',g.title+' · '+stockLocations[row.location],
+  '<form id="lifeStockUseForm"><div class="life-form-field"><label for="lifeStockUsed">Verbruikte hoeveelheid ('+esc(row.unit)+')</label><input id="lifeStockUsed" type="number" min="0.01" max="'+row.amount+'" step="0.01" inputmode="decimal" required value="'+esc(row.amount)+'"></div><p class="life-footnote">Bij volledig verbruik verdwijnt deze voorraadregel. Je kunt dit direct ongedaan maken.</p></form>',
+  '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="lifeStockUseForm" class="life-btn life-btn-primary">Verbruiken</button>');
+}
+function saveStockUse(productId,stockId){
+ const amount=Number($('lifeStockUsed').value),g=stockProducts().find(p=>p.id===productId),row=g?.stock?.find(r=>r.id===stockId);
+ if(!row||!$('lifeStockUsed').value||!Number.isFinite(amount)||amount<=0||amount>row.amount||Math.abs(Math.round(amount*100)-amount*100)>1e-6){status('Vul een geldige verbruikte hoeveelheid in.',false,true);return false;}
+ const remaining=Math.round((row.amount-amount)*100)/100;
+ if(mutate(()=>{if(remaining===0)g.stock=g.stock.filter(r=>r.id!==stockId);else row.amount=remaining;},'Voorraad bijgewerkt.',true)){closeDialog();return true;}return false;
+}
+function deleteStock(productId,stockId){
+ const g=stockProducts().find(p=>p.id===productId);if(!g?.stock?.some(r=>r.id===stockId))return;
+ if(!confirm('Deze voorraadregel verwijderen?'))return;
+ mutate(()=>{g.stock=g.stock.filter(r=>r.id!==stockId)},'Voorraadregel verwijderd.',true);
+}
+
 function renderGroceries(){
+ if(groceryTab==='stock'){renderStock();return;}
  const all=shoppingItems(),visible=all.filter(g=>groceryTab==='trash'?g.deletedAt:!g.deletedAt).filter(shoppingMatches).sort((a,b)=>compareManual(a,b,()=>0));
  const list=visible.filter(g=>g.needed&&!g.bought),bought=groceryList==='purchases'?visible.filter(g=>g.needed&&g.bought):[];
  const favorites=all.filter(g=>!g.deletedAt&&g.favorite&&!g.needed).slice(0,4);
@@ -1092,23 +1190,25 @@ function renderGroceries(){
 }
 function renderShopping(){
  $('lifeTitle').textContent=shoppingName(groceryList);
- const section=groceryList==='purchases'?'purchases':groceryTab==='list'?'list':'saved';
+ const section=groceryList==='purchases'?'purchases':groceryTab==='list'?'list':groceryTab==='stock'?'stock':'saved';
  const isList=groceryList==='groceries'&&groceryTab==='list';
+ const isStock=groceryList==='groceries'&&groceryTab==='stock';
  const isLibrary=groceryList==='groceries'&&['saved','favorites'].includes(groceryTab);
  const nav=(value,label)=>'<button type="button" data-shopping-section="'+value+'" aria-pressed="'+(section===value)+'">'+label+'</button>';
  content.innerHTML='<section class="shopping-app" aria-label="'+shoppingName(groceryList)+'">'+
- '<div class="shopping-primary-head"><div class="shopping-primary-nav" role="group" aria-label="Boodschappenonderdelen">'+nav('list','Mijn lijst')+nav('saved','Producten')+nav('purchases','Aankopen')+'</div>'+
+ '<div class="shopping-primary-head"><div class="shopping-primary-nav" role="group" aria-label="Boodschappenonderdelen">'+nav('list','Mijn lijst')+nav('stock','Voorraad')+nav('saved','Producten')+nav('purchases','Aankopen')+'</div>'+
  '<details class="life-task-menu shopping-list-menu"><summary aria-label="Boodschappenopties">⋮</summary><div class="life-task-actions">'+
  (groceryList==='purchases'?'<button type="button" data-life-grocery-tab="saved">Bewaarde aankopen</button>':'')+
  '<button type="button" data-life-grocery-tab="trash">Prullenbak</button>'+
- (!isList&&groceryTab!=='trash'?'<button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button>':'')+
- (groceryTab!=='trash'&&!(isList&&groceryMode==='shop')?'<button type="button" data-shopping-sort="true" aria-pressed="'+grocerySortOpen+'">'+(grocerySortOpen?'Sorteren stoppen':'Handmatig sorteren')+'</button>':'')+
+ (!isList&&!isStock&&groceryTab!=='trash'?'<button type="button" data-shopping-group="true">'+(groceryGrouped?'Zonder categorieën':'Groeperen op categorie')+'</button>':'')+
+ (!isStock&&groceryTab!=='trash'&&!(isList&&groceryMode==='shop')?'<button type="button" data-shopping-sort="true" aria-pressed="'+grocerySortOpen+'">'+(grocerySortOpen?'Sorteren stoppen':'Handmatig sorteren')+'</button>':'')+
  '<button type="button" data-shopping-new="true">Product met details toevoegen</button></div></details></div>'+
  '<div class="shopping-library-filters"'+(isLibrary?'':' hidden')+' role="group" aria-label="Producten filteren"><button type="button" data-life-grocery-tab="saved" aria-pressed="'+(groceryTab==='saved')+'">Alle producten</button><button type="button" data-life-grocery-tab="favorites" aria-pressed="'+(groceryTab==='favorites')+'">Favorieten</button></div>'+
  (isList?'<button type="button" class="life-btn shopping-import-entry" data-shopping-import>＋ Ingrediënten uit Notion</button>':'')+
+ (isStock?'<div class="shopping-stock-tools"><button type="button" class="life-btn shopping-stock-new" data-stock-new>＋ Voorraad toevoegen</button><label class="shopping-stock-search">Zoeken in voorraad<input id="lifeStockSearch" type="search" maxlength="180" autocomplete="off" placeholder="Zoek producten…" value="'+esc(groceryDraft)+'"></label></div><div class="shopping-stock-filters" role="group" aria-label="Bewaarlocatie filteren">'+[['all','Alles'],...Object.entries(stockLocations)].map(([value,label])=>'<button type="button" data-stock-filter="'+value+'" aria-pressed="'+(stockFilter===value)+'">'+label+'</button>').join('')+'</div>':
  '<form id="lifeShoppingForm" class="shopping-add"><input id="lifeShoppingInput" type="text" maxlength="180" autocomplete="off" enterkeyhint="done" aria-label="Zoek of voeg een product toe" placeholder="Zoek of voeg toe…" value="'+esc(groceryDraft)+'"><button type="submit" aria-label="Product toevoegen" title="Product toevoegen">＋</button></form>'+
  '<div id="shoppingNewCategory" class="shopping-category-picker" hidden><label for="shoppingCategoryChoice">Categorie nieuw product</label><select id="shoppingCategoryChoice">'+option(shoppingCategoryChoices(),'Overig')+'</select><input id="shoppingCustomCategory" maxlength="80" placeholder="Naam eigen categorie" aria-label="Eigen categorie" hidden></div>'+
- '<div id="shoppingSuggestions" aria-live="polite"></div><div id="shoppingFavorites"></div>'+
+ '<div id="shoppingSuggestions" aria-live="polite"></div><div id="shoppingFavorites"></div>')+
  '<div class="shopping-modebar"'+(isList?'':' hidden')+'><p id="shoppingCount" class="shopping-count" aria-live="polite"></p><div class="shopping-mode-switch" role="group" aria-label="Boodschappenweergave"><button type="button" data-shopping-mode="compact" aria-pressed="'+(groceryMode==='compact')+'">Compact</button><button type="button" data-shopping-mode="shop" aria-pressed="'+(groceryMode==='shop')+'">Winkelmodus</button></div></div>'+
  '<p class="memento-sort-guide" id="shoppingSortGuide" hidden>Houd ⠿ vast om te sorteren; binnen categorieën blijft de volgorde gescheiden.</p><div id="lifeGroceryResults"></div></section>';
  renderGroceries();
@@ -1188,7 +1288,8 @@ function changeShoppingItem(id,action,value){
  const g=state.groceries.find(x=>x.id===id&&!x.deletedAt);if(!g||!['bought','favorite','move','needed'].includes(action))return false;
  if(oneOff(g)){if(action!=='bought')return false;const ok=mutate(()=>{state.groceries=state.groceries.filter(x=>x.id!==id)},'Receptingrediënt afgevinkt.',true);if(!ok)renderShopping();return ok;}
  if(action==='bought'&&!g.needed)return false;
- return mutate(()=>{if(action==='bought'){if(shoppingListOf(g)==='groceries'){g.needed=!Boolean(value);g.bought=false}else g.bought=Boolean(value)}else if(action==='favorite')g.favorite=!g.favorite;else if(action==='move')g.list=shoppingListOf(g)==='purchases'?'groceries':'purchases';else if(action==='needed'){g.needed=!g.needed;g.bought=false}},action==='move'?'Verplaatst naar '+shoppingName(shoppingListOf(g)==='purchases'?'groceries':'purchases')+'.':action==='bought'&&shoppingListOf(g)==='groceries'?'Bewaard bij Producten.':'',true);
+ if(action==='move'&&g.stock?.length){status('Verbruik of verwijder eerst je voorraad voordat je dit product naar Aankopen verplaatst.',false,true);return false;}
+ return mutate(()=>{if(action==='bought'){if(shoppingListOf(g)==='groceries'){g.needed=!Boolean(value);g.bought=false}else g.bought=Boolean(value)}else if(action==='favorite')g.favorite=!g.favorite;else if(action==='move'){if(Array.isArray(g.stock)&&!g.stock.length)delete g.stock;g.list=shoppingListOf(g)==='purchases'?'groceries':'purchases';}else if(action==='needed'){g.needed=!g.needed;g.bought=false}},action==='move'?'Verplaatst naar '+shoppingName(shoppingListOf(g)==='purchases'?'groceries':'purchases')+'.':action==='bought'&&shoppingListOf(g)==='groceries'?'Bewaard bij Producten.':'',true);
 }
 function clearShoppingBought(){
  return mutate(()=>shoppingItems().filter(shoppingMatches).forEach(g=>{if(!g.deletedAt&&g.needed&&g.bought){g.needed=false;g.bought=false}}),'Gekochte producten opgeruimd.',true);
@@ -1205,10 +1306,12 @@ function saveShoppingProduct(id){
  const budget=budgetText===''?'':Number(budgetText);if(budget!==''&&(!Number.isFinite(budget)||budget<0)){status('Vul een geldig budget in.',false,true);return false}
  const old=existing;if(id&&!old||old?.deletedAt)return false;
  if(oneOff(old)&&list!=='groceries'){status('Een receptingrediënt blijft een eenmalige boodschap.',false,true);return false}
+ if(old?.stock?.length&&list!=='groceries'){status('Dit product heeft nog voorraad. Verbruik of verwijder die eerst.',false,true);return false}
  const selected=$('lifeProductCategory').value,category=selected==='__new__'?$('lifeProductCustomCategory').value.trim():selected;
  if(!category){status('Kies of benoem een categorie.',false,true);return false}
  const obj={...(old||{id:uid(),bought:false,deletedAt:'',sourceUrl:''}),title,quantity:$('lifeProductQuantity').value.trim(),category,notes:$('lifeProductNotes').value.trim(),list,favorite:$('lifeProductFavorite').checked,needed:$('lifeProductNeeded').value==='yes',budget};
  if(oneOff(old)){obj.favorite=false;obj.needed=true;obj.bought=false;}
+ if(list==='purchases'&&Array.isArray(obj.stock)&&obj.stock.length===0)delete obj.stock;
  if(!obj.needed)obj.bought=false;
  if(mutate(()=>{if(old)state.groceries[state.groceries.indexOf(old)]=obj;else state.groceries.push(obj)},'Product opgeslagen.')){groceryList=list;groceryTab=obj.needed?'list':'saved';groceryDraft='';render();closeDialog();return true}return false;
 }
@@ -1593,7 +1696,15 @@ root.addEventListener('click',e=>{
  
  if(d.mementoDeleteDayEvent){const event=localAppointments().find(x=>x.id===d.mementoDeleteDayEvent);if(event&&confirm('Afspraak ‘'+event.title+'’ verwijderen uit Memento?')){if(mutate(()=>{state.appointments=localAppointments().filter(x=>x.id!==event.id)},'Lokale afspraak verwijderd.',true))window.MementoGoogleCalendar?.refreshAgenda?.();}return}
  if(d.lifeSourceNote){if(setView('notes'))window.MementoKnowledge?.showNote?.(d.lifeSourceNote);return}
- if(d.shoppingSection){groceryCategoryChoice='';groceryList=d.shoppingSection==='purchases'?'purchases':'groceries';groceryTab=d.shoppingSection==='saved'?'saved':'list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
+ if(d.shoppingSection){groceryCategoryChoice='';groceryList=d.shoppingSection==='purchases'?'purchases':'groceries';groceryTab=d.shoppingSection==='stock'?'stock':d.shoppingSection==='saved'?'saved':'list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
+ if(d.stockNew!==undefined){editStock();return}
+ if(d.stockToList){addShoppingItem(d.stockToList);return}
+ if(d.stockAdd){editStock(d.stockAdd);return}
+ if(d.stockFromPurchase){const g=state.groceries.find(x=>x.id===d.stockFromPurchase&&x.list==='purchases'&&!x.deletedAt);if(g)editStock('','',g.title);return}
+ if(d.stockEdit){editStock(d.stockEdit,d.stockId);return}
+ if(d.stockUse){useStock(d.stockUse,d.stockId);return}
+ if(d.stockDelete){deleteStock(d.stockDelete,d.stockId);return}
+ if(d.stockFilter){stockFilter=d.stockFilter;renderStock();root.querySelectorAll('[data-stock-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stockFilter===stockFilter)));return}
  if(d.shoppingMode){if(groceryList==='groceries'&&groceryTab==='list'){groceryMode=d.shoppingMode==='shop'?'shop':'compact';grocerySortOpen=false;render()}return}
  if(d.shoppingSort){grocerySortOpen=!grocerySortOpen;render();return}
  if(d.shoppingList){groceryList=d.shoppingList==='purchases'?'purchases':'groceries';groceryTab='list';groceryDraft='';groceryBoughtOpen=false;grocerySortOpen=false;render();return}
@@ -1632,7 +1743,7 @@ root.addEventListener('click',e=>{
  if(d.mgSaveTaskFilter!==undefined){modal={mode:'task-filter'};showDialog('Selectie bewaren','','<form id="mgSavedTaskFilterForm"><label>Naam<input id="mgTaskFilterName" maxlength="80" required></label></form>','<button class="life-btn" type="button" data-life-close>Annuleren</button><button class="life-btn life-btn-primary" type="submit" form="mgSavedTaskFilterForm">Bewaren</button>');return;}
  if(d.mgLoadTaskFilter){const f=state.uiPreferences?.taskFilters?.find(x=>x.id===d.mgLoadTaskFilter);if(f){restoreTaskFilter(f.filters);render();}return;}
  if(d.mgRemoveTaskFilter){mutate(()=>{state.uiPreferences.taskFilters=state.uiPreferences.taskFilters.filter(f=>f.id!==d.mgRemoveTaskFilter);},'Bewaarde selectie verwijderd.',true);return;}
- if(d.lifeTaskTab){taskTab=d.lifeTaskTab;render();return}if(d.lifeGroceryTab){groceryTab=d.lifeGroceryTab;groceryDraft='';groceryCategoryChoice='';render();return}
+ if(d.lifeTaskTab){taskTab=d.lifeTaskTab;render();return}if(d.lifeGroceryTab){groceryTab=d.lifeGroceryTab;groceryDraft='';groceryCategoryChoice='';grocerySortOpen=false;render();return}
  if(d.lifeNeeded){changeShoppingItem(d.lifeNeeded,'needed');return}
  if(d.lifeGroceryEdit){editGrocery(d.lifeGroceryEdit);return}if(d.lifeWishEdit){editWish(d.lifeWishEdit);return}if(d.lifeNoteEdit){editNote(d.lifeNoteEdit);return}
  if(d.lifeResearch){const w=state.wishes.find(x=>x.id===d.lifeResearch);if(!setArea('finance'))return false;document.querySelector('#sideNav [data-view="smartbuy"]').click();$('smartBuyProduct').value=w.title;$('smartBuyPreferences').value=w.notes||'';$('smartBuyBudget').value=w.budget||'';window.MementoResearch?.fromWish?.(w.id);$('smartBuyOutputCard').hidden=true;$('smartBuyPrompt').value='';status('Aankoopwens klaargezet bij Slim Kopen.');return}
@@ -1646,7 +1757,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('scroll',e=>{if(e.target.id!=='lifeDayTrack')return;const track=e.target;const index=Math.max(0,Math.min(2,Math.round(track.scrollLeft/Math.max(1,track.clientWidth))));if(daySlide!==index){closeLifePopovers();daySlide=index;syncDayCarousel()}},true);
 root.addEventListener('keydown',e=>{if(e.target.id==='lifeDayTrack'&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();showDaySlide(daySlide+(e.key==='ArrowRight'?1:-1))}});
-root.addEventListener('input',e=>{if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;groceryCategoryChoice='';renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
+root.addEventListener('input',e=>{if(e.target.id==='lifeStockSearch'){groceryDraft=e.target.value;renderStock();return}if(e.target.id==='lifeShoppingInput'){groceryDraft=e.target.value;groceryCategoryChoice='';renderGroceries();return}if(e.target.id!=='lifeSearch')return;search=e.target.value;if(view==='tasks')renderTasks();else if(view==='groceries')renderGroceries();else if(view==='wishes')wishCards();else if(view==='notes')noteCards();});
 root.addEventListener('change',e=>{
  if(e.target.dataset.drCheck){window.MementoDayRhythm.toggle(e.target.dataset.drCheck,e.target.dataset.drStep);return}
  const el=e.target;if(el.id==='shoppingCategoryChoice'){groceryCategoryChoice=el.value;$('shoppingCustomCategory').hidden=el.value!=='__new__';return}if(el.id==='lifeQuickDate'){quickDate=el.value===today()?null:el.value;syncQuickForm();return}if(el.id==='lifeQuickTime'){quickTime=el.value;return}if(el.dataset.lifeNoteCheck){const n=state.notes.find(x=>x.id===el.dataset.lifeNoteCheck);if(n)mutate(()=>{n.checkedLines=(n.checkedLines||[]).filter(i=>i!==Number(el.dataset.line));if(el.checked)n.checkedLines.push(Number(el.dataset.line))});return}if(el.id==='lifeNoteCategoryFilter'){noteCategoryFilter=el.value;noteOpenId='';noteCards();return}if(el.id==='lifeWishFilter'){wishFilter=el.value;wishCards();return}if(el.id==='lifeTaskSort'){taskSort=el.value;renderTasks();return}if(el.id==='lifeMobileView'){if(!setView(el.value))el.value=view;return}if(el.id==='lifeTaskScopeFilter'){taskScope=el.value;renderTasks();return}if(el.id==='lifeRoomFilter'){roomFilter=el.value;renderTasks();return}if(el.id==='lifeRepeatFilter'){repeatFilter=el.value;renderTasks();return}if(el.id==='lifeCategoryFilter'){categoryFilter=el.value;renderTasks();return}
@@ -1705,6 +1816,8 @@ dialog.addEventListener('submit',e=>{
   if(old?.planning||template?.planning||estimate!==null)updated.planning={...(old?.planning||template?.planning||{}),schemaVersion:1,estimateMinutes:estimate,estimateSource:modal.estimateSource};
   if(mode==='template'){if(!old)templateTab='active';const saved={...(old||{}),...templateOf(updated),id:old?.id||updated.id,sourceTaskId:old?.sourceTaskId||'',deletedAt:''};if(mutate(()=>{if(old)state.templates[state.templates.findIndex(x=>x.id===id)]=saved;else state.templates.push(saved)},'Taak bewaard in je bibliotheek.'))closeDialog();return}if(old&&repeat!=='none'){const changed=old.repeat!==repeat||(repeat==='custom'&&old.repeatDays!==updated.repeatDays);if(old.done)updated.done=false;if(old.lastDone&&(old.done||changed)&&date===(old.date||''))updated.date=nextDate(old.lastDone,repeat,updated.repeatDays)}if(!old){taskTab='open';taskScope='all';roomFilter='all';repeatFilter='all';categoryFilter='all';search='';}if(template){updated.sourceUrl=template.sourceUrl||'';updated.sourceLabel='Takenbibliotheek';updated.templateId=template.id}if(mutate(()=>{if(old)state.tasks[state.tasks.findIndex(x=>x.id===id)]=updated;else {state.tasks.push(updated);trackConversion(updated,'task')}},'Taak opgeslagen.'))closeDialog();return;
  }
+ if(mode==='stock'){saveStock(modal.productId,modal.stockId);return}
+ if(mode==='stock-use'){saveStockUse(modal.productId,modal.stockId);return}
  if(mode==='grocery'){saveShoppingProduct(id);return}
  if(mode==='wish'){const title=$('lifeWishTitle').value.trim(),url=$('lifeWishUrl').value.trim();if(!title)return;if(url&&!safeLink(url)){status('Gebruik een geldige http- of https-link.',false,true);return}const old=state.wishes.find(x=>x.id===id),obj={...(old||{id:uid(),sourceUrl:''}),title,url,notes:$('lifeWishNotes').value.trim(),budget:Math.max(0,Number($('lifeWishBudget').value)||0),status:$('lifeWishStatus').value};if(mutate(()=>{if(old)state.wishes[state.wishes.findIndex(x=>x.id===id)]=obj;else {state.wishes.push(obj);trackConversion(obj,'wish')}},'Aankoopwens opgeslagen.'))closeDialog();return}
  if(mode==='note'){if(!id)noteTab='active';const title=$('lifeNoteTitle').value.trim();if(!title)return;const old=state.notes.find(x=>x.id===id),now=new Date().toISOString(),obj={...(old||{id:uid(),sourceUrl:'',createdAt:now}),title,category:$('lifeNoteCategory').value.trim()||'Notitie',body:$('lifeNoteBody').value.trim(),isChecklist:$('lifeNoteChecklist').checked,checkedLines:old?.body===$('lifeNoteBody').value.trim()?(old.checkedLines||[]):[],updatedAt:now};if(mutate(()=>{if(old)state.notes[state.notes.findIndex(x=>x.id===id)]=obj;else state.notes.push(obj)},'Notitie opgeslagen.')){noteOpenId=obj.id;noteTab='active';noteCategoryFilter='all';closeDialog();render()}}
