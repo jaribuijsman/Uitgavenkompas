@@ -20,13 +20,7 @@
 <button type="button" data-ms-slide="0" aria-controls="ms-feature-track" aria-label="Toon weer" aria-pressed="true"></button>
 <button type="button" data-ms-slide="1" aria-controls="ms-feature-track" aria-label="Toon gedachte voor vandaag" aria-pressed="false"></button>
 </nav></div>
-<section class="ms-day ms-glass" aria-label="Jouw daglijn"><div class="ms-dayhead"><button class="ms-overview" type="button" data-ms-view="today">Jouw daglijn</button><div class="ms-counts"><span id="ms-events" aria-live="polite">Agenda laden…</span><span id="ms-tasks" aria-live="polite">Taken laden…</span></div></div>
-<div class="ms-timeline">
-<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-time" id="ms-event-first-time">Vandaag</span><span class="ms-rowtext"><strong id="ms-event-first-title">Agenda laden…</strong><small id="ms-event-first">Vandaag · Agenda</small></span><img class="ms-thumb" src="./assets/memento-start-agenda.svg" alt=""></button>
-<button class="ms-cardrow" id="ms-task-row-first" type="button" data-ms-view="tasks"><span class="ms-time">Taken</span><span class="ms-rowtext"><strong id="ms-task-first-title">Taken laden…</strong><small id="ms-task-first">Vandaag · Mijn taken</small></span><img class="ms-thumb" src="./assets/memento-start-tasks.svg" alt=""></button>
-<button class="ms-cardrow" type="button" data-ms-view="agenda"><span class="ms-time" id="ms-event-second-time">Morgen</span><span class="ms-rowtext"><strong id="ms-event-second-title">Agenda laden…</strong><small id="ms-event-second">Morgen · Agenda</small></span><img class="ms-thumb" src="./assets/memento-start-agenda.svg" alt=""></button>
-<button class="ms-cardrow" id="ms-task-row-second" type="button" data-ms-view="tasks"><span class="ms-time">Later</span><span class="ms-rowtext"><strong id="ms-task-second-title">Taken laden…</strong><small id="ms-task-second">Komende dagen · Mijn taken</small></span><img class="ms-thumb" src="./assets/memento-start-tasks.svg" alt=""></button>
-</div></section>
+<section class="ms-day ms-glass" aria-label="Jouw dagritme"><div class="ms-dayhead"><strong>Jouw dagritme</strong><button class="ms-overview" type="button" data-ms-view="checklists">Beheer →</button></div><nav class="ms-moments" aria-label="Dagmoment kiezen"><button type="button" data-ms-moment="morning" aria-pressed="true">Ochtend</button><button type="button" data-ms-moment="afternoon" aria-pressed="false">Middag</button><button type="button" data-ms-moment="evening" aria-pressed="false">Avond</button></nav><div id="ms-rhythm" class="ms-rhythm" aria-live="polite"></div></section>
 <nav class="ms-quick" aria-label="Snelfuncties"><button class="ms-quickbutton" type="button" data-ms-create="task"><span aria-hidden="true">＋</span>Taak</button><button class="ms-quickbutton" type="button" data-ms-create="note"><span aria-hidden="true">＋</span>Snelle notitie</button><button class="ms-quickbutton" type="button" data-ms-create="transaction"><span aria-hidden="true">＋</span>Transactie</button></nav>
 </div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
@@ -104,6 +98,7 @@
  root.querySelectorAll('[data-ms-view]').forEach(btn=>btn.addEventListener('click',()=>{
   if(isLocked()){showPin();return}leave();navigate(btn.dataset.msView);
  }));
+ root.addEventListener('click',e=>{const button=e.target.closest('#ms-rhythm [data-ms-view]');if(button){if(isLocked())showPin();else{leave();navigate(button.dataset.msView)}}});
  // Reuse the real editors and their validation/storage guards; this portal never writes records.
  function create(kind){
   if(isLocked()){showPin();return}
@@ -129,54 +124,16 @@
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   root.classList.remove('ms-illuminate');void root.offsetWidth;root.classList.add('ms-illuminate');
  }
- function setRow(prefix,title,detail){one(prefix+'-title').textContent=title;one(prefix).textContent=detail;}
+ let selectedMoment='morning';
  function refreshDay(){
-  const iso=date(),tomorrow=new Date(Date.parse(iso+'T12:00:00Z')+86400000).toISOString().slice(0,10);
-  const fmt=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'});
-  one('ms-date').textContent=fmt.format(new Date());
-  let s;try{s=JSON.parse(localStorage.getItem(LIFE_KEY)||'null')}catch{}
-  if(!s||!Array.isArray(s.tasks)||!Array.isArray(s.appointments)){
-   one('ms-events').textContent='Agenda niet beschikbaar';one('ms-tasks').textContent='Taken niet beschikbaar';
-   setRow('ms-event-first','Agenda niet beschikbaar','Vandaag · Agenda');setRow('ms-event-second','Agenda niet beschikbaar','Morgen · Agenda');one('ms-event-first-time').textContent='Vandaag';one('ms-event-second-time').textContent='Morgen';
-   setRow('ms-task-first','Taken niet beschikbaar','Geen gegevens');setRow('ms-task-second','Taken niet beschikbaar','Geen gegevens');one('ms-task-row-first').removeAttribute('aria-label');
-   one('ms-task-row-first').classList.remove('ms-row-overdue');return;
-  }
-  const taskDate=t=>/^\d{4}-\d{2}-\d{2}$/.test(t.date||'')?t.date:/^\d{4}-\d{2}-\d{2}$/.test(t.focusDate||'')?t.focusDate:'';
-  const pending=s.tasks.filter(t=>t&&!t.deletedAt&&!t.archived&&!t.done);
-  const todayTasks=pending.filter(t=>taskDate(t)===iso);
-  const late=pending.filter(t=>{const d=taskDate(t);return d&&d<iso}).sort((a,b)=>taskDate(a).localeCompare(taskDate(b)));
-  const future=pending.filter(t=>taskDate(t)>iso).sort((a,b)=>taskDate(a).localeCompare(taskDate(b)));
-  one('ms-tasks').textContent=todayTasks.length+' vandaag · '+late.length+' achterstallig';
-  if(late.length){
-   const t=late[0],days=Math.round((Date.parse(iso+'T12:00:00Z')-Date.parse(taskDate(t)+'T12:00:00Z'))/86400000);
-   const planned=new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short',timeZone:'Europe/Amsterdam'}).format(new Date(taskDate(t)+'T12:00:00Z'));
-   setRow('ms-task-first',t.title||'Taak zonder titel',planned+' · '+(days===1?'1 dag te laat':days+' dagen te laat'));
-   one('ms-task-row-first').classList.add('ms-row-overdue');
-   one('ms-task-row-first').setAttribute('aria-label',(t.title||'Taak')+', gepland '+planned+', '+days+' '+(days===1?'dag':'dagen')+' te laat. Open taken.');
-   if(todayTasks.length)setRow('ms-task-second',todayTasks[0].title||'Taak zonder titel','Vandaag · Mijn taken');
-   else setRow('ms-task-second',future[0]?.title||'Geen taken gepland','Komende dagen · Mijn taken');
-  }else{
-   one('ms-task-row-first').classList.remove('ms-row-overdue');one('ms-task-row-first').removeAttribute('aria-label');
-   setRow('ms-task-first',todayTasks[0]?.title||'Geen taken vandaag','Vandaag · Mijn taken');
-   setRow('ms-task-second',future[0]?.title||'Geen taken gepland','Komende dagen · Mijn taken');
-  }
-  const appointmentsFor=day=>{
-   const personal=s.appointments.filter(e=>e&&!e.deletedAt&&!e.cancelled&&e.date===day).map(e=>({title:e.title||'Afspraak',time:e.time||''}));
-   const remote=Array.isArray(s.googleAppointments)?s.googleAppointments.filter(e=>{
-    if(!e||e.status==='cancelled'||s.appointmentChecks?.['google:'+e.id]?.done)return false;
-    const start=e.start?.date||e.start?.dateTime||'';
-    if(start.slice(0,10)===day)return true;
-    if(e.start?.dateTime){const dt=new Date(e.start.dateTime);return !Number.isNaN(dt.valueOf())&&new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Amsterdam'}).format(dt)===day}
-    return false;
-   }).map(e=>({title:e.summary||'Afspraak',time:e.start?.dateTime?.slice(11,16)||''})):[];
-   return [...personal,...remote].sort((a,b)=>String(a.time).localeCompare(String(b.time)));
-  };
-  const events=appointmentsFor(iso),next=appointmentsFor(tomorrow);
-  one('ms-events').textContent=events.length+' '+(events.length===1?'afspraak':'afspraken')+' vandaag';
-  one('ms-event-first-time').textContent=events[0]?.time||'Vandaag';one('ms-event-second-time').textContent=next[0]?.time||'Morgen';
-  setRow('ms-event-first',events[0]?.title||'Geen afspraken','Vandaag · Agenda');
-  setRow('ms-event-second',next[0]?.title||'Geen afspraken','Morgen · Agenda');
+  one('ms-date').textContent=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'}).format(new Date());
+  const api=window.MementoDayRhythm,host=one('ms-rhythm');if(!host)return;
+  const cards=api?.start?.().filter(c=>c.moment===selectedMoment)||[];
+  host.innerHTML=cards.length?cards.map(c=>{const done=c.days?.[date()]||[];return '<article class="ms-rhythm-card"><div><small>DAGRITME · '+c.steps.filter(s=>done.includes(s.id)).length+'/'+c.steps.length+'</small><h2>'+esc(c.title)+'</h2></div><div class="ms-rhythm-steps">'+c.steps.map(s=>'<label><input type="checkbox" data-ms-check="'+esc(c.id)+'" data-ms-step="'+esc(s.id)+'"'+(done.includes(s.id)?' checked':'')+'><span>'+esc(s.text)+'</span></label>').join('')+'</div></article>'}).join(''):'<div class="ms-rhythm-empty">Nog geen vastgezette checklist voor dit dagmoment.<button type="button" data-ms-view="checklists">Checklists beheren →</button></div>';
  }
+ root.querySelectorAll('[data-ms-moment]').forEach(button=>button.addEventListener('click',()=>{selectedMoment=button.dataset.msMoment;root.querySelectorAll('[data-ms-moment]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));refreshDay()}));
+ root.addEventListener('change',e=>{const input=e.target;if(input.dataset.msCheck&&window.MementoDayRhythm?.toggle(input.dataset.msCheck,input.dataset.msStep))refreshDay()});
+ window.addEventListener('memento-day-rhythm-update',()=>{if(lock.classList.contains('memento-welcome-mode'))refreshDay()});
  function weatherIcon(code,isDay){
   if(code===0||code===1)return isDay?'☀':'☾';
   if(code===2)return '⛅';if(code===3)return '☁';

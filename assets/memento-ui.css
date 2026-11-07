@@ -424,3 +424,30 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 }
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}
 
+/* Dagritme: one Life store, with daily checklist instances and optional task slots. */
+#lifeApp .dr-manager{display:grid;gap:14px;padding-bottom:30px}
+#lifeApp .dr-manager-head{display:flex;flex-wrap:wrap;gap:8px}
+#lifeApp .dr-group{display:grid;gap:8px}
+#lifeApp .dr-group h2{font-size:18px;margin:9px 0 0;color:var(--m-ink)}
+#lifeApp .dr-checklist{padding:14px;border:1px solid var(--m-line);border-radius:16px;background:var(--m-surface,#f4f7f1);color:var(--m-ink)}
+#lifeApp .dr-checklist-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#lifeApp .dr-checklist-head small{white-space:nowrap}
+#lifeApp .dr-steps{display:grid;gap:2px;margin:9px 0}
+#lifeApp .dr-step{display:flex;align-items:center;gap:8px;min-height:48px;cursor:pointer;overflow-wrap:anywhere}
+#lifeApp .dr-step input{width:23px;height:23px;margin:10px;accent-color:#477f5d;flex:none}
+#lifeApp .dr-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+#lifeApp .dr-actions button,#lifeApp .dr-move{min-height:44px;border:1px solid #acc4a9;border-radius:10px;background:#e7efe4;color:#254d37;padding:6px 12px;font:inherit}
+#lifeApp .dr-actions .dr-delete{color:#963b40}
+#lifeApp .dr-marker-host{position:sticky;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:5}
+#lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#214c37;color:#f7f7e9;border-radius:13px;padding:5px 7px 5px 14px;box-shadow:0 6px 15px #092c1f66}
+#lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:#d9e8cc;color:#214c37;font-weight:700;padding:8px 12px}
+#lifeApp .dr-timeline{display:grid;gap:8px;border-left:2px solid #a1bda2;margin:8px 0 14px 9px;padding-left:13px}
+#lifeApp .dr-free{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px dashed #9fbcaa;border-radius:12px;min-height:48px;padding:3px 8px;color:var(--m-ink);font-size:12px}
+#lifeApp .dr-free button{min-height:44px;border:0;background:transparent;color:#306448;font-weight:700;white-space:nowrap}
+#lifeApp .dr-planned-task{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center}
+#lifeApp .dr-clock{grid-column:1/-1;color:var(--m-ink);font-size:12px;font-weight:700}
+#lifeApp .dr-planned-task .life-task{min-width:0}
+#lifeApp .dr-planned-task .dr-move{padding-inline:7px;font-size:12px}
+#lifeApp .dr-pin{display:flex;align-items:center;gap:8px;min-height:48px}
+#lifeApp .dr-pin input{width:23px;height:23px}
+@media(max-width:360px){#lifeApp .dr-planned-task{grid-template-columns:1fr}#lifeApp .dr-planned-task .dr-move{justify-self:end}}

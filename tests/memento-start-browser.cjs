@@ -20,6 +20,7 @@ const server=http.createServer((req,res)=>{
   const fixture=await require('./helpers/visual-fixture.cjs').fixture();
   const date='2026-10-28';
   fixture.life.tasks=[...([1,2,3,4].map(i=>({...task('portal-t'+i,'Voorbeeldtaak '+i),date}))),{...task('portal-late','Leuke outfit scoren'),date:'2026-10-27'}];
+  fixture.life.checklists=[{id:'portal-check',title:'Ochtendzorg',moment:'morning',repeat:'daily',pinned:true,deletedAt:'',steps:[{id:'portal-step',text:'Tanden flossen'}],days:{}}];
   fixture.life.appointments=[
    {id:'portal-a',title:'Tandarts',date,time:'09:30',endTime:'10:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'},
    {id:'portal-b',title:'Afspraak',date,time:'15:30',endTime:'16:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'}
@@ -51,12 +52,10 @@ const server=http.createServer((req,res)=>{
    await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
    await page.locator('#mementoStart').waitFor({state:'visible'});
    await page.waitForFunction(()=>document.querySelectorAll('#ms-hourly .ms-hour').length===6);
-   assert.match(await page.locator('#ms-events').innerText(),/2\s*afspraken/);
-   assert.match(await page.locator('#ms-tasks').innerText(),/4 vandaag · 1 achterstallig/);
-   assert.equal(await page.locator('#ms-task-first-title').innerText(),'Leuke outfit scoren');
-   assert.match(await page.locator('#ms-task-first').innerText(),/27 okt.*1 dag te laat/);
    assert.equal(await page.locator('#mementoStart .ms-day').count(),1);
-   assert.equal(await page.locator('#mementoStart .ms-cardrow').count(),4);
+   assert.equal(await page.locator('#mementoStart .ms-cardrow').count(),0);
+   assert.equal(await page.locator('#ms-rhythm h2').innerText(),'Ochtendzorg');
+   assert.equal(await page.locator('#ms-rhythm input[type=checkbox]').count(),1);
    assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
@@ -64,16 +63,17 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
    for(const height of [640,700,800]){
     await page.setViewportSize({width,height});
-    await page.locator('#ms-task-row-second').scrollIntoViewIfNeeded();
-    const reachable=await page.locator('#ms-task-row-second').evaluate(el=>{const r=el.getBoundingClientRect(),f=document.querySelector('.ms-footer').getBoundingClientRect();return r.top>=0&&r.bottom<=f.top+1});
-    assert(reachable,'Last row remains reachable above fixed footer');
-    for(const selector of ['.ms-quickbutton','.ms-cardrow','.ms-overview','.ms-continue']){
+    await page.locator('#ms-rhythm').scrollIntoViewIfNeeded();
+    for(const selector of ['.ms-quickbutton','.ms-moments button','.ms-overview','.ms-continue']){
      assert((await page.locator('#mementoStart '+selector).first().boundingBox()).height>=44,'Touch height '+selector);
     }
    }
    if(width===393){
     await page.setViewportSize({width,height:772});
     await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
+    await page.locator('#ms-rhythm input[type=checkbox]').check();
+    assert((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists[0].days['2026-10-28'].includes('portal-step'));
+    assert.equal(await page.locator('#ms-rhythm input[type=checkbox]').isChecked(),true);
     await page.locator('[data-ms-create="note"]').click();
     await page.locator('#memento-hq-preview').waitFor({state:'visible'});
     await page.locator('[data-action=inbox]').first().click();await page.locator('#mm-note-form').waitFor({state:'visible'});
