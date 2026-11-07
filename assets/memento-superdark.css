@@ -2,8 +2,8 @@
    Keep page structure, icons, data charts and original pixel artwork intact.
    Artwork is color-graded only while this theme is active; no expensive live blur. */
 
-/* Shell and the forest under the app: retain the original landscape, but put it
-   under a genuine midnight-green veil. Scroll attachment is mobile-friendly. */
+/* Keep detail in the original landscape: a faint cool highlight above a
+   near-black foreground, without a uniform green film or mobile blur. */
 html[data-memento-theme="superdark"] body {
   background:#070b09!important;
   color:var(--mg-ink);
@@ -18,7 +18,8 @@ html[data-memento-theme="superdark"] body[data-compass-area="finance"] {
 html[data-memento-theme="superdark"] body #lifeApp,
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] > .app {
   background:
-    linear-gradient(180deg,#030a07d7 0%,#030906e5 52%,#030805f2 100%),
+    radial-gradient(ellipse at 72% 5%,#b4c5b90e 0%,transparent 53%),
+    linear-gradient(180deg,#040b0ab5 0%,#030a09d4 48%,#030806f0 100%),
     url('./pin-forests/bosruines.webp') center top / cover scroll!important;
   color:var(--mg-ink)!important;
 }
@@ -49,21 +50,24 @@ html[data-memento-theme="superdark"] #pinLock .pin-forest-bg {
 }
 html[data-memento-theme="superdark"] #pinLock .mf-image,
 html[data-memento-theme="superdark"] #pinLock[data-mf-night="true"] .mf-image {
-  filter:brightness(.39) saturate(.70) hue-rotate(12deg) contrast(1.14)!important;
+  filter:brightness(.48) saturate(.73) hue-rotate(5deg) contrast(1.24)!important;
 }
 html[data-memento-theme="superdark"] #pinLock[data-mf-scene="maanmeer"] .mf-image {
-  filter:brightness(.60) saturate(.82) contrast(1.13)!important;
+  filter:brightness(.60) saturate(.85) contrast(1.2)!important;
 }
 html[data-memento-theme="superdark"] #pinLock[data-mf-scene="schemermeer"] .mf-image {
-  filter:brightness(.48) saturate(.74) contrast(1.16)!important;
+  filter:brightness(.48) saturate(.78) contrast(1.21)!important;
 }
 html[data-memento-theme="superdark"] #pinLock .memento-scene-shade,
 html[data-memento-theme="superdark"] #pinLock[data-mf-kind="snow"] .memento-scene-shade,
 html[data-memento-theme="superdark"] #pinLock[data-mf-kind="fog"] .memento-scene-shade {
-  background:linear-gradient(180deg,#030a1049 0%,#030b0a7e 35%,#030a08b9 72%,#020806eb 100%)!important;
+  background:
+    radial-gradient(ellipse at 72% 9%,#c1d3c21a 0%,transparent 40%),
+    linear-gradient(180deg,#03090b30 0%,#030a0958 35%,#020806a4 72%,#020605da 100%)!important;
 }
 html[data-memento-theme="superdark"] #pinLock .mf-rays {opacity:0!important}
-html[data-memento-theme="superdark"] #pinLock .mf-fog {opacity:.12!important}
+html[data-memento-theme="superdark"] #pinLock .mf-fog {opacity:.06!important}
+html[data-memento-theme="superdark"] #pinLock[data-mf-kind="fog"] .mf-fog {opacity:.18!important}
 html[data-memento-theme="superdark"] #pinLock .pin-forest-bg::after {
   content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
   background:
@@ -72,7 +76,7 @@ html[data-memento-theme="superdark"] #pinLock .pin-forest-bg::after {
     radial-gradient(circle 1px at 49% 17%,#f8e3b899 95%,transparent),
     radial-gradient(circle 1px at 72% 10%,#e6f2e0aa 95%,transparent),
     radial-gradient(circle 1px at 90% 21%,#f8e3b896 95%,transparent);
-  opacity:.65;
+  opacity:.48;
   -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 46%);
   mask-image:linear-gradient(180deg,#000 0%,transparent 46%);
 }
@@ -113,15 +117,57 @@ html[data-memento-theme="superdark"] #mementoStart .ms-moments button[aria-press
   color:#13261a;
   border-color:#c7e3bc;
 }
+html[data-memento-theme="superdark"] #mementoStart .ms-shell {
+  padding-bottom:14px;
+}
 html[data-memento-theme="superdark"] #mementoStart .ms-quickbutton {
-  border-color:#59745b8a;
-  box-shadow:inset 0 1px #d9e7c21a,0 7px 18px #0007;
+  border-color:#89a78c80;
+  color:#edf5ee;
+  box-shadow:inset 0 1px #d9e7c220,0 9px 20px #0009;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
 }
+html[data-memento-theme="superdark"] #mementoStart .ms-footer {
+  padding-top:12px;
+  background:linear-gradient(180deg,#080f0bd9,#050a08fa 80%);
+  border-top:1px solid #526b4f35;
+}
 html[data-memento-theme="superdark"] #mementoStart .ms-continue {
   background:linear-gradient(110deg,#d3e7bc,#a8cfb2);
+  border-color:#d8edc9;
   color:#142b1b;
+  box-shadow:inset 0 1px 0 #ffffff7a,0 7px 22px #000a;
+}
+
+/* Day V3 has hard-coded medium-green card colors in memento-ui.css.
+   Super Dark alone repaints them; time, late accent, controls and geometry stay. */
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] :is(.memento-unified-event.memento-v3-card,.life-day-column .life-list>.life-task.memento-v3-card,.life-overdue>.life-task.memento-v3-card) {
+  background:#13201a!important;
+  border-color:#3b5143!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-v3-card.memento-appointment-card {
+  background:linear-gradient(115deg,#16241d,#101b16)!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late {
+  border-left-color:#e0a0a6!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-appointment-card .memento-unified-time {
+  background:#203329;
+  border-color:#526c57;
+}
+/* Compact capture uses a separate hard-coded green material on Mijn Dag. */
+html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card {
+  background:linear-gradient(145deg,#16251d,#101b16)!important;
+  border-color:#3e5746!important;
+  box-shadow:0 9px 24px #0008!important;
+}
+html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card .memento-capture-kinds {
+  background:#101a15;
+  border-color:#405a48;
+}
+html[data-memento-theme="superdark"] body #lifeApp .memento-capture-card .memento-capture-kinds button:not([aria-pressed="true"]) {
+  background:#1a2b22;
+  color:#e7f0e9;
 }
 
 /* Selected app cards remain distinguishable from midnight canvas.
@@ -175,7 +221,7 @@ html[data-memento-theme="superdark"] body :is(.memento-gcal-popover,.memento-tas
 html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app {
   --bg:#070b09;
   --surface:#101915;
-  --surface2:#15231b;
+  --surface2:#16241d;
   --ink:#edf5ec;
   --muted:#b9cdbd;
   --line:#395344;
@@ -215,16 +261,16 @@ html[data-memento-theme="superdark"] body[data-compass-area="finance"] .app .tx-
    Scenic banners are dimmed with a pseudo-layer, not by filtering text/photos. */
 html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-app {
   --kc-bg:#08120d;
-  --kc-panel:#111f17;
-  --kc-panel-alt:#192b20;
-  --kc-border:#3b5845;
+  --kc-panel:#111c16;
+  --kc-panel-alt:#16241d;
+  --kc-border:#3b5143;
   --kc-text:#edf5ed;
   --kc-muted:#b9cbbb;
   --kc-sage:#c7e3bc;
 }
 html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] :is(.kc-collection,.kc-item,.kc-capture,.kc-folder-row,.kc-inbox,.kc-collection-row) {
-  background:#132119!important;
-  border-color:#3b5742!important;
+  background:#13201a!important;
+  border-color:#3b5143!important;
   color:#edf5ed!important;
 }
 html[data-memento-theme="superdark"] #lifeApp[data-life-view="notes"] .kc-mark,
