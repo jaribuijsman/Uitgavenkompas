@@ -23,6 +23,7 @@ const reports=[];
   data.life.appointments=count?[{...fixture.life.appointments[0],id:'v3-event',title:'Fictieve afspraak met notitie',date:'2026-10-31',time:'12:00',endTime:'13:00',notes:'Dit is een geïsoleerde notitie.',location:''}]:[];
   data.life.googleAppointments=[];data.life.appointmentChecks={};
   if(count){data.life.tasks.push({...task('v3-tomorrow','Fictieve taak voor morgen'),date:'2026-11-01'});}
+  if(count===3){data.life.tasks.push({...task('v3-overdue','Fictieve taak die te laat is'),date:'2026-10-30'});}
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(12000);
   const tag=width+'-'+count;
   const shot=label=>page.screenshot({path:path.join(out,tag+'-'+label+'.png'),animations:'disabled'});
@@ -35,6 +36,12 @@ const reports=[];
     else await page.locator('#lifeNavigation [data-life-view="today"]').click();
    };
    await goToday();
+   if(count===3){
+    const overdue=page.locator('[data-life-day="2026-10-31"] .life-overdue-group');
+    assert(await overdue.isVisible(),'Overdue tasks retain a visible place on Mijn dag');
+    assert.match(await overdue.innerText(),/Te laat — nog te doen/);
+    assert(await overdue.locator('[data-life-edit-task="v3-overdue"]').count(),'Overdue task remains actionable');
+   }
    const stored=()=>page.evaluate(()=>({life:JSON.parse(localStorage.getItem('compass_life_preview_v1')),finance:localStorage.getItem('uitgavenkompas_v1')}));
    const original=await stored();
    const measure=()=>page.evaluate(()=>{
