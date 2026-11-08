@@ -89,9 +89,16 @@ const reports=[];
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,'Agenda has no horizontal overflow');
    assert.equal(JSON.stringify((await stored()).life.appointments),appointmentsBefore,'Roster rendering leaves appointments unchanged');
    if(width===393){
-    await calendar.screenshot({path:path.join(out,phase,'393-agenda-roster.png'),animations:'disabled'});
-    await page.evaluate(()=>document.documentElement.dataset.mementoTheme='superdark');
-    await calendar.screenshot({path:path.join(out,phase,'393-agenda-roster-superdark.png'),animations:'disabled'});
+    await page.setViewportSize({width,height:852});
+    for(const theme of ['forest','superdark']){
+     await page.evaluate(theme=>window.MementoTheme.set(theme),theme);
+     await calendar.screenshot({path:path.join(out,phase,'393-agenda-roster-'+theme+'.png'),animations:'disabled'});
+     const cells=await calendar.locator('[data-gcal-day]').evaluateAll(nodes=>nodes.map(el=>({date:el.dataset.gcalDay,numberTop:el.firstElementChild.getBoundingClientRect().top-el.getBoundingClientRect().top,slotHeight:el.querySelector('.memento-duty-code').getBoundingClientRect().height,code:el.querySelector('.memento-duty-code').textContent})));
+     reports.push({kind:'calendar-date-alignment',theme,cells});
+     assert(cells.some(c=>c.code==='')&&cells.some(c=>c.code==='N'),'Cover empty and occupied duty slots');
+     assert(Math.max(...cells.map(c=>c.numberTop))-Math.min(...cells.map(c=>c.numberTop))<=0.5,'All calendar date numbers share the same vertical offset, including free days');
+     assert(cells.every(c=>c.slotHeight>=14),'An empty duty slot retains one line of height');
+    }
    }
   }
   assert.deepEqual(errors,[]);await ctx.close();
