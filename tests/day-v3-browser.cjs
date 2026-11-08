@@ -88,16 +88,22 @@ const reports=[];
     const appointment=day.querySelector('.memento-appointment-card'),task=day.querySelector('.life-list>.life-task.memento-v3-card');
     if(!appointment||!task)return null;
     const offset=(card,selector)=>card.querySelector(selector).getBoundingClientRect().left-card.getBoundingClientRect().left;
+    const trailing=(card,selector)=>card.getBoundingClientRect().right-card.querySelector(selector).getBoundingClientRect().right;
     const style=card=>getComputedStyle(card.querySelector('.memento-unified-time'));
+    const grid=card=>{const s=getComputedStyle(card);return [s.gridTemplateColumns.split(' ').slice(0,2),s.columnGap]};
     return {
      appointment:[offset(appointment,'.memento-event-complete'),offset(appointment,'.memento-unified-time'),offset(appointment,'.memento-unified-info'),offset(appointment,'.memento-event-actions')],
      task:[offset(task,'.life-complete'),offset(task,'.memento-unified-time'),offset(task,'.life-task-body'),offset(task,'.memento-event-actions')],
+     grid:[grid(appointment),grid(task)],
+     trailing:[trailing(appointment,'.memento-event-actions'),trailing(task,'.memento-event-actions')],
      badge:[style(appointment).borderRadius,style(appointment).backgroundColor],
      taskBadge:[style(task).borderRadius,style(task).backgroundColor]
     };
    });
    assert(shared,'Both appointment and task cards must exist');
-   shared.appointment.forEach((x,i)=>assert(Math.abs(x-shared.task[i])<=2,'Card column '+i+' alignment: '+JSON.stringify(shared)));
+   assert.deepEqual(shared.grid[0],shared.grid[1],'Both cards keep the same fixed tracks and column gaps');
+   shared.appointment.slice(0,3).forEach((x,i)=>assert(Math.abs(x-shared.task[i])<=3,'Left column '+i+' alignment, allowing 2px accent border: '+JSON.stringify(shared)));
+   assert(Math.abs(shared.trailing[0]-shared.trailing[1])<=3,'Menu right inset must match even across differently wide card containers: '+JSON.stringify(shared));
    assert.deepEqual(shared.badge,shared.taskBadge,'Date/time badges must look identical');
    for(const selector of ['.memento-event-complete','.memento-v3-menu>summary','.memento-day-note>summary']){
     const b=await event.locator(selector).boundingBox();assert(b.width>=44&&b.height>=44,'Touch target '+selector);
