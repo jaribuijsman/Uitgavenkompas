@@ -150,3 +150,12 @@ De datums zijn de datums van de oorspronkelijke keuze, niet de datum waarop code
 ## 9. Volgende onderhoudsstap
 
 Wanneer nieuwe bewijsstukken beschikbaar komen: vergelijk elk document/gesprek met D01–D30, voeg uitsluitend echt nieuwe keuzes toe, noem welke oude keuze vervalt en houd desnoods aparte **verval-/conflictrecords** aan. Voor implementatiewerk altijd opnieuw GitHub `main`, PR's, tests, lokale opslagcontracten en runtime onderzoeken. **Deze v1.0-documentwijziging geeft geen toestemming om GitHub of productie te wijzigen.**
+## 10. Uitvoeringsbesluit — 8 november 2026
+
+De gebruiker heeft het gezamenlijke plan voor Mijn dag, Taken en Agenda expliciet laten uitvoeren. Dit vervangt de conceptstatus en eerdere open ontwerpvragen uitsluitend voor deze onderdelen:
+
+- Mijn dag: volledige datum en dienst bij de dagkeuze, onder snelle invoer; dubbele bovenstrook vervalt.
+- Taken: standaard ingeklapte categorieën bij navigatie, 500 ms aanraking op de bestaande sleepgreep, geen snelle invoer op dit tabblad. De bestaande taken en herhaallogica blijven intact.
+- Agenda: één gouden stip naast het dagnummer voor echte afspraken; alleen O/M/N, geen V in dagcellen. Lokale afspraken ondersteunen hele dag en wekelijkse/maandelijkse/jaarlijkse herhaling met uitzonderingen per voorkomen. Afspraken, taken, trainingen en diensten blijven afzonderlijke typen.
+
+Het [uitvoeringscontract](../design-review/day-tasks-agenda-20261108.md) bevat de eisenmatrix en randgevallen. Implementatie op een werkbranch geeft geen merge- of productieclaim; daarvoor blijven actuele checks en afzonderlijke autorisatie nodig. Kennis/Meer vallen buiten deze opdracht.

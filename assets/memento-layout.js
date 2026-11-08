@@ -95,7 +95,6 @@
   const app=$('#lifeApp'),view=app?.dataset.lifeView,host=$('#lifeContent');if(!app||!host)return;
   if(view==='today'){
    for(const future of all('.memento-future-day:not(.life-overdue-group)',host)){const counts=$('[data-memento-total]',future);if(counts){let badge=$(':scope>summary .ml-future-count',future);if(!badge){badge=document.createElement('span');badge.className='ml-future-count';$(':scope>summary',future)?.append(badge);}text(badge,counts.textContent);}}
-   const head=$('.mg-day-head',host);if(head&&!$('.ml-day-context',head)){const line=document.createElement('p');line.className='ml-day-context';const C=window.MementoFitnessCore,today=C?.date?.();line.textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+(today&&C.duty?' · '+C.duty(today).label+' · '+C.duty(today).time:'');head.prepend(line);}
   }
   if(view==='wishes')for(const card of all('.mg-wish-card',host))once(card,'mlWish',()=>{
    card.classList.add('ml-wish-row');const heading=$('.life-card-head',card),status=$('.life-pill',card),budget=all(':scope>p',card).find(p=>p.textContent.startsWith('Budget:'));

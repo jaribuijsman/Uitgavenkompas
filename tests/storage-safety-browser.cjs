@@ -48,7 +48,7 @@ async function addTransaction(page, description) {
     context.on("page", p => { p.on("pageerror", e => errors.push(e.message)); p.on("dialog", d => d.accept()); });
     const a = await context.newPage(); await a.goto(url + "/__seed__");
     const finance = { version: 3, transactions: [tx("old-1", "Beginsaldo roodstand"), tx("old-2", "Saldo roodstand")], categories: [{ name: "Overig", icon: "✨", kind: "expense", color: "#aaaaaa", subcategories: [] }], receipts: [{ id: "bon", transactionId: "old-1", store: "Test", date: "2026-10-26", total: 12.34, text: "Fictief" }], budgets: {}, bills: [], goals: [], totalBudget: 0, monthClosures: {}, settings: { salaryPeriodStart: "2026-10-01", accountOpening: { personal: 100, joint: 0, creditcard: 0 } } };
-    const life = emptyLife(); life.tasks.push({ ...task("trashed"), deletedAt: "2026-10-26" });
+    const life = emptyLife(); life.appointments.push({id:"recurring-backup-fixture",title:"Fictieve jaarlijkse afspraak",date:"2026-11-08",allDay:true,time:"",recurrence:"yearly",done:false,completedAt:"",exceptions:{"2027-11-08":{date:"2027-11-09",title:"Verplaatst voorkomen"},"2028-11-08":{cancelled:true}}});life.tasks.push({ ...task("trashed"), deletedAt: "2026-10-26" });
     await a.evaluate(({ finance, life }) => { localStorage.setItem("uitgavenkompas_v1", JSON.stringify(finance)); localStorage.setItem("compass_life_preview_v1", JSON.stringify(life)); }, { finance, life });
     await a.goto(url, { waitUntil: "domcontentloaded" }); await unlock(a, true);
     await until(a, () => window.MementoStorageGuard?.writable);
@@ -67,11 +67,11 @@ async function addTransaction(page, description) {
     let stored = await a.evaluate(() => JSON.parse(localStorage.getItem("uitgavenkompas_v1")));
     assert(stored.transactions.some(t => t.description === "Transactie A")); assert(!stored.transactions.some(t => t.description === "Concept B"));
     checks.push("Native two-tab transaction conflict preserves A and B's unsaved form");
-    await b.locator("#cancelTx").click(); await navigate(a, "life", "tasks");
+    await b.locator("#cancelTx").click(); await navigate(a, "life", "today");
     await require("./helpers/reveal.cjs")(a,"#lifeQuickTitle");await a.locator('[data-life-quick-kind="task"]').click();await a.locator("#lifeQuickTitle").fill("Taak A"); await a.locator("#lifeQuickForm button[type=submit]").click();
     await require("./helpers/reveal.cjs")(a,'[data-life-quick-kind="note"]');await a.locator('[data-life-quick-kind="note"]').click(); await a.locator("#lifeQuickTitle").fill("Notitie A"); await a.locator("#lifeQuickForm button[type=submit]").click();
     await until(a,()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")).notes.some(n=>n.title==="Notitie A"));
-    await navigate(b, "life", "tasks"); await require("./helpers/reveal.cjs")(b,"#lifeQuickTitle");await b.locator('[data-life-quick-kind="task"]').click();await b.locator("#lifeQuickTitle").fill("Taakconcept B"); await b.locator("#lifeQuickForm button[type=submit]").click();
+    await navigate(b, "life", "today"); await require("./helpers/reveal.cjs")(b,"#lifeQuickTitle");await b.locator('[data-life-quick-kind="task"]').click();await b.locator("#lifeQuickTitle").fill("Taakconcept B"); await b.locator("#lifeQuickForm button[type=submit]").click();
     assert.equal(await b.locator("#lifeQuickTitle").inputValue(), "Taakconcept B");
     assert((await a.evaluate(() => JSON.parse(localStorage.getItem("compass_life_preview_v1")))).tasks.some(t => t.title === "Taak A"));
     checks.push("Two-tab Life conflict preserves saved task and quick-capture input");

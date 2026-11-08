@@ -178,8 +178,9 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    assert(Array.isArray(byGroup[name])&&byGroup[name].length>0,"missing full CI domain "+name);
    return byGroup[name];
   });
-  assert.equal(fullSuites.length,23,"full matrix including AI Hub browser journey must remain");
+  assert.equal(fullSuites.length,24,"full matrix including AI Hub and recurring agenda journeys must remain");
   assert.equal(fullSuites.filter(s=>s==="knowledge-workspace-browser").length,1,"duplicate or missing knowledge journey in full run");
+  assert.equal(fullSuites.filter(s=>s==="agenda-plan-browser").length,1,"recurring agenda journey must run exactly once");
   assert.equal(fullSuites.filter(s=>s==="ai-hub-browser").length,1,"duplicate or missing AI Hub journey in full run");
   assert(byGroup["life-full"].includes("knowledge-workspace-browser"),"life-full must own knowledge journey");
   assert.deepEqual(byGroup["interface-visual"],["glass-rendering-browser"],"visual shard retains dedicated glass journey");
@@ -197,10 +198,10 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
   }
  }
  verify(groups);
- assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|23/);
+ assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|24/);
  assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
- assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/23|storage-safety-browser/);
- assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/23|grocery-import-browser/);
+ assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/24|storage-safety-browser/);
+ assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/24|grocery-import-browser/);
 });
 check("manual workflows reject obsolete V1 browser contracts without losing offline or safety coverage",()=>{
  const fs=require("node:fs"),path=require("node:path");

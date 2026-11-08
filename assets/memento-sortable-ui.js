@@ -60,8 +60,8 @@
     root.document.removeEventListener("touchmove",track,true);
     root.document.removeEventListener("mousemove",track,true);
    }
-   // Mijn Dag: Android-style long press on the drag handle; other lists stay immediate.
-   const dayTaskDragDelay=el.matches(".life-day-column .life-list")?500:0;
+   // Task lists share the same handle-only Android long press.
+   const dayTaskDragDelay=el.matches(".life-day-column .life-list, #lifeTaskResults .life-list")?500:0;
    const sortable=new root.Sortable(el,{
     draggable:selector,handle,sort:true,animation:150,
     delay:dayTaskDragDelay,delayOnTouchOnly:dayTaskDragDelay>0,touchStartThreshold:4,

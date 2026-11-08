@@ -39,6 +39,9 @@ async function seed(page,data,url){
   // Keep a legacy same-origin cache ahead of the new release in CacheStorage order.
   // An offline navigation must not use another cache's HTML or its old script URLs.
   await page.evaluate(async html=>{const legacy=await caches.open('uitgavenkompas-legacy-document');for(const p of ['./','./index.html'])await legacy.put(new URL(p,location.href),new Response(html,{headers:{'Content-Type':'text/html'}}));},fs.readFileSync(path.join(baseline,'index.html'),'utf8'));
+  // Finish baseline document requests before switching server content; otherwise the
+  // old worker can recreate its cache with an in-flight write after activation.
+  await page.waitForLoadState('networkidle');
   source=current;await page.evaluate(async()=>{window.__previousMementoController=navigator.serviceWorker.controller;await(await navigator.serviceWorker.getRegistration()).update();});const worker=fs.readFileSync(path.join(current,'sw.js'),'utf8'),cache=worker.match(/const CACHE = "([^"]+)"/)[1],required=JSON.parse(worker.match(/const CORE = (\[.*?\]);/)[1]);
   // Opening a new cache precedes addAll/activation. Wait for the actual worker takeover,
   // not just a cache directory, before assessing an offline upgrade.

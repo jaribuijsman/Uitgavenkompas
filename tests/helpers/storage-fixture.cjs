@@ -29,7 +29,7 @@ async function tab(storage = new Map(), manager = locks(), options = {}) {
     navigator: { locks: options.supported === false ? undefined : manager }, isSecureContext: options.secure !== false,
     location: { protocol: "https:", reload() { s.reloaded = true; } }, setTimeout: () => 1, clearTimeout() {}, queueMicrotask() {}, MutationObserver: class { observe() {} },
     confirm: () => true, addEventListener(t, fn) { (listeners[t] ||= []).push(fn); }, scrollTo() {}, matchMedia: () => ({ matches: false }),
-    MementoLifePresentation: require("../../assets/memento-life-presentation.js"), MementoFinancePresentation: require("../../assets/memento-finance-presentation.js"), MementoFinanceValidation: require("../../assets/memento-finance-validation.js"), MementoFinancePeriodCore: require("../../assets/memento-finance-period-core.js"), MementoKnowledgeCore: K, MementoFitnessCore: F, MementoTrashCore: Trash, MementoCompleteBackup: { ...ZIP }, CompassFlow: { home: () => "", mount() {} } };
+    MementoAppointmentRecurrence: require("../../assets/memento-appointment-recurrence.js"), MementoLifePresentation: require("../../assets/memento-life-presentation.js"), MementoFinancePresentation: require("../../assets/memento-finance-presentation.js"), MementoFinanceValidation: require("../../assets/memento-finance-validation.js"), MementoFinancePeriodCore: require("../../assets/memento-finance-period-core.js"), MementoKnowledgeCore: K, MementoFitnessCore: F, MementoTrashCore: Trash, MementoCompleteBackup: { ...ZIP }, CompassFlow: { home: () => "", mount() {} } };
   s.MementoGroceryImport = require('../../assets/memento-grocery-import.js');
   s.window = s; s.get = get; s.storage = storage; s.listeners = listeners; s.MementoStorageGuard = Guard.create(s);
   await s.MementoStorageGuard.ready; vm.createContext(s);
@@ -40,7 +40,7 @@ async function tab(storage = new Map(), manager = locks(), options = {}) {
   const source = fs.readFileSync(path.join(root, "assets/memento-life-app.js"), "utf8");
   const end = source.lastIndexOf("scheduleDayRefresh();\nrender();setArea(area);");
   if (end < 0) throw Error("Life bootstrap marker changed");
-  const lifeExports = `render=()=>{globalThis.renderCalls=(globalThis.renderCalls||0)+1};globalThis.life={get state(){return state},set state(v){state=v},get blocked(){return blocked},set blocked(v){blocked=v},save,mutate,validate,importBackup,importCompleteBackup,restorePreviousLife,performPermanentTrashPurge,exportBackup,submitQuickCapture,changeShoppingItem,shoppingItems,saveShoppingProduct,set groceryTab(v){groceryTab=v},set quickKind(v){quickKind=v}};`;
+  const lifeExports = `render=()=>{globalThis.renderCalls=(globalThis.renderCalls||0)+1};globalThis.life={get state(){return state},set state(v){state=v},get blocked(){return blocked},set blocked(v){blocked=v},save,mutate,validate,importBackup,importCompleteBackup,restorePreviousLife,performPermanentTrashPurge,exportBackup,editAppointment,saveAppointment,deleteAppointment,localAppointmentsForDay,appointmentItemsForDay,toggleAppointmentCompletion,get modal(){return modal},submitQuickCapture,changeShoppingItem,shoppingItems,saveShoppingProduct,set groceryTab(v){groceryTab=v},set quickKind(v){quickKind=v}};`;
   vm.runInContext(source.slice(0, end) + lifeExports + "})();", s, { filename: "life-under-test.js" });
   s.MementoKnowledgeStore = files(s.MementoStorageGuard);
   return s;

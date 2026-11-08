@@ -28,11 +28,11 @@ async function touchDrag(page,selector){
  const hit=await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.closest(".memento-sort-handle")!==null,start);
  assert(hit,"Touch target must not be covered by another element");
  const options=await page.locator(selector).first().evaluate(row=>window.Sortable.get(row.parentElement)?.options);
- assert(options&&options.delay===0,"Touch drag must activate immediately, with no hold delay");
+ const taskList=selector.includes("lifeTaskResults");assert(options&&options.delay===(taskList?500:0),"Only tasks require the Android hold delay");
  const session=await page.context().newCDPSession(page);
  await session.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{...start,id:9}]});
- // Immediate drag must work without a long press on the grip.
- await page.waitForTimeout(20);
+ // Task drag waits for its hold; other explicit sort modes remain immediate.
+ await page.waitForTimeout(taskList?550:20);
  for(let i=1;i<=10;i++){await session.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:start.x+(target.x-start.x)*i/10,y:start.y+(target.y-start.y)*i/10,id:9}]});await page.waitForTimeout(24);}
  await page.waitForTimeout(90);
  await session.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
@@ -58,6 +58,7 @@ async function touchDrag(page,selector){
   assert.equal(await page.locator("#lifeTaskSort").inputValue(),"manual","Tasks must be immediately draggable by default");
   const taskSelector='#lifeTaskResults .life-list[data-task-category="Persoonlijk"]>.life-task[data-order-id]';
   assert(await page.locator(taskSelector+" > .memento-sort-handle").count()>=2,"Task drag grips are missing");
+  assert.equal(await page.locator(".memento-task-category[open]").count(),0);await require("./helpers/expand-task-group.cjs")(page,taskSelector);
   const before=await ids(page,taskSelector);
   await touchDrag(page,taskSelector);
   const after=await ids(page,taskSelector);

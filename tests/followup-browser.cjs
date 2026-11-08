@@ -44,7 +44,7 @@ const fixture=require("./helpers/visual-fixture.cjs").fixture;
   const dialogRect=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,width:innerWidth}));
   assert(dialogRect.scrollWidth<=dialogRect.width+1,"horizontale overflow na conversie");
   await page.locator('#mementoQuickNav [data-memento-dest="life:tasks"]').click();
-  const task=page.locator('.life-task:has([data-followup-id="album"])').first();
+  await require('./helpers/expand-task-group.cjs')(page,'.life-task:has([data-followup-id="album"])');const task=page.locator('.life-task:has([data-followup-id="album"])').first();
   await task.locator('[data-life-detail="album"]').click();
   await page.locator('#lifeDialog [data-followup-start="task"][data-followup-id="album"]').click();
   await page.locator('#followupOptionsSummary').click();

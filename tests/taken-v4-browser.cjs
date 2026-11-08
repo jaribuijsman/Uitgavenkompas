@@ -11,7 +11,7 @@ async function nav(page,view){
  if(page.viewportSize().width>800){if(await page.evaluate(()=>document.body.dataset.compassArea)!=='life')await page.locator('#compassAreaBar [data-compass-area="life"]').click();await page.locator('#lifeNavigation [data-life-view="'+view+'"]').click();return}
  await page.locator('[data-memento-menu="open"]').click();if(await page.evaluate(()=>document.body.dataset.compassArea)!=='life')await page.locator('[data-memento-switch="life"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:'+view+'"]').click();
 }
-async function openEditor(page,id='v4-routine'){await page.locator('[data-order-id="'+id+'"] .life-task-menu summary').click();await page.locator('[data-life-edit-task="'+id+'"]').click();await page.locator('#lifeTaskForm[data-mg-ready]').waitFor()}
+async function openEditor(page,id='v4-routine'){await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="'+id+'"]');await page.locator('[data-order-id="'+id+'"] .life-task-menu summary').click();await page.locator('[data-life-edit-task="'+id+'"]').click();await page.locator('#lifeTaskForm[data-mg-ready]').waitFor()}
 async function geometry(page,label){
  const box=await page.evaluate(()=>({width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,first:document.querySelector('#lifeTaskResults .life-task')?.getBoundingClientRect().toJSON(),menu:document.querySelector('.life-task-menu[open] .life-task-actions')?.getBoundingClientRect().toJSON(),footer:document.querySelector('#lifeDialog:not([hidden]) .life-dialog-footer')?.getBoundingClientRect().toJSON()}));
  assert(box.scroll<=box.width+1,label+' document overflow');
@@ -40,7 +40,7 @@ async function life(page){return page.evaluate(k=>JSON.parse(localStorage.getIte
  for(const width of [360,393,412,1280]){
   const {page,context}=await launchFixture(width);
   assert.equal(await page.locator('#lifeTaskResults .life-task').count(),43);
-  await geometry(page,width+' list');await page.screenshot({path:out+'/'+width+'-list.png'});
+  assert.equal(await page.locator('.memento-task-category[open]').count(),baseline?4:0,'Task groups default collapsed');await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="v4-routine"]');await geometry(page,width+' list');await page.screenshot({path:out+'/'+width+'-list.png'});
   await page.locator('[data-order-id="v4-routine"] .life-task-menu summary').click();await page.waitForFunction(()=>document.querySelector('.life-task-menu[open] .life-task-actions')?.style.left);await geometry(page,width+' menu');await page.screenshot({path:out+'/'+width+'-menu.png'});
   await page.locator('[data-life-edit-task="v4-routine"]').click();await page.locator('#lifeTaskForm[data-mg-ready]').waitFor();
   await geometry(page,width+' editor');await page.screenshot({path:out+'/'+width+'-editor.png'});
@@ -61,11 +61,11 @@ async function life(page){return page.evaluate(k=>JSON.parse(localStorage.getIte
  await page.locator('.memento-task-overview-menu>summary').click();
  assert.equal(await page.locator('.memento-task-overview-items [data-life-task-tab]').count(),3,'Existing secondary statuses remain');
  await page.locator('.memento-task-overview-menu>summary').click();
- await page.locator('[data-order-id="v4-routine"] .life-task-menu>summary').click();
+ await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="v4-routine"]');await page.locator('[data-order-id="v4-routine"] .life-task-menu>summary').click();
  await page.locator('[data-life-star="v4-routine"]').click();
  assert.equal(await page.locator('.memento-task-category-priority').count(),0,'Removing priority returns to original category');
  assert.equal(await page.locator('.memento-task-category [data-order-id="v4-routine"]').count(),1);
- await page.locator('[data-order-id="v4-routine"] .life-task-menu>summary').click();
+ await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="v4-routine"]');await page.locator('[data-order-id="v4-routine"] .life-task-menu>summary').click();
  await page.locator('[data-life-star="v4-routine"]').click();
  assert.equal(await page.locator('.memento-task-category-priority [data-order-id="v4-routine"]').count(),1,'Existing menu re-adds priority');
  assert.equal(await page.locator('#lifeTaskResults [data-task-timer]').count(),0,'No card timers');
@@ -100,7 +100,7 @@ async function life(page){return page.evaluate(k=>JSON.parse(localStorage.getIte
  const invalidJSON=structuredClone(savedJSON);invalidJSON.tasks.find(t=>t.id==='v4-routine').planning.estimateMinutes=0;
  await page.locator('#lifeImportFile').setInputFiles({name:'invalid-v4.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({format:'compass-life-backup',version:1,lifeState:invalidJSON}))});await page.waitForFunction(()=>document.querySelector('#lifeMessage').textContent.includes('Ongeldige geschatte taakduur'));assert.deepEqual(await life(page),savedJSON);
  await page.locator('#lifeImportFile').setInputFiles({name:'isolated-v4.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({format:'compass-life-backup',version:1,lifeState:savedJSON}))});await page.waitForFunction(()=>document.querySelector('#lifeMessage').textContent.includes('Back-up hersteld'));assert.deepEqual(await life(page),savedJSON);await nav(page,'tasks');
- await page.locator('[data-life-complete="v4-routine"]').click();task=await getTask();assert.equal(task.date,'2026-11-05');assert.equal(task.id,'v4-routine');assert.equal(task.done,false);assert.equal(task.history.length,2);assert.equal(task.history[0].legacy,true);assert.equal(task.history[1].occurrenceId,oldOccurrence);assert.notEqual(task.timing.occurrenceId,oldOccurrence);assert(task.steps.every(s=>!s.done));assert.deepEqual(task.timing.measurements[0],measured[0]);assert.equal(task.planning.estimateMinutes,3);
+ await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="v4-routine"]');await page.locator('[data-life-complete="v4-routine"]').click();task=await getTask();assert.equal(task.date,'2026-11-05');assert.equal(task.id,'v4-routine');assert.equal(task.done,false);assert.equal(task.history.length,2);assert.equal(task.history[0].legacy,true);assert.equal(task.history[1].occurrenceId,oldOccurrence);assert.notEqual(task.timing.occurrenceId,oldOccurrence);assert(task.steps.every(s=>!s.done));assert.deepEqual(task.timing.measurements[0],measured[0]);assert.equal(task.planning.estimateMinutes,3);
  // Undo restores the exact original occurrence, including its confirmed sessions.
  await page.locator('[data-life-action="undo"]').click();assert.equal((await getTask()).timing.occurrenceId,oldOccurrence);
  await openEditor(page);await page.locator('#lifeTaskEstimate').fill('');await page.locator('[form="lifeTaskForm"]').click();
