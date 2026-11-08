@@ -151,13 +151,10 @@ html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] :is(.
   background:var(--mg-night-card)!important;
   border-color:var(--mg-night-border)!important;
 }
-html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-v3-card.memento-appointment-card {
-  background:linear-gradient(115deg,#192a21,#101c17)!important;
-}
 html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late {
   border-left-color:#e0a0a6!important;
 }
-html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-appointment-card .memento-unified-time {
+html[data-memento-theme="superdark"] body #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time {
   background:#203329;
   border-color:#526c57;
 }
