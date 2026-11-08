@@ -326,7 +326,7 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 }
 #lifeApp[data-life-view="today"] .memento-v3-card::before{top:13px;bottom:13px;left:0;width:3px}
 #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late{border-left:3px solid #e0a0a6}
-#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{box-sizing:border-box;min-width:0;white-space:nowrap;color:#cee4d2;font-size:12px;line-height:1.3;font-weight:700}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:5px 2px;white-space:normal;text-align:center;font-variant-numeric:tabular-nums;color:#cee4d2;font-size:12px;line-height:1.3;font-weight:700;background:#315b45;border:1px solid #64876e;border-radius:10px}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:0;grid-column:auto;grid-row:auto}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong,
@@ -385,21 +385,8 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-note{margin-left:auto}
 #lifeApp[data-life-view="today"] .memento-day-note>summary{color:#e6cf9a}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small{font-size:11.5px;line-height:1.3}
-/* Appointment-only variant: time, flexible title, note / check / menu.
-   Tasks retain their existing layout; optional notes never consume another row. */
-#lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card.memento-appointment-card{
- grid-template-columns:48px minmax(0,1fr) auto;gap:11px;min-height:60px;padding:6px;
- background:linear-gradient(110deg,#244735f5,#193a2df0);border-color:#66876d;border-radius:14px;
-}
-#lifeApp[data-life-view="today"] .memento-appointment-card .memento-unified-time{
- display:flex;align-items:center;justify-content:center;min-height:32px;padding:5px 2px;
- white-space:normal;text-align:center;font-variant-numeric:tabular-nums;background:#315b45;
- border:1px solid #64876e;border-radius:10px;
-}
-#lifeApp[data-life-view="today"] .memento-appointment-card .memento-event-actions{flex-wrap:nowrap;align-self:center}
-#lifeApp[data-life-view="today"] .memento-appointment-card .memento-event-actions>*{flex:0 0 44px}
-#lifeApp[data-life-view="today"] .memento-appointment-card .memento-unified-info{gap:3px}
-#lifeApp[data-life-view="today"] .memento-appointment-card .memento-v3-title{min-height:44px;align-content:center}
+/* Afspraken en taken delen hetzelfde vierkoloms raster, kaartmateriaal en tijdvak.
+   Afspraaknotities gebruiken de bestaande detailrij zonder extra actie-kolom. */
 #lifeApp[data-life-view="today"] .memento-appointment-card.memento-event-carried::before{background:#e9bf78}
 #lifeApp[data-life-view="today"] .memento-appointment-group{margin:0}
 #lifeApp[data-life-view="today"] .memento-appointment-group+.memento-appointment-group{margin-top:16px}
@@ -414,7 +401,6 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
  #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{grid-template-columns:44px 51px minmax(0,1fr) 44px;gap:2px;padding-right:6px}
  #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
  #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{font-size:13.7px}
- #lifeApp[data-life-view="today"] .memento-appointment-card{column-gap:8px}
 }
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}
 

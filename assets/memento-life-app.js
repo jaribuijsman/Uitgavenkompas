@@ -554,10 +554,11 @@ function renderUnifiedAppointmentItem(e,source,options={}){
    (local?'<button type="button" class="life-task-delete" data-memento-delete-day-event="'+esc(e.id)+'">Verwijderen</button>':googleLink?'<a href="'+esc(e.htmlLink)+'" target="_blank" rel="noopener noreferrer">Open in Google Agenda</a>':'')+
    '</div></details>';
   return '<article class="memento-unified-event memento-v3-card memento-appointment-card'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
-   '<span class="memento-unified-time">'+esc(time||'—')+'</span><div class="memento-unified-info">'+titleControl+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+'</div>'+
-   '<div class="memento-event-actions">'+(local?dayNoteControl(e,title):'')+
    '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
-   menu+'</div></article>';
+   '<span class="memento-unified-time">'+esc(time||'—')+'</span>'+
+   '<div class="memento-unified-info">'+titleControl+
+   '<div class="memento-v3-bottom">'+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+(local?dayNoteControl(e,title):'')+'</div></div>'+
+   '<div class="memento-event-actions">'+menu+'</div></article>';
  }
  return '<div class="memento-unified-event'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
  '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+

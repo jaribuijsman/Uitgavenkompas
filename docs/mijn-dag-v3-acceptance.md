@@ -5,10 +5,10 @@ zelfstandige ontwerpvoorbeelden gelden niet als bewijs van werkende productie.
 
 | Onderdeel | Vereist resultaat |
 | --- | --- |
-| Afspraakkaart | Tijd, flexibele titel, acties op één rij: optioneel notitie-icoon → afvinken → driepuntjes. Geen aparte notitieregel; alle acties minimaal 44×44 px, ook op 360 px. |
+| Afspraakkaart | Zelfde vierkoloms indeling als taken: afvinken, tijdvak, titel/details met optionele notitieknop, driepuntjes. Alle acties minimaal 44×44 px, ook op 360 px. |
 | Takenkaart | Bestaande vier kolommen: checkbox, tijd/datum, inhoud, driepuntjes. |
 | Afspraakgroepen | Gepland eerst, daarna Nog open met aantal en oorspronkelijke datum. Lege groepen verborgen; bestaande chronologische volgorde binnen iedere groep behouden. |
-| Notitie | Bij afspraken tussen titel en afvinken; bij taken bestaande positie. Volledige tekst bereikbaar zonder overflow. |
+| Notitie | Bij afspraken en taken binnen de detailskolom, met een eigen 44×44-px bediening. Volledige tekst bereikbaar zonder overflow. |
 | Dagkeuze | Eén dag per scherm; menu/notitie openen verandert scrollbegrenzing of positie niet. |
 | V2-editor | Titel met echte microfoon op één rij; tijden naast elkaar; checkbox 23 px in 44 px label. |
 | Beheer | Verwijderen onder Meer opties, met bevestiging en bestaande undo. Footer: Annuleren en Opslaan. |
@@ -37,3 +37,7 @@ gebruiker; deze uitvoering claimt geen visuele goedkeuring en doet geen merge.
 Alleen de afspraakpresentatie in Mijn dag wijzigt. Agenda, taken, editors,
 opslagvelden en afvinkhandlers blijven behouden. Controleer ook alleen oude
 open afspraken, gemengde groepen, geen notitie, hele dag, lange titels en afronden/heropenen.
+
+## Gelijke afspraak- en taakkaarten — 8 november 2026
+
+De expliciete vraag van 8 november vervangt het eerdere afwijkende drieluiks raster voor afspraken op Mijn dag (2 november). Afspraken en taken gebruiken nu **checkbox → tijd/datum in dezelfde capsule → titel/details → opties**. De notitieknop blijft binnen de detailskolom; toegang tot menu, editor, afvinken, Google-afspraak en opgeslagen data blijven ongewijzigd. Op 360/393/412 px horen de rasterkolommen en tijdcapsules hetzelfde te zijn. Andere schermen blijven buiten deze wijziging.

@@ -78,12 +78,33 @@ const reports=[];
    if(!count){assert.equal(await page.locator('.memento-v3-card').count(),0);continue;}
    const event=page.locator('[data-life-day="2026-10-31"] .memento-v3-card').filter({has:page.locator('[data-memento-edit-event="v3-event"]')});
    const zones=await event.evaluate(el=>[...el.children].map(n=>n.getBoundingClientRect().toJSON()));
-   assert.equal(zones.length,3);for(let i=0;i<2;i++)assert(zones[i].right<=zones[i+1].left+1,'Time, title and actions must not overlap');
-    assert(zones[1].left-zones[0].right>=7,'Appointment title needs visible spacing after the time badge');
-   const actions=await event.locator('.memento-event-actions').evaluate(el=>[...el.children].map(n=>({className:n.className,rect:n.getBoundingClientRect().toJSON()})));
-   assert.deepEqual(actions.map(n=>n.className),['memento-day-note','memento-event-complete','life-task-menu memento-v3-menu']);
-   for(let i=0;i<actions.length-1;i++)assert(actions[i].rect.right<=actions[i+1].rect.left+1,'Note, checkbox and menu must not overlap');
-   assert(actions.every(n=>Math.abs(n.rect.y-actions[0].rect.y)<2),'Actions must share one row');
+   assert.equal(zones.length,4,'Appointment shares the checkbox / time / title / menu layout with tasks');
+   for(let i=0;i<zones.length-1;i++)assert(zones[i].right<=zones[i+1].left+1,'Appointment zones must not overlap');
+   const actions=await event.locator('.memento-event-actions').evaluate(el=>[...el.children].map(n=>n.className));
+   assert.deepEqual(actions,['life-task-menu memento-v3-menu'],'Appointment options use the same right-hand slot as tasks');
+   assert.equal(await event.locator('.memento-v3-bottom .memento-day-note').count(),1,'Appointment notes remain accessible inside the details column');
+   const shared=await page.evaluate(()=>{
+    const day=document.querySelector('[data-life-day="2026-10-31"]');
+    const appointment=day.querySelector('.memento-appointment-card'),task=day.querySelector('.life-list>.life-task.memento-v3-card');
+    if(!appointment||!task)return null;
+    const offset=(card,selector)=>card.querySelector(selector).getBoundingClientRect().left-card.getBoundingClientRect().left;
+    const trailing=(card,selector)=>card.getBoundingClientRect().right-card.querySelector(selector).getBoundingClientRect().right;
+    const style=card=>getComputedStyle(card.querySelector('.memento-unified-time'));
+    const grid=card=>{const s=getComputedStyle(card);return [s.gridTemplateColumns.split(' ').slice(0,2),s.columnGap]};
+    return {
+     appointment:[offset(appointment,'.memento-event-complete'),offset(appointment,'.memento-unified-time'),offset(appointment,'.memento-unified-info'),offset(appointment,'.memento-event-actions')],
+     task:[offset(task,'.life-complete'),offset(task,'.memento-unified-time'),offset(task,'.life-task-body'),offset(task,'.memento-event-actions')],
+     grid:[grid(appointment),grid(task)],
+     trailing:[trailing(appointment,'.memento-event-actions'),trailing(task,'.memento-event-actions')],
+     badge:[style(appointment).borderRadius,style(appointment).backgroundColor],
+     taskBadge:[style(task).borderRadius,style(task).backgroundColor]
+    };
+   });
+   assert(shared,'Both appointment and task cards must exist');
+   assert.deepEqual(shared.grid[0],shared.grid[1],'Both cards keep the same fixed tracks and column gaps');
+   shared.appointment.slice(0,3).forEach((x,i)=>assert(Math.abs(x-shared.task[i])<=3,'Left column '+i+' alignment, allowing 2px accent border: '+JSON.stringify(shared)));
+   assert(Math.abs(shared.trailing[0]-shared.trailing[1])<=3,'Menu right inset must match even across differently wide card containers: '+JSON.stringify(shared));
+   assert.deepEqual(shared.badge,shared.taskBadge,'Date/time badges must look identical');
    for(const selector of ['.memento-event-complete','.memento-v3-menu>summary','.memento-day-note>summary']){
     const b=await event.locator(selector).boundingBox();assert(b.width>=44&&b.height>=44,'Touch target '+selector);
    }
