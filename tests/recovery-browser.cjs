@@ -75,18 +75,22 @@ async function checkbox(page,selector){
     return {taskColumns:styles[0].gridTemplateColumns.split(' ').length,eventColumns:styles[1].gridTemplateColumns.split(' ').length,
       taskElements:task.length,eventElements:event.length,taskRect:rect.toJSON(),
       firstTarget:task[0],date:task[1],info:task[2],action:task[3],
+      eventFirstTarget:event[0],eventTime:event[1],eventInfo:event[2],eventAction:event[3],
       taskSurface:styles[0].backgroundColor,eventSurface:styles[1].backgroundColor,
       taskRadius:styles[0].borderRadius,eventRadius:styles[1].borderRadius,
       taskBorders:[styles[0].borderTopWidth,styles[0].borderBottomWidth],
       label:card.querySelector('.life-task-menu>summary')?.textContent?.trim()};
    });
    assert.equal(parity.taskColumns,4,'Task grid retains checkbox, date, content and action tracks');
-   assert.equal(parity.eventColumns,3,'Compact appointment uses its distinct three-column grid');
-   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,3,'Compact appointment keeps its three interactive/display elements');
+   assert.equal(parity.eventColumns,4,'Appointments and tasks both use the four-column day grid');
+   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,4,'Both cards have checkbox, time/date, details and options');
+   assert(parity.eventFirstTarget.right<=parity.eventTime.left+1,'Appointment checkbox must not overlap time');
+   assert(parity.eventTime.right<=parity.eventInfo.left+1,'Appointment time must not overlap title');
+   assert(parity.eventInfo.right<=parity.eventAction.left+1,'Appointment title must not overlap options');
    assert(parity.firstTarget.right<=parity.date.left+1,'Task checkbox must not overlap date');
    assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
    assert.notEqual(parity.taskSurface,'rgba(0, 0, 0, 0)','Task card retains a visible surface');
-   assert.equal(parity.eventSurface,'rgba(0, 0, 0, 0)','Compact appointment inherits its glass surface');
+   assert.equal(parity.eventSurface,parity.taskSurface,'Appointment and task share the same card material');
    assert.notEqual(parity.taskRadius,'0px','Task retains rounded corners');
    assert.notEqual(parity.eventRadius,'0px','Appointment retains rounded corners');
    assert.equal(parity.label,'⋮');
