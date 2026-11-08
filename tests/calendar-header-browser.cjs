@@ -83,7 +83,7 @@ const reports=[];
    assert.equal(await marker('2026-11-02').innerText(),'N');
    assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Nachtdienst\s+22:00–06:00\s+\(volgende dag\)/);
    await calendar.locator('[data-gcal-day="2026-11-04"]').click();
-   assert.equal(await marker('2026-11-04').innerText(),'V');
+   assert.equal(await marker('2026-11-04').innerText(),'');
    assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Vrije dag/);
    assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Nachtdienst van gisteren tot 06:00/);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,'Agenda has no horizontal overflow');

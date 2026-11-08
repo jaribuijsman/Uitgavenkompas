@@ -82,7 +82,7 @@ async function inspect(page,screen,width,report){
   assert.equal(hit.pointTarget,'addTransaction','Add transaction is not topmost clickable target: '+JSON.stringify(hit));
   await page.locator('#addTransaction').click();await inspect(page,'transaction-dialog',width,report);await page.locator('#txDescription').focus();await page.keyboard.press('Escape');await page.locator('#modalBackdrop.open').waitFor({state:'hidden'});
   await nav(page,'life','tasks');await page.locator('#lifeAdd').click();await inspect(page,'task-dialog',width,report);await page.locator('#lifeTaskTitle').focus();await page.keyboard.press('Escape');await page.locator('#lifeDialog').waitFor({state:'hidden'});
-  const last=page.locator('.life-task').last();await last.scrollIntoViewIfNeeded();assert(await last.isVisible());await page.evaluate(()=>scrollTo(0,0));
+  const lastId=await page.locator('.life-task').last().getAttribute('data-order-id');await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="'+lastId+'"]');const last=page.locator('.life-task').last();await last.scrollIntoViewIfNeeded();assert(await last.isVisible());await page.evaluate(()=>scrollTo(0,0));
   assert.deepEqual(await stored(),before,'Read-only rendering and scrolling preserve Life/Finance/PIN');await ctx.close();console.log('PASS glass rendering '+width);
  }
  assert.deepEqual(errors,[]);

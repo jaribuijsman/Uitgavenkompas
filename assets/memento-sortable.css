@@ -1,5 +1,6 @@
 /* Scoped drag handles in Leven; finance layout remains unchanged. */
 #lifeApp .memento-sort-handle,#fitnessDialog .memento-sort-handle{box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;display:grid;place-items:center;cursor:grab;touch-action:none;border:0;border-radius:10px;background:transparent;color:#b9d5c1;font-size:23px;line-height:1;font-weight:700}
+#lifeApp .life-task>.memento-sort-handle{touch-action:pan-y}
 #lifeApp .memento-sort-handle:focus-visible,#fitnessDialog .memento-sort-handle:focus-visible{outline:2px solid #dcefe0;outline-offset:2px}
 #lifeApp .memento-sort-chosen,#lifeApp .memento-sort-ghost,#fitnessDialog .memento-sort-chosen,#fitnessDialog .memento-sort-ghost{background:#294735!important;border-color:#a5ccb3!important}
 #lifeApp .life-task:has(>.memento-sort-handle),#lifeApp .shopping-row:has(>.memento-sort-handle){position:relative}

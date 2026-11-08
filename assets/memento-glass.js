@@ -25,11 +25,6 @@
   for(const form of document.querySelectorAll('#lifeTaskForm,#txForm'))markForm(form);
   const taskProps=$('#lifeTaskForm [data-mg-task-properties]>summary');if(taskProps){const text=['lifeTaskKind','lifeTaskCategory','lifeTaskRoom','lifeTaskRepeat','lifeTaskPriority'].map(id=>$('#'+id)?.selectedOptions[0]?.textContent).filter(Boolean).join(' · ');if(taskProps.textContent!=='Eigenschappen · '+text)taskProps.textContent='Eigenschappen · '+text;}
   const today=$('#lifeApp[data-life-view=today] #lifeContent');
-  if(today&&!today.querySelector('.mg-day-head')){
-   const h=document.createElement('div');h.className='mg-day-head';
-   const title=document.createElement('h2');title.textContent='Mijn dag';h.append(title);
-   today.prepend(h);
-  }
   const hero=today?.querySelector('.flow-hero');if(hero&&!hero.closest('.mg-fold'))fold([hero],'Gedachte voor vandaag');
   const tasks=$('#lifeApp[data-life-view=tasks] #lifeContent');
   if(tasks){

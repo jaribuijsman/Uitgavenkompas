@@ -1135,9 +1135,9 @@ const update=()=>{mount()};
 window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.classList.contains('visible')||(document.body.dataset.compassArea==='life'&&document.getElementById('lifeApp')?.dataset.lifeView==='today'))refresh(true)});window.addEventListener('focus',update);document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});setInterval(update,60000);mount();
 })();
 </script>
-<link rel="stylesheet" href="./assets/memento-sortable.css?v=20261101-sortable-ux-v2">
+<link rel="stylesheet" href="./assets/memento-sortable.css?v=20261108-agenda-plan-v1">
 <script src="./assets/vendor/sortable-1.15.7.min.js?v=20261101-sortable-v1"></script>
-<script src="./assets/memento-sortable-ui.js?v=20261102-sortable-day-longpress-v1"></script>
+<script src="./assets/memento-sortable-ui.js?v=20261108-agenda-plan-v1"></script>
 <link rel="stylesheet" href="./assets/memento-fitness.css?v=20261028-master-p4">
 <script src="./assets/memento-dictation.js?v=20261029-unified-dictation-v1"></script>
 <link rel="stylesheet" href="./assets/memento-dictation.css?v=20261029-unified-dictation-v1">
@@ -1155,7 +1155,7 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 <link rel="stylesheet" href="./assets/memento-knowledge-portal.css?v=20261105-portal-pixelart-v1">
 <script src="./assets/memento-knowledge-portal.js?v=20261106-notion-intent-v1"></script>
 <script src="./assets/memento-knowledge.js?v=20261105-ai-hub-v1"></script>
-<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><link rel="stylesheet" href="./assets/memento-ai-hub.css?v=20261105-ai-hub-v1"><script src="./assets/memento-ai-hub-prompts.js?v=20261105-ai-hub-v1"></script><script src="./assets/memento-ai-hub.js?v=20261105-ai-hub-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261107-voorraad-v1"></script>
+<script src="./assets/memento-life-presentation.js?v=20261102-life-presentation-v1"></script><link rel="stylesheet" href="./assets/memento-ai-hub.css?v=20261105-ai-hub-v1"><script src="./assets/memento-ai-hub-prompts.js?v=20261105-ai-hub-v1"></script><script src="./assets/memento-ai-hub.js?v=20261105-ai-hub-v1"></script><script src="./assets/memento-appointment-recurrence.js?v=20261108-agenda-plan-v1"></script><script id="compassLifeScript" src="./assets/memento-life-app.js?v=20261108-agenda-plan-v1"></script>
 <script src="./assets/memento-global-search-core.js?v=20261031-global-search-v1"></script>
 <script src="./assets/memento-global-search.js?v=20261031-navigation-contract-v1"></script>
 
@@ -1182,9 +1182,6 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 #lifeApp[data-life-view="agenda"] button.memento-cal-day.is-today:not(.selected){border-color:#91cea5}
 #lifeApp[data-life-view="agenda"] button.memento-cal-day.selected{background:#b5ebc6;color:#193d28;border:1px solid #b5ebc6;font-weight:800;box-shadow:0 0 0 1px #b5ebc6}
 #lifeApp[data-life-view="agenda"] button.memento-cal-day:focus-visible{outline:2px solid #b5ebc6;outline-offset:2px}
-#lifeApp[data-life-view="agenda"] button.memento-cal-day .memento-cal-dots{width:4px;height:4px;border-radius:50%;background:transparent}
-#lifeApp[data-life-view="agenda"] button.memento-cal-day.has-gcal-event .memento-cal-dots{background:#b5ebc6}
-#lifeApp[data-life-view="agenda"] button.memento-cal-day.selected.has-gcal-event .memento-cal-dots{background:#244b30}
 #lifeApp[data-life-view="agenda"] button.memento-cal-day.has-gcal-event{box-shadow:none}
 #memento-gcal-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:17px 0 10px}
 #memento-gcal-tools .gcal-btn{background:#254b35;border:1px solid #567e62;color:#e9f6eb;padding:9px 11px;border-radius:11px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;min-height:40px}
@@ -1243,7 +1240,7 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
   return iso>=start&&iso<=end;
  }
  const sameDay=(e,iso)=>spans(e,iso);
- const myDay=(iso)=>local().filter(e=>e.date===iso);
+ const myDay=(iso)=>window.MementoLife?.getLocalAppointmentsForDay?.(iso)||local().filter(e=>e.date===iso);
  function setDefaultDay(y,m){if(selectedDay&&sameMonth(selectedDay,y,m))return;const d=localIso(new Date());selectedDay=sameMonth(d,y,m)?d:y+'-'+String(m+1).padStart(2,'0')+'-01'}
  function paintControls(){
  const el=$('memento-gcal-tools');if(!el||!active())return;
@@ -1261,12 +1258,12 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
   const onDay=iso=>available?events.filter(e=>sameDay(e,iso)):[];
   const rows=life?.appointmentItemsForDay?.(selectedDay,onDay(selectedDay))||[];
   document.querySelectorAll('[data-gcal-day]').forEach(d=>{
-   const items=life?.appointmentItemsForDay?.(d.dataset.gcalDay,onDay(d.dataset.gcalDay))||[],count=items.length+(window.MementoFitnessBridge?.bookingsForDay(d.dataset.gcalDay).length||0);
+   const items=life?.appointmentItemsForDay?.(d.dataset.gcalDay,onDay(d.dataset.gcalDay))||[],count=items.filter(item=>!item.carried).length;
    // One-time, accessible duty marker from the existing roster; never add an appointment.
    const duty=window.MementoFitnessCore?.duty?.(d.dataset.gcalDay);
    if(duty&&!d.dataset.dutyCode){
     d.dataset.dutyCode=duty.code;
-    d.insertAdjacentHTML('beforeend','<span class="memento-duty-code" aria-hidden="true">'+esc(duty.code)+'</span>');
+    d.insertAdjacentHTML('beforeend','<span class="memento-duty-code" aria-hidden="true">'+esc(duty.code==='V'?'':duty.code)+'</span>');
     d.setAttribute('aria-label',d.getAttribute('aria-label')+' · '+duty.label);
    }
    d.classList.toggle('has-gcal-event',count>0);d.classList.toggle('selected',selectedDay===d.dataset.gcalDay);
@@ -1839,14 +1836,14 @@ body[data-compass-area="finance"] .app #view-transactions .tx-list-empty b{color
 </script>
 
 <link rel="stylesheet" href="./assets/memento-tokens.css?v=20261107-superdark-v4">
-<link rel="stylesheet" href="./assets/memento-ui.css?v=20261107-superdark-v4">
+<link rel="stylesheet" href="./assets/memento-ui.css?v=20261108-agenda-plan-v1">
 <script src="./assets/memento-ui.js?v=20261029-visual-repair-v1"></script>
 <script src="./assets/memento-finance-dashboard-v9.js?v=20261101-salary-period-v1"></script>
 <link rel="stylesheet" href="./assets/memento-glass.css?v=20261107-card-themes-v1">
-<link rel="stylesheet" href="./assets/memento-layout.css?v=20261107-card-themes-v1">
+<link rel="stylesheet" href="./assets/memento-layout.css?v=20261108-agenda-plan-v1">
 <script src="./assets/memento-disclosure.js?v=20261029-recovery-v2"></script>
-<script src="./assets/memento-layout.js?v=20261102-material-settings-v1"></script>
-<script src="./assets/memento-glass.js?v=20261102-material-settings-v1"></script>
+<script src="./assets/memento-layout.js?v=20261108-agenda-plan-v1"></script>
+<script src="./assets/memento-glass.js?v=20261108-agenda-plan-v1"></script>
 <link rel="stylesheet" href="./assets/memento-assistant.css?v=20261030-life-assistant-v1">
 <script src="./assets/memento-assistant-core.js?v=20261030-life-assistant-v1"></script>
 <script src="./assets/memento-assistant.js?v=20261030-life-assistant-v1"></script>

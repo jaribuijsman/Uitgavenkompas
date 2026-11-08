@@ -38,7 +38,7 @@ async function checkbox(page,selector){
   assert.equal(await page.locator('#lifeTaskResults .life-task').count(),count);assert.equal(await page.locator('.memento-task-overview-menu').getAttribute('open'),null);assert.equal(await page.locator('#lifeQuickTitle').isVisible(),false);
   assert.equal(await page.locator('[data-mg-save-task-filter]').isVisible(),false);assert.equal(await page.locator('#mgTaskFilterChips').isVisible(),false);
   const row={width,count};
-  if(count){
+  if(count){await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="recovery-0"]');
    row.checkbox=await checkbox(page,'.life-complete');const title=await page.locator('.life-task-title').first().boundingBox(),control=row.checkbox.rect;assert(control.right<=title.x+1,'Checkbox does not overlap title');
    row.firstTask=await page.locator('.life-task').first().boundingBox();if(width<800){assert(row.firstTask.y<452,'First task moves above baseline y452');assert(row.firstTask.y+row.firstTask.height<=(await page.locator('#mementoQuickNav').boundingBox()).y,'Whole first task visible');}
    await page.locator('.life-task-menu>summary').first().click();await settle(page);
@@ -46,12 +46,12 @@ async function checkbox(page,selector){
    assert(await menu.locator('button').first().evaluate(n=>{const r=n.getBoundingClientRect();return n.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),'Menu has an unobstructed hit target');
    await page.screenshot({path:path.join(out,width+'-'+count+'-menu.jpg'),type:'jpeg',animations:'disabled'});await page.locator('.life-task-menu[open]>summary').click();
    await page.locator('[data-life-complete="recovery-0"]').focus();await page.keyboard.press('Space');assert((await stored()).tasks.find(t=>t.id==='recovery-0').done);
-   await page.locator('[data-life-task-tab=done]').click();await page.locator('[data-life-complete="recovery-0"]').click();await page.locator('[data-life-task-tab=open]').click();assert.equal((await stored()).tasks.find(t=>t.id==='recovery-0').done,false);
+   await page.locator('[data-life-task-tab=done]').click();await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="recovery-0"]');await page.locator('[data-life-complete="recovery-0"]').click();await page.locator('[data-life-task-tab=open]').click();assert.equal((await stored()).tasks.find(t=>t.id==='recovery-0').done,false);
    await page.locator('.memento-filter-drawer>summary').click();await page.locator('#lifeTaskScopeFilter').selectOption('household');assert.equal(await page.locator('.life-task').count(),1);
    await page.locator('[data-mg-save-task-filter]').click();await page.locator('#mgTaskFilterName').fill('Fictieve selectie');await page.locator('[form=mgSavedTaskFilterForm]').click();const preset=(await stored()).uiPreferences.taskFilters.at(-1);assert(preset);
    await page.locator('[data-mg-clear-task=taskScope]').click();assert.equal(await page.locator('.life-task').count(),count);await reveal(page,'[data-mg-load-task-filter="'+preset.id+'"]');await page.locator('[data-mg-load-task-filter="'+preset.id+'"]').click();assert.equal(await page.locator('.life-task').count(),1);
    await page.locator('[data-mg-clear-task=taskScope]').click();if(await page.locator('.memento-filter-drawer').getAttribute('open')!==null)await page.locator('.memento-filter-drawer>summary').click();assert.equal(await page.locator('[data-mg-save-task-filter]').isVisible(),false);
-   if(count===43){await page.locator('#lifeTaskResults .life-task').last().scrollIntoViewIfNeeded();assert(await page.locator('#lifeTaskResults .life-task').last().isVisible());await page.evaluate(()=>scrollTo(0,0));}
+   if(count===43){await require('./helpers/expand-task-group.cjs')(page,'[data-order-id="recovery-42"]');await page.locator('#lifeTaskResults .life-task').last().scrollIntoViewIfNeeded();assert(await page.locator('#lifeTaskResults .life-task').last().isVisible());await page.evaluate(()=>scrollTo(0,0));}
    for(const t of before.tasks.slice(1))assert.deepEqual((await stored()).tasks.find(x=>x.id===t.id),t);
   }
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),width);await page.screenshot({path:path.join(out,width+'-'+count+'-tasks.jpg'),type:'jpeg',animations:'disabled'});

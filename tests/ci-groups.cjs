@@ -6,7 +6,7 @@ const domain=process.argv[2],tier=process.argv[3]||"high";
 const suitesByGroup={
  "interface-layout":["layout-completion-browser","visual-layout-browser","patches-001-002-004-browser","day-swipe-browser"],
  // The legacy masterplan browser journey depends on removed V1 Notes navigation; its finance/day contracts remain in app-review and day-v3.
- "interface-feature":["memento-start-browser","calendar-header-browser","day-v3-browser"],
+ "interface-feature":["memento-start-browser","calendar-header-browser","agenda-plan-browser","day-v3-browser"],
  "interface-acceptance":["release-acceptance-browser"],
  // Full-matrix Kenniscentrum journey belongs to life-full; narrow changes retain life-knowledge.
  "interface-visual":["glass-rendering-browser"],
