@@ -69,6 +69,30 @@ const reports=[];
    assert.equal(await day.getByRole('button',{name:'Google-agenda verbinden',exact:true}).count(),1);
    await page.setViewportSize({width,height:430});await header.scrollIntoViewIfNeeded();assert((await measure()).scrollWidth<=width+1);
    await page.evaluate(()=>document.documentElement.style.fontSize='20px');assert((await measure()).scrollWidth<=width+1);
+   await page.evaluate(()=>document.documentElement.style.fontSize='');
+   const appointmentsBefore=JSON.stringify((await stored()).life.appointments);
+   if(width>800)await page.locator('#lifeNavigation [data-life-view="agenda"]').click();
+   else{await page.locator('[data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:agenda"]').click();}
+   const calendar=page.locator('#lifeApp[data-life-view="agenda"]');
+   const marker=iso=>calendar.locator('[data-gcal-day="'+iso+'"] .memento-duty-code');
+   await calendar.locator('[data-gcal-day="2026-10-30"]').click();
+   assert.equal(await marker('2026-10-30').innerText(),'M');
+   assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Middagdienst\s+14:00–22:00/);
+   await calendar.locator('[data-memento-agenda-shift="1"]').click();
+   await calendar.locator('[data-gcal-day="2026-11-02"]').click();
+   assert.equal(await marker('2026-11-02').innerText(),'N');
+   assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Nachtdienst\s+22:00–06:00\s+\(volgende dag\)/);
+   await calendar.locator('[data-gcal-day="2026-11-04"]').click();
+   assert.equal(await marker('2026-11-04').innerText(),'V');
+   assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Vrije dag/);
+   assert.match(await calendar.locator('.memento-agenda-duty').innerText(),/Nachtdienst van gisteren tot 06:00/);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,'Agenda has no horizontal overflow');
+   assert.equal(JSON.stringify((await stored()).life.appointments),appointmentsBefore,'Roster rendering leaves appointments unchanged');
+   if(width===393){
+    await calendar.screenshot({path:path.join(out,phase,'393-agenda-roster.png'),animations:'disabled'});
+    await page.evaluate(()=>document.documentElement.dataset.mementoTheme='superdark');
+    await calendar.screenshot({path:path.join(out,phase,'393-agenda-roster-superdark.png'),animations:'disabled'});
+   }
   }
   assert.deepEqual(errors,[]);await ctx.close();
  }
