@@ -8,7 +8,7 @@ zelfstandige ontwerpvoorbeelden gelden niet als bewijs van werkende productie.
 | Afspraakkaart | Zelfde vierkoloms indeling als taken: afvinken, tijdvak, titel/details met optionele notitieknop, driepuntjes. Alle acties minimaal 44×44 px, ook op 360 px. |
 | Takenkaart | Bestaande vier kolommen: checkbox, tijd/datum, inhoud, driepuntjes. |
 | Afspraakgroepen | Gepland eerst, daarna Nog open met aantal en oorspronkelijke datum. Lege groepen verborgen; bestaande chronologische volgorde binnen iedere groep behouden. |
-| Notitie | Bij afspraken tussen titel en afvinken; bij taken bestaande positie. Volledige tekst bereikbaar zonder overflow. |
+| Notitie | Bij afspraken en taken binnen de detailskolom, met een eigen 44×44-px bediening. Volledige tekst bereikbaar zonder overflow. |
 | Dagkeuze | Eén dag per scherm; menu/notitie openen verandert scrollbegrenzing of positie niet. |
 | V2-editor | Titel met echte microfoon op één rij; tijden naast elkaar; checkbox 23 px in 44 px label. |
 | Beheer | Verwijderen onder Meer opties, met bevestiging en bestaande undo. Footer: Annuleren en Opslaan. |
