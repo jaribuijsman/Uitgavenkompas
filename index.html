@@ -1199,6 +1199,11 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
 #lifeApp .memento-gcal-day-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 #lifeApp .memento-gcal-day-head h3{color:#eff8f1;font-size:15px;font-weight:800;margin:0}
 #lifeApp #memento-gcal-count{font-size:11px;color:#a9ceb2}
+/* The roster is read-only context, not another appointment card. */
+#lifeApp .memento-agenda-duty{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;padding:9px 11px;border:1px solid var(--mg-line);border-radius:12px;background:var(--mg-settings-list);color:var(--mg-ink);font-size:12px;line-height:1.45}
+#lifeApp .memento-agenda-duty-name{font-weight:700}
+#lifeApp .memento-agenda-duty-time{color:var(--mg-muted);font-variant-numeric:tabular-nums}
+#lifeApp .memento-agenda-duty-time small,#lifeApp .memento-agenda-duty-carry{font-size:11px;color:var(--mg-muted)}
 #memento-gcal-events{display:grid;gap:8px}
 #memento-gcal-events .gcal-event{display:flex;align-items:center;gap:12px;padding:12px 13px;background:#203c2d;border:1px solid #385a41;border-radius:12px}
 #memento-gcal-events .gcal-event:before{content:'';width:3px;height:39px;flex:none;border-radius:5px;background:#ade9c1}
@@ -1257,6 +1262,13 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
   const rows=life?.appointmentItemsForDay?.(selectedDay,onDay(selectedDay))||[];
   document.querySelectorAll('[data-gcal-day]').forEach(d=>{
    const items=life?.appointmentItemsForDay?.(d.dataset.gcalDay,onDay(d.dataset.gcalDay))||[],count=items.length+(window.MementoFitnessBridge?.bookingsForDay(d.dataset.gcalDay).length||0);
+   // One-time, accessible duty marker from the existing roster; never add an appointment.
+   const duty=window.MementoFitnessCore?.duty?.(d.dataset.gcalDay);
+   if(duty&&!d.dataset.dutyCode){
+    d.dataset.dutyCode=duty.code;
+    d.insertAdjacentHTML('beforeend','<span class="memento-duty-code" aria-hidden="true">'+esc(duty.code)+'</span>');
+    d.setAttribute('aria-label',d.getAttribute('aria-label')+' · '+duty.label);
+   }
    d.classList.toggle('has-gcal-event',count>0);d.classList.toggle('selected',selectedDay===d.dataset.gcalDay);
    d.setAttribute('aria-pressed',String(selectedDay===d.dataset.gcalDay));d.title=count?count+(count===1?' afspraak':' afspraken'):'';
   });
@@ -1268,7 +1280,11 @@ window.addEventListener('online',()=>{if(document.getElementById('pinLock')?.cla
   if(!valid()&&!rows.length&&!message)result+='<p class="gcal-message">Geen lokale afspraken. Google Agenda is niet verbonden.</p>';
   else if(!available)result+='<p class="gcal-message">Google-afspraken ophalen…</p>';
   else if(!rows.length&&!message)result='<p class="gcal-message">Geen afspraken op deze dag.</p>';
-  el.innerHTML=result+(window.MementoFitnessBridge?.dayHTML(selectedDay)||'');
+  const shift=window.MementoFitnessCore?.duty?.(selectedDay);
+  const dutyRow=shift?'<div class="memento-agenda-duty" role="note" aria-label="Ploegendienst"><span class="memento-agenda-duty-name">'+esc(shift.label)+'</span>'+
+   (shift.code==='V'?'':'<span class="memento-agenda-duty-time">'+esc(shift.time)+(shift.code==='N'?' <small>(volgende dag)</small>':'')+'</span>')+
+   (shift.carryUntil?'<span class="memento-agenda-duty-carry">Nachtdienst van gisteren tot 06:00</span>':'')+'</div>':'';
+  el.innerHTML=dutyRow+result+(window.MementoFitnessBridge?.dayHTML(selectedDay)||'');
  }
  async function listGoogleEvents(start,end){
   const q=new URLSearchParams({timeMin:start.toISOString(),timeMax:end.toISOString(),singleEvents:'true',orderBy:'startTime',maxResults:'250'});
