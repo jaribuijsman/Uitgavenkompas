@@ -70,3 +70,26 @@ body.memento-start-open{overflow:hidden!important}
 #mementoStart .ms-thought .flow-citation a{display:inline-block;min-height:44px;padding:10px 0}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#mementoStart .ms-glass,#mementoStart .ms-quickbutton{background:#15382dec}}
 @media(prefers-reduced-motion:reduce){#mementoStart *,#mementoStart *::before,#mementoStart *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Start weather slides: reuse the existing ms-weather/ms-glass material. */
+#mementoStart .ms-weather-slider{display:flex;align-items:stretch;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+#mementoStart .ms-weather-slider::-webkit-scrollbar{display:none}
+#mementoStart .ms-weather-slider>.ms-weather{flex:0 0 100%;min-width:0;width:100%;scroll-snap-align:start;scroll-snap-stop:always}
+#mementoStart .ms-weather-pages{display:flex;justify-content:center;align-items:center;gap:2px;width:100%;height:44px}
+#mementoStart .ms-weather-pages button{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:transparent;padding:0}
+#mementoStart .ms-weather-pages button span{display:block;width:7px;height:7px;border-radius:50%;background:#d3dfca70;transition:background .18s,transform .18s}
+#mementoStart .ms-weather-pages button[aria-pressed="true"] span{background:#f0dfa9;transform:scale(1.28)}
+#mementoStart .ms-weather-forecast{display:flex;flex-direction:column;gap:6px;padding-bottom:4px}
+#mementoStart .ms-forecast-heading{font-size:17px;font-weight:700;color:#f4f6e9;line-height:1.2}
+#mementoStart .ms-forecast-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-width:0;flex:1;align-items:stretch}
+#mementoStart .ms-forecast-day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;padding:8px 2px;border-radius:11px;background:#b8d7a60b;border:1px solid #d3ddbe26;text-align:center}
+#mementoStart .ms-forecast-day time{font-size:11px;line-height:1.2;color:#e7d8af;white-space:nowrap}
+#mementoStart .ms-forecast-icon{font-size:22px;line-height:1.25;color:#eeda9e}
+#mementoStart .ms-forecast-day strong{font-size:14px;color:#f2f7ec;line-height:1.2;font-variant-numeric:tabular-nums}
+#mementoStart .ms-forecast-day small{font-size:12px;color:#bfcfc2;line-height:1.2;font-variant-numeric:tabular-nums}
+#mementoStart .ms-forecast-rain{display:flex;align-items:center;justify-content:center;gap:1px;white-space:nowrap;font-size:11px;color:#d8e8ee}
+#mementoStart .ms-forecast-rain span{font-size:11px}
+#mementoStart .ms-forecast-caption{font-size:10px;line-height:1.35;color:#cbdcca}
+#mementoStart .ms-forecast-source{display:flex;align-items:center;min-height:44px;border-top:1px solid #d3ddbe30;font-size:11px;color:#c6dac7}
+#mementoStart .ms-forecast-empty{grid-column:1/-1;align-self:center;padding:12px 8px;color:#dcebd1;font-size:12px;text-align:center}
+@media(prefers-reduced-motion:reduce){#mementoStart .ms-weather-slider{scroll-behavior:auto}#mementoStart .ms-weather-pages button span{transition:none}}
