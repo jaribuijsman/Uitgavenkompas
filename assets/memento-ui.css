@@ -404,27 +404,61 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 }
 @media(prefers-reduced-motion:reduce){#lifeApp[data-life-view="today"] .memento-day-v3-bar *,#lifeApp[data-life-view="today"] .memento-v3-card *{scroll-behavior:auto;transition:none}}
 
-/* Dagritme: one Life store, with daily checklist instances and optional task slots. */
-#lifeApp .dr-manager{display:grid;gap:14px;padding-bottom:30px}
+/* Checklisten A + C: compact list and focused execution. Shared theme tokens own colours. */
+#lifeApp[data-life-view="checklists"] #lifeContent{padding-bottom:calc(105px + env(safe-area-inset-bottom,0px))}
+#lifeApp .dr-manager{display:grid;gap:16px;padding-bottom:30px}
 #lifeApp .dr-manager-head{display:flex;flex-wrap:wrap;gap:8px}
-#lifeApp .dr-group{display:grid;gap:8px}
-#lifeApp .dr-group h2{font-size:18px;margin:9px 0 0;color:var(--m-ink)}
-#lifeApp .dr-checklist{padding:14px;border:1px solid var(--m-line);border-radius:16px;background:var(--m-surface,#f4f7f1);color:var(--m-ink)}
-#lifeApp .dr-checklist-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
-#lifeApp .dr-checklist-head small{white-space:nowrap}
-#lifeApp .dr-steps{display:grid;gap:2px;margin:9px 0}
-#lifeApp .dr-step{display:flex;align-items:center;gap:8px;min-height:48px;cursor:pointer;overflow-wrap:anywhere}
-#lifeApp .dr-step input{width:23px;height:23px;margin:10px;accent-color:#477f5d;flex:none}
-#lifeApp .dr-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-#lifeApp .dr-actions button{min-height:44px;border:1px solid #acc4a9;border-radius:10px;background:#e7efe4;color:#254d37;padding:6px 12px;font:inherit}
-#lifeApp .dr-actions .dr-delete{color:#963b40}
-#lifeApp .dr-marker-host{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 24px),700px);transform:translateX(-50%);z-index:5}
-#lifeApp[data-life-view="today"] #lifeContent{padding-bottom:70px}
-@media(min-width:801px){#lifeApp .dr-marker-host{bottom:16px}}
-#lifeApp .dr-marker{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--mg-checklist-bg,#214c37);color:var(--mg-checklist-ink,#f7f7e9);border-radius:13px;padding:5px 7px 5px 14px;box-shadow:inset 0 0 0 1px var(--mg-checklist-border,transparent),0 6px 15px #092c1f66}
-#lifeApp .dr-marker button{min-height:44px;border:0;border-radius:10px;background:var(--mg-checklist-button-bg,#d9e8cc);color:var(--mg-checklist-button-ink,#214c37);font-weight:700;padding:8px 12px}
+#lifeApp .dr-intro{margin:0;color:var(--m-muted);font-size:14px;line-height:1.5}
+#lifeApp .dr-group{display:grid;gap:9px}
+#lifeApp .dr-group h2{display:flex;gap:9px;align-items:baseline;margin:8px 0 3px;font-size:17px;color:var(--m-ink)}
+#lifeApp .dr-group h2 small{font-size:12px;color:var(--m-muted);font-weight:500}
+#lifeApp .dr-list-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center;padding:15px;border:1px solid var(--m-line);border-radius:17px;background:var(--m-surface);color:var(--m-ink);min-width:0}
+#lifeApp .dr-list-info{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
+#lifeApp .dr-list-info strong{font-size:16px;font-weight:700;line-height:1.35}
+#lifeApp .dr-list-info small,#lifeApp .dr-list-meta{color:var(--m-muted);font-size:12px;line-height:1.4}
+#lifeApp .dr-list-open,#lifeApp .dr-back{display:inline-grid;place-items:center;min-height:44px;min-width:44px;padding:8px 15px;border:1px solid var(--m-line);border-radius:12px;color:var(--m-ink);background:var(--m-surface-raised);font:inherit;font-size:14px;font-weight:700}
+#lifeApp .dr-progress{height:7px;border-radius:999px;background:var(--m-line);overflow:hidden}
+#lifeApp .dr-list-card>.dr-progress{grid-column:1/-1}
+#lifeApp .dr-progress>span{display:block;height:100%;border-radius:inherit;background:var(--m-sage);transition:width .16s ease}
+#lifeApp .dr-empty-small{margin:0;padding:14px;color:var(--m-muted);font-size:14px;line-height:1.5}
+#lifeApp .dr-focus{display:grid;gap:16px;min-width:0;padding-bottom:12px}
+#lifeApp .dr-focus-top{display:flex;align-items:flex-start;gap:12px;min-width:0}
+#lifeApp .dr-focus-top>div{display:grid;gap:4px;min-width:0}
+#lifeApp .dr-focus-top small{color:var(--mg-gold);font-size:11px;font-weight:700;letter-spacing:.09em}
+#lifeApp .dr-focus-top h2{margin:0;font-size:22px;color:var(--m-ink);line-height:1.25;overflow-wrap:anywhere}
+#lifeApp .dr-focus-top span{font-size:12px;color:var(--m-muted)}
+#lifeApp .dr-focus-progress{display:grid;gap:10px;padding:15px;border:1px solid var(--m-line);border-radius:16px;background:var(--m-surface)}
+#lifeApp .dr-focus-progress>div:first-child{display:flex;justify-content:space-between;gap:10px;color:var(--m-ink);font-size:13px}
+#lifeApp .dr-focus-progress>div:first-child span{color:var(--m-muted)}
+#lifeApp .dr-focus-steps{display:grid;gap:0;padding:5px 12px;border:1px solid var(--m-line);border-radius:16px;background:var(--m-surface);min-width:0}
+#lifeApp .dr-focus-step{display:flex;gap:10px;align-items:center;min-height:54px;border-bottom:1px solid var(--m-line);cursor:pointer;color:var(--m-ink);overflow-wrap:anywhere}
+#lifeApp .dr-focus-step:last-child{border-bottom:0}
+#lifeApp .dr-focus-step input{width:24px;height:24px;margin:10px;accent-color:#a7cda4;flex:0 0 24px}
+#lifeApp .dr-focus-step span{min-width:0;font-size:15px;line-height:1.45}
+#lifeApp .dr-done-steps{border:1px solid var(--m-line);border-radius:14px;background:var(--m-surface);overflow:hidden}
+#lifeApp .dr-done-steps summary,#lifeApp .dr-history summary{display:flex;align-items:center;min-height:48px;padding:9px 14px;color:var(--m-muted);font-size:13px;cursor:pointer}
+#lifeApp .dr-done-steps>div{padding:0 12px}
+#lifeApp .dr-done-steps .dr-focus-step span{text-decoration:line-through;color:var(--m-muted)}
+#lifeApp .dr-finished{margin:0;padding:12px 14px;border-radius:13px;background:var(--m-surface-raised);color:var(--m-ink);border:1px solid var(--m-line)}
+#lifeApp .dr-focus-actions{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1px solid var(--m-line);border-radius:14px;background:var(--m-surface);z-index:4}
+#lifeApp .dr-focus-actions .life-btn-primary{flex:1;min-width:185px}
+#lifeApp .dr-focus-actions .life-btn:disabled{opacity:.47;cursor:not-allowed}
+#lifeApp .dr-focus-manage{display:flex;gap:8px;flex-wrap:wrap}
+#lifeApp .dr-focus-manage .life-btn{min-height:44px}
+#lifeApp .dr-focus-manage .dr-danger{color:var(--m-danger)}
+#lifeApp .dr-history{border-top:1px solid var(--m-line)}
+#lifeApp .dr-history ul{margin:0;padding:6px 18px 12px 32px;color:var(--m-muted);font-size:13px}
+#lifeApp .dr-actions{display:flex;gap:8px;flex-wrap:wrap;grid-column:1/-1}
+#lifeApp .dr-actions button{min-height:44px;border:1px solid var(--m-line);border-radius:10px;background:var(--m-surface-raised);color:var(--m-ink);padding:8px 12px;font:inherit}
+#lifeApp .dr-actions .dr-delete{color:var(--m-danger)}
+#lifeApp .dr-edit-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 10px}
+#lifeDialog .dr-edit-step{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:8px 0}
+#lifeDialog .dr-edit-step>input{flex:1 1 190px;min-width:0;min-height:48px;border:1px solid var(--m-line);border-radius:11px;padding:10px 12px;color:var(--m-ink);background:var(--m-surface)}
+#lifeDialog .dr-edit-controls{display:flex;gap:5px}
+#lifeDialog .dr-edit-controls button{display:grid;place-items:center;min-height:44px;min-width:44px;background:var(--m-surface-raised);border:1px solid var(--m-line);border-radius:10px;color:var(--m-ink);font:inherit}
+#lifeDialog .dr-edit-controls button:disabled{opacity:.4}
+@media(min-width:801px){#lifeApp .dr-focus-actions{bottom:12px}}
+@media(prefers-reduced-motion:reduce){#lifeApp .dr-progress>span{transition:none}}
 #lifeApp .dr-timeline{display:grid;gap:8px;border-left:2px solid #a1bda2;margin:8px 0 14px 9px;padding-left:13px}
 #lifeApp .dr-timeline:empty{display:none}
-#lifeApp .dr-pin{display:flex;align-items:center;gap:8px;min-height:48px}
-#lifeApp .dr-pin input{width:23px;height:23px}
 
