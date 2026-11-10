@@ -1038,9 +1038,9 @@ function completeChecklist(id){
  const c=activeChecklists().find(c=>c.id===id);if(!c)return;
  const p=checklistStats(c),completed=(c.runHistory||[]).some(run=>run.day===p.day);
  if(!p.total||p.checked!==p.total||(completed&&c.repeat==='daily'))return;
- const at=new Date().toISOString(),snapshot=c.steps.map(step=>step.id);
+ const at=new Date().toISOString(),snapshot=c.steps.map(step=>step.id),previousOpen=checklistOpenId;
  checklistOpenId='';
- mutate(()=>{c.runHistory||=[];c.runHistory.push({id:uid(),day:p.day,completedAt:at,stepIds:snapshot});if(c.repeat!=='daily')c.days[p.day]=[]},'Checklist afgerond. Uitvoering bewaard.');
+ if(!mutate(()=>{c.runHistory||=[];c.runHistory.push({id:uid(),day:p.day,completedAt:at,stepIds:snapshot});if(c.repeat!=='daily')c.days[p.day]=[]},'Checklist afgerond. Uitvoering bewaard.'))checklistOpenId=previousOpen;
 }
 function resetChecklist(id){
  const c=activeChecklists().find(c=>c.id===id);if(!c)return;
@@ -1077,7 +1077,7 @@ function renderToday(){
   '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+esc(dayContext(dayKeys[daySlide]))+'</span></div>'+
   '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
   '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div>'+
-  '</div><div class="dr-marker-host">'+checklistMarker()+'</div>';
+  '</div>';
  window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
   activateLifeSortables();
  // Panel height changes with completion disclosures, font loading and viewport width.
@@ -1565,7 +1565,7 @@ function render(){
  dayTrackObserver?.disconnect();dayTrackObserver=null;
  renderNav();const label=views.find(x=>x[0]===view)[2];$('lifeTitle').textContent=label;$('lifeCrumb').textContent='Leven / '+label;
  const descriptions={};
- $('lifeSubtitle').textContent=descriptions[view]||'';$('lifeSubtitle').hidden=!descriptions[view];root.dataset.lifeView=view;const add=$('lifeAdd');add.hidden=['agenda','backup','today','groceries','fitness','notes'].includes(view);add.textContent=view==='groceries'?'＋ Product':view==='wishes'?'＋ Aankoopwens':view==='notes'?'＋ Notitie':'＋ Nieuwe taak';
+ $('lifeSubtitle').textContent=descriptions[view]||'';$('lifeSubtitle').hidden=!descriptions[view];root.dataset.lifeView=view;const add=$('lifeAdd');add.hidden=['agenda','backup','today','groceries','fitness','notes','checklists'].includes(view);add.textContent=view==='groceries'?'＋ Product':view==='wishes'?'＋ Aankoopwens':view==='notes'?'＋ Notitie':'＋ Nieuwe taak';
  if(view==='fitness'){if(window.MementoFitness){window.MementoFitness.mount(content,window.MementoFitnessBridge)}else{content.innerHTML='<div class="life-panel"><p>Fitness kon niet worden geladen. Vernieuw de app zodra je internet hebt.</p></div>'}return}
  if(view==='today'){renderToday();window.MementoGlobalSearch?.mount();return}
  if(view==='checklists'){renderChecklists();return}
@@ -1752,11 +1752,15 @@ root.addEventListener('click',e=>{
  const section=summary?.parentElement;
  if(section?.matches?.('.memento-task-category')){const id=section.dataset.taskGroup;if(section.open)expandedTaskCategories.delete(id);else expandedTaskCategories.add(id);}
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.drOpen){checklistOpenId=d.drOpen;checklistTrash=false;renderChecklists();window.scrollTo(0,0);return}
+ if(d.drBack!==undefined){checklistOpenId='';renderChecklists();return}
+ if(d.drComplete){completeChecklist(d.drComplete);return}
+ if(d.drReset){resetChecklist(d.drReset);return}
  if(d.drNew!==undefined){editChecklist();return}
  if(d.drEdit){editChecklist(d.drEdit);return}
- if(d.drTrash!==undefined){checklistTrash=!checklistTrash;renderChecklists();return}
- if(d.drDuplicate){const c=state.checklists.find(x=>x.id===d.drDuplicate);if(c)mutate(()=>{state.checklists.push({...clone(c),id:uid(),title:c.title+' (kopie)',days:{},deletedAt:'',steps:c.steps.map(s=>({...s,id:uid()}))})},'Checklist gekopieerd.');return}
- if(d.drDelete){const c=state.checklists.find(x=>x.id===d.drDelete);if(c&&confirm('Checklist naar de prullenbak verplaatsen?'))mutate(()=>{c.deletedAt=new Date().toISOString()},'Checklist naar de prullenbak verplaatst.',true);return}
+ if(d.drTrash!==undefined){checklistTrash=!checklistTrash;checklistOpenId='';renderChecklists();return}
+ if(d.drDuplicate){const c=state.checklists.find(x=>x.id===d.drDuplicate);if(c)mutate(()=>{state.checklists.push({...clone(c),id:uid(),title:c.title+' (kopie)',days:{},runHistory:[],deletedAt:'',steps:c.steps.map(s=>({...s,id:uid()}))})},'Checklist gekopieerd.');return}
+ if(d.drDelete){const c=state.checklists.find(x=>x.id===d.drDelete);if(c&&confirm('Checklist naar de prullenbak verplaatsen?'))mutate(()=>{c.deletedAt=new Date().toISOString();checklistOpenId=''},'Checklist naar de prullenbak verplaatst.',true);return}
  if(d.drRestore){const c=state.checklists.find(x=>x.id===d.drRestore);if(c)mutate(()=>{c.deletedAt=''},'Checklist hersteld.',true);return}
  if(d.drPurge){const c=state.checklists.find(x=>x.id===d.drPurge);if(c&&confirm('Checklist en alle afvinkgeschiedenis definitief verwijderen?'))mutate(()=>{state.checklists=state.checklists.filter(x=>x.id!==c.id)},'Checklist definitief verwijderd.');return}
  if(d.drPlan){planTask(d.drPlan);return}
@@ -1840,6 +1844,15 @@ root.addEventListener('change',e=>{
 });
 root.addEventListener('submit',e=>{if(e.target.id==='lifeShoppingForm'){e.preventDefault();addShoppingItem();return}if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;
+ if(modal?.mode==='checklist'&&(b.dataset.drStepAdd!==undefined||b.dataset.drStepMove||b.dataset.drStepRemove)){
+  syncChecklistEditorSteps();
+  if(b.dataset.drStepAdd!==undefined)modal.checklistSteps.push({id:uid(),text:''});
+  else if(b.dataset.drStepRemove)modal.checklistSteps=modal.checklistSteps.filter(s=>s.id!==b.dataset.drStepRemove);
+  else {const i=modal.checklistSteps.findIndex(s=>s.id===b.dataset.drStepMove),j=i+Number(b.dataset.direction);if(i>=0&&j>=0&&j<modal.checklistSteps.length)[modal.checklistSteps[i],modal.checklistSteps[j]]=[modal.checklistSteps[j],modal.checklistSteps[i]];}
+  renderChecklistEditorSteps();
+  if(b.dataset.drStepAdd!==undefined){const list=$('drStepEditor').querySelectorAll('[data-dr-step-text]');list[list.length-1]?.focus();}
+  return;
+ }
  if(b.dataset.drUnplan){const t=state.tasks.find(x=>x.id===b.dataset.drUnplan);if(t&&mutate(()=>{delete t.daySlot},'Taak weer zonder tijd.'))closeDialog();return}
  if(b.hasAttribute('data-recipe-import-back')&&recipeImportDraft){recipeImportDraft.stage='input';renderRecipeImport();return}
  if(b.dataset.followupStart&&b.dataset.followupId){startFollowup(b.dataset.followupStart,b.dataset.followupId);return;}
