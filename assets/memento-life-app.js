@@ -208,6 +208,13 @@ function save(token){
 }
 function mutate(fn,text='',allowUndo=false){const before=clone(state);fn();if(!save()){state=before;return false}undo=allowUndo?before:null;render();window.MementoStart?.refreshDay?.();if(text)status(text,allowUndo);return true}
 function nextDate(base,repeat,days=4){if(repeat==='none')return '';const d=parseDate(base),day=d.getDate();if(['daily','weekly','custom'].includes(repeat)){d.setDate(day+(repeat==='daily'?1:repeat==='weekly'?7:days));return formatISO(d)}const n={monthly:1,quarterly:3,yearly:12}[repeat];d.setDate(1);d.setMonth(d.getMonth()+n);const end=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,end));return formatISO(d)}
+// A prior release could leave the last completed occurrence in the timeline.
+// Resolve that stale slot for display and conflict checks without rewriting stored data.
+function taskTimelineSlot(t){
+ const slot=t.daySlot;
+ if(slot&&t.kind==='routine'&&t.repeat!=='none'&&t.lastDone&&t.date>t.lastDone&&slot.date<=t.lastDone)return {...slot,date:t.date};
+ return slot;
+}
 function sourceLink(t){const u=safeLink(t.sourceUrl||'');return u?'<a class="life-source" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">Bron openen ↗</a>':''}
 // Navigation returns true only when the requested destination is accepted.
 // Re-selecting a pending editor must keep its current DOM and draft.
@@ -924,12 +931,12 @@ function taskSlotOverlaps(id,date,time,minutes){
  const events=appointmentItemsForDay(date,window.MementoGoogleCalendar?.getUpcomingForDay?.(date)||[]).map(appointmentInterval).filter(Boolean);
  const previousEvents=appointmentItemsForDay(previous,window.MementoGoogleCalendar?.getUpcomingForDay?.(previous)||[]).map(appointmentInterval).filter(x=>x&&x.end>1440).map(x=>({begin:x.begin-1440,end:x.end-1440}));
  const nextEvents=appointmentItemsForDay(next,window.MementoGoogleCalendar?.getUpcomingForDay?.(next)||[]).map(appointmentInterval).filter(Boolean).map(x=>({begin:x.begin+1440,end:x.end+1440}));
- const occupied=[...events,...previousEvents,...nextEvents,...state.tasks.filter(x=>x.id!==id&&!x.done&&!x.archived&&!x.deletedAt&&x.daySlot&&Math.abs(calendarDays(date,x.daySlot.date))<=1).map(x=>{const offset=calendarDays(date,x.daySlot.date)*1440,b=offset+slotMinutes(x.daySlot.time);return {begin:b,end:b+x.daySlot.minutes}})];
+ const occupied=[...events,...previousEvents,...nextEvents,...state.tasks.filter(x=>x.id!==id&&!x.done&&!x.archived&&!x.deletedAt).map(taskTimelineSlot).filter(s=>s&&Math.abs(calendarDays(date,s.date))<=1).map(s=>{const offset=calendarDays(date,s.date)*1440,b=offset+slotMinutes(s.time);return {begin:b,end:b+s.minutes}})];
  return occupied.some(x=>begin<x.end&&end>x.begin);
 }
 function taskSlotFromForm(old,date,time,estimatedMinutes=30){
  if(!time)return null;
- if(old?.daySlot&&old.date===date&&old.daySlot.time===time)return {...old.daySlot};
+ if(old?.daySlot&&old.date===date&&old.daySlot.time===time)return {...taskTimelineSlot(old)};
  return {date,time,minutes:old?.daySlot?.minutes||estimatedMinutes||30};
 }
 function taskSlotChanged(old,slot){return JSON.stringify(old?.daySlot||null)!==JSON.stringify(slot||null)}
@@ -937,7 +944,7 @@ function paintDayTimeline(){
  for(const host of root.querySelectorAll('[data-memento-date]')){
   const day=host.dataset.mementoDate,remote=window.MementoGoogleCalendar?.getUpcomingForDay?.(day)||[];
   const events=appointmentItemsForDay(day,remote).filter(x=>!x.done);
-  const tasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&t.daySlot?.date===day&&!(t.date&&t.date<today()));
+  const tasks=state.tasks.filter(t=>!t.deletedAt&&!t.archived&&!t.done&&taskTimelineSlot(t)?.date===day&&!(t.date&&t.date<today()));
   const entries=[...events.map(e=>({interval:appointmentInterval(e),html:renderUnifiedAppointmentItem(e.x,e.source,{dayCard:true,carried:e.carried})})),
    ...tasks.map(t=>({interval:{begin:slotMinutes(t.daySlot.time),end:slotMinutes(t.daySlot.time)+t.daySlot.minutes},html:taskRow(t)}))];
   const timed=entries.filter(x=>x.interval).sort((a,b)=>a.interval.begin-b.interval.begin),other=entries.filter(x=>!x.interval);
@@ -953,7 +960,7 @@ function planTask(id,day=dayKeysForPlan(),suggested='',end=''){
  const selected=choices.find(t=>t.id===id)||choices[0];
  if(!selected){status('Er zijn geen open taken om in te plannen.',false,true);return}
  modal={mode:'day-plan',id:selected.id,day};
- const defaults=selected.daySlot,minutes=defaults?.minutes||selected.planning?.estimateMinutes||30;
+ const defaults=taskTimelineSlot(selected),minutes=defaults?.minutes||selected.planning?.estimateMinutes||30;
  showDialog('Taak inplannen','De bestaande plandatum en deadline blijven staan.',
  '<form id="drPlanForm"><label class="life-form-field">Taak<select id="drPlanTask">'+option(choices.map(t=>[t.id,t.title]),selected.id)+'</select></label><label class="life-form-field">Dag<input id="drPlanDate" type="date" required value="'+esc(defaults?.date||day)+'"></label><label class="life-form-field">Begintijd<input id="drPlanTime" type="time" required value="'+esc(suggested||defaults?.time||'09:00')+'"></label><label class="life-form-field">Duur in minuten<input id="drPlanMinutes" type="number" min="1" max="1440" required value="'+esc(minutes)+'"></label><p id="drPlanError" role="alert"></p></form>',
  '<button type="button" class="life-btn" data-life-close>Annuleren</button>'+(defaults?'<button type="button" class="life-btn" data-dr-unplan="'+esc(selected.id)+'">Tijd weghalen</button>':'')+'<button type="submit" form="drPlanForm" class="life-btn life-btn-primary">Inplannen</button>');
@@ -1609,7 +1616,7 @@ function removeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedA
 function restoreTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||!t.deletedAt)return false;return mutate(()=>{t.deletedAt=''},t.archived?'Taak teruggezet in het archief.':t.done?'Taak teruggezet bij Afgerond.':'Taak teruggezet.',true)}
 function removeNote(id){const n=state.notes.find(x=>x.id===id);if(!n)return false;return mutate(()=>{n.deletedAt=new Date().toISOString()},'Notitie naar de prullenbak verplaatst.',true)}
 function editNote(id=null){const n=state.notes.find(x=>x.id===id)||{title:'',body:'',category:'Persoonlijk'};modal={mode:'note',id};showDialog(id?'Notitie bewerken':'Notitie toevoegen','Een lijstje, gedachte of stukje informatie bewaren.','<form id="lifeNoteForm"><div class="life-form-grid"><div class="life-form-field wide"><label for="lifeNoteTitle">Titel *</label><input id="lifeNoteTitle" required maxlength="180" value="'+esc(n.title)+'"></div><div class="life-form-field wide"><label for="lifeNoteCategory">Onderwerp</label><input id="lifeNoteCategory" maxlength="80" value="'+esc(n.category)+'"></div><div class="life-form-field wide"><label><input type="checkbox" id="lifeNoteChecklist" '+(n.isChecklist?'checked':'')+'> Toon als afvinklijst (één regel per item)</label><label for="lifeNoteBody">Inhoud</label><textarea id="lifeNoteBody" rows="9" maxlength="20000">'+esc(n.body)+'</textarea></div></div></form>',(id?'<button type="button" class="life-btn life-btn-danger" data-life-note-delete="'+esc(id)+'">Verwijderen</button>':'<button type="button" class="life-btn" data-life-close>Annuleren</button>')+'<button type="submit" class="life-btn life-btn-primary" form="lifeNoteForm">Opslaan</button>')}
-function completeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt||t.archived)return;if(t.timing?.session){status('Bevestig of verwerp eerst de tijdmeting in de taakeditor.',false,true);return false}const ok=mutate(()=>{if(t.done){t.done=false;return}t.lastDone=today();t.history.push({date:today(),at:new Date().toISOString(),...(t.timing?{occurrenceId:t.timing.occurrenceId}:{})});if(t.timing)t.timing.occurrenceId=uid();t.focusDate='';t.steps.forEach(x=>x.done=false);if(t.kind==='routine'&&t.repeat!=='none'){t.date=nextDate(today(),t.repeat,t.repeatDays);t.done=false}else{t.done=true}},t.done?'Taak heropend.':t.kind==='routine'&&t.repeat!=='none'?'Afgerond. Volgende datum ingesteld.':'Taak afgerond.',true);if(ok)window.MementoFeedback?.success([...root.querySelectorAll('[data-life-complete]')].find(b=>b.dataset.lifeComplete===id)||$('lifeMessage'));return ok;}
+function completeTask(id){const t=state.tasks.find(x=>x.id===id);if(!t||t.deletedAt||t.archived)return;if(t.timing?.session){status('Bevestig of verwerp eerst de tijdmeting in de taakeditor.',false,true);return false}const ok=mutate(()=>{if(t.done){t.done=false;return}t.lastDone=today();t.history.push({date:today(),at:new Date().toISOString(),...(t.timing?{occurrenceId:t.timing.occurrenceId}:{})});if(t.timing)t.timing.occurrenceId=uid();t.focusDate='';t.steps.forEach(x=>x.done=false);if(t.kind==='routine'&&t.repeat!=='none'){const next=nextDate(today(),t.repeat,t.repeatDays);if(t.daySlot)t.daySlot={...t.daySlot,date:next};t.date=next;t.done=false}else{t.done=true}},t.done?'Taak heropend.':t.kind==='routine'&&t.repeat!=='none'?'Afgerond. Volgende datum ingesteld.':'Taak afgerond.',true);if(ok)window.MementoFeedback?.success([...root.querySelectorAll('[data-life-complete]')].find(b=>b.dataset.lifeComplete===id)||$('lifeMessage'));return ok;}
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 function exportLegacyBackup(){try{if(blocked||!storageGuard)throw Error('De gegevens zijn niet beschikbaar voor een veilige back-up.');storageGuard.assertCurrent()}catch(e){status(e.message,false,true);return}let finance=null;try{finance=JSON.parse(localStorage.getItem(FINANCE_KEY)||'null')}catch{status('De financiële opslag kon niet worden gelezen. De back-up is niet gemaakt.',false,true);return}download('compass-leven-financien-'+today()+'.json',JSON.stringify({format:'compass-life-backup',version:1,exportedAt:new Date().toISOString(),lifeState:state,financeState:finance},null,2),'application/json');const dated=rememberExport();status('Oude JSON-export klaargezet, zonder bijlagen.'+(dated?'':' Exportdatum kon niet worden bewaard.'))}
 async function exportBackup(){
