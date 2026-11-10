@@ -54,15 +54,14 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.documentElement.dataset.mementoTheme),'forest','Bosgroen is the default');
    const forestMaterial=await page.evaluate(()=>{
     const style=selector=>getComputedStyle(document.querySelector(selector)).backgroundImage;
-    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought'),rhythm:style('#mementoStart .ms-day')};
+    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought')};
    });
    assert.equal(forestMaterial.weather,forestMaterial.quote,'Weather and quote must use the same card material');
-   assert.equal(forestMaterial.weather,forestMaterial.rhythm,'Day rhythm uses the same material');
    await page.waitForFunction(()=>document.querySelectorAll('#ms-hourly .ms-hour').length===6);
-   assert.equal(await page.locator('#mementoStart .ms-day').count(),1);
-   assert.equal(await page.locator('#mementoStart .ms-cardrow').count(),0);
-   assert.equal(await page.locator('#ms-rhythm h2').innerText(),'Ochtendzorg');
-   assert.equal(await page.locator('#ms-rhythm input[type=checkbox]').count(),1);
+   assert.equal(await page.locator('#mementoStart .ms-day').count(),0,'The rhythm card is removed');
+   assert.equal(await page.locator('#mementoStart .ms-feature-nav').count(),0,'The weather carousel dots are removed');
+   assert.equal(await page.locator('#mementoStart .ms-quote').count(),1,'The quote has its own card');
+   assert.match(await page.locator('#ms-quote-host').innerText(),/Quote van de dag/);
    assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
@@ -70,31 +69,56 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
    for(const height of [640,700,800]){
     await page.setViewportSize({width,height});
-    await page.locator('#ms-rhythm').scrollIntoViewIfNeeded();
-    for(const selector of ['.ms-quickbutton','.ms-moments button','.ms-overview','.ms-continue']){
+    await page.locator('#mementoStart .ms-shell').evaluate(shell=>{shell.scrollTop=shell.scrollHeight});
+    for(const selector of ['.ms-quickbutton','.ms-refresh','.ms-continue']){
      assert((await page.locator('#mementoStart '+selector).first().boundingBox()).height>=44,'Touch height '+selector);
     }
    }
    if(width===393){
     await page.setViewportSize({width,height:772});
     await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
-    await page.locator('#ms-rhythm input[type=checkbox]').check();
-    assert((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists[0].days['2026-10-28'].includes('portal-step'));
-    assert.equal(await page.locator('#ms-rhythm input[type=checkbox]').isChecked(),true);
-    await page.locator('#mementoStart [data-ms-view="checklists"]').first().click();
+    await page.locator('#ms-continue').click();
+    assert.equal(await page.locator('#mementoQuickNav [data-memento-dest="life:checklists"]').count(),1,'Checklists takes the fourth fixed tab');
+    assert.equal(await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').count(),0,'Knowledge is no longer fixed');
+    await page.locator('[data-memento-menu="open"]').click();
+    assert.equal(await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').count(),1,'Knowledge remains in More');
+    await page.locator('#mementoMenuClose').click();
+    await page.locator('#mementoQuickNav [data-memento-dest="life:checklists"]').click();
     assert.equal(await page.locator('#lifeApp').getAttribute('data-life-view'),'checklists');
+    await page.locator('[data-dr-open="portal-check"]').click();
+    await page.locator('[data-dr-check="portal-check"]').check();
+    assert((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists[0].days['2026-10-28'].includes('portal-step'));
+    await page.locator('[data-dr-complete="portal-check"]').click();
+    const run=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).checklists[0]);
+    assert.equal(run.runHistory.length,1,'Completion saves a durable run');
+    assert.deepEqual(run.runHistory[0].stepIds,['portal-step']);
+    assert.deepEqual(run.days['2026-10-28'],['portal-step'],'Daily state and older progress remain intact');
+    await page.locator('[data-dr-open="portal-check"]').click();
+    assert.equal(await page.locator('[data-dr-complete="portal-check"]').isDisabled(),true,'An already-completed daily run cannot be recorded twice');
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('[data-dr-reset="portal-check"]').click();
+    const afterReset=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).checklists[0]);
+    assert.equal(afterReset.runHistory.length,1,'Reset does not delete completion history');
+    assert.deepEqual(afterReset.days['2026-10-28'],[]);
+    await page.locator('[data-dr-back]').click();
     await page.locator('[data-dr-new]').click();
     await page.locator('#drTitle').fill('Avondzorg');
     await page.locator('#drMoment').selectOption('evening');
-    await page.locator('#drSteps').fill('Water drinken\nTanden poetsen');
+    await page.locator('#drStepEditor [data-dr-step-text]').fill('Water drinken');
+    await page.locator('[data-dr-step-add]').click();
+    await page.locator('#drStepEditor [data-dr-step-text]').nth(1).fill('Tanden poetsen');
     await page.locator('[form="drChecklistForm"]').click();
     await page.locator('#lifeDialog').waitFor({state:'hidden'});
-    assert((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists.some(c=>c.title==='Avondzorg'));
+    const newItem=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).checklists.find(c=>c.title==='Avondzorg'));
+    assert.deepEqual(newItem.steps.map(step=>step.text),['Water drinken','Tanden poetsen']);
+    assert.equal(newItem.moment,'evening');
     await page.screenshot({path:'/tmp/memento-start-checklists-393.png',animations:'disabled'});
-    const newId=(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists.find(c=>c.title==='Avondzorg').id;
-    page.once('dialog',d=>d.accept());await page.locator('[data-dr-delete="'+newId+'"]').click();
-    await page.locator('[data-dr-trash]').click();await page.locator('[data-dr-restore="'+newId+'"]').click();
-    assert.equal((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists.find(c=>c.id===newId).deletedAt,'');
+    await page.locator('[data-dr-open="'+newItem.id+'"]').click();
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('[data-dr-delete="'+newItem.id+'"]').click();
+    await page.locator('[data-dr-trash]').click();
+    await page.locator('[data-dr-restore="'+newItem.id+'"]').click();
+    assert.equal((await page.evaluate(id=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).checklists.find(c=>c.id===id).deletedAt,newItem.id)),'');
     await page.evaluate(()=>window.MementoStart.showWelcome());
     await page.locator('[data-ms-create="note"]').click();
     await page.locator('#memento-hq-preview').waitFor({state:'visible'});
@@ -134,7 +158,6 @@ const server=http.createServer((req,res)=>{
    });
    assert.notEqual(glassMaterial.weather,forestMaterial.weather,'Changing theme must alter the real portal material');
    assert.equal(glassMaterial.weather,glassMaterial.quote);
-   assert.equal(glassMaterial.weather,glassMaterial.rhythm);
    // Super Dark is a third, independent and persistent whole-app theme.
    await page.locator('#mementoSettingsFinance [data-ms-theme="superdark"]').click();
    // Observe the final painted state after the live material switch.
@@ -148,7 +171,6 @@ const server=http.createServer((req,res)=>{
      chrome:document.querySelector('meta[name="theme-color"]').content,
      weather:bg('#mementoStart .ms-weather'),
      quote:bg('#mementoStart .ms-thought'),
-     rhythm:bg('#mementoStart .ms-day'),
      nightArt:css('#pinLock .mf-image').filter,
      sceneShade:bg('#pinLock .memento-scene-shade'),
      body:css('body').backgroundColor,
@@ -164,7 +186,6 @@ const server=http.createServer((req,res)=>{
    assert.equal(dark.body,'rgb(7, 11, 9)');
    assert.equal(dark.nightToken,'#080e11','Night palette CSS is active');
    assert.equal(dark.weather,dark.quote);
-   assert.equal(dark.weather,dark.rhythm);
    assert.notEqual(dark.weather,glassMaterial.weather);
    assert.notEqual(dark.weather,forestMaterial.weather);
    assert.match(dark.nightArt,/brightness\(0\.(39|48|60)\)/,'Original landscape should be night-graded');
@@ -217,7 +238,7 @@ const server=http.createServer((req,res)=>{
    assert(nightGeometry.scrollWidth<=nightGeometry.width+1,'Super Dark start has horizontal overflow');
    assert.match(nightGeometry.material,/#121f19/i,'Dark content cards must use the calmer night material');
    assert.deepEqual(errors,[],'No page errors');
-   console.log('PASS real create routes, dagritme, weather, checklist and manual PIN at '+width+'px');
+   console.log('PASS quote card, weather, focus checklist, navigation, themes and PIN at '+width+'px');
    await context.close();
   }
  }finally{if(browser)await browser.close();await new Promise(done=>server.close(done))}
