@@ -160,7 +160,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#mementoSettingsFinance [data-ms-theme="glass"]').getAttribute('aria-pressed'),'true');
    const glassMaterial=await page.evaluate(()=>{
     const style=selector=>getComputedStyle(document.querySelector(selector)).backgroundImage;
-    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought'),rhythm:style('#mementoStart .ms-day')};
+    return {weather:style('#mementoStart .ms-weather'),quote:style('#mementoStart .ms-thought')};
    });
    assert.notEqual(glassMaterial.weather,forestMaterial.weather,'Changing theme must alter the real portal material');
    assert.equal(glassMaterial.weather,glassMaterial.quote);
