@@ -902,7 +902,7 @@ const checklistDone=(c,day)=>c.days[day]||[];
 const activeChecklists=()=>(state.checklists||[]).filter(c=>!c.deletedAt);
 const checklistStats=c=>{
  const day=checklistCycleDay(c),done=checklistDone(c,day),total=c.steps.length,checked=c.steps.filter(step=>done.includes(step.id)).length;
- return {day,total,checked,finishedToday:(c.runHistory||[]).some(run=>run.day===day),percent:total?Math.round(100*checked/total):0};
+ return {day,total,checked,finishedToday:(c.runHistory||[]).some(run=>run.day===day&&run.stepIds.length===total&&c.steps.every(step=>run.stepIds.includes(step.id))),percent:total?Math.round(100*checked/total):0};
 };
 const checklistRepeatName={daily:'Dagelijks',free:'Vrije dag',manual:'Handmatig'};
 let checklistOpenId='',checklistTrash=false;
@@ -1036,7 +1036,7 @@ function saveChecklist(id){
 }
 function completeChecklist(id){
  const c=activeChecklists().find(c=>c.id===id);if(!c)return;
- const p=checklistStats(c),completed=(c.runHistory||[]).some(run=>run.day===p.day);
+ const p=checklistStats(c),completed=p.finishedToday;
  if(!p.total||p.checked!==p.total||(completed&&c.repeat==='daily'))return;
  const at=new Date().toISOString(),snapshot=c.steps.map(step=>step.id),previousOpen=checklistOpenId;
  checklistOpenId='';
