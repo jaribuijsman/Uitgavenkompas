@@ -12,13 +12,44 @@
  root.innerHTML=`<div class="ms-shell"><div class="ms-content">
 <header class="ms-brand"><img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90"><div class="ms-date" id="ms-date">Vandaag</div></header>
 <div class="ms-feature">
+<div class="ms-weather-slider" id="ms-weather-slider" role="region" aria-label="Weer voor vandaag en komende vijf dagen">
 <section class="ms-weather ms-glass" aria-label="Weer in Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
+<section class="ms-weather ms-weather-forecast ms-glass" aria-label="Weer komende vijf dagen">
+<span class="ms-overline">Beverwijk · Komende 5 dagen</span>
+<div class="ms-forecast-heading">Vooruitblik</div>
+<div class="ms-forecast-days" id="ms-forecast-days" aria-label="Verwachting per dag"><span class="ms-forecast-empty">Vijfdaagse voorspelling ophalen…</span></div>
+<div class="ms-forecast-caption">Dagmaximum · nachtminimum · neerslagkans</div>
+<div class="ms-forecast-source"><span id="ms-forecast-status">Open-Meteo · Voorspelling</span></div>
+</section>
+</div>
+<nav class="ms-weather-pages" aria-label="Wissel weerkaart">
+<button type="button" data-ms-weather-page="0" aria-label="Weer vandaag tonen" aria-pressed="true"><span aria-hidden="true"></span></button>
+<button type="button" data-ms-weather-page="1" aria-label="Weer komende vijf dagen tonen" aria-pressed="false"><span aria-hidden="true"></span></button>
+</nav>
 </div>
 <section class="ms-thought ms-quote ms-glass" aria-label="Quote van de dag"><div id="ms-quote-host"><div class="flow-hero"><div class="flow-eyebrow">Quote van de dag</div><p>Quote laden…</p></div></div></section>
 <nav class="ms-quick" aria-label="Snelfuncties"><button class="ms-quickbutton" type="button" data-ms-create="task"><span aria-hidden="true">＋</span>Taak</button><button class="ms-quickbutton" type="button" data-ms-create="note"><span aria-hidden="true">＋</span>Snelle notitie</button><button class="ms-quickbutton" type="button" data-ms-create="transaction"><span aria-hidden="true">＋</span>Transactie</button></nav>
 </div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
  const one=id=>document.getElementById(id);
+ const weatherSlider=one('ms-weather-slider'),weatherPages=[...root.querySelectorAll('[data-ms-weather-page]')];
+ let activeWeatherPage=0,weatherScrollPending=false;
+ function setWeatherPage(index,move=false){
+  activeWeatherPage=index===1?1:0;
+  weatherPages.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===activeWeatherPage)));
+  [...weatherSlider.querySelectorAll('.ms-weather')].forEach((panel,i)=>{
+   panel.toggleAttribute('inert',i!==activeWeatherPage);
+   panel.setAttribute('aria-hidden',String(i!==activeWeatherPage));
+  });
+  if(move)weatherSlider.scrollTo({left:weatherSlider.clientWidth*activeWeatherPage,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+ }
+ weatherPages.forEach(button=>button.addEventListener('click',()=>setWeatherPage(Number(button.dataset.msWeatherPage),true)));
+ weatherSlider.addEventListener('scroll',()=>{
+  if(weatherScrollPending)return;weatherScrollPending=true;
+  requestAnimationFrame(()=>{weatherScrollPending=false;setWeatherPage(weatherSlider.scrollLeft>=weatherSlider.clientWidth/2?1:0)});
+ },{passive:true});
+ window.addEventListener('resize',()=>{weatherSlider.scrollLeft=activeWeatherPage*weatherSlider.clientWidth});
+ setWeatherPage(0);
 
  function refreshThought(){
   const host=one('ms-quote-host'),today=date();
@@ -136,6 +167,29 @@
   const idx=d?.time?.indexOf(date())??-1,low=d?.temperature_2m_min?.[idx],high=d?.temperature_2m_max?.[idx],rain=d?.precipitation_probability_max?.[idx];
   one('ms-summary').textContent=idx>=0&&Number.isFinite(low)&&Number.isFinite(high)?Math.round(low)+'°–'+Math.round(high)+'° vandaag'+(Number.isFinite(rain)?' · '+Math.round(rain)+'% kans op neerslag':''):'Weerverwachting voor vandaag';
   one('ms-weather-status').textContent=busy?'Weer wordt bijgewerkt…':failed?(valid?'Vernieuwen mislukt · opgeslagen weer van '+c.time.replace('T',' · '):'Weer ophalen mislukt · controleer je verbinding'):fresh?'Actueel · '+c.time.slice(11,16):valid?'Opgeslagen voorspelling · mogelijk verouderd':'Geen verbinding? Probeer opnieuw';
+  const forecastHost=one('ms-forecast-days'),forecastStatus=one('ms-forecast-status');
+  const nextDays=idx>=0&&Array.isArray(d?.time)?d.time.slice(idx+1,idx+6):[];
+  const complete=nextDays.length===5&&nextDays.every((stamp,offset)=>{
+   const pos=idx+offset+1;
+   return /^\d{4}-\d{2}-\d{2}$/.test(stamp)&&Number.isFinite(d?.weather_code?.[pos])&&
+    Number.isFinite(d?.temperature_2m_max?.[pos])&&Number.isFinite(d?.temperature_2m_min?.[pos]);
+  });
+  if(complete){
+   const dayFormat=new Intl.DateTimeFormat('nl-NL',{weekday:'short',day:'numeric',timeZone:'UTC'});
+   forecastHost.innerHTML=nextDays.map((stamp,offset)=>{
+    const pos=idx+offset+1,code=d.weather_code[pos],high=Math.round(d.temperature_2m_max[pos]),low=Math.round(d.temperature_2m_min[pos]),rain=d.precipitation_probability_max?.[pos];
+    const dayLabel=dayFormat.format(new Date(stamp+'T12:00:00Z')).replace('.','');
+    const rainLabel=Number.isFinite(rain)?Math.round(rain)+'%':'—%';
+    return '<div class="ms-forecast-day" aria-label="'+esc(dayLabel+', '+weatherName(code)+', maximum '+high+' graden, minimum '+low+' graden, maximale neerslagkans '+rainLabel)+'">'+
+     '<time datetime="'+esc(stamp)+'">'+esc(dayLabel)+'</time>'+
+     '<span class="ms-forecast-icon" aria-hidden="true">'+weatherIcon(code,true)+'</span>'+
+     '<strong>'+high+'°</strong><small>'+low+'°</small>'+
+     '<span class="ms-forecast-rain"><span aria-hidden="true">💧</span>'+rainLabel+'</span></div>';
+   }).join('');
+  }else{
+   forecastHost.innerHTML='<span class="ms-forecast-empty">Vijfdaagse voorspelling niet beschikbaar. Vernieuw het weer.</span>';
+  }
+  forecastStatus.textContent=busy?'Open-Meteo · Bijwerken…':failed||!fresh?'Open-Meteo · Opgeslagen of verouderde voorspelling':'Open-Meteo · Actuele voorspelling';
   const today=date(),hours=[];
   if(Array.isArray(h?.time)&&Array.isArray(h?.temperature_2m)&&Array.isArray(h?.weather_code)){
    for(let i=0;i<h.time.length;i++){
