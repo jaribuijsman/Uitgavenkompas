@@ -290,6 +290,26 @@ const reports=[];
     await page.locator('[data-ms-moment="evening"]').click();
     await shot('start-rhythm');
    }
+   if(width===393&&count===3){
+    // Real UI regression: completing a timed weekly routine must remove the old day card.
+    const weekly={...original.life.tasks[0],id:'v3-weekly-timed',title:'Fictieve wekelijkse schoonmaak',kind:'routine',repeat:'weekly',repeatDays:4,date:'2026-10-31',focusDate:'',lastDone:'',done:false,history:[],daySlot:{date:'2026-10-31',time:'10:00',minutes:30}};
+    await page.evaluate(t=>{const s=JSON.parse(localStorage.getItem('compass_life_preview_v1'));s.tasks.push(t);localStorage.setItem('compass_life_preview_v1',JSON.stringify(s))},weekly);
+    await page.reload();await require('./helpers/enter-app.cjs')(page);await goToday();
+    const selector='[data-life-day="2026-10-31"] [data-order-id="v3-weekly-timed"]';
+    assert.equal(await page.locator(selector).count(),1,'Recurring timed task initially appears once');
+    await page.locator(selector+' [data-life-complete]').click();
+    const completed=(await stored()).life.tasks.find(t=>t.id===weekly.id);
+    assert.equal(completed.date,'2026-11-07');assert.deepEqual(completed.daySlot,{date:'2026-11-07',time:'10:00',minutes:30});
+    assert.equal(completed.history.at(-1).date,'2026-10-31');
+    assert.equal(await page.locator(selector).count(),0,'Completed weekly task leaves the old timeline');
+    await page.reload();await require('./helpers/enter-app.cjs')(page);await goToday();
+    assert.equal(await page.locator(selector).count(),0,'Completed task stays gone after restart');
+    // Previous release: completion was saved but the stale daySlot still points to today.
+    await page.evaluate(id=>{const s=JSON.parse(localStorage.getItem('compass_life_preview_v1'));s.tasks.find(t=>t.id===id).daySlot.date='2026-10-31';localStorage.setItem('compass_life_preview_v1',JSON.stringify(s))},weekly.id);
+    await page.reload();await require('./helpers/enter-app.cjs')(page);await goToday();
+    assert.equal(await page.locator(selector).count(),0,'Legacy stale occurrence no longer reappears');
+    assert.equal((await stored()).life.tasks.find(t=>t.id===weekly.id).daySlot.date,'2026-10-31','Legacy recovery must not alter saved data');
+   }
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}
   finally{await ctx.close();}
