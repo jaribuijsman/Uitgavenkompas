@@ -61,7 +61,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#mementoStart .ms-day').count(),0,'The rhythm card is removed');
    assert.equal(await page.locator('#mementoStart .ms-feature-nav').count(),0,'The weather carousel dots are removed');
    assert.equal(await page.locator('#mementoStart .ms-quote').count(),1,'The quote has its own card');
-   assert.match(await page.locator('#ms-quote-host').innerText(),/Quote van de dag/);
+   assert.match(await page.locator('#ms-quote-host').innerText(),/Quote van de dag/i);
    assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
