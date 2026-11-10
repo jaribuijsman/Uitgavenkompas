@@ -25,9 +25,10 @@ const server=http.createServer((req,res)=>{
    {id:'portal-a',title:'Tandarts',date,time:'09:30',endTime:'10:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'},
    {id:'portal-b',title:'Afspraak',date,time:'15:30',endTime:'16:00',allDay:false,location:'',notes:'',done:false,completedAt:'',createdAt:date+'T07:00:00Z'}
   ];fixture.life.googleAppointments=[];fixture.life.appointmentChecks={};
+  const forecastDates=Array.from({length:6},(_,i)=>new Date(Date.parse(date+'T12:00:00Z')+i*86400000).toISOString().slice(0,10));
   const weather={
    current:{time:date+'T12:00',temperature_2m:14.2,apparent_temperature:13,weather_code:61,wind_speed_10m:15,is_day:1},
-   daily:{time:[date],temperature_2m_min:[9],temperature_2m_max:[15],precipitation_probability_max:[70]},
+   daily:{time:forecastDates,weather_code:[0,61,2,3,95,71],temperature_2m_min:[9,8,7,6,5,4],temperature_2m_max:[15,14,13,12,11,10],precipitation_probability_max:[70,80,10,15,45,60]},
    hourly:{time:Array.from({length:24},(_,i)=>date+'T'+String(i).padStart(2,'0')+':00'),temperature_2m:Array.from({length:24},(_,i)=>10+i/6),weather_code:Array(24).fill(61),precipitation_probability:Array(24).fill(70)}
   };
   const origin='http://127.0.0.1:'+server.address().port;
@@ -65,6 +66,18 @@ const server=http.createServer((req,res)=>{
    assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
+   await page.waitForFunction(()=>document.querySelectorAll('#ms-forecast-days .ms-forecast-day').length===5);
+   assert.deepEqual(await page.locator('#ms-forecast-days .ms-forecast-icon').allTextContents(),['☂','⛅','☁','ϟ','❄'],'Daily icons follow Open-Meteo daily weather_code');
+   assert.deepEqual(await page.locator('#ms-forecast-days .ms-forecast-day strong').allTextContents(),['14°','13°','12°','11°','10°']);
+   assert.equal(await page.locator('[data-ms-weather-page]').count(),2);
+   const cardHeights=await page.locator('#mementoStart .ms-weather').evaluateAll(cards=>cards.map(card=>card.getBoundingClientRect().height));
+   assert(Math.abs(cardHeights[0]-cardHeights[1])<=2,'Weather slides keep an equal card height: '+cardHeights.join(', '));
+   await page.locator('[data-ms-weather-page="1"]').click();
+   await page.waitForFunction(()=>{const s=document.getElementById('ms-weather-slider');return Math.abs(s.scrollLeft-s.clientWidth)<2});
+   assert.equal(await page.locator('[data-ms-weather-page="1"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await page.locator('#ms-forecast-days .ms-forecast-day').count(),5);
+   await page.locator('[data-ms-weather-page="0"]').click();
+   await page.waitForFunction(()=>document.getElementById('ms-weather-slider').scrollLeft<2);
    assert.equal(await page.locator('#pinForm').isVisible(),false);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
    for(const height of [640,700,800]){
@@ -79,6 +92,10 @@ const server=http.createServer((req,res)=>{
     await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
     fs.mkdirSync('/tmp/memento-start/after',{recursive:true});
     await page.screenshot({path:'/tmp/memento-start/after/start-top-393.png',animations:'disabled'});
+     await page.locator('[data-ms-weather-page="1"]').click();
+     await page.waitForFunction(()=>{const s=document.getElementById('ms-weather-slider');return Math.abs(s.scrollLeft-s.clientWidth)<2});
+     await page.screenshot({path:'/tmp/memento-start/after/start-weather-5day-393.png',animations:'disabled'});
+     await page.locator('[data-ms-weather-page="0"]').click();
     await page.locator('#mementoStart .ms-shell').evaluate(shell=>{shell.scrollTop=shell.scrollHeight;});
     await page.screenshot({path:'/tmp/memento-start/after/start-bottom-393.png',animations:'disabled'});
     await page.locator('#ms-continue').click();
