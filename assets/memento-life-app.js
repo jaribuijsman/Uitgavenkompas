@@ -908,7 +908,7 @@ const checklistRepeatName={daily:'Dagelijks',free:'Vrije dag',manual:'Handmatig'
 let checklistOpenId='',checklistTrash=false;
 function checklistCard(c){
  const p=checklistStats(c),meta=momentName(c.moment)+' · '+(checklistRepeatName[c.repeat]||'Handmatig');
- const progress=p.finishedToday&&p.checked===p.total?'Vandaag afgerond':p.checked+' van '+p.total+' stappen';
+ const progress=c.repeat==='daily'&&p.finishedToday&&p.checked===p.total?'Vandaag afgerond':p.checked+' van '+p.total+' stappen';
  return '<article class="dr-list-card"><div class="dr-list-info"><strong>'+esc(c.title)+'</strong><div class="dr-list-meta">'+esc(meta)+'</div><small>'+esc(progress)+'</small></div>'+
  '<button type="button" class="dr-list-open" data-dr-open="'+esc(c.id)+'" aria-label="Open '+esc(c.title)+'">Open</button>'+
  '<div class="dr-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.percent+'" aria-label="Voortgang '+esc(c.title)+'"><span style="width:'+p.percent+'%"></span></div></article>';
@@ -918,7 +918,7 @@ function checklistFocus(c){
  const completed=c.steps.filter(step=>done.has(step.id)),waiting=c.steps.filter(step=>!done.has(step.id));
  const row=step=>'<label class="dr-focus-step"><input type="checkbox" data-dr-check="'+esc(c.id)+'" data-dr-step="'+esc(step.id)+'"'+(done.has(step.id)?' checked':'')+'><span>'+esc(step.text)+'</span></label>';
  const history=(c.runHistory||[]).slice(-20).reverse();
- const finished=p.finishedToday&&p.checked===p.total&&p.total>0;
+ const finished=c.repeat==='daily'&&p.finishedToday&&p.checked===p.total&&p.total>0;
  return '<div class="dr-focus"><div class="dr-focus-top"><button type="button" class="dr-back" data-dr-back aria-label="Terug naar checklists">←</button><div><small>CHECKLIST UITVOEREN</small><h2>'+esc(c.title)+'</h2><span>'+esc(momentName(c.moment))+' · '+esc(checklistRepeatName[c.repeat]||'Handmatig')+'</span></div></div>'+
  '<div class="dr-focus-progress"><div><strong>'+p.checked+' van '+p.total+' stappen</strong><span>'+p.percent+'%</span></div><div class="dr-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.percent+'" aria-label="Voortgang"><span style="width:'+p.percent+'%"></span></div></div>'+
  (finished?'<p class="dr-finished" role="status">Deze checklist is vandaag afgerond.</p>':'')+
