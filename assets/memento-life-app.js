@@ -158,8 +158,9 @@ function validate(s){
  if(s.checklists!==undefined&&!Array.isArray(s.checklists))throw Error('Ongeldige checklists.');
  const checklistIds=new Set();
  for(const c of s.checklists||[]){
-  if(!c||typeof c.id!=='string'||checklistIds.has(c.id)||typeof c.title!=='string'||!c.title.trim()||c.title.length>180||!['morning','afternoon','evening','wake','night','sleep'].includes(c.moment)||!['daily','free','manual'].includes(c.repeat)||typeof c.pinned!=='boolean'||typeof c.deletedAt!=='string'||!Array.isArray(c.steps)||!c.steps.every(x=>x&&typeof x.id==='string'&&typeof x.text==='string'&&x.text.trim()&&x.text.length<=300)||new Set(c.steps.map(x=>x.id)).size!==c.steps.length||!c.days||typeof c.days!=='object'||Array.isArray(c.days))throw Error('Ongeldige checklistgegevens.');
+  if(!c||typeof c.id!=='string'||checklistIds.has(c.id)||typeof c.title!=='string'||!c.title.trim()||c.title.length>180||!['any','morning','afternoon','evening','wake','night','sleep'].includes(c.moment)||!['daily','free','manual'].includes(c.repeat)||typeof c.pinned!=='boolean'||typeof c.deletedAt!=='string'||!Array.isArray(c.steps)||!c.steps.every(x=>x&&typeof x.id==='string'&&typeof x.text==='string'&&x.text.trim()&&x.text.length<=300)||new Set(c.steps.map(x=>x.id)).size!==c.steps.length||!c.days||typeof c.days!=='object'||Array.isArray(c.days))throw Error('Ongeldige checklistgegevens.');
   for(const [day,ids] of Object.entries(c.days))if(!validDate(day)||!day||!Array.isArray(ids)||ids.some(x=>typeof x!=='string'))throw Error('Ongeldige checklistgeschiedenis.');
+  if(c.runHistory!==undefined&&(!Array.isArray(c.runHistory)||c.runHistory.some(r=>!r||typeof r.id!=='string'||!r.id||!validDate(r.day)||!r.day||typeof r.completedAt!=='string'||!Number.isFinite(Date.parse(r.completedAt))||!Array.isArray(r.stepIds)||r.stepIds.some(id=>typeof id!=='string'))))throw Error('Ongeldige checklistuitvoeringen.');
   checklistIds.add(c.id);
  }
  if(s?.uiPreferences!==undefined)window.MementoReviewCore.validFilters(s.uiPreferences);
@@ -894,21 +895,39 @@ function showDaySlide(index){
  syncDayCarousel();
  track.scrollTo({left:daySlide*track.clientWidth,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
-const checklistMoments=[['morning','Ochtend'],['afternoon','Middag'],['evening','Avond'],['wake','Na het opstaan'],['night','Tijdens je nacht'],['sleep','Voor het slapen']];
-const momentName=id=>checklistMoments.find(x=>x[0]===id)?.[1]||'Dagmoment';
-// Night checklists use the wake cycle that started before midnight.
+const checklistMoments=[['any','Elk moment'],['morning','Ochtend'],['afternoon','Middag'],['evening','Avond'],['wake','Na het opstaan'],['night','Tijdens je nacht'],['sleep','Voor het slapen']];
+const momentName=id=>checklistMoments.find(x=>x[0]===id)?.[1]||'Elk moment';
 const checklistCycleDay=c=>{const d=new Date();if(['wake','night','sleep'].includes(c.moment)&&d.getHours()<12)d.setDate(d.getDate()-1);return formatISO(d)};
 const checklistDone=(c,day)=>c.days[day]||[];
 const activeChecklists=()=>(state.checklists||[]).filter(c=>!c.deletedAt);
-function checklistCard(c,day,compact=false){
- const done=checklistDone(c,day),total=c.steps.length,checked=c.steps.filter(s=>done.includes(s.id)).length;
- return '<article class="dr-checklist" data-dr-id="'+esc(c.id)+'"><div class="dr-checklist-head"><strong>'+esc(c.title)+'</strong><small>'+checked+'/'+total+' afgevinkt</small></div>'+
- (compact?'':'<div class="dr-steps">'+c.steps.map(s=>'<label class="dr-step"><input type="checkbox" data-dr-check="'+esc(c.id)+'" data-dr-step="'+esc(s.id)+'"'+(done.includes(s.id)?' checked':'')+'><span>'+esc(s.text)+'</span></label>').join('')+'</div>')+
- (compact?'':'<div class="dr-actions"><button type="button" data-dr-edit="'+esc(c.id)+'">Bewerken</button><button type="button" data-dr-duplicate="'+esc(c.id)+'">Kopiëren</button><button type="button" class="dr-delete" data-dr-delete="'+esc(c.id)+'" aria-label="Verwijder '+esc(c.title)+'">Prullenbak</button></div>')+'</article>';
+const checklistStats=c=>{
+ const day=checklistCycleDay(c),done=checklistDone(c,day),total=c.steps.length,checked=c.steps.filter(step=>done.includes(step.id)).length;
+ return {day,total,checked,finishedToday:(c.runHistory||[]).some(run=>run.day===day&&run.stepIds.length===total&&c.steps.every(step=>run.stepIds.includes(step.id))),percent:total?Math.round(100*checked/total):0};
+};
+const checklistRepeatName={daily:'Dagelijks',free:'Vrije dag',manual:'Handmatig'};
+let checklistOpenId='',checklistTrash=false;
+function checklistCard(c){
+ const p=checklistStats(c),meta=momentName(c.moment)+' · '+(checklistRepeatName[c.repeat]||'Handmatig');
+ const progress=c.repeat==='daily'&&p.finishedToday&&p.checked===p.total?'Vandaag afgerond':p.checked+' van '+p.total+' stappen';
+ return '<article class="dr-list-card"><div class="dr-list-info"><strong>'+esc(c.title)+'</strong><div class="dr-list-meta">'+esc(meta)+'</div><small>'+esc(progress)+'</small></div>'+
+ '<button type="button" class="dr-list-open" data-dr-open="'+esc(c.id)+'" aria-label="Open '+esc(c.title)+'">Open</button>'+
+ '<div class="dr-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.percent+'" aria-label="Voortgang '+esc(c.title)+'"><span style="width:'+p.percent+'%"></span></div></article>';
 }
-function checklistMarker(){
- const count=activeChecklists().filter(c=>c.repeat==='daily'&&c.steps.some(s=>!checklistDone(c,checklistCycleDay(c)).includes(s.id))).length;
- return '<div class="dr-marker"><span>'+count+' '+(count===1?'checklist':'checklists')+' open</span><button type="button" data-life-view="checklists">Open checklists</button></div>';
+function checklistFocus(c){
+ const p=checklistStats(c),done=new Set(checklistDone(c,p.day));
+ const completed=c.steps.filter(step=>done.has(step.id)),waiting=c.steps.filter(step=>!done.has(step.id));
+ const row=step=>'<label class="dr-focus-step"><input type="checkbox" data-dr-check="'+esc(c.id)+'" data-dr-step="'+esc(step.id)+'"'+(done.has(step.id)?' checked':'')+'><span>'+esc(step.text)+'</span></label>';
+ const history=(c.runHistory||[]).slice(-20).reverse();
+ const finished=c.repeat==='daily'&&p.finishedToday&&p.checked===p.total&&p.total>0;
+ return '<div class="dr-focus"><div class="dr-focus-top"><button type="button" class="dr-back" data-dr-back aria-label="Terug naar checklists">←</button><div><small>CHECKLIST UITVOEREN</small><h2>'+esc(c.title)+'</h2><span>'+esc(momentName(c.moment))+' · '+esc(checklistRepeatName[c.repeat]||'Handmatig')+'</span></div></div>'+
+ '<div class="dr-focus-progress"><div><strong>'+p.checked+' van '+p.total+' stappen</strong><span>'+p.percent+'%</span></div><div class="dr-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.percent+'" aria-label="Voortgang"><span style="width:'+p.percent+'%"></span></div></div>'+
+ (finished?'<p class="dr-finished" role="status">Deze checklist is vandaag afgerond.</p>':'')+
+ '<section class="dr-focus-steps" aria-label="Nog te doen">'+waiting.map(row).join('')+(waiting.length?'':'<p class="dr-empty-small">Alle stappen afgevinkt.</p>')+'</section>'+
+ (completed.length?'<details class="dr-done-steps"><summary>Afgevinkte stappen ('+completed.length+')</summary><div>'+completed.map(row).join('')+'</div></details>':'')+
+ '<div class="dr-focus-actions"><button type="button" class="life-btn life-btn-primary" data-dr-complete="'+esc(c.id)+'"'+(p.total&&p.checked===p.total&&!finished?'':' disabled')+'>Uitvoering afronden</button><button type="button" class="life-btn" data-dr-reset="'+esc(c.id)+'">Nieuwe ronde</button></div>'+
+ '<div class="dr-focus-manage"><button type="button" class="life-btn" data-dr-edit="'+esc(c.id)+'">Bewerken</button><button type="button" class="life-btn" data-dr-duplicate="'+esc(c.id)+'">Kopiëren</button><button type="button" class="life-btn dr-danger" data-dr-delete="'+esc(c.id)+'">Prullenbak</button></div>'+
+ (history.length?'<details class="dr-history"><summary>Eerdere uitvoeringen ('+history.length+(c.runHistory.length>20?'+':'')+')</summary><ul>'+history.map(run=>'<li>'+esc(fmt(run.day))+' · '+esc(new Date(run.completedAt).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}))+'</li>').join('')+'</ul></details>':'')+
+ '</div>';
 }
 const slotMinutes=time=>Number(time.slice(0,2))*60+Number(time.slice(3,5));
 function appointmentInterval(row){
@@ -975,29 +994,59 @@ function saveTaskSlot(){
 }
 function renderChecklists(){
  const deleted=(state.checklists||[]).filter(c=>c.deletedAt),active=activeChecklists();
- content.innerHTML='<div class="dr-manager"><div class="dr-manager-head"><button type="button" class="life-btn life-btn-primary" data-dr-new>＋ Nieuwe checklist</button><button type="button" class="life-btn" data-dr-trash>Prullenbak ('+deleted.length+')</button></div>'+
- (checklistTrash?'<div class="dr-group"><h2>Prullenbak</h2>'+(deleted.length?deleted.map(c=>'<article class="dr-checklist"><strong>'+esc(c.title)+'</strong><div class="dr-actions"><button data-dr-restore="'+esc(c.id)+'">Herstellen</button><button class="dr-delete" data-dr-purge="'+esc(c.id)+'">Definitief verwijderen</button></div></article>').join(''):'<p>De prullenbak is leeg.</p>')+'</div>':
- checklistMoments.map(([key,label])=>{const list=active.filter(c=>c.moment===key);return list.length?'<section class="dr-group"><h2>'+label+'</h2>'+list.map(c=>checklistCard(c,checklistCycleDay(c))).join('')+'</section>':''}).join('')+
- (!active.length?'<p>Maak je eerste checklist voor een dagmoment.</p>':''))+'</div>';
+ const current=active.find(c=>c.id===checklistOpenId);
+ if(current&&!checklistTrash){content.innerHTML=checklistFocus(current);return}
+ if(checklistOpenId&&!current)checklistOpenId='';
+ const ongoing=active.filter(c=>{const p=checklistStats(c);return p.checked>0&&p.checked<p.total});
+ const other=active.filter(c=>!ongoing.includes(c));
+ content.innerHTML='<div class="dr-manager"><div class="dr-manager-head"><button type="button" class="life-btn life-btn-primary" data-dr-new>＋ Nieuwe checklist</button><button type="button" class="life-btn" data-dr-trash>'+(checklistTrash?'Terug naar lijsten':'Prullenbak ('+deleted.length+')')+'</button></div>'+
+ (checklistTrash?'<section class="dr-group"><h2>Prullenbak</h2>'+(deleted.length?deleted.map(c=>'<article class="dr-list-card"><strong>'+esc(c.title)+'</strong><div class="dr-actions"><button type="button" data-dr-restore="'+esc(c.id)+'">Herstellen</button><button type="button" class="dr-delete" data-dr-purge="'+esc(c.id)+'">Definitief verwijderen</button></div></article>').join(''):'<p>De prullenbak is leeg.</p>')+'</section>':
+ '<p class="dr-intro">Je checklists op één plek. Open een lijst om de stappen af te vinken.</p>'+
+ (ongoing.length?'<section class="dr-group"><h2>Verdergaan <small>'+ongoing.length+'</small></h2>'+ongoing.map(checklistCard).join('')+'</section>':'')+
+ '<section class="dr-group"><h2>Mijn checklists <small>'+other.length+'</small></h2>'+(other.length?other.map(checklistCard).join(''):'<p class="dr-empty-small">Nog geen checklists. Maak je eerste lijst.</p>')+'</section>')+'</div>';
 }
-let checklistTrash=false;
+function renderChecklistEditorSteps(){
+ const host=$('drStepEditor');if(!host||modal?.mode!=='checklist')return;
+ host.innerHTML=modal.checklistSteps.map((step,i)=>'<div class="dr-edit-step"><input type="text" maxlength="300" data-dr-step-text="'+esc(step.id)+'" aria-label="Stap '+(i+1)+'" placeholder="Beschrijf een stap" value="'+esc(step.text)+'"><div class="dr-edit-controls"><button type="button" data-dr-step-move="'+esc(step.id)+'" data-direction="-1" aria-label="Stap '+(i+1)+' omhoog"'+(i===0?' disabled':'')+'>↑</button><button type="button" data-dr-step-move="'+esc(step.id)+'" data-direction="1" aria-label="Stap '+(i+1)+' omlaag"'+(i===modal.checklistSteps.length-1?' disabled':'')+'>↓</button><button type="button" data-dr-step-remove="'+esc(step.id)+'" aria-label="Stap '+(i+1)+' verwijderen">×</button></div></div>').join('');
+}
+function syncChecklistEditorSteps(){
+ if(modal?.mode!=='checklist')return;
+ for(const input of $('drStepEditor')?.querySelectorAll('[data-dr-step-text]')||[]){
+  const step=modal.checklistSteps.find(step=>step.id===input.dataset.drStepText);if(step)step.text=input.value;
+ }
+}
 function editChecklist(id){
  const c=(state.checklists||[]).find(x=>x.id===id&&!x.deletedAt);
- modal={mode:'checklist',id:id||''};
- showDialog(c?'Checklist bewerken':'Nieuwe checklist','Stappen blijven per dag afzonderlijk afgevinkt.',
+ modal={mode:'checklist',id:id||'',checklistSteps:c?clone(c.steps):[{id:uid(),text:''}]};
+ showDialog(c?'Checklist bewerken':'Nieuwe checklist','Maak een lijst die je opnieuw kunt gebruiken.',
  '<form id="drChecklistForm"><label class="life-form-field">Naam<input id="drTitle" required maxlength="180" value="'+esc(c?.title||'')+'"></label>'+
- '<label class="life-form-field">Dagmoment<select id="drMoment">'+option(checklistMoments,c?.moment||'morning')+'</select></label>'+
- '<label class="life-form-field">Herhaling<select id="drRepeat">'+option([['daily','Dagelijks'],['free','Vrije dag'],['manual','Handmatig']],c?.repeat||'daily')+'</select></label>'+
- '<label class="dr-pin"><input id="drPinned" type="checkbox"'+(c?.pinned?' checked':'')+'> Op startscherm vastzetten</label>'+
- '<label class="life-form-field">Stappen (één per regel; volgorde hier wijzigen)<textarea id="drSteps" rows="7" maxlength="6000" placeholder="Bijvoorbeeld: tanden flossen">'+esc(c?.steps.map(s=>s.text).join('\n')||'')+'</textarea></label></form>',
+ '<label class="life-form-field">Dagmoment<select id="drMoment">'+option(checklistMoments,c?.moment||'any')+'</select></label>'+
+ '<label class="life-form-field">Herhaling<select id="drRepeat">'+option([['manual','Handmatig'],['daily','Dagelijks'],['free','Vrije dag']],c?.repeat||'manual')+'</select></label>'+
+ '<div class="dr-edit-heading"><strong>Stappen</strong><button type="button" class="life-btn" data-dr-step-add>＋ Stap toevoegen</button></div><div id="drStepEditor"></div><p class="life-footnote">Gebruik de pijlen om stappen te verplaatsen. Eerdere uitvoeringen blijven bewaard.</p></form>',
  '<button type="button" class="life-btn" data-life-close>Annuleren</button><button type="submit" form="drChecklistForm" class="life-btn life-btn-primary">Opslaan</button>');
+ renderChecklistEditorSteps();
 }
 function saveChecklist(id){
- const title=$('drTitle').value.trim(),lines=$('drSteps').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
- if(!title||lines.some(x=>x.length>300)||lines.length>60){status('Controleer de naam en stappen (maximaal 60 stappen, 300 tekens per stap).',false,true);return}
- const old=(state.checklists||[]).find(x=>x.id===id),available=[...(old?.steps||[])],steps=lines.map(text=>{const at=available.findIndex(s=>s.text===text);return at>=0?available.splice(at,1)[0]:{id:uid(),text}});
- const value={...(old||{id:uid(),deletedAt:'',days:{}}),title,moment:$('drMoment').value,repeat:$('drRepeat').value,pinned:$('drPinned').checked,steps};
+ syncChecklistEditorSteps();
+ const title=$('drTitle').value.trim(),steps=modal.checklistSteps.map(s=>({id:s.id,text:s.text.trim()})).filter(s=>s.text);
+ if(!title||!steps.length||steps.length>60||steps.some(s=>s.text.length>300)){status('Vul een naam en 1 tot 60 stappen in (maximaal 300 tekens per stap).',false,true);return}
+ const old=(state.checklists||[]).find(x=>x.id===id);
+ const value={...(old||{id:uid(),deletedAt:'',days:{},runHistory:[],pinned:false}),title,moment:$('drMoment').value,repeat:$('drRepeat').value,steps};
  if(mutate(()=>{state.checklists||=[];if(old)state.checklists[state.checklists.indexOf(old)]=value;else state.checklists.push(value)},'Checklist opgeslagen.'))closeDialog();
+}
+function completeChecklist(id){
+ const c=activeChecklists().find(c=>c.id===id);if(!c)return;
+ const p=checklistStats(c),completed=p.finishedToday;
+ if(!p.total||p.checked!==p.total||(completed&&c.repeat==='daily'))return;
+ const at=new Date().toISOString(),snapshot=c.steps.map(step=>step.id),previousOpen=checklistOpenId;
+ checklistOpenId='';
+ if(!mutate(()=>{c.runHistory||=[];c.runHistory.push({id:uid(),day:p.day,completedAt:at,stepIds:snapshot});if(c.repeat!=='daily')c.days[p.day]=[]},'Checklist afgerond. Uitvoering bewaard.'))checklistOpenId=previousOpen;
+}
+function resetChecklist(id){
+ const c=activeChecklists().find(c=>c.id===id);if(!c)return;
+ const p=checklistStats(c);
+ if(p.checked&&!confirm('Nieuwe ronde starten? De huidige afvinkstatus wordt gewist; eerdere afgeronde uitvoeringen blijven bewaard.'))return;
+ mutate(()=>{c.days[p.day]=[]},'Nieuwe ronde gestart.',true);
 }
 window.MementoDayRhythm={
  start:()=>activeChecklists().filter(c=>c.pinned),
@@ -1028,7 +1077,7 @@ function renderToday(){
   '<div class="memento-day-v3-bar"><span id="mementoDaySelectedDate">'+esc(dayContext(dayKeys[daySlide]))+'</span></div>'+
   '<div class="life-day-carousel"><nav class="life-day-tabs" aria-label="Kies dag">'+tabs+'</nav>'+
   '<div class="life-day-track" id="lifeDayTrack" role="region" aria-roledescription="carrousel" aria-label="Planning voor vandaag, morgen en overmorgen" tabindex="0">'+days+'</div>'+
-  '</div><div class="dr-marker-host">'+checklistMarker()+'</div>';
+  '</div>';
  window.CompassFlow.mount();paintTodayAppointments();window.MementoGoogleCalendar?.ensureUpcoming?.();syncDayCarousel(true);
   activateLifeSortables();
  // Panel height changes with completion disclosures, font loading and viewport width.
@@ -1516,7 +1565,7 @@ function render(){
  dayTrackObserver?.disconnect();dayTrackObserver=null;
  renderNav();const label=views.find(x=>x[0]===view)[2];$('lifeTitle').textContent=label;$('lifeCrumb').textContent='Leven / '+label;
  const descriptions={};
- $('lifeSubtitle').textContent=descriptions[view]||'';$('lifeSubtitle').hidden=!descriptions[view];root.dataset.lifeView=view;const add=$('lifeAdd');add.hidden=['agenda','backup','today','groceries','fitness','notes'].includes(view);add.textContent=view==='groceries'?'＋ Product':view==='wishes'?'＋ Aankoopwens':view==='notes'?'＋ Notitie':'＋ Nieuwe taak';
+ $('lifeSubtitle').textContent=descriptions[view]||'';$('lifeSubtitle').hidden=!descriptions[view];root.dataset.lifeView=view;const add=$('lifeAdd');add.hidden=['agenda','backup','today','groceries','fitness','notes','checklists'].includes(view);add.textContent=view==='groceries'?'＋ Product':view==='wishes'?'＋ Aankoopwens':view==='notes'?'＋ Notitie':'＋ Nieuwe taak';
  if(view==='fitness'){if(window.MementoFitness){window.MementoFitness.mount(content,window.MementoFitnessBridge)}else{content.innerHTML='<div class="life-panel"><p>Fitness kon niet worden geladen. Vernieuw de app zodra je internet hebt.</p></div>'}return}
  if(view==='today'){renderToday();window.MementoGlobalSearch?.mount();return}
  if(view==='checklists'){renderChecklists();return}
@@ -1703,11 +1752,15 @@ root.addEventListener('click',e=>{
  const section=summary?.parentElement;
  if(section?.matches?.('.memento-task-category')){const id=section.dataset.taskGroup;if(section.open)expandedTaskCategories.delete(id);else expandedTaskCategories.add(id);}
  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.drOpen){checklistOpenId=d.drOpen;checklistTrash=false;renderChecklists();window.scrollTo(0,0);return}
+ if(d.drBack!==undefined){checklistOpenId='';renderChecklists();return}
+ if(d.drComplete){completeChecklist(d.drComplete);return}
+ if(d.drReset){resetChecklist(d.drReset);return}
  if(d.drNew!==undefined){editChecklist();return}
  if(d.drEdit){editChecklist(d.drEdit);return}
- if(d.drTrash!==undefined){checklistTrash=!checklistTrash;renderChecklists();return}
- if(d.drDuplicate){const c=state.checklists.find(x=>x.id===d.drDuplicate);if(c)mutate(()=>{state.checklists.push({...clone(c),id:uid(),title:c.title+' (kopie)',days:{},deletedAt:'',steps:c.steps.map(s=>({...s,id:uid()}))})},'Checklist gekopieerd.');return}
- if(d.drDelete){const c=state.checklists.find(x=>x.id===d.drDelete);if(c&&confirm('Checklist naar de prullenbak verplaatsen?'))mutate(()=>{c.deletedAt=new Date().toISOString()},'Checklist naar de prullenbak verplaatst.',true);return}
+ if(d.drTrash!==undefined){checklistTrash=!checklistTrash;checklistOpenId='';renderChecklists();return}
+ if(d.drDuplicate){const c=state.checklists.find(x=>x.id===d.drDuplicate);if(c)mutate(()=>{state.checklists.push({...clone(c),id:uid(),title:c.title+' (kopie)',days:{},runHistory:[],deletedAt:'',steps:c.steps.map(s=>({...s,id:uid()}))})},'Checklist gekopieerd.');return}
+ if(d.drDelete){const c=state.checklists.find(x=>x.id===d.drDelete);if(c&&confirm('Checklist naar de prullenbak verplaatsen?'))mutate(()=>{c.deletedAt=new Date().toISOString();checklistOpenId=''},'Checklist naar de prullenbak verplaatst.',true);return}
  if(d.drRestore){const c=state.checklists.find(x=>x.id===d.drRestore);if(c)mutate(()=>{c.deletedAt=''},'Checklist hersteld.',true);return}
  if(d.drPurge){const c=state.checklists.find(x=>x.id===d.drPurge);if(c&&confirm('Checklist en alle afvinkgeschiedenis definitief verwijderen?'))mutate(()=>{state.checklists=state.checklists.filter(x=>x.id!==c.id)},'Checklist definitief verwijderd.');return}
  if(d.drPlan){planTask(d.drPlan);return}
@@ -1791,6 +1844,15 @@ root.addEventListener('change',e=>{
 });
 root.addEventListener('submit',e=>{if(e.target.id==='lifeShoppingForm'){e.preventDefault();addShoppingItem();return}if(e.target.id!=='lifeQuickForm')return;e.preventDefault();submitQuickCapture()});
 dialog.addEventListener('click',e=>{if(e.target===dialog||e.target.closest('[data-life-close]')){closeDialog();return}const b=e.target.closest('button');if(!b)return;
+ if(modal?.mode==='checklist'&&(b.dataset.drStepAdd!==undefined||b.dataset.drStepMove||b.dataset.drStepRemove)){
+  syncChecklistEditorSteps();
+  if(b.dataset.drStepAdd!==undefined)modal.checklistSteps.push({id:uid(),text:''});
+  else if(b.dataset.drStepRemove)modal.checklistSteps=modal.checklistSteps.filter(s=>s.id!==b.dataset.drStepRemove);
+  else {const i=modal.checklistSteps.findIndex(s=>s.id===b.dataset.drStepMove),j=i+Number(b.dataset.direction);if(i>=0&&j>=0&&j<modal.checklistSteps.length)[modal.checklistSteps[i],modal.checklistSteps[j]]=[modal.checklistSteps[j],modal.checklistSteps[i]];}
+  renderChecklistEditorSteps();
+  if(b.dataset.drStepAdd!==undefined){const list=$('drStepEditor').querySelectorAll('[data-dr-step-text]');list[list.length-1]?.focus();}
+  return;
+ }
  if(b.dataset.drUnplan){const t=state.tasks.find(x=>x.id===b.dataset.drUnplan);if(t&&mutate(()=>{delete t.daySlot},'Taak weer zonder tijd.'))closeDialog();return}
  if(b.hasAttribute('data-recipe-import-back')&&recipeImportDraft){recipeImportDraft.stage='input';renderRecipeImport();return}
  if(b.dataset.followupStart&&b.dataset.followupId){startFollowup(b.dataset.followupStart,b.dataset.followupId);return;}

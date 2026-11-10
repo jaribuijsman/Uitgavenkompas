@@ -31,10 +31,16 @@ async function seed(page,data,url){
   timedTask.planning={schemaVersion:1,estimateMinutes:12};
   timedTask.timing={schemaVersion:1,occurrenceId:'upgrade-current',measurements:[{id:'upgrade-measurement',taskId:timedTask.id,occurrenceId:'upgrade-previous',source:'timer',activeSeconds:720,confirmedAt:'2026-10-27T10:00:00.000Z',needsReview:false}],session:{id:'upgrade-review',occurrenceId:'upgrade-current',status:'needsReview',activeSeconds:30}};
   async function context(){const c=await browser.newContext({viewport:{width:393,height:852},hasTouch:true,reducedMotion:'reduce',locale:'nl-NL',timezoneId:'Europe/Amsterdam'});await c.route('https://**/*',r=>r.abort());await c.addInitScript(()=>{const D=Date,t=Date.parse('2026-10-28T12:00:00+01:00');window.Date=class extends D{constructor(...a){super(...(a.length?a:[t]));}static now(){return t;}};});return c;}
+  async function openNotes(){
+   const fixed=page.locator('#mementoQuickNav [data-memento-dest="life:notes"]');
+   if(await fixed.count())await fixed.click();
+   else {await page.locator('#mementoQuickNav [data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:notes"]').click();}
+   assert.equal(await page.locator('#lifeApp').getAttribute('data-life-view'),'notes','Knowledge remains reachable via the active navigation');
+  }
   // Same origin and profile, real service workers and IndexedDB; source switches only on the local test server.
   source=baseline;const ctx=await context();let page=await ctx.newPage();page.on('dialog',d=>d.accept());await seed(page,data,url);
   const upgradeTrace=async label=>{report.upgradeTrace??=[];report.upgradeTrace.push(await page.evaluate(async label=>({label,core:typeof window.MementoFitnessCore,duty:typeof window.MementoFitnessCore?.duty,scripts:[...document.scripts].filter(s=>s.src.includes('fitness')).map(s=>s.src),caches:await Promise.all((await caches.keys()).map(async name=>{const c=await caches.open(name),html=await c.match(location.href);return {name,htmlFitness:html?(await html.text()).match(/memento-fitness-core\.js[^"<]*/)?.[0]:null,assets:(await c.keys()).filter(r=>r.url.includes('fitness-core')).map(r=>r.url)};}))}),label));};
-  await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration();return window.MementoStorageGuard?.writable&&r?.active?.state==='activated'&&!r.installing&&!r.waiting&&navigator.serviceWorker.controller===r.active;});
+  await openNotes();await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration();return window.MementoStorageGuard?.writable&&r?.active?.state==='activated'&&!r.installing&&!r.waiting&&navigator.serviceWorker.controller===r.active;});
   const before=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));
   // Keep a legacy same-origin cache ahead of the new release in CacheStorage order.
   // An offline navigation must not use another cache's HTML or its old script URLs.
@@ -48,11 +54,11 @@ async function seed(page,data,url){
   // Opening a new cache precedes addAll/activation. Wait for the actual worker takeover,
   // not just a cache directory, before assessing an offline upgrade.
   await page.waitForFunction(async({name,required})=>{const r=await navigator.serviceWorker.getRegistration();if(r?.active?.state!=='activated'||r.installing||r.waiting||navigator.serviceWorker.controller!==r.active||navigator.serviceWorker.controller===window.__previousMementoController)return false;const c=await caches.open(name);return(await Promise.all(required.map(p=>c.match(new URL(p,location.href))))).every(Boolean);},{name:cache,required});await previousWorkerClosed;await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoFitnessCore?.duty);await upgradeTrace('online-new-worker');report.workersOnline=await Promise.all(ctx.serviceWorkers().map(w=>w.evaluate(()=>CACHE).catch(e=>String(e))));
-  await ctx.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoFitnessCore?.duty);await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();
+  await ctx.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});if(await page.locator('#ms-continue').isVisible())await page.locator('#ms-continue').click();await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoFitnessCore?.duty);await openNotes();
   // Enter the actual note workspace before asserting its additive migration.
   await page.evaluate(()=>window.MementoKnowledge.showNote('visual-note'));
   await page.locator('#mementoQuickNav [data-memento-dest="life:tasks"]').click();
-  await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').click();
+  await openNotes();
   await page.waitForFunction(()=>window.MementoKnowledgeBridge.read().knowledge?.workspace?.version===2);
   await upgradeTrace('offline');report.workersOffline=await Promise.all(ctx.serviceWorkers().map(w=>w.evaluate(()=>CACHE).catch(e=>String(e))));const after=await page.evaluate(()=>({life:localStorage.getItem('compass_life_preview_v1'),finance:localStorage.getItem('uitgavenkompas_v1'),pin:localStorage.getItem('uitgavenkompas_pin_config_v1')}));
   // V2 adds a workspace to Knowledge metadata. Compare the original user-owned payload,

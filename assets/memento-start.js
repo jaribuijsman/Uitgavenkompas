@@ -2,7 +2,7 @@
 (()=>{'use strict';
  const lock=document.getElementById('pinLock'),forest=lock?.querySelector('.pin-forest-bg'),form=document.getElementById('pinForm');
  if(!lock||!forest||!form)return;
- const PIN_KEY='memento_manual_pin_lock_v1',LIFE_KEY='compass_life_preview_v1',WEATHER_KEY='compass_weather_beverwijk_v1';
+ const PIN_KEY='memento_manual_pin_lock_v1',WEATHER_KEY='compass_weather_beverwijk_v1';
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const date=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const hour=()=>Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Amsterdam',hour:'2-digit',hourCycle:'h23'}).format(new Date()));
@@ -12,34 +12,14 @@
  root.innerHTML=`<div class="ms-shell"><div class="ms-content">
 <header class="ms-brand"><img class="ms-logo" src="./assets/memento-logo-gold.png" alt="Memento — Reflect · Refine · Conquer" width="260" height="90"><div class="ms-date" id="ms-date">Vandaag</div></header>
 <div class="ms-feature">
-<div class="ms-feature-track" id="ms-feature-track" role="region" aria-roledescription="carrousel" aria-label="Weer en gedachte voor vandaag">
-<section class="ms-weather ms-glass ms-feature-slide" role="group" aria-label="1 van 2: Weer in Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
-<section class="ms-thought ms-glass ms-feature-slide" role="group" aria-label="2 van 2: Gedachte voor vandaag"><div id="ms-quote-host"><div class="flow-hero"><div class="flow-eyebrow">Gedachte voor vandaag</div><p>Gedachte laden…</p></div></div></section>
+<section class="ms-weather ms-glass" aria-label="Weer in Beverwijk"><span class="ms-overline">Beverwijk · Vandaag</span><div class="ms-topweather"><div class="ms-temperature" id="ms-temp">—°</div><div class="ms-condition" id="ms-condition">Weersverwachting ophalen…</div></div><div class="ms-summary" id="ms-summary">Actuele voorspelling van Open-Meteo</div><div class="ms-hourly" id="ms-hourly" aria-label="Weer per uur"><div class="ms-hour"><time>—:—</time><b>·</b><strong>—°</strong></div></div><div class="ms-source"><span id="ms-weather-status">Weer wordt bijgewerkt</span><span><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="ms-refresh" id="ms-refresh" aria-label="Weer verversen">↻</button></span></div></section>
 </div>
-<nav class="ms-feature-nav" aria-label="Kaart kiezen">
-<button type="button" data-ms-slide="0" aria-controls="ms-feature-track" aria-label="Toon weer" aria-pressed="true"></button>
-<button type="button" data-ms-slide="1" aria-controls="ms-feature-track" aria-label="Toon gedachte voor vandaag" aria-pressed="false"></button>
-</nav></div>
-<section class="ms-day ms-glass" aria-label="Jouw dagritme"><div class="ms-dayhead"><strong>Jouw dagritme</strong><button class="ms-overview" type="button" data-ms-view="checklists">Beheer →</button></div><button class="ms-night-switch" type="button" aria-pressed="false">Nachtritme tonen</button><nav class="ms-moments" aria-label="Dagmoment kiezen"><button type="button" data-ms-moment="morning" aria-pressed="true">Ochtend</button><button type="button" data-ms-moment="afternoon" aria-pressed="false">Middag</button><button type="button" data-ms-moment="evening" aria-pressed="false">Avond</button></nav><div id="ms-rhythm" class="ms-rhythm" aria-live="polite"></div></section>
+<section class="ms-thought ms-quote ms-glass" aria-label="Quote van de dag"><div id="ms-quote-host"><div class="flow-hero"><div class="flow-eyebrow">Quote van de dag</div><p>Quote laden…</p></div></div></section>
 <nav class="ms-quick" aria-label="Snelfuncties"><button class="ms-quickbutton" type="button" data-ms-create="task"><span aria-hidden="true">＋</span>Taak</button><button class="ms-quickbutton" type="button" data-ms-create="note"><span aria-hidden="true">＋</span>Snelle notitie</button><button class="ms-quickbutton" type="button" data-ms-create="transaction"><span aria-hidden="true">＋</span>Transactie</button></nav>
 </div></div><div class="ms-footer"><button class="ms-continue" id="ms-continue" type="button">Doorgaan <span aria-hidden="true">→</span></button></div>`;
  lock.insertBefore(root,form);
  const one=id=>document.getElementById(id);
 
- const featureTrack=one('ms-feature-track');
- const featureButtons=[...root.querySelectorAll('[data-ms-slide]')];
- function activeSlide(index){featureButtons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)))}
- function showSlide(index,immediate=false){
-  const next=index===1?1:0;
-  activeSlide(next);
-  featureTrack.scrollTo({left:next*featureTrack.clientWidth,behavior:immediate||matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
- }
- featureButtons.forEach(button=>button.addEventListener('click',()=>showSlide(Number(button.dataset.msSlide))));
- let slideFrame=0;
- featureTrack.addEventListener('scroll',()=>{
-  cancelAnimationFrame(slideFrame);
-  slideFrame=requestAnimationFrame(()=>activeSlide(Math.round(featureTrack.scrollLeft/Math.max(1,featureTrack.clientWidth))));
- },{passive:true});
  function refreshThought(){
   const host=one('ms-quote-host'),today=date();
   if(!host||host.dataset.date===today)return;
@@ -57,7 +37,7 @@
     }
    }catch{}
   }
-  host.innerHTML=html||'<div class="flow-hero"><div class="flow-eyebrow">Gedachte voor vandaag</div><p>Gedachte tijdelijk niet beschikbaar.</p></div>';
+  host.innerHTML=html?html.replace(/Gedachte voor vandaag/g,'Quote van de dag'):'<div class="flow-hero"><div class="flow-eyebrow">Quote van de dag</div><p>Quote tijdelijk niet beschikbaar.</p></div>';
   host.dataset.date=html?today:'';
  }
  function removeLegacyTodayQuote(){
@@ -75,7 +55,7 @@
   if(isLocked())return showPin();
   lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
-  setFocusBlocked(true);removeLegacyTodayQuote();refreshDay();refreshWeather();refreshThought();showSlide(0,true);illuminate();
+  setFocusBlocked(true);removeLegacyTodayQuote();refreshDay();refreshWeather();refreshThought();illuminate();
  }
  function showPin(){
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
@@ -98,7 +78,7 @@
  root.querySelectorAll('[data-ms-view]').forEach(btn=>btn.addEventListener('click',()=>{
   if(isLocked()){showPin();return}leave();navigate(btn.dataset.msView);
  }));
- root.addEventListener('click',e=>{const button=e.target.closest('#ms-rhythm [data-ms-view]');if(button){if(isLocked())showPin();else{leave();navigate(button.dataset.msView)}}});
+
  // Reuse the real editors and their validation/storage guards; this portal never writes records.
  function create(kind){
   if(isLocked()){showPin();return}
@@ -124,21 +104,9 @@
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   root.classList.remove('ms-illuminate');void root.offsetWidth;root.classList.add('ms-illuminate');
  }
- let selectedMoment='morning';
  function refreshDay(){
   one('ms-date').textContent=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'}).format(new Date());
-  const api=window.MementoDayRhythm,host=one('ms-rhythm');if(!host)return;
-  const cards=api?.start?.().filter(c=>c.moment===selectedMoment)||[];
-  host.innerHTML=cards.length?cards.map(c=>{const done=c.days?.[api.day(c)]||[];return '<article class="ms-rhythm-card"><div><small>DAGRITME · '+c.steps.filter(s=>done.includes(s.id)).length+'/'+c.steps.length+'</small><h2>'+esc(c.title)+'</h2></div><div class="ms-rhythm-steps">'+c.steps.map(s=>'<label><input type="checkbox" data-ms-check="'+esc(c.id)+'" data-ms-step="'+esc(s.id)+'"'+(done.includes(s.id)?' checked':'')+'><span>'+esc(s.text)+'</span></label>').join('')+'</div></article>'}).join(''):'<div class="ms-rhythm-empty">Nog geen vastgezette checklist voor dit dagmoment.<button type="button" data-ms-view="checklists">Checklists beheren →</button></div>';
  }
- root.querySelectorAll('[data-ms-moment]').forEach(button=>button.addEventListener('click',()=>{selectedMoment=button.dataset.msMoment;root.querySelectorAll('[data-ms-moment]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));refreshDay()}));
- root.querySelector('.ms-night-switch').addEventListener('click',e=>{
-  const night=e.currentTarget.getAttribute('aria-pressed')!=='true',choices=night?[['wake','Na het opstaan'],['night','Tijdens je nacht'],['sleep','Voor het slapen']]:[['morning','Ochtend'],['afternoon','Middag'],['evening','Avond']];
-  e.currentTarget.setAttribute('aria-pressed',String(night));e.currentTarget.textContent=night?'Dagritme tonen':'Nachtritme tonen';
-  root.querySelectorAll('[data-ms-moment]').forEach((button,i)=>{button.dataset.msMoment=choices[i][0];button.textContent=choices[i][1];button.setAttribute('aria-pressed',String(i===0))});
-  selectedMoment=choices[0][0];refreshDay();
- });
- root.addEventListener('change',e=>{const input=e.target;if(input.dataset.msCheck&&window.MementoDayRhythm?.toggle(input.dataset.msCheck,input.dataset.msStep))refreshDay()});
  function weatherIcon(code,isDay){
   if(code===0||code===1)return isDay?'☀':'☾';
   if(code===2)return '⛅';if(code===3)return '☁';
@@ -191,7 +159,7 @@
   window.dispatchEvent(new CustomEvent('memento-start-weather-refresh'));
  });
  window.addEventListener('memento-weather-update',event=>{refreshWeather(event);refreshThought()});
- window.addEventListener('storage',e=>{if(e.key===LIFE_KEY&&lock.classList.contains('memento-welcome-mode'))refreshDay();if(e.key===PIN_KEY){if(isLocked())showPin();else showWelcome()}});
+ window.addEventListener('storage',e=>{if(e.key===PIN_KEY){if(isLocked())showPin();else showWelcome()}});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather();refreshThought()}});
  lock.addEventListener('keydown',e=>{
   if(e.key!=='Tab'||!lock.classList.contains('visible'))return;

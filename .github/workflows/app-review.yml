@@ -146,6 +146,15 @@ jobs:
           path: /tmp/memento-*
           retention-days: 7
 
+      - name: Preserve updated Start and Checklisten visual evidence
+        uses: actions/upload-artifact@v4
+        if: always() && matrix.group == 'interface-feature'
+        with:
+          name: memento-start-checklists-visual
+          path: /tmp/memento-start/after
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Keep recurring agenda visual evidence
         uses: actions/upload-artifact@v4
         if: always() && matrix.group == 'interface-feature'

@@ -8,6 +8,7 @@
   fitness:'<path d="m6 4-2 2m4 0-4 4m6-2 6 6m0 2 4-4m-2 6 2-2M3 7l4-4m10 18 4-4"/>',
   day:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>',
   tasks:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7 12 3 3 6-7"/>',
+  checklists:'<path d="m3 6 1.5 1.5L7 5M10 6h11M3 13l1.5 1.5L7 12m3 1h11M3 20l1.5 1.5L7 19m3 1h11"/>',
   library:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   household:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-7h6v7"/>',
   groceries:'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>',
@@ -27,17 +28,17 @@
   settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/>',
   menu:'<path d="M4 6h16M4 12h16M4 18h16"/>'
  };
- const life=[['fitness','Fitness','fitness'],['today','Mijn dag','day'],['tasks','Taken','tasks'],['agenda','Agenda','agenda'],['notes','Kennis','notes'],['groceries','Boodschappen','groceries'],['wishes','Wensen','wishes'],['backup','Instellingen','backup']];
+ const life=[['fitness','Fitness','fitness'],['today','Mijn dag','day'],['tasks','Taken','tasks'],['agenda','Agenda','agenda'],['checklists','Checklisten','checklists'],['notes','Kennis','notes'],['groceries','Boodschappen','groceries'],['wishes','Wensen','wishes'],['backup','Instellingen','backup']];
  const finance=[['dashboard','Overzicht','dashboard'],['transactions','Transacties','transactions'],['analysis','Analyse','analysis'],['budgets','Budgetten','budgets'],['accounts','Rekeningen','accounts'],['planning','Planning','planning'],['smartbuy','Slim Kopen','smartbuy'],['moneycoach','Geldcoach','moneycoach'],['receipts','Bonnetjes','receipts'],['settings','Instellingen','settings']];
  const sets={life,finance};
- const fav={life:['today','tasks','agenda','notes'],finance:['dashboard','transactions','analysis','budgets']};
+ const fav={life:['today','tasks','agenda','checklists'],finance:['dashboard','transactions','analysis','budgets']};
  let lastFocus=null;
  const area=()=>document.body.dataset.compassArea==='finance'?'finance':'life';
  const active=a=>{
    if(a==='life')return document.querySelector('#lifeNavigation button[aria-current="page"]')?.dataset.lifeView||'today';
    return document.querySelector('#sideNav button.active')?.dataset.view||'dashboard'
  };
- const icon=name=>window.MementoIllustratedIcons?.svg(name)||'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+icons[name]+'</svg>';
+ const icon=name=>name==='checklists'?'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+icons.checklists+'</svg>':window.MementoIllustratedIcons?.svg(name)||'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+icons[name]+'</svg>';
  function sync(){
   const a=area(),v=active(a),items=sets[a];
   for(const [key,,symbol]of life){const span=document.querySelector('#lifeNavigation [data-life-view="'+key+'"] .life-nav-icon');if(span)span.innerHTML=icon(symbol)}
@@ -50,7 +51,7 @@
  }
  function paintMenu(){const a=area(),v=active(a);document.getElementById('mementoMenuTitle').textContent=a==='life'?'Leven — alle onderdelen':'Financiën — alle onderdelen';
   layer.querySelectorAll('[data-memento-switch]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mementoSwitch===a)));
-  const groups=a==='life'?[['Dagelijks',['today','tasks','agenda','groceries','wishes']],['Kennis',['notes']],['Fitness',['fitness']],['Instellingen',['backup']]]:[['Financiën',finance.map(x=>x[0])]];grid.innerHTML=groups.map(([name,ids])=>'<h3 class="ml-menu-label">'+name+'</h3>'+ids.map(id=>{const [,label,symbol]=sets[a].find(x=>x[0]===id);return '<button type="button" data-memento-dest="'+a+':'+id+'"'+(v===id?' class="active" aria-current="page"':'')+'>'+icon(symbol)+'<span>'+label+'</span></button>';}).join('')).join('');
+  const groups=a==='life'?[['Dagelijks',['today','tasks','agenda','checklists','groceries','wishes']],['Kennis',['notes']],['Fitness',['fitness']],['Instellingen',['backup']]]:[['Financiën',finance.map(x=>x[0])]];grid.innerHTML=groups.map(([name,ids])=>'<h3 class="ml-menu-label">'+name+'</h3>'+ids.map(id=>{const [,label,symbol]=sets[a].find(x=>x[0]===id);return '<button type="button" data-memento-dest="'+a+':'+id+'"'+(v===id?' class="active" aria-current="page"':'')+'>'+icon(symbol)+'<span>'+label+'</span></button>';}).join('')).join('');
  }
  function close(){if(layer.hidden)return;layer.hidden=true;document.body.classList.remove('memento-menu-open');lastFocus?.focus?.();lastFocus=null}
  function open(){if(document.body.classList.contains('pin-locked'))return;lastFocus=document.activeElement;paintMenu();layer.hidden=false;document.body.classList.add('memento-menu-open');closeButton.focus()}
