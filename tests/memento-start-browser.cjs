@@ -77,6 +77,10 @@ const server=http.createServer((req,res)=>{
    if(width===393){
     await page.setViewportSize({width,height:772});
     await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
+    fs.mkdirSync('/tmp/memento-start/after',{recursive:true});
+    await page.screenshot({path:'/tmp/memento-start/after/start-top-393.png',animations:'disabled'});
+    await page.locator('#mementoStart .ms-shell').evaluate(shell=>{shell.scrollTop=shell.scrollHeight;});
+    await page.screenshot({path:'/tmp/memento-start/after/start-bottom-393.png',animations:'disabled'});
     await page.locator('#ms-continue').click();
     assert.equal(await page.locator('#mementoQuickNav [data-memento-dest="life:checklists"]').count(),1,'Checklists takes the fourth fixed tab');
     assert.equal(await page.locator('#mementoQuickNav [data-memento-dest="life:notes"]').count(),0,'Knowledge is no longer fixed');
@@ -85,7 +89,9 @@ const server=http.createServer((req,res)=>{
     await page.locator('#mementoMenuClose').click();
     await page.locator('#mementoQuickNav [data-memento-dest="life:checklists"]').click();
     assert.equal(await page.locator('#lifeApp').getAttribute('data-life-view'),'checklists');
+    await page.screenshot({path:'/tmp/memento-start/after/checklist-overview-393.png',animations:'disabled'});
     await page.locator('[data-dr-open="portal-check"]').click();
+    await page.screenshot({path:'/tmp/memento-start/after/checklist-focus-393.png',animations:'disabled'});
     await page.locator('[data-dr-check="portal-check"]').check();
     assert((await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')))).checklists[0].days['2026-10-28'].includes('portal-step'));
     await page.locator('[data-dr-complete="portal-check"]').click();
