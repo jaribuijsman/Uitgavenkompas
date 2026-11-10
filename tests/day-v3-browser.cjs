@@ -281,14 +281,16 @@ const reports=[];
     await page.locator('[data-dr-new]').click();
     await page.locator('#drTitle').fill('Fictieve avondzorg');
     await page.locator('#drMoment').selectOption('evening');
-    await page.locator('#drPinned').check();
-    await page.locator('#drSteps').fill('Water drinken\nTanden poetsen');
+    await page.locator('#drStepEditor [data-dr-step-text]').fill('Water drinken');
+    await page.locator('[data-dr-step-add]').click();
+    await page.locator('#drStepEditor [data-dr-step-text]').nth(1).fill('Tanden poetsen');
     await page.locator('[form="drChecklistForm"]').click();
     await page.locator('#lifeDialog').waitFor({state:'hidden'});
     await shot('checklists');
     await page.evaluate(()=>window.MementoStart.showWelcome());
-    await page.locator('[data-ms-moment="evening"]').click();
-    await shot('start-rhythm');
+    assert.equal(await page.locator('#mementoStart .ms-day').count(),0,'Start no longer contains daily rhythm');
+    assert.equal(await page.locator('#mementoStart .ms-quote').count(),1,'Start shows the standalone daily quote');
+    await shot('start-quote');
    }
    if(width===393&&count===3){
     // Real UI regression: completing a timed weekly routine must remove the old day card.
