@@ -43,7 +43,7 @@ try{
  };
  await page.goto(base+"/docs/icon-audit.html",{waitUntil:"domcontentloaded"});
  assert.equal(await page.locator("#categoryGrid .tile").count(),23);
- assert.equal(await page.locator("#iconGrid .tile").count(),66);
+ assert.equal(await page.locator("#iconGrid .tile").count(),67);
  assert.equal(await page.locator("#cardGrid .card").count(),5);
  assert.match(await page.locator("#auditStatus").textContent(),/geen letters in de beelden/);
  const geometry=await page.evaluate(()=>{
@@ -56,7 +56,7 @@ try{
     sizes:[...tile.querySelectorAll(".mini .sample:not(.light) svg")].map(n=>n.getBoundingClientRect().width),box:[intrinsic.x,intrinsic.y,intrinsic.width,intrinsic.height],nodes,ids,text:!!a.querySelector("text")};
   });
  });
- assert.equal(geometry.length,89);
+ assert.equal(geometry.length,90);
  for(const g of geometry){
   assert(g.bigW>=55&&g.bigW<=64,JSON.stringify(g));
   assert(g.smallW>=21&&g.smallW<=27,JSON.stringify(g));
@@ -68,7 +68,7 @@ try{
  }
  assert.equal(new Set(geometry.flatMap(g=>g.ids)).size,geometry.reduce((s,g)=>s+g.ids.length,0),"Gradient IDs collide");
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,"Visual gallery overflows horizontally");
- checks.push("All 66 icons and 23 categories render at 24/32/48/64px without letters, clipping or duplicate IDs");
+ checks.push("All 67 icons and 23 categories render at 24/32/48/64px without letters, clipping or duplicate IDs");
  const rasters=await page.evaluate(async()=>{
   const I=window.MementoIllustratedIcons,results=[];
   for(const key of I.available)for(const size of [24,32,48,64]){
@@ -82,7 +82,7 @@ try{
  });
  const clipped=rasters.filter(r=>r.edge);assert.deepEqual(clipped,[],"Clipped or opaque edges");
  for(const r of rasters){assert(r.ink>r.size*r.size*.04,JSON.stringify(r));assert.equal(r.edge,0,'Clipped or opaque edge '+JSON.stringify(r));assert(r.center.every(v=>v>.3&&v<.7),'Unbalanced center '+JSON.stringify(r));}
- checks.push('264 transparent raster samples: nonempty silhouettes, clear edges, centered at all four sizes');
+ checks.push('268 transparent raster samples: nonempty silhouettes, clear edges, centered at all four sizes');
  await capture(page,"audit-gallery");
  const fixture=await require('./helpers/visual-fixture.cjs').fixture();
  await page.goto(base+'/__seed__');
@@ -161,7 +161,7 @@ try{
  // A real service worker must cache every core URL and survive a network-disabled reload.
  await page.evaluate(async()=>{await navigator.serviceWorker.ready});await page.reload({waitUntil:'domcontentloaded'});await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>navigator.serviceWorker.controller);
  const cache=await page.evaluate(async()=>{const key=(await caches.keys()).find(k=>k.startsWith('memento-pwa-'));const c=await caches.open(key);return {key,urls:(await c.keys()).map(r=>r.url)};});
- assert.equal(cache.key,fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1]);assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261027-iconset-v2')));
+ assert.equal(cache.key,fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1]);assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261111-checklist-icon-v1')));
  await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
  await knowledgeHome();assert(await page.locator('.kc-art-row .memento-illustrative-icon').count()>=5);await capture(page,'offline-knowledge');
  await navigate('finance','transactions');await noOverflow();await context.setOffline(false);

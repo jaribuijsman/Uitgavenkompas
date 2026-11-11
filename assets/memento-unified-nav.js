@@ -38,7 +38,7 @@
    if(a==='life')return document.querySelector('#lifeNavigation button[aria-current="page"]')?.dataset.lifeView||'today';
    return document.querySelector('#sideNav button.active')?.dataset.view||'dashboard'
  };
- const icon=name=>name==='checklists'?'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+icons.checklists+'</svg>':window.MementoIllustratedIcons?.svg(name)||'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+icons[name]+'</svg>';
+ const icon=name=>window.MementoIllustratedIcons?.svg(name)||'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+icons[name]+'</svg>';
  function sync(){
   const a=area(),v=active(a),items=sets[a];
   for(const [key,,symbol]of life){const span=document.querySelector('#lifeNavigation [data-life-view="'+key+'"] .life-nav-icon');if(span)span.innerHTML=icon(symbol)}

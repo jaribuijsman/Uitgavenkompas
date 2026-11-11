@@ -8,8 +8,8 @@ const finance=fs.readFileSync(path.join(__dirname,"../assets/memento-finance-app
 const css=fs.readFileSync(path.join(__dirname,"../assets/memento-illustrative-icons.css"),"utf8");
 const sw=fs.readFileSync(path.join(__dirname,"../sw.js"),"utf8");
 const headings=["levenspad","huis-wonen","recepten-creaties","projecten-onderzoek","ideeen-inspiratie"];
-assert.equal(I.available.length,66);
-assert.equal(new Set(I.available).size,66);
+assert.equal(I.available.length,67);
+assert.equal(new Set(I.available).size,67);
 assert.equal(Object.keys(I.categoryDefaults).length,23);
 const groups={};
 for(const key of I.available){
@@ -56,23 +56,23 @@ for(const [name,key] of [['Vaste lasten','house'],['Cadeaus & donaties','star'],
 for(const name of ["Dagboek","Reizen en vakanties","Auto & vervoer","Gezondheid","Boodschappen","Wonen"]){
  assert(I.available.includes(I.financeCategory(name)));
 }
-for(const name of ["today","tasks","notes","groceries","agenda","fitness","settings","smartbuy","moneycoach","accounts","transactions","analysis","budgets","planning","receipts","menu"]){
+for(const name of ["today","tasks","checklists","notes","groceries","agenda","fitness","settings","smartbuy","moneycoach","accounts","transactions","analysis","budgets","planning","receipts","menu"]){
  assert(I.svg(name).includes("<svg"),"Navigation icon missing "+name);
 }
 assert(I.svg("<script>alert(1)</script>").includes("<svg"));
 assert(!I.svg("<script>").includes("<script>"));
 assert(ksrc.includes("MementoIllustratedIcons?.forCollection(c)"),"Knowledge icons not wired");
 assert(ksrc.includes("MementoIllustratedIcons?.svg(key)"),"Knowledge picker not wired");
-assert(index.includes("memento-illustrative-icons.js?v=20261027-iconset-v2"),"Missing shared module");
+assert(index.includes("memento-illustrative-icons.js?v=20261111-checklist-icon-v1"),"Missing shared module");
 assert(index.includes("memento-illustrative-icons.css?v=20261027-iconset-v2"),"Missing CSS");
 const navigation=fs.readFileSync(path.join(__dirname,"../assets/memento-unified-nav.js"),"utf8");
-assert(index.includes('src="./assets/memento-unified-nav.js?v=20261110-checklists-ac-v1"'),"Unified navigation module not loaded");
+assert(index.includes('src="./assets/memento-unified-nav.js?v=20261111-checklist-icon-v1"'),"Unified navigation module not loaded");
 assert(navigation.includes("MementoIllustratedIcons?.svg(name)"),"Unified navigation not using icons");
 assert(finance.includes("transactionArt(t)"),"Financial transactions not using icons");
 assert(finance.includes("categoryArt(c.name)"),"Budgets not using icons");
 assert.match(sw,/const CACHE = "memento-pwa-v\d+-[^"\n]+"/,"Versioned app cache required");
 for(const entry of JSON.parse(sw.match(/const CORE = (\[[^;]+\]);/)[1]).filter(x=>/\.(js|css)\?/.test(x)))assert(index.includes(entry),"Cache and HTML must agree: "+entry);
-assert(sw.includes("./assets/memento-illustrative-icons.js?v=20261027-iconset-v2"));
+assert(sw.includes("./assets/memento-illustrative-icons.js?v=20261111-checklist-icon-v1"));
 assert(sw.includes("./assets/memento-illustrative-icons.css?v=20261027-iconset-v2"));
 for(const token of [".kc-collection-icon",".kc-icon-picker","#mementoQuickNav","#mementoMenuGrid",".stat-icon",".ft-tabs"]){
  assert(css.includes(token),"Missing icon sizing for "+token);
