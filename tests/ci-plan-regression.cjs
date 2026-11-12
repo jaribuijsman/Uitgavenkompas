@@ -11,6 +11,46 @@ function check(title,fn){fn();count++;console.log("PASS "+title)}
 check("documentation-only does not invoke browsers",()=>{
  const a=planFor(["AGENTS.md","docs/readme.md"]);assert.equal(a.tier,"none");assert.deepEqual(a.groups,[]);
 });
+check("every planned browser group resolves in the runner, including icons",()=>{
+ const groups=JSON.parse(require('node:child_process').execFileSync(process.execPath,[require('node:path').join(__dirname,'ci-groups.cjs'),'--list-groups'],{encoding:'utf8'}));
+ assert(Object.values(groups).flat().includes('illustrative-icons-browser'),'Icon journey must be registered before the planner selects it');
+ const {suitesForGroup}=require('./ci-suites.cjs');
+ for(const paths of [
+  ['tests/illustrative-icons-browser.cjs'],
+  ['tests/visual-browser.cjs'],
+  ['tests/knowledge-workspace-browser.cjs','tests/global-search-browser.cjs'],
+  ['assets/memento-storage-guard.js']
+ ]){
+  const plan=planFor(paths);
+  for(const group of plan.groups)assert(suitesForGroup(group).length,group);
+ }
+ assert.deepEqual(suitesForGroup('test-illustrative-icons-browser'),['illustrative-icons-browser']);
+});
+check("unknown suites fail during planning and cannot launch arbitrary files",()=>{
+ const {suitesForGroup}=require('./ci-suites.cjs');
+ for(const suite of ['unknown-browser','../storage-safety','masterplan-browser']){
+  assert.throws(()=>suitesForGroup('test-'+suite),/Unknown direct browser suite/);
+ }
+ assert.throws(()=>suitesForGroup('unknown-group'),/Unknown CI group/);
+ assert.throws(()=>planFor(['tests/unknown-browser.cjs']),/Unknown direct browser suite/);
+});
+check("retired browser files select current full coverage without reviving V1 routes",()=>{
+ for(const suite of ['masterplan-browser','knowledge-v2-browser','knowledge-covers-browser','notes-direction-c-browser','journal-upgrade-browser']){
+  const p=planFor(['tests/'+suite+'.cjs']);
+  assert.equal(p.tier,'high',suite);assert.deepEqual(p.groups,FULL);
+  assert.equal(p.upgrade,false,suite);
+ }
+});
+check("full coverage exercises the icon and postmerge smoke journeys once",()=>{
+ const {suitesForGroup}=require('./ci-suites.cjs');
+ const suites=planFor(['tests/ci-plan.cjs']).groups.flatMap(suitesForGroup);
+ for(const suite of ['illustrative-icons-browser','visual-browser'])assert.equal(suites.filter(s=>s===suite).length,1,suite);
+});
+check("shared smoke assertions run the smoke journey without a duplicate direct suite",()=>{
+ assert.deepEqual(planFor(['tests/helpers/visual-assertions.cjs']).groups,['interface-smoke']);
+ assert.deepEqual(planFor(['tests/visual-browser.cjs','tests/helpers/visual-assertions.cjs']).groups,['test-visual-browser']);
+ assert.equal(planFor(['tests/ci-suites.cjs']).tier,'high','Registry changes must retain full safety coverage');
+});
 check("Agent Markdown skills are documentation-only, not a browser regression",()=>{
  const doc=planFor(["AGENTS.md","docs/android-pwa-ux-standaard.md",".agents/skills/android-ux-inspector/SKILL.md",".agents/skills/design-system-guardian/SKILL.md"]);
  assert.equal(doc.tier,"none");assert.deepEqual(doc.groups,[]);assert.equal(doc.upgrade,false);
@@ -141,9 +181,9 @@ check("worker fetch event changes remain high risk",()=>{
  assert.equal(a.tier,"high");assert(a.upgrade);
 });
 check("modified browser test runs itself, without unrelated suites",()=>{
- const a=planFor(["tests/notes-direction-c-browser.cjs"]);
+ const a=planFor(["tests/taken-v4-browser.cjs"]);
  assert.equal(a.tier,"medium");
- assert.deepEqual(a.groups,["test-notes-direction-c-browser"]);
+ assert.deepEqual(a.groups,["test-taken-v4-browser"]);
 });
 check("upgrade-browser changes retain full offline upgrade",()=>{
  const a=planFor(["tests/recovery-upgrade-browser.cjs"]);
@@ -178,12 +218,12 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    assert(Array.isArray(byGroup[name])&&byGroup[name].length>0,"missing full CI domain "+name);
    return byGroup[name];
   });
-  assert.equal(fullSuites.length,24,"full matrix including AI Hub and recurring agenda journeys must remain");
+  assert.equal(fullSuites.length,26,"full matrix including icons and postmerge smoke must remain");
   assert.equal(fullSuites.filter(s=>s==="knowledge-workspace-browser").length,1,"duplicate or missing knowledge journey in full run");
   assert.equal(fullSuites.filter(s=>s==="agenda-plan-browser").length,1,"recurring agenda journey must run exactly once");
   assert.equal(fullSuites.filter(s=>s==="ai-hub-browser").length,1,"duplicate or missing AI Hub journey in full run");
   assert(byGroup["life-full"].includes("knowledge-workspace-browser"),"life-full must own knowledge journey");
-  assert.deepEqual(byGroup["interface-visual"],["glass-rendering-browser"],"visual shard retains dedicated glass journey");
+  assert.deepEqual(byGroup["interface-visual"],["glass-rendering-browser","illustrative-icons-browser","visual-browser"],"visual shard retains dedicated glass journey");
   assert.deepEqual(byGroup["life-knowledge"],["knowledge-workspace-browser"],"targeted knowledge journey must remain");
   const mandatory={
    "interface-layout":["layout-completion-browser","visual-layout-browser"],
@@ -198,10 +238,10 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
   }
  }
  verify(groups);
- assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|24/);
+ assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|26/);
  assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
- assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/24|storage-safety-browser/);
- assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/24|grocery-import-browser/);
+ assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/26|storage-safety-browser/);
+ assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/26|grocery-import-browser/);
 });
 check("manual workflows reject obsolete V1 browser contracts without losing offline or safety coverage",()=>{
  const fs=require("node:fs"),path=require("node:path");

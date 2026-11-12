@@ -34,7 +34,8 @@ try{
   await page.evaluate(()=>scrollTo(0,0));
  }
  async function knowledgeHome(){
-  await navigate('life','notes');const home=page.locator('.kc-breadcrumbs [data-kc="home"]');if(await home.count())await home.click();
+  await navigate('life','notes');await page.evaluate(()=>window.MementoKnowledge.open());
+  await page.locator('#memento-hq-preview').waitFor();
  }
  const noOverflow=async()=>{
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
@@ -85,11 +86,20 @@ try{
  checks.push('268 transparent raster samples: nonempty silhouettes, clear edges, centered at all four sizes');
  await capture(page,"audit-gallery");
  const fixture=await require('./helpers/visual-fixture.cjs').fixture();
+ const K=require('../assets/memento-knowledge-core.js');K.migrateHierarchy(fixture.life);
+ const legacyCollections=fixture.life.knowledge.collections.filter(c=>c.id.startsWith('kc2-'));
+ assert.equal(legacyCollections.length,23);
+ for(const c of legacyCollections){
+  const note=K.makeNote({title:'Fictief bewaard document: '+c.name,body:'Bewaarde inhoud voor pictogramcontrole.',collectionId:c.id},fixture.life);
+  note.id='icon-compat-'+c.id;fixture.life.notes.push(note);
+ }
  await page.goto(base+'/__seed__');
- await page.evaluate(data=>{
+ await page.evaluate(async data=>{
   localStorage.setItem('uitgavenkompas_v1',JSON.stringify(data.finance));
   localStorage.setItem('compass_life_preview_v1',JSON.stringify(data.life));
   localStorage.setItem('uitgavenkompas_pin_config_v1',JSON.stringify(data.pin));
+  const db=await new Promise((ok,bad)=>{const r=indexedDB.open('memento_knowledge_files_v1',1);r.onupgradeneeded=()=>{const st=r.result.createObjectStore('files',{keyPath:'id'});st.createIndex('noteId','noteId',{unique:false})};r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)});
+  await new Promise((ok,bad)=>{const tx=db.transaction('files','readwrite');tx.oncomplete=ok;tx.onerror=()=>bad(tx.error);for(const {base64,...meta} of data.files)tx.objectStore('files').put({...meta,blob:new Blob([Uint8Array.from(atob(base64),c=>c.charCodeAt(0))],{type:meta.type})})});db.close();
  },fixture);
  await page.goto(base,{waitUntil:"domcontentloaded"});
  await require('./helpers/enter-app.cjs')(page,false);
@@ -99,39 +109,39 @@ try{
  if(width<=800){await page.locator('[data-memento-menu="open"]').click();
  assert(await page.locator('#mementoMenuGrid button .memento-illustrative-icon').count()>=8);await capture(page,'life-menu');await page.locator('#mementoMenuClose').click();}
  await knowledgeHome();
- assert(await page.locator("#lifeApp[data-life-view='notes'] .kc-collection-row.kc-art-row").count()>=5);
- assert(await page.locator("#lifeApp .kc-art-row .memento-illustrative-icon").count()>=5);
- assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
- checks.push("Five root forest-background cards keep labels and display distinct collection symbols");
- await capture(page,"knowledge-roots");
- await page.locator('.kc-art-row[data-id="kc2-levenspad"]').click();
- assert.equal(await page.locator(".kc-folder-row .memento-illustrative-icon").count(),5);
- const distinct=await page.locator(".kc-folder-row .memento-illustrative-icon").evaluateAll(list=>new Set(list.map(e=>[...e.querySelectorAll("path")].map(x=>x.getAttribute("d")).join("|"))).size);
- assert(distinct>=4);
- checks.push("Levenspad children are recognizable and no longer reuse their parent icon blindly");
- await capture(page,"knowledge-children");
- // Open every standard category through its existing ID.
- const roots=['levenspad','huis-wonen','recepten-creaties','projecten-onderzoek','ideeen-inspiratie'];
- const visited=new Set(['kc2-levenspad']);
- for(const root of roots){
-  await knowledgeHome();await page.locator('.kc-art-row[data-id="kc2-'+root+'"]').click();
-  const ids=await page.locator('.kc-folder-row').evaluateAll(rows=>rows.map(n=>n.dataset.id));visited.add('kc2-'+root);
-  if(root!=='levenspad')await capture(page,'knowledge-'+root);
-  for(const id of ids){await page.locator('.kc-folder-row[data-id="'+id+'"]').click();visited.add(id);await noOverflow();await page.locator('[data-kc="back"]').click();}
+ const portalTitles=await page.locator('.mm-hq .mm-open strong').allTextContents();
+ assert.equal(portalTitles.length,10);assert(portalTitles.includes('Recepten'));
+ assert.equal(await page.locator('.mm-hq .mm-open').count(),10);
+ await noOverflow();await capture(page,'knowledge-portal');
+ checks.push('Current Knowledge portal retains ten labelled headquarters and accessible navigation');
+ // Open preserved documents through the same public API used by search/AI.
+ // Their breadcrumbs still lead to existing collections; the retired home is not recreated.
+ async function openCollection(c){
+  await page.evaluate(id=>window.MementoKnowledge.showNote(id),'icon-compat-'+c.id);
+  await page.locator('.kc-breadcrumbs [data-kc="collection"][data-id="'+c.id+'"]').click();
+  assert.equal(await page.locator('.kc-header h2').innerText(),c.special==='journal'?'Mijn dagboek':c.name);
  }
- assert.equal(visited.size,23);checks.push('All 23 categories open through unchanged IDs');
- await knowledgeHome();await page.locator('.kc-art-row[data-id="kc2-levenspad"]').click();
+ const originalNotes=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes);
+ for(const note of fixture.life.notes){const actual=originalNotes.find(n=>n.id===note.id);assert(actual);assert.equal(actual.body,note.body);}
+ const visited=new Set();
+ for(const c of legacyCollections){await openCollection(c);visited.add(c.id);await noOverflow();}
+ assert.equal(visited.size,23);
+ const rootCollection=legacyCollections.find(c=>c.id==='kc2-levenspad');
+ await openCollection(rootCollection);
+ const children=page.locator('.kc-folder-row .memento-illustrative-icon');assert.equal(await children.count(),5);
+ const distinct=await children.evaluateAll(list=>new Set(list.map(e=>[...e.querySelectorAll('path')].map(x=>x.getAttribute('d')).join('|'))).size);
+ assert(distinct>=4);await capture(page,'preserved-collection');
+ checks.push('All 23 preserved collection IDs remain reachable through document breadcrumbs; distinct child icons retain labels');
  await page.locator('.kc-collection-actions summary').click();await page.locator('.kc-collection-actions [data-kc="edit-collection"]').click();
  const original=await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).knowledge.collections.find(c=>c.id==='kc2-levenspad'));
  const choices=page.locator('.kc-icon-picker [data-kc="choose-icon"]');assert(await choices.count()>=39);
  for(const b of await choices.all())assert((await b.getAttribute('aria-label')).length>0);
  await capture(page,'category-editor');
- // Saving unrelated fields must retain the stored legacy icon preference.
- await page.locator('[data-kc="save-collection"]').click();await page.waitForSelector('.kc-collection-actions');
+ await page.locator('[data-kc="save-collection"]').click();await page.locator('.kc-collection-actions').waitFor();
  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).knowledge.collections.find(c=>c.id==='kc2-levenspad').icon),original.icon);
- await knowledgeHome();await page.locator('.kc-section-head summary').first().click();await page.locator('[data-kc="new-collection"]').first().click();
+ await page.locator('.kc-collection-actions summary').click();await page.locator('[data-kc="new-sub"]').click();
  await page.locator('#kc-col-name').fill('Fictieve pictogramcontrole');await page.locator('[data-kc="choose-icon"][data-id="compass"]').click();
- await page.locator('[data-kc="save-collection"]').click();await page.waitForSelector('.kc-collection-actions');
+ await page.locator('[data-kc="save-collection"]').click();await page.locator('.kc-collection-actions').waitFor();
  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).knowledge.collections.find(c=>c.name==='Fictieve pictogramcontrole').icon),'compass');
  checks.push('Picker labels, existing preference and newly selected illustration survive save');
  await navigate('life','fitness');
@@ -163,7 +173,7 @@ try{
  const cache=await page.evaluate(async()=>{const key=(await caches.keys()).find(k=>k.startsWith('memento-pwa-'));const c=await caches.open(key);return {key,urls:(await c.keys()).map(r=>r.url)};});
  assert.equal(cache.key,fs.readFileSync(path.join(root,'sw.js'),'utf8').match(/const CACHE = "([^"]+)"/)[1]);assert(cache.urls.some(u=>u.includes('memento-illustrative-icons.js?v=20261111-checklist-icon-v1')));
  await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await require('./helpers/enter-app.cjs')(page);await page.waitForFunction(()=>window.MementoStorageGuard?.writable&&window.MementoIllustratedIcons);
- await knowledgeHome();assert(await page.locator('.kc-art-row .memento-illustrative-icon').count()>=5);await capture(page,'offline-knowledge');
+ await knowledgeHome();assert.deepEqual(await page.locator('.mm-hq .mm-open strong').allTextContents(),portalTitles);await page.evaluate(()=>window.MementoKnowledge.showNote('visual-checklist'));assert.equal(await page.locator('.kc-header h2').innerText(),'Voor de wandeling');assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('compass_life_preview_v1')).notes),originalNotes);await noOverflow();await capture(page,'offline-preserved-note');
  await navigate('finance','transactions');await noOverflow();await context.setOffline(false);
  checks.push('Current service worker loads app, SVG library, forest scenes and transactions offline');
  assert.deepEqual(errors,[],"Browser page errors detected");
