@@ -502,3 +502,28 @@ De publieke HTML, worker, alle precache-URLs en de nieuwe CI-/roadmapbestanden z
 **Lokaal geverifieerd:** de Quickfit-baseline, ontbrekende gerichte selectie en ontbrekende checklistfixture zijn eerst rood vastgesteld. De uiteindelijke selectie is high, zes browsergroepen, upgrade false (uitsluitend CI/tests/docs wijzigen). Alle 34 centrale coretests, 39 plannergevallen en alle zes volledige browsergroepen zijn groen: 27 unieke suites, 30 browseruitvoeringen door smoke op vier breedtes. De echte medium-coreworkflow is apart succesvol uitgevoerd en bevat de 25 Fitness-regressies. De checklist-axecontrole is groen in overzicht én focus op 360/393/412/1280px; geen bevestigde axe-violations of horizontale documentoverflow in die acht staten. 393px-beelden van beide checkliststaten zijn daadwerkelijk bekeken. Onafhankelijke diffreview: geen belangrijke bevindingen.
 
 **Overdracht:** bronbestanden van de app, opslagcontracten en cache blijven exact gelijk aan de basis. Oude screenshotbestanden die een bestaande test onder docs overschreef zijn exact hersteld; nieuwe captures/logs blijven buiten de repository. Deze PR bewaart checklistbeelden en het axe-rapport ook bij groene CI. De finale PR-head moet op GitHub slagen vóór de gebruiker handmatig merge uitvoert. Agent merge/publiceert niet. Fysieke A54 en echte microfoon zijn niet getest; dicteren gebruikt een browser-API-fixture en controleert de echte appinvoer en opslag. Geen algemene ontwerp- of volledige toegankelijkheidsclaim.
+
+
+## 10. D-20261112 — begrensde opschoning van private Finance-code
+
+**Opdracht en basis:** gebruiker vraagt code op te schonen en stelt pakket C uit. Werkbasis is actuele main `982c6ee718e2bc144e16b67ff8d5a653e3cc4822` na handmatige merge van B (#121). Alleen aantoonbaar ongebruikte private Finance-functies verwijderen; PR voor handmatige merge, geen publicatie of releasebeschermingswijziging.
+
+**Acceptatie, maximaal acht criteria:**
+
+1. Scope-analyse bewijst dat `allMonthsBack`, `makeInsights`, `nextBillDate`, `addFrequency` en `runReceiptOcr` geen bindingverwijzingen hebben; `categorySpending` en `billDateForMonth` worden alleen vanuit dit dode cluster gebruikt. Geen dynamische scope of exports van deze functies.
+2. Verwijder uitsluitend deze zeven declaraties. Vergelijking van de syntaxbomen bewijst dat alle resterende code gelijk blijft; actieve analyse, betaaldata en boninvoer blijven behouden.
+3. Geen wijziging aan opslagkeys, schema, data, handlers of ontwerp. Alleen bijbehorende asset-URL en cacheversie consistent verversen; worker-lifecycle ongewijzigd.
+4. Bestaande financiële validatie-, periode- en domeinregressies slagen vóór en na de verwijdering. Geen kunstmatige test die uitsluitend afwezigheid van functienamen assert.
+5. Echte appjourney vóór wijziging doorloopt 360/393/412px; runtimecoverage ondersteunt de statische bewijsvoering. Dezelfde fictieve fixture levert vergelijkbare voor/na-beelden op 393px.
+6. Werkelijke plannerselectie high, zes browsergroepen en upgrade wordt uitgevoerd, inclusief overgang van baseline-worker v157 naar v158 en behouden fictieve gegevens.
+7. Onafhankelijke diffreview, syntax/whitespacecontrole en exacte PR-head-CI worden beoordeeld. Historische screenshots blijven intact; bewijs buiten repository.
+8. Gebruiker ontvangt een PR-link voor handmatige merge. Fysieke A54, TalkBack, echte geïnstalleerde PWA en productie blijven niet geverifieerd.
+
+**Onderzoeksresultaat:** private bindinganalyse en nul aanroepen in alle drie baseline-browserbreedtes bevestigen het gekozen cluster. De overblijvende syntaxboom is exact gelijk. Dit is een gedragsbehoudende verwijdering; daarom gelden bestaande karakterisatietests en structureel bewijs, geen nieuwe gedragsasserties voor een functie die niet bereikbaar is. Lokale eindcontrole en PR-overdracht volgen hieronder.
+
+
+**Lokaal eindresultaat:** Finance-app 226043→221542 bytes (−4501; zeven declaraties). Onafhankelijke reviewer bevestigt de overblijvende syntaxboom en vindt geen belangrijke of kleine bevindingen. Alle 34 centrale coretests en zes volledige browsergroepen zijn groen (27 unieke suites, 30 browseruitvoeringen door smoke op vier breedtes). De afzonderlijke upgrade vanaf bovenstaande main is geslaagd: nieuwe worker v158 online én offline, behouden fictieve Finance/Life/PIN en binaire bijlagen, actuele offline-assets beschikbaar. Een eerdere uitvoering tijdens gelijktijdige browserbelasting liep vast op baseline-networkidle; de geslaagde afzonderlijke uitvoering verandert geen test of applicatiecode.
+
+**Visueel bewijs en begrenzing:** dezelfde fictieve fixture leverde elf relevante Finance-beelden op 393px. Negen zijn pixelidentiek; analyse verschilt op 19 randpixels, de transactiemodal op drie koprandpixels. Overzicht, analyse en actieve boninvoer zijn daadwerkelijk bekeken. Een Mijn dag-capture koos een andere dag en is uitgesloten van een gelijkheidsclaim; Life-code is ongewijzigd en de bestaande journeys zijn groen. Geen algemene ontwerp- of fysieke-devicegoedkeuring. Historische screenshots zijn exact hersteld. Logs, scope-/AST-bewijs en beelden staan buiten de repository onder `/workspace/memento-finance-cleanup-evidence`.
+
+**Overdracht:** scope blijft dit cluster; de daardoor nu ongebruikte `receiptParseText` is bewust voor een afzonderlijke opschoonstap bewaard. De exacte GitHub-PR-head moet groen zijn vóór handmatige merge. Geen agentmerge, publicatie of pakket C. Rollback kan via een beoordeelde revert met opnieuw consistente asset/cacheversie; er is geen opslagmigratie.
