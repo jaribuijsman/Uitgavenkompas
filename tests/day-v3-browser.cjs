@@ -312,6 +312,7 @@ const reports=[];
     assert.equal(await page.locator(selector).count(),0,'Legacy stale occurrence no longer reappears');
     assert.equal((await stored()).life.tasks.find(t=>t.id===weekly.id).daySlot.date,'2026-10-31','Legacy recovery must not alter saved data');
    }
+   if(width===393&&count===3)await require('./helpers/quick-note-browser-checks.cjs')(page);
    assert.deepEqual(errors,[]);console.log('PASS V3 design, menu/edit/close/swipe, V2 validation, draft retention and undo at '+width+'px');
   }catch(e){await shot('FAIL').catch(()=>{});throw e;}
   finally{await ctx.close();}

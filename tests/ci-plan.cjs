@@ -3,7 +3,7 @@
 // state/security/worker/inline-code changes, not cache version-only churn.
 const cp=require("node:child_process"),fs=require("node:fs");
 const {FULL,retiredSuites,suitesForGroup}=require("./ci-suites.cjs");
-const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:suites|plan|groups|plan-regression|postmerge|postmerge-regression|release-gate|release-gate-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
+const HIGH=/^(?:\.github\/workflows\/|tests\/helpers\/visual-fixture\.cjs$|tests\/ci-(?:suites|plan|groups|plan-regression|postmerge|postmerge-regression|release-gate|release-gate-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|knowledge-backup|fitness-core|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
 function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
@@ -78,7 +78,7 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  }
  // Actual changes to the offline lifecycle and persistent data must be upgrade-tested.
  if(high&&application.some(p=>p==="sw.js"&&!workerCacheOnly(read(p,"before"),read(p,"after"))
-  ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|finance-app|finance-validation|life-app)\.js$/.test(p)))needsUpgrade=true;
+  ||/^assets\/memento-(?:storage-guard|backup|knowledge-store|knowledge-backup|fitness-core|trash-core|finance-app|finance-validation|life-app)\.js$/.test(p)))needsUpgrade=true;
  if(high)return {tier:"high",groups:FULL,upgrade:needsUpgrade,files:paths};
  const shared=htmlStyleOnly||application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
@@ -87,15 +87,17 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  if(onlyTests&&application.every(p=>/^tests\/[\w-]+-browser\.cjs$/.test(p)))return {tier:"medium",groups:[...groups],upgrade:false,files:paths};
  // The shared assertions execute inside visual-browser, including postmerge smoke.
  if(application.includes('tests/helpers/visual-assertions.cjs')&&!groups.has('test-visual-browser'))groups.add('interface-smoke');
+ if(application.includes('assets/memento-appointment-recurrence.js'))groups.add('test-agenda-plan-browser');
+ if(application.some(p=>['tests/helpers/quick-note-browser-checks.cjs','assets/memento-dictation.js'].includes(p))&&!groups.has('test-day-v3-browser'))groups.add('interface-day');
  // Reuse the existing search journey for search assets and shared menu routing;
  // it also verifies rejected navigation and note/Fitness draft preservation.
  if(application.some(p=>/^assets\/memento-(?:global-search(?:-core)?\.js|global-search\.css|unified-nav\.js)$/.test(p)))groups.add("test-global-search-browser");
- if(application.some(p=>/knowledge|note|journal|cover/i.test(p)))groups.add("life-knowledge");
+ if(application.some(p=>/knowledge|note|journal|cover/i.test(p)&&p!=='tests/helpers/quick-note-browser-checks.cjs'))groups.add("life-knowledge");
  if(application.some(p=>/fitness|quickfit/i.test(p)))groups.add("life-fitness");
  if(application.some(p=>/assistant|dictation/i.test(p)&&p.endsWith(".js")))groups.add("life-assistant");
  if(application.some(p=>/finance|account|transaction|receipt|categor|budget/i.test(p)))groups.add("data-finance");
  if(application.some(p=>/storage|backup|recovery/i.test(p)))groups.add("data-storage");
- if(application.some(p=>/calendar|agenda/i.test(p)))groups.add("interface-calendar");
+ if(application.some(p=>/calendar|agenda/i.test(p)&&p!=='tests/agenda-plan-browser.cjs'))groups.add("interface-calendar");
  if(application.some(p=>/memento-start/i.test(p)))groups.add("interface-start");
  // Global material/style changes require a layout check, but not every domain suite.
  if(shared)groups.add("interface-layout-smoke");

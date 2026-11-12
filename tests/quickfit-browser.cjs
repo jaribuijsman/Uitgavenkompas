@@ -13,12 +13,6 @@ const server=http.createServer((req,res)=>{
   browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||undefined,args:["--no-sandbox","--disable-dev-shm-usage"]});
   const context=await browser.newContext({viewport:{width,height:830},locale:"nl-NL",timezoneId:"Europe/Amsterdam",hasTouch:true,reducedMotion:"reduce"});
   await context.route("https://**/*",r=>r.abort());
-  await context.addInitScript(()=>{
-   window.SpeechRecognition=window.webkitSpeechRecognition=class{
-    start(){this.onstart?.();this.onresult?.({resultIndex:0,results:[Object.assign([{transcript:"Herinner me aan de afspraak"}],{isFinal:true})]});this.onend?.();}
-    stop(){this.onend?.();}
-   };
-  });
   const page=await context.newPage();page.on("pageerror",e=>errors.push(e.message));page.on("dialog",d=>d.accept());
   const url="http://127.0.0.1:"+server.address().port;
   await page.goto(url,{waitUntil:"domcontentloaded"});
@@ -26,37 +20,6 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>window.MementoStorageGuard?.writable);
   const stored=()=>page.evaluate(()=>JSON.parse(localStorage.getItem("compass_life_preview_v1")));
   const nav=async(dest)=>{await page.locator('[data-memento-menu="open"]').click();await page.locator('#mementoMenuGrid [data-memento-dest="life:'+dest+'"]').click()};
-  await nav("notes");
-  assert.equal(await page.locator("#kc-quick-text").count(),1);
-  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Startnotitie");
-  await page.locator('#kc-quick-mic').click();
-  assert.equal(await page.locator("#kc-quick-text").inputValue(),"Startnotitie Herinner me aan de afspraak");
-  assert.equal((await stored()).notes.some(n=>n.body.includes("Startnotitie Herinner")),false);
-  checks.push("Browser speech transcription remains editable and unpersisted until user confirms");
-  await page.locator('[data-kc="quick-save"]').click();
-  assert.equal((await stored()).notes.filter(n=>n.body==="Startnotitie Herinner me aan de afspraak").length,1);
-  assert.equal((await stored()).notes.find(n=>n.body.startsWith("Startnotitie")).collectionId,"inbox");
-  assert.equal(await page.locator("#kc-quick-text").inputValue(),"");
-  checks.push("Quick note saves precisely once in existing Knowledge Inbox");
-  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Bij opslagfout bewaren");
-  await page.evaluate(()=>{
-   window.mementoOriginalSetItem=Storage.prototype.setItem;
-   Storage.prototype.setItem=function(k,v){if(k==="compass_life_preview_v1")throw Error("Simulated quota");return window.mementoOriginalSetItem.call(this,k,v);}
-  });
-  await page.locator('[data-kc="quick-save"]').click();
-  assert.equal(await page.locator("#kc-quick-text").inputValue(),"Bij opslagfout bewaren");
-  assert.equal((await stored()).notes.some(n=>n.body==="Bij opslagfout bewaren"),false);
-  await page.evaluate(()=>{Storage.prototype.setItem=window.mementoOriginalSetItem});
-  await page.locator('[data-kc="quick-save"]').click();
-  assert.equal((await stored()).notes.some(n=>n.body==="Bij opslagfout bewaren"),true);
-  checks.push("Quota refusal keeps draft and allows explicit retry");
-  await require("./helpers/reveal.cjs")(page,"#kc-quick-text");await page.locator("#kc-quick-text").fill("Nog uitwerken");
-  await page.locator('[data-kc="quick-expand"]').click();
-  assert.equal(await page.locator("#kc-body").inputValue(),"Nog uitwerken");
-  await page.locator("#kc-body").fill("Nog uitwerken en aanvullen");
-  await page.locator('[data-kc="save"]').click();
-  assert.equal((await stored()).notes.some(n=>n.body==="Nog uitwerken en aanvullen"),true);
-  checks.push("Expand into existing editor retains text and normal saved note identity");
   await nav("fitness");
   await page.locator('#mementoFitness [data-fit="profile"]').first().click();
   await page.locator("#fitnessDialog [name=starter]").check();
@@ -92,11 +55,8 @@ const server=http.createServer((req,res)=>{
   checks.push("Prior worksets and actual previous-session difference, unchanged history");
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
   if(process.env.MEMENTO_SCREENSHOT_DIR){fs.mkdirSync(process.env.MEMENTO_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.MEMENTO_SCREENSHOT_DIR,"fitness-"+width+".png"),fullPage:true,animations:"disabled"});}
-  await nav("notes");
-  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
-  if(process.env.MEMENTO_SCREENSHOT_DIR){await page.screenshot({path:path.join(process.env.MEMENTO_SCREENSHOT_DIR,"quicknotes-"+width+".png"),fullPage:true,animations:"disabled"});}
   assert.deepEqual(errors,[]);
-  checks.push("No browser errors or horizontal overflow in both updated mobile views");
+  checks.push("Fitness-only journey completes without browser errors or horizontal overflow");
   console.log(JSON.stringify({width,checks,errors}));
   await context.close();
  }catch(e){console.error(JSON.stringify({width,checks,errors,error:String(e),stack:e.stack}));process.exitCode=1;}

@@ -48,6 +48,7 @@ async function fixture() {
   for (let i = 0; i < 2; i++) { F.start(life.fitness, life.fitness.routines[i].id, 45); life.fitness.active.exercises.forEach(e => e.logs.forEach(l => Object.assign(l, { done: true, weight: 25 + i * 2.5, reps: 10, rir: 2 }))); F.finish(life.fitness); life.fitness.sessions.at(-1).date = "2026-10-" + (22 + i * 2); }
   F.start(life.fitness, life.fitness.routines[0].id, 45); life.fitness.active.date = today; life.fitness.active.exercises[0].logs[0] = { ...life.fitness.active.exercises[0].logs[0], done: true, weight: 27.5, reps: 10, rir: 2 };
   life.fitness.measurements = [{ id: "measurement-1", date: "2026-10-20", weight: 70.2, waist: null }, { id: "measurement-2", date: today, weight: 70.4, waist: null }];
+  life.checklists = [{id:'visual-checklist-routine',title:'Fictieve vertrekchecklist',moment:'any',repeat:'manual',pinned:false,deletedAt:'',steps:[{id:'visual-step-water',text:'Waterfles vullen'},{id:'visual-step-keys',text:'Sleutels meenemen'}],days:{},runHistory:[]}];
   source.life.validate(clone(life)); K.validate(life); F.validate(life.fitness);
   return { finance, life, files: [{ ...file, base64: bytes.toString("base64") }], pin: { salt: "memento-visual-fixture", hash: require("node:crypto").createHash("sha256").update("memento-visual-fixture:123456").digest("hex"), version: 1 } };
 }
