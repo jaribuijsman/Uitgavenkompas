@@ -2,8 +2,8 @@
 // Fast, conservative CI planner. Full safety coverage is reserved for real
 // state/security/worker/inline-code changes, not cache version-only churn.
 const cp=require("node:child_process"),fs=require("node:fs");
-const FULL=["interface-layout","interface-feature","interface-acceptance","interface-visual","life-full","data-full"];
-const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:plan|groups|plan-regression|postmerge|postmerge-regression|release-gate|release-gate-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
+const {FULL,retiredSuites,suitesForGroup}=require("./ci-suites.cjs");
+const HIGH=/^(?:\.github\/workflows\/|tests\/ci-(?:suites|plan|groups|plan-regression|postmerge|postmerge-regression|release-gate|release-gate-regression)\.cjs$|assets\/memento-(?:storage-guard|backup|knowledge-store|trash-core|review-core|finance-dashboard-v9|finance-app|finance-validation|life-app|category-integrity)\.js$)/;
 function normalizeHtml(s){
  return s.replace(/(<(?:script|link)\b[^>]*?\b(?:src|href)=["'][^"']+?)\?v=[\w.-]+(?=["'])/g,"$1?v=VERSION");
 }
@@ -63,6 +63,13 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  if(verifiedPostmerge&&!forceFull)return {tier:"low",groups:["interface-smoke"],upgrade:false,files:paths,postmerge:true};
  const htmlStyleOnly=application.includes("index.html")&&styleOnlyHtml(read("index.html","before"),read("index.html","after"));
  let high=forceFull,needsUpgrade=false;
+ const groups=new Set();
+ for(const p of application){
+  const match=p.match(/^tests\/([\w-]+-browser)\.cjs$/);
+  if(!match||match[1]==="recovery-upgrade-browser")continue;
+  if(retiredSuites.has(match[1])){high=true;continue}
+  const group="test-"+match[1];suitesForGroup(group);groups.add(group);
+ }
  for(const p of application){
   if(HIGH.test(p)){high=true;continue}
   if(p==="tests/recovery-upgrade-browser.cjs"){high=true;needsUpgrade=true;continue}
@@ -76,13 +83,10 @@ function planFor(paths,read=()=>null,forceFull=false,verifiedPostmerge=false){
  const shared=htmlStyleOnly||application.some(p=>/^assets\/memento-(?:glass|layout|ui|tokens|base-app)\.css$/.test(p));
  const medium=application.some(p=>p==="index.html"||p==="sw.js"||p.endsWith(".js")||p.startsWith("tests/")||shared);
  const onlyTests=application.every(p=>p.startsWith("tests/"));
- const groups=new Set();
- for(const p of application){
-  const match=p.match(/^tests\/([\w-]+-browser)\.cjs$/);
-  if(match)groups.add("test-"+match[1]);
- }
  // A PR changing only browser tests runs those exact tests, without duplicates.
  if(onlyTests&&application.every(p=>/^tests\/[\w-]+-browser\.cjs$/.test(p)))return {tier:"medium",groups:[...groups],upgrade:false,files:paths};
+ // The shared assertions execute inside visual-browser, including postmerge smoke.
+ if(application.includes('tests/helpers/visual-assertions.cjs')&&!groups.has('test-visual-browser'))groups.add('interface-smoke');
  // Reuse the existing search journey for search assets and shared menu routing;
  // it also verifies rejected navigation and note/Fitness draft preservation.
  if(application.some(p=>/^assets\/memento-(?:global-search(?:-core)?\.js|global-search\.css|unified-nav\.js)$/.test(p)))groups.add("test-global-search-browser");

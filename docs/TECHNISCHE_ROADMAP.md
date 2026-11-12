@@ -52,6 +52,7 @@
 | F6-B | Financiën: één modulegrens vereenvoudigen | P3 | Hoog, financiële integriteit | GESLAAGD | [PR #85](https://github.com/jaribuijsman/Uitgavenkompas/pull/85), head `a4e3c7e0057d8e06180ac6936b6c84500cb3d6b7`, merge `1c8a73d432d89f67aa57cd288095794ede635dc0`, [CI 41512472162](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41512472162) groen: zes browsergroepen + upgrade |
 | D1 | Historische documentatie en bewijsbronnen ordenen | P2 | Laag, uitsluitend documentatie | GESLAAGD | [PR #86](https://github.com/jaribuijsman/Uitgavenkompas/pull/86), head `851b7d77b57b51e704b4b5abd00ea1e37bd04946`, merge `6692be5c948398e6e914e0b21d58382d89f9f070`, [docs-CI 41513484891](https://github.com/jaribuijsman/Uitgavenkompas/actions/runs/41513484891) groen |
 | F7-A | Effectmeting, device- en productiecontrole | P1 | Read-only en gerichte releasecontrole | NIET GEVERIFIEERD voor volledige afsluiting; metingen/livechecks uitgevoerd | §7: exacte CI-meting, bronbytes en live offline groen; G2, F3-B2/B3 en fysieke A54 blijven expliciet open |
+| A-20261112 | CI-register, icoonjourney en algemene rooktest herstellen | P1 | Hoog: planner/runner; geen appcode | NIET GEVERIFIEERD voor PR/vrijgave; lokaal geslaagd | Basis `1c67f0896ff180ebbb6eb9967b810af3b5a0b9c9`; branch `fix/ci-package-a`; 34 coretests en zes browsergroepen groen; bewijs en grenzen in §8. Niet gepusht/gemerged/gepubliceerd. |
 
 **Uitvoervolgorde volgens de opdracht:** (1) G0; (2) G1–G2; (3) F4-A; (4) F3-B1 t/m B3; (5) F4-B; (6) F5-A/F5-B; (7) F6-A/F6-B; (8) D1; (9) F7-A. Eén samenhangend werkpakket per PR; geen bulkmerge. Een echte blokkade wordt vastgelegd en niet als voltooiing geteld.
 
@@ -452,3 +453,23 @@ De [echte live-browserroute](design-review/f7-closeout-20261102/live-browser.jso
 4. Sluit de PWA volledig, start offline en open Mijn dag, Taken, Kenniscentrum/bijlage en Financiën; controleer scroll en onderste acties. Werkelijke IME, grotere systeemtekst, standalone-insets en TalkBack blijven toestelafhankelijk.
 
 **Eerstvolgende acties, maximaal drie:** effectieve branchbescherming door de bevoegde eigenaar; een werkelijk goedgekeurde versievaste niet-KC-referentie voor F3-B2; de gerichte fysieke A54-proef. Geen daarvan wordt vooruit als uitgevoerd of goedgekeurd geregistreerd.
+
+## 8. A-20261112 — goedgekeurd eerste herstelpakket
+
+**Autorisatie:** gebruiker koos op 12 november 2026 de eerste stap uit de review: pakket A lokaal uitvoeren, stap voor stap. GitHub-writes, merge, publicatie, pakket B (Quickfit/dekkingsuitbreiding), branchebescherming en codeopruiming vallen buiten deze uitvoering. De actuele main is opnieuw vastgesteld op `1c67f0896ff180ebbb6eb9967b810af3b5a0b9c9`.
+
+**Uitvoering:** één gedeeld browserregister voor planner en runner; onbekende suite-namen vroeg weigeren; historische Kennisjourneys bij wijzigingen conservatief door de huidige volledige dekking beoordelen. De icoonjourney volgt het actuele portaal en bestaande document-/kruimelpadroute; de rooktest gebruikt snelle invoer op Mijn dag en bestaande taakmenu's. De zes volledige groepen nemen voortaan ook de herstelde icoon- en rookjourney mee, zodat groen in de volledige matrix deze routes eveneens beoordeelt. Geen applicatiecode, vormgeving of opslagcontract verandert.
+
+**Acceptatie, maximaal zeven criteria:**
+
+1. De bestaande runner-, icoon- en rookfouten zijn vóór reparatie gereproduceerd op huidige main.
+2. Planner en runner gebruiken hetzelfde register; actieve directe groepen zijn uitvoerbaar, onbekende namen worden afgewezen en oude Kennis-homejourneys worden niet heractiveerd.
+3. Zes volledige browsergroepen, met alle bestaande veiligheidsjourneys en zonder dubbele Kennis-workspacejourney; iconen en algemene smoke zijn elk eenmaal als suite opgenomen.
+4. De icoonjourney controleert raster/labels, huidig portaal, 23 bewaarde categorie-IDs via bestaande documenten, icoonkeuze, behouden notities/transacties en offline herladen.
+5. Algemene smoke controleert snelle invoer op Mijn dag, bewerken/afronden vanuit Taken, ingeklapte groepen, notities, financiële invoer en offlinegedrag; helperwijzigingen selecteren deze journey.
+6. Nieuwe negatieve plannergevallen zijn eerst rood gezien en daarna groen; alle door de uiteindelijke diff geselecteerde lokale core-/browserchecks worden uitgevoerd. GitHub-CI wordt afzonderlijk als niet uitgevoerd gemeld zolang er niet gepusht is.
+7. Diffreview en gerichte browserbeelden tonen de geteste routes; appbestanden, echte gebruikersdata, cacheversie en productbesluiten blijven ongewijzigd.
+
+**Lokaal resultaat:** de drie oorspronkelijke fouten zijn opnieuw bevestigd vóór reparatie. `node tests/ci-plan-regression.cjs` slaagt met 36 gevallen; beide gerichte routes (`node tests/ci-groups.cjs test-illustrative-icons-browser medium` en `interface-smoke medium`) zijn groen. De finale diff selecteert `high`, zes groepen en `upgrade:false`: alleen tests/CI/documentatie veranderen. Alle 34 scripts uit de centrale corejob en `node tests/ci-groups.cjs <groep> high` voor interface-layout, interface-feature, interface-acceptance, interface-visual, life-full en data-full zijn geslaagd. Dit zijn 26 unieke suites, 29 browseruitvoeringen door de vier smoke-breedtes (360/393/412/1280); de toegankelijkheidsjourney controleert eveneens vier breedtes. Zes gewijzigde JS-bestanden slagen voor syntaxcontrole; diff-whitespace is schoon. Onafhankelijke diffreview: geen belangrijke bevindingen.
+
+**Bewijs en grenzen:** lokale logs en bekeken 393px-beelden van portaal, bestaande categorie, offline checklist en taakmenu zijn buiten de repository bewaard onder `/workspace/memento-package-a-evidence`. Deze beelden zijn een routebaseline, geen volledige ontwerp- of fysieke A54-goedkeuring. De test die bestaande screenshots onder docs overschreef, heeft zijn nieuwe beelden in tijdelijk bewijs gekregen; de historische Git-bestanden zijn exact hersteld. Applicatiebestanden, opslagcontracten en cacheversie blijven gelijk aan main. Quickfit-testdrift blijft expliciet open voor pakket B. GitHub-PR/CI, merge, deployment en fysieke A54 zijn niet uitgevoerd; daarom wordt deze rij niet als afgeronde vrijgave gemarkeerd.
