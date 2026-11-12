@@ -11,6 +11,23 @@ function check(title,fn){fn();count++;console.log("PASS "+title)}
 check("documentation-only does not invoke browsers",()=>{
  const a=planFor(["AGENTS.md","docs/readme.md"]);assert.equal(a.tier,"none");assert.deepEqual(a.groups,[]);
 });
+check("appointment recurrence runs the existing agenda integration exactly once",()=>{
+ for(const paths of [['assets/memento-appointment-recurrence.js'],['assets/memento-appointment-recurrence.js','tests/agenda-plan-browser.cjs']]){
+  const p=planFor(paths);assert.equal(p.tier,'medium');assert.deepEqual(p.groups,['test-agenda-plan-browser']);assert.equal(p.upgrade,false);
+ }
+ for(const file of ['assets/memento-start.js','assets/memento-fitness.css'])assert(!planFor([file]).groups.includes('test-agenda-plan-browser'));
+});
+check("knowledge archives and Fitness core retain full data and upgrade coverage",()=>{
+ for(const file of ['assets/memento-knowledge-backup.js','assets/memento-fitness-core.js']){
+  const p=planFor([file]);assert.equal(p.tier,'high',file);assert.deepEqual(p.groups,FULL);assert.equal(p.upgrade,true,file);
+ }
+ for(const file of ['assets/memento-knowledge.css','assets/memento-fitness.css'])assert.equal(planFor([file]).upgrade,false,file);
+});
+check("shared fixtures and quick-note assertions select their real browser consumers",()=>{
+ assert.equal(planFor(['tests/helpers/visual-fixture.cjs']).tier,'high');
+ assert.deepEqual(planFor(['tests/helpers/quick-note-browser-checks.cjs']).groups,['interface-day']);
+ assert.deepEqual(planFor(['tests/helpers/quick-note-browser-checks.cjs','tests/day-v3-browser.cjs']).groups,['test-day-v3-browser']);
+});
 check("every planned browser group resolves in the runner, including icons",()=>{
  const groups=JSON.parse(require('node:child_process').execFileSync(process.execPath,[require('node:path').join(__dirname,'ci-groups.cjs'),'--list-groups'],{encoding:'utf8'}));
  assert(Object.values(groups).flat().includes('illustrative-icons-browser'),'Icon journey must be registered before the planner selects it');
@@ -218,7 +235,7 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    assert(Array.isArray(byGroup[name])&&byGroup[name].length>0,"missing full CI domain "+name);
    return byGroup[name];
   });
-  assert.equal(fullSuites.length,26,"full matrix including icons and postmerge smoke must remain");
+  assert.equal(fullSuites.length,27,"full matrix including icons and postmerge smoke must remain");
   assert.equal(fullSuites.filter(s=>s==="knowledge-workspace-browser").length,1,"duplicate or missing knowledge journey in full run");
   assert.equal(fullSuites.filter(s=>s==="agenda-plan-browser").length,1,"recurring agenda journey must run exactly once");
   assert.equal(fullSuites.filter(s=>s==="ai-hub-browser").length,1,"duplicate or missing AI Hub journey in full run");
@@ -230,7 +247,7 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
    "interface-feature":["day-v3-browser"],
    "interface-acceptance":["release-acceptance-browser"],
    "interface-visual":["glass-rendering-browser"],
-   "life-full":["grocery-import-browser","followup-browser","taken-v4-browser","knowledge-workspace-browser","ai-hub-browser"],
+   "life-full":["grocery-import-browser","followup-browser","taken-v4-browser","knowledge-workspace-browser","ai-hub-browser","quickfit-browser"],
    "data-full":["app-review-browser","storage-safety-browser","recovery-browser"]
   };
   for(const [owner,required] of Object.entries(mandatory)){
@@ -238,10 +255,10 @@ check("full high-risk shards retain all domains, unique knowledge journey and sa
   }
  }
  verify(groups);
- assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|26/);
+ assert.throws(()=>verify({...groups,"interface-visual":[...groups["interface-visual"],"knowledge-workspace-browser"]}),/duplicate|27/);
  assert.throws(()=>verify({...groups,"data-full":[]}),/missing full CI domain/);
- assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/26|storage-safety-browser/);
- assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/26|grocery-import-browser/);
+ assert.throws(()=>verify({...groups,"data-full":groups["data-full"].filter(s=>s!=="storage-safety-browser")}),/27|storage-safety-browser/);
+ assert.throws(()=>verify({...groups,"life-full":groups["life-full"].filter(s=>s!=="grocery-import-browser")}),/27|grocery-import-browser/);
 });
 check("manual workflows reject obsolete V1 browser contracts without losing offline or safety coverage",()=>{
  const fs=require("node:fs"),path=require("node:path");

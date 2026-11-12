@@ -1,4 +1,4 @@
-name: Memento quick notes and Fitness acceptance
+name: Memento Fitness session acceptance
 # Manual specialist suites; automated checks are consolidated in app-review.yml.
 on:
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/memento-browser" --no-package-lock --no-save playwright@1.62.1
           "$RUNNER_TEMP/memento-browser/node_modules/.bin/playwright" install --with-deps chromium
           echo "NODE_PATH=$RUNNER_TEMP/memento-browser/node_modules" >> "$GITHUB_ENV"
-      - name: Test quick notes and Fitness on touch viewport
+      - name: Test Fitness worksets and history on touch viewport
         env:
           MEMENTO_TEST_WIDTH: ${{ matrix.width }}
           MEMENTO_SCREENSHOT_DIR: ${{ runner.temp }}/quickfit
