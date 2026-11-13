@@ -63,6 +63,22 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#mementoStart .ms-feature-nav').count(),0,'The weather carousel dots are removed');
    assert.equal(await page.locator('#mementoStart .ms-quote').count(),1,'The quote has its own card');
    assert.match(await page.locator('#ms-quote-host').innerText(),/Quote van de dag/i);
+   const quote = page.locator('#ms-quote-host');
+   const disclosure = quote.locator('summary');
+   assert.equal(await quote.locator('time').getAttribute('datetime'), '2026-10-28');
+   assert.equal(await quote.locator('.ms-quote-detail').isVisible(), false);
+   await disclosure.tap();
+   assert.equal(await quote.locator('.ms-quote-detail').isVisible(), true);
+   assert.match(await quote.locator('.ms-quote-detail').innerText(), /De gedachte uitgelegd[\s\S]+Sta vandaag stil bij/);
+   assert((await disclosure.boundingBox()).height >= 48, 'The whole quote preview is a touch target');
+   assert(await quote.locator('.ms-quote-detail').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+   if(width===393){
+    fs.mkdirSync('/tmp/memento-start/after',{recursive:true});
+    await quote.screenshot({path:'/tmp/memento-start/after/stoic-expanded-393.png',animations:'disabled'});
+   }
+   await disclosure.press('Enter');
+   assert.equal(await quote.locator('.ms-quote-detail').isVisible(), false);
+   if(width===393)await quote.screenshot({path:'/tmp/memento-start/after/stoic-compact-393.png',animations:'disabled'});
    assert.deepEqual(await page.locator('[data-ms-create]').allTextContents(),['＋Taak','＋Snelle notitie','＋Transactie']);
    assert.equal(await page.locator('#ms-temp').innerText(),'14°');
    assert.equal(await page.locator('#ms-hourly .ms-hour').count(),6);
@@ -264,5 +280,62 @@ const server=http.createServer((req,res)=>{
    console.log('PASS quote card, weather, focus checklist, navigation, themes and PIN at '+width+'px');
    await context.close();
   }
+  const calendarContext=await browser.newContext({viewport:{width:1280,height:800},timezoneId:'America/New_York',reducedMotion:'reduce'});
+  const calendarPage=await calendarContext.newPage();
+  await calendarPage.route('https://api.open-meteo.com/**',route=>route.abort());
+  await calendarPage.clock.install({time:new Date('2024-02-28T23:59:56-05:00')});
+  await calendarPage.clock.pauseAt(new Date('2024-02-28T23:59:58-05:00'));
+  await calendarPage.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  const calendarQuote=calendarPage.locator('#ms-quote-host');
+  async function assertDay(iso,title){
+   assert.equal(await calendarQuote.locator('time').getAttribute('datetime'),iso);
+   assert.equal(await calendarQuote.locator('cite').textContent(),title);
+  }
+  const calendar=await calendarPage.evaluate(()=>window.MementoStoicDays);
+  const expectedKeys=Array.from({length:366},(_,i)=>new Date(Date.UTC(2024,0,i+1)).toISOString().slice(5,10));
+  assert.deepEqual(Object.keys(calendar),expectedKeys);
+  for(const key of expectedKeys){
+   const entry=calendar[key];
+   assert.equal(entry.dateKey,key);
+   assert.equal(entry.month,Number(key.slice(0,2)));
+   assert.equal(entry.day,Number(key.slice(3)));
+   assert(entry.sourceTitle&&entry.bookAttribution&&entry.thoughtNl&&entry.explanationNl&&entry.reflectionNl,key);
+  }
+  await assertDay('2024-02-28','WHEN YOU LOSE CONTROL');
+  await calendarQuote.locator('summary').click();
+  await calendarPage.clock.runFor(2000);
+  await assertDay('2024-02-29','YOU CAN’T ALWAYS (BE) GET(TING) WHAT YOU WANT');
+  assert.equal(await calendarQuote.locator('details').getAttribute('open'),null);
+  assert.equal(await calendarQuote.locator('summary').evaluate(el=>el===document.activeElement),true);
+  for(const [stamp,iso,title] of [
+   ['2024-03-01T00:00:00-05:00','2024-03-01','WHERE PHILOSOPHY BEGINS'],
+   ['2025-02-28T23:59:58-05:00','2025-02-28','WHEN YOU LOSE CONTROL'],
+   ['2025-03-01T00:00:00-05:00','2025-03-01','WHERE PHILOSOPHY BEGINS'],
+   ['2026-11-13T08:00:00-05:00','2026-11-13','NEVER COMPLAIN, NEVER EXPLAIN'],
+   ['2026-12-31T23:59:58-05:00','2026-12-31','GET ACTIVE IN YOUR OWN RESCUE'],
+   ['2027-01-01T00:00:00-05:00','2027-01-01','CONTROL AND CHOICE']
+  ]){
+   await calendarPage.clock.setSystemTime(new Date(stamp));
+   await calendarPage.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
+   await assertDay(iso,title);
+  }
+  assert.equal(await calendarPage.locator('#compassQuoteData').count(),0);
+  await calendarPage.waitForFunction(()=>!!navigator.serviceWorker.controller);
+  await calendarContext.setOffline(true);
+  await calendarPage.reload({waitUntil:'domcontentloaded'});
+  await assertDay('2027-01-01','CONTROL AND CHOICE');
+  await calendarQuote.locator('summary').click();
+  assert.equal(await calendarQuote.locator('.ms-quote-detail').isVisible(),true);
+  await calendarContext.setOffline(false);
+  await calendarPage.evaluate(()=>{
+   delete window.MementoStoicDays['11-13'];
+  });
+  await calendarPage.clock.setSystemTime(new Date('2027-11-13T08:00:00-05:00'));
+  await calendarPage.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
+  assert.equal(await calendarQuote.locator('time').getAttribute('datetime'),'2027-11-13');
+  assert.match(await calendarQuote.innerText(),/Quote tijdelijk niet beschikbaar/);
+  assert.equal(await calendarQuote.locator('summary').count(),0);
+  console.log('PASS local midnight, leap day, New Year, resume, offline reload and missing quote');
+  await calendarContext.close();
  }finally{if(browser)await browser.close();await new Promise(done=>server.close(done))}
 })().catch(e=>{console.error(e);process.exitCode=1});
