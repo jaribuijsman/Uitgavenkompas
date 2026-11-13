@@ -59,15 +59,24 @@ body.memento-start-open{overflow:hidden!important}
 #mementoStart .ms-quote{flex:0 0 auto;width:100%;max-width:100%;min-width:0;}
 #mementoStart .ms-thought{display:flex;flex-direction:column;color:#f0f7f2}
 #mementoStart .ms-thought #ms-quote-host{display:block;min-width:0}
-#mementoStart .ms-thought .flow-hero{min-width:0;min-height:0;border:0;border-radius:22px;padding:14px 15px;background:transparent}
+#mementoStart .ms-thought .flow-hero{min-width:0;min-height:0;border:0;border-radius:22px;padding:0;background:transparent}
 #mementoStart .ms-thought .flow-hero-top{margin-bottom:6px;gap:8px}
 #mementoStart .ms-thought .flow-eyebrow{font-size:11px}
-#mementoStart .ms-thought .flow-date{font-size:12px}
+#mementoStart .ms-thought .flow-date{display:block;font-size:12px}
 #mementoStart .ms-thought .flow-avatar{width:40px;height:40px}
-#mementoStart .ms-thought .flow-hero blockquote{font-size:clamp(16px,4.1vw,18px);line-height:1.42;margin:0 0 7px;overflow-wrap:anywhere}
-#mementoStart .ms-thought .flow-citation{font-size:12px;overflow-wrap:anywhere}
-#mementoStart .ms-thought .flow-citation summary{min-height:44px;display:list-item;padding:10px 0}
-#mementoStart .ms-thought .flow-citation a{display:inline-block;min-height:44px;padding:10px 0}
+#mementoStart .ms-quote-summary{display:block;min-height:48px;padding:14px 15px;cursor:pointer;touch-action:manipulation;border-radius:inherit}
+#mementoStart .ms-quote-summary::-webkit-details-marker{display:none}
+#mementoStart .ms-quote-summary:focus-visible{outline:3px solid #f1d795;outline-offset:-4px}
+#mementoStart .ms-quote-thought{display:block;font-size:clamp(16px,4.1vw,18px);line-height:1.42;font-weight:550;letter-spacing:-.2px;overflow-wrap:anywhere}
+#mementoStart .ms-quote-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:7px}
+#mementoStart .ms-quote-chevron{width:9px;height:9px;flex:none;border-right:2px solid #eadaad;border-bottom:2px solid #eadaad;transform:rotate(45deg);margin:0 5px 4px 0}
+#mementoStart .ms-quote-disclosure[open] .ms-quote-chevron{transform:rotate(225deg);margin-bottom:0}
+#mementoStart .ms-quote-detail{margin:0 15px;padding:12px 0 16px;border-top:1px solid #d3ddbe30;line-height:1.6;overflow-wrap:anywhere}
+#mementoStart .ms-quote-detail h3{font-size:14px;color:#f0dfb5;margin:14px 0 4px}
+#mementoStart .ms-quote-detail h3:first-child{margin-top:0}
+#mementoStart .ms-quote-detail p{margin:0}
+#mementoStart .ms-quote-source{margin-top:8px}
+#mementoStart .ms-thought .ms-quote-unavailable{padding:14px 15px}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#mementoStart .ms-glass,#mementoStart .ms-quickbutton{background:#15382dec}}
 @media(prefers-reduced-motion:reduce){#mementoStart *,#mementoStart *::before,#mementoStart *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
