@@ -320,15 +320,15 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
 #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
 #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{
- box-sizing:border-box;position:relative;display:grid;grid-template-columns:44px 56px minmax(0,1fr) 44px;
- gap:4px;align-items:center;min-height:70px;padding:6px 8px 6px 6px;
+ box-sizing:border-box;position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;
+ gap:4px;align-items:center;min-height:60px;padding:6px 8px 6px 6px;
  background:#233f30;border:1px solid #55725b;border-radius:15px;box-shadow:none;overflow:visible;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card::before{top:13px;bottom:13px;left:0;width:3px}
 #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card.life-task-late{border-left:3px solid #e0a0a6}
-#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:5px 2px;white-space:normal;text-align:center;font-variant-numeric:tabular-nums;color:#cee4d2;font-size:12px;line-height:1.3;font-weight:700;background:#315b45;border:1px solid #64876e;border-radius:10px}
+#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time{white-space:nowrap;font-variant-numeric:tabular-nums;color:#cee4d2;font-weight:650}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
-#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:0;grid-column:auto;grid-row:auto}
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-body{min-width:0;display:grid;gap:2px;grid-column:auto;grid-row:auto}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info strong,
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{
@@ -345,7 +345,7 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;max-height:calc(1.36em * 3);overflow:hidden;
 }
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small,
-#lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta{display:block;margin:0;font-size:12px;line-height:1.4;color:#bed2c2}
+#lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta{display:block;margin:0;font-size:12px;line-height:1.4;color:#bed2c2;overflow-wrap:anywhere}
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-meta>span{margin-right:6px}
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-original{color:#e9cc9d!important}
 #lifeApp[data-life-view="today"] .memento-v3-card .life-complete,
@@ -355,6 +355,9 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-note>summary{
  box-sizing:border-box;display:grid;place-items:center;min-width:44px;width:44px;min-height:44px;height:44px;
  padding:0;border:0;border-radius:10px;list-style:none;background:transparent;color:#d0dfd2;cursor:pointer;font-size:24px;line-height:1;
+}
+#lifeApp[data-life-view="today"] .memento-v3-menu .life-task-actions>a{
+ box-sizing:border-box;display:flex;align-items:center;min-height:44px;padding:8px 10px;border-radius:8px;color:#ebf7ee;font-size:12px;
 }
 #lifeApp[data-life-view="today"] .memento-v3-menu>summary::-webkit-details-marker,
 #lifeApp[data-life-view="today"] .memento-day-note>summary::-webkit-details-marker{display:none}
@@ -373,7 +376,6 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-day-completed .life-list{margin-top:8px}
 #lifeApp[data-life-view="today"] .memento-day-completed .memento-unified-list{margin-top:8px}
 #lifeApp[data-life-view="today"] .memento-v3-card :is(button,summary):focus-visible{outline:2px solid #d3efd9;outline-offset:2px}
-#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-time,
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info,
 #lifeApp[data-life-view="today"] .memento-v3-card .life-task-body,
 #lifeApp[data-life-view="today"] .memento-v3-card .memento-event-actions,
@@ -384,9 +386,6 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 #lifeApp[data-life-view="today"] .memento-v3-bottom>:first-child:not(.memento-day-note){flex:1;min-width:0}
 #lifeApp[data-life-view="today"] .memento-day-note{margin-left:auto}
 #lifeApp[data-life-view="today"] .memento-day-note>summary{color:#e6cf9a}
-#lifeApp[data-life-view="today"] .memento-v3-card .memento-unified-info small{font-size:11.5px;line-height:1.3}
-/* Afspraken en taken delen hetzelfde vierkoloms raster, kaartmateriaal en tijdvak.
-   Afspraaknotities gebruiken de bestaande detailrij zonder extra actie-kolom. */
 #lifeApp[data-life-view="today"] .memento-appointment-card.memento-event-carried::before{background:#e9bf78}
 #lifeApp[data-life-view="today"] .memento-appointment-group{margin:0}
 #lifeApp[data-life-view="today"] .memento-appointment-group+.memento-appointment-group{margin-top:16px}
@@ -398,7 +397,7 @@ body[data-compass-area="finance"] .app #txActiveSelection.memento-finance-contex
 @media(max-width:375px){
  #lifeApp[data-life-view="today"] .memento-unified-event.memento-v3-card,
  #lifeApp[data-life-view="today"] .life-day-column .life-list>.life-task.memento-v3-card,
- #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{grid-template-columns:44px 51px minmax(0,1fr) 44px;gap:2px;padding-right:6px}
+ #lifeApp[data-life-view="today"] .life-overdue>.life-task.memento-v3-card{padding-right:6px}
  #lifeApp[data-life-view="today"] .memento-v3-card .memento-v3-title,
  #lifeApp[data-life-view="today"] .memento-v3-card .life-task-title{font-size:13.7px}
 }
