@@ -65,7 +65,7 @@ async function checkbox(page,selector){
    await nav(page,'today');await targets(page,'.memento-event-complete,.memento-v3-menu>summary');await checkbox(page,'.memento-event-complete');
    const taskCard=page.locator('#lifeApp[data-life-view="today"] .life-overdue .memento-unified-task').first();
    assert.equal(await taskCard.count(),1,'Overdue task uses the same visual card structure as appointments');
-   assert.equal(await taskCard.locator(':scope > .memento-unified-time').textContent(),'26 okt','Task date is shown instead of an invented clock time');
+   assert.equal(await taskCard.locator('.memento-v3-bottom .memento-unified-time').textContent(),'26 okt','Task date is shown instead of an invented clock time');
    const parity=await taskCard.evaluate(card=>{
     const appointment=document.querySelector('.memento-unified-event:not(.memento-unified-task)');
     const styles=[card,appointment].map(n=>getComputedStyle(n));
@@ -74,21 +74,20 @@ async function checkbox(page,selector){
     const rect=card.getBoundingClientRect();
     return {taskColumns:styles[0].gridTemplateColumns.split(' ').length,eventColumns:styles[1].gridTemplateColumns.split(' ').length,
       taskElements:task.length,eventElements:event.length,taskRect:rect.toJSON(),
-      firstTarget:task[0],date:task[1],info:task[2],action:task[3],
-      eventFirstTarget:event[0],eventTime:event[1],eventInfo:event[2],eventAction:event[3],
+      firstTarget:task[0],info:task[1],action:task[2],
+      eventFirstTarget:event[0],eventInfo:event[1],eventAction:event[2],
       taskSurface:styles[0].backgroundColor,eventSurface:styles[1].backgroundColor,
       taskRadius:styles[0].borderRadius,eventRadius:styles[1].borderRadius,
       taskBorders:[styles[0].borderTopWidth,styles[0].borderBottomWidth],
       label:card.querySelector('.life-task-menu>summary')?.textContent?.trim()};
    });
-   assert.equal(parity.taskColumns,4,'Task grid retains checkbox, date, content and action tracks');
-   assert.equal(parity.eventColumns,4,'Appointments and tasks both use the four-column day grid');
-   assert.equal(parity.taskElements,4);assert.equal(parity.eventElements,4,'Both cards have checkbox, time/date, details and options');
-   assert(parity.eventFirstTarget.right<=parity.eventTime.left+1,'Appointment checkbox must not overlap time');
-   assert(parity.eventTime.right<=parity.eventInfo.left+1,'Appointment time must not overlap title');
+   assert.equal(parity.taskColumns,3,'Task grid retains checkbox, content and action tracks');
+   assert.equal(parity.eventColumns,3,'Appointments and tasks both use the three-column day grid');
+   assert.equal(parity.taskElements,3);assert.equal(parity.eventElements,3,'Both cards have checkbox, details and options');
+   assert(parity.eventFirstTarget.right<=parity.eventInfo.left+1,'Appointment checkbox must not overlap details');
    assert(parity.eventInfo.right<=parity.eventAction.left+1,'Appointment title must not overlap options');
-   assert(parity.firstTarget.right<=parity.date.left+1,'Task checkbox must not overlap date');
-   assert(parity.info.right<=parity.action.left+1,'Task content must not overlap edit action');
+   assert(parity.firstTarget.right<=parity.info.left+1,'Task checkbox must not overlap details');
+   assert(parity.info.right<=parity.action.left+1,'Task content must not overlap options');
    assert.notEqual(parity.taskSurface,'rgba(0, 0, 0, 0)','Task card retains a visible surface');
    assert.equal(parity.eventSurface,parity.taskSurface,'Appointment and task share the same card material');
    assert.notEqual(parity.taskRadius,'0px','Task retains rounded corners');
@@ -97,8 +96,7 @@ async function checkbox(page,selector){
    await targets(page,'.memento-unified-task .life-complete,.memento-unified-task .memento-v3-menu>summary');
    await taskCard.locator('.memento-v3-menu>summary').click();
    const menuActions=taskCard.locator('.life-task-menu[open] .life-task-actions');await menuActions.waitFor({state:'visible'});
-   assert.equal(await menuActions.locator('[data-life-duplicate]').count(),1,'Duplicate action stays accessible');
-   assert.equal(await menuActions.locator('[data-life-star]').count(),1,'Priority action stays accessible');
+   assert.deepEqual(await menuActions.locator('button').allTextContents(),['Bewerken','Slim opvolgen','Verwijderen'],'Overdue menu keeps the relevant actions');
    await menuActions.locator('[data-life-edit-task]').click();await page.locator('#lifeDialog').waitFor({state:'visible'});
    assert((await page.locator('#lifeDialogTitle').textContent()).includes('Taak bewerken'));
    await page.keyboard.press('Escape');assert.equal(await page.locator('#lifeDialog').isVisible(),false);

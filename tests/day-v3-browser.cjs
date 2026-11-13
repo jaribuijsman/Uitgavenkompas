@@ -78,7 +78,7 @@ const reports=[];
    if(!count){assert.equal(await page.locator('.memento-v3-card').count(),0);continue;}
    const event=page.locator('[data-life-day="2026-10-31"] .memento-v3-card').filter({has:page.locator('[data-memento-edit-event="v3-event"]')});
    const zones=await event.evaluate(el=>[...el.children].map(n=>n.getBoundingClientRect().toJSON()));
-   assert.equal(zones.length,4,'Appointment shares the checkbox / time / title / menu layout with tasks');
+   assert.equal(zones.length,3,'Appointment shares the checkbox / details / menu layout with tasks');
    for(let i=0;i<zones.length-1;i++)assert(zones[i].right<=zones[i+1].left+1,'Appointment zones must not overlap');
    const actions=await event.locator('.memento-event-actions').evaluate(el=>[...el.children].map(n=>n.className));
    assert.deepEqual(actions,['life-task-menu memento-v3-menu'],'Appointment options use the same right-hand slot as tasks');
@@ -89,22 +89,21 @@ const reports=[];
     if(!appointment||!task)return null;
     const offset=(card,selector)=>card.querySelector(selector).getBoundingClientRect().left-card.getBoundingClientRect().left;
     const trailing=(card,selector)=>card.getBoundingClientRect().right-card.querySelector(selector).getBoundingClientRect().right;
-    const style=card=>getComputedStyle(card.querySelector('.memento-unified-time'));
-    const grid=card=>{const s=getComputedStyle(card);return [s.gridTemplateColumns.split(' ').slice(0,2),s.columnGap]};
     return {
-     appointment:[offset(appointment,'.memento-event-complete'),offset(appointment,'.memento-unified-time'),offset(appointment,'.memento-unified-info'),offset(appointment,'.memento-event-actions')],
-     task:[offset(task,'.life-complete'),offset(task,'.memento-unified-time'),offset(task,'.life-task-body'),offset(task,'.memento-event-actions')],
-     grid:[grid(appointment),grid(task)],
-     trailing:[trailing(appointment,'.memento-event-actions'),trailing(task,'.memento-event-actions')],
-     badge:[style(appointment).borderRadius,style(appointment).backgroundColor],
-     taskBadge:[style(task).borderRadius,style(task).backgroundColor]
+     appointment:[offset(appointment,'.memento-event-complete'),offset(appointment,'.memento-unified-info')],
+     task:[offset(task,'.life-complete'),offset(task,'.life-task-body')],
+     trailing:[trailing(appointment,'.memento-event-actions'),trailing(task,'.memento-event-actions')]
     };
    });
    assert(shared,'Both appointment and task cards must exist');
-   assert.deepEqual(shared.grid[0],shared.grid[1],'Both cards keep the same fixed tracks and column gaps');
-   shared.appointment.slice(0,3).forEach((x,i)=>assert(Math.abs(x-shared.task[i])<=3,'Left column '+i+' alignment, allowing 2px accent border: '+JSON.stringify(shared)));
-   assert(Math.abs(shared.trailing[0]-shared.trailing[1])<=3,'Menu right inset must match even across differently wide card containers: '+JSON.stringify(shared));
-   assert.deepEqual(shared.badge,shared.taskBadge,'Date/time badges must look identical');
+   shared.appointment.forEach((x,i)=>assert(Math.abs(x-shared.task[i])<=3,'Left column '+i+' alignment, allowing 2px accent border: '+JSON.stringify(shared)));
+   assert(Math.abs(shared.trailing[0]-shared.trailing[1])<=3,'Menu right inset must match across card containers');
+   const time=event.locator('.memento-v3-bottom .memento-unified-time');
+   assert.equal(await time.innerText(),'12:00');
+   const timeBox=await time.boundingBox(),titleBox=await event.locator('.memento-v3-title').boundingBox();
+   assert(timeBox.y>=titleBox.y+titleBox.height-1&&Math.abs(timeBox.x-titleBox.x)<=1,'Time begins below the title at the same inset');
+   assert(timeBox.height<24,'Time remains compact metadata');
+   assert.equal(await page.locator('[data-order-id="v3-task-0"] .memento-unified-time').count(),0,'An unscheduled task needs no date or time in its day card');
    for(const selector of ['.memento-event-complete','.memento-v3-menu>summary','.memento-day-note>summary']){
     const b=await event.locator(selector).boundingBox();assert(b.width>=44&&b.height>=44,'Touch target '+selector);
    }
@@ -117,6 +116,7 @@ const reports=[];
    await page.waitForFunction(()=>!!document.querySelector('#lifeDayTrack.mg-menu-ancestor'));
    await contained('appointment-menu-open');await shot('menu');
    const popup=event.locator('.life-task-actions');const b=await popup.boundingBox();assert(b.x>=0&&b.x+b.width<=width+1);
+   assert.deepEqual(await popup.locator('button, a').allTextContents(),['Bewerken','Slim opvolgen','Verwijderen']);
    await popup.getByRole('button',{name:'Bewerken',exact:true}).click();
    await page.locator('#mementoAppointmentForm').waitFor();
    assert.equal(await page.locator('.life-task-menu[open]').count(),0,'Editing closes the background menu');
@@ -160,7 +160,11 @@ const reports=[];
    const nb=await event.locator('.memento-day-note-content').boundingBox();assert(nb.x>=0&&nb.x+nb.width<=width+1);
    const hit=await event.locator('.memento-day-note-content').evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+10,r.y+10));});assert(hit,'Note preview must not be clipped by its carousel');
    await page.keyboard.press('Escape');
-   const taskCard=page.locator('[data-life-day="2026-10-31"] .life-task').first();await taskCard.locator('.memento-v3-menu>summary').click();await contained('task-menu-open');
+   const taskCard=page.locator('[data-life-day="2026-10-31"] [data-order-id="v3-task-0"]');await taskCard.locator('.memento-v3-menu>summary').click();await contained('task-menu-open');
+   const taskMenu=taskCard.locator('.life-task-actions');
+   assert.deepEqual(await taskMenu.locator('button').allTextContents(),['Bewerken','Plan in','Slim opvolgen','Verwijderen']);
+   const taskOptions=await taskMenu.locator('button').evaluateAll(buttons=>buttons.map(button=>button.getBoundingClientRect().toJSON()));
+   assert(taskOptions.every((box,i)=>box.height>=44&&(!i||box.y>=taskOptions[i-1].bottom-1)),'Menu actions stay touchable and stack vertically');
    await page.locator('#lifeDayTrack').evaluate(el=>el.scrollTo({left:el.clientWidth,behavior:'instant'}));await page.waitForFunction(()=>{const t=document.querySelector('#lifeDayTrack');return Math.abs(t.scrollLeft-t.clientWidth)<2});
    await page.waitForFunction(()=>document.querySelectorAll('.life-task-menu[open]').length===0,null,{timeout:3000});
     assert.equal(await page.locator('.life-task-menu[open]').count(),0);await contained('after-menu-and-swipe');await page.evaluate(()=>scrollTo(0,0));await shot('tomorrow');
@@ -277,6 +281,11 @@ const reports=[];
      await page.locator('#lifeTaskDetailForm [type="submit"]').click();
      assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').daySlot,undefined,'Clearing time unschedules without deleting task');
      await page.locator('#lifeDialog [data-life-close]').last().click();
+     await page.locator(taskSelector+' .memento-v3-menu>summary').click();
+     await page.locator(taskSelector+' [data-life-task-delete]').click();
+     assert((await stored()).life.tasks.find(t=>t.id==='v3-task-0').deletedAt,'Delete still uses the task trash');
+     await page.locator('[data-life-action="undo"]').click();
+     assert.equal((await stored()).life.tasks.find(t=>t.id==='v3-task-0').deletedAt,'','Undo restores the same task');
      await page.evaluate(()=>window.MementoNavigation.setView('checklists'));
     await page.locator('[data-dr-new]').click();
     await page.locator('#drTitle').fill('Fictieve avondzorg');

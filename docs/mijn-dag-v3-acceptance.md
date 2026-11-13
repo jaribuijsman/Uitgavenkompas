@@ -5,13 +5,13 @@ zelfstandige ontwerpvoorbeelden gelden niet als bewijs van werkende productie.
 
 | Onderdeel | Vereist resultaat |
 | --- | --- |
-| Afspraakkaart | Zelfde vierkoloms indeling als taken: afvinken, tijdvak, titel/details met optionele notitieknop, driepuntjes. Alle acties minimaal 44×44 px, ook op 360 px. |
-| Takenkaart | Bestaande vier kolommen: checkbox, tijd/datum, inhoud, driepuntjes. |
+| Afspraakkaart | Zelfde indeling als taken: afvinken, titel met tijd en details eronder, driepuntjes. Alle acties minimaal 44×44 px, ook op 360 px. |
+| Takenkaart | Checkbox, titel met details eronder, driepuntjes. Toon de tijd bij geplande taken en de oorspronkelijke datum bij achterstallige taken. |
 | Afspraakgroepen | Gepland eerst, daarna Nog open met aantal en oorspronkelijke datum. Lege groepen verborgen; bestaande chronologische volgorde binnen iedere groep behouden. |
 | Notitie | Bij afspraken en taken binnen de detailskolom, met een eigen 44×44-px bediening. Volledige tekst bereikbaar zonder overflow. |
 | Dagkeuze | Eén dag per scherm; menu/notitie openen verandert scrollbegrenzing of positie niet. |
 | V2-editor | Titel met echte microfoon op één rij; tijden naast elkaar; checkbox 23 px in 44 px label. |
-| Beheer | Verwijderen onder Meer opties, met bevestiging en bestaande undo. Footer: Annuleren en Opslaan. |
+| Beheer | Verticaal kaartmenu met Verwijderen voor taken en lokale afspraken. De afspraak-editor behoudt Meer opties met bevestiging en undo. Footer: Annuleren en Opslaan. |
 | Invoer | Hele dag schakelt tijden uit zonder conceptwaarden te wissen; notitie vergroten behoudt tekst. |
 | Fouten | Ongeldige eindtijd en opslagfout behouden alle conceptinvoer en bestaande opgeslagen gegevens. |
 | Veiligheid | Bestaande IDs, opslagvelden, bronnotities, Google read-only en financiële gegevens behouden. |
@@ -41,3 +41,12 @@ open afspraken, gemengde groepen, geen notitie, hele dag, lange titels en afrond
 ## Gelijke afspraak- en taakkaarten — 8 november 2026
 
 De expliciete vraag van 8 november vervangt het eerdere afwijkende drieluiks raster voor afspraken op Mijn dag (2 november). Afspraken en taken gebruiken nu **checkbox → tijd/datum in dezelfde capsule → titel/details → opties**. De notitieknop blijft binnen de detailskolom; toegang tot menu, editor, afvinken, Google-afspraak en opgeslagen data blijven ongewijzigd. Op 360/393/412 px horen de rasterkolommen en tijdcapsules hetzelfde te zijn. Andere schermen blijven buiten deze wijziging.
+
+## Tijd onder de titel — 13 november 2026
+
+Het driepuntsmenu blijft een verticale dropdown. Afronden en heropenen lopen via
+het afvinkvak. Taken tonen Bewerken, Plan in of Verplaats indien beschikbaar,
+Slim opvolgen en Verwijderen. Vandaag en Dupliceren blijven bereikbaar in Taken.
+Belangrijk is ook instelbaar via de taakeditor. Lokale afspraken houden Bewerken,
+Slim opvolgen en Verwijderen. Google-afspraken houden Slim opvolgen en de link
+naar Google Agenda wanneer beschikbaar.

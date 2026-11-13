@@ -558,14 +558,13 @@ function renderUnifiedAppointmentItem(e,source,options={}){
   const meta=[carried?fmt(date)+(done?'':' · nog open'):'',e.location||'',label,done?'Afgerond':''].filter(Boolean);
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+title)+'">⋮</summary><div class="life-task-actions">'+
    (local?'<button type="button" data-memento-edit-event="'+esc(e.id)+'">Bewerken</button>':'')+'<button type="button" data-followup-start="'+(local?'appointment':'google')+'" data-followup-id="'+esc(e.id)+'">Slim opvolgen</button>'+
-   '<button type="button" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'">'+(done?'Heropenen':'Afronden')+'</button>'+
    (local?'<button type="button" class="life-task-delete" data-memento-delete-day-event="'+esc(e.id)+'">Verwijderen</button>':googleLink?'<a href="'+esc(e.htmlLink)+'" target="_blank" rel="noopener noreferrer">Open in Google Agenda</a>':'')+
    '</div></details>';
   return '<article class="memento-unified-event memento-v3-card memento-appointment-card'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
    '<button type="button" role="checkbox" aria-checked="'+done+'" class="memento-event-complete" data-memento-complete-event="'+esc(e.id)+'" data-memento-event-source="'+source+'" aria-label="'+esc((done?'Heropen afspraak: ':'Afvinken: ')+title)+'">'+(done?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>':'')+'</button>'+
-   '<span class="memento-unified-time">'+esc(time||'—')+'</span>'+
    '<div class="memento-unified-info">'+titleControl+
-   '<div class="memento-v3-bottom">'+(meta.length?'<small class="'+(carried?'memento-event-original':'')+'">'+esc(meta.join(' · '))+'</small>':'')+(local?dayNoteControl(e,title):'')+'</div></div>'+
+   '<div class="memento-v3-bottom">'+(time||meta.length?'<small>'+(time?'<span class="memento-unified-time">'+esc(time)+'</span>':'')+
+   (time&&meta.length?' · ':'')+(meta.length?'<span'+(carried?' class="memento-event-original"':'')+'>'+esc(meta.join(' · '))+'</span>':'')+'</small>':'')+(local?dayNoteControl(e,title):'')+'</div></div>'+
    '<div class="memento-event-actions">'+menu+'</div></article>';
  }
  return '<div class="memento-unified-event'+(done?' memento-event-done':'')+(carried?' memento-event-carried':'')+'">'+
@@ -767,14 +766,15 @@ function taskRow(t){
  const actions=t.deletedAt?'<button type="button" class="life-focus" data-life-task-restore="'+esc(t.id)+'">Terugzetten</button>':t.archived?'<button type="button" class="life-focus" data-life-restore="'+esc(t.id)+'">Terugzetten</button>':!finished?'<button type="button" data-life-focus="'+esc(t.id)+'">'+(focus?'Uit Vandaag halen':'＋ Vandaag')+'</button><button type="button" data-life-star="'+esc(t.id)+'">'+(t.priority?'Minder belangrijk':'★ Belangrijk')+'</button>':'';
 
  if(inDay){
-  const dateLabel=t.daySlot?.time&&!late?t.daySlot.time:t.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):'—';
+  const dateLabel=late?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'short'}).format(parseDate(t.date)):t.daySlot?.time;
   const menu='<details class="life-task-menu memento-v3-menu"><summary title="Opties" aria-label="'+esc('Opties voor '+t.title)+'">⋮</summary><div class="life-task-actions">'+
-   (!t.deletedAt?'<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button>'+(!finished&&!late?'<button type="button" data-dr-plan="'+esc(t.id)+'">'+(t.daySlot?'Verplaats':'Plan in')+'</button>':'')+'<button type="button" data-followup-start="task" data-followup-id="'+esc(t.id)+'">Slim opvolgen</button><button type="button" data-life-menu-complete="'+esc(t.id)+'">'+(finished?'Heropenen':'Afronden')+'</button>':'')+actions+
-   (!t.deletedAt?'<button type="button" data-life-duplicate="'+esc(t.id)+'">Dupliceren</button><button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button>':'')+'</div></details>';
+   '<button type="button" data-life-edit-task="'+esc(t.id)+'">Bewerken</button>'+
+   (!finished&&!late?'<button type="button" data-dr-plan="'+esc(t.id)+'">'+(t.daySlot?'Verplaats':'Plan in')+'</button>':'')+
+   '<button type="button" data-followup-start="task" data-followup-id="'+esc(t.id)+'">Slim opvolgen</button>'+
+   '<button type="button" class="life-task-delete" data-life-task-delete="'+esc(t.id)+'">Verwijderen</button></div></details>';
   return '<article data-order-id="'+esc(t.id)+'" class="life-task memento-unified-event memento-unified-task memento-v3-card'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
    '<button type="button" class="life-complete" data-life-complete="'+esc(t.id)+'"'+(t.deletedAt||t.archived?' disabled':'')+' aria-pressed="'+Boolean(finished)+'" aria-label="'+esc((finished?'Heropen: ':'Afronden: ')+t.title)+'">'+(finished?'✓':'')+'</button>'+
-   '<span class="memento-unified-time">'+esc(dateLabel)+'</span>'+
-   '<div class="life-task-body memento-unified-info"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="memento-v3-bottom"><div class="life-task-meta">'+meta.map(x=>'<span>'+x+'</span>').join('')+'</div>'+dayNoteControl(t,t.title)+'</div></div>'+
+   '<div class="life-task-body memento-unified-info"><button type="button" class="life-task-title" data-life-detail="'+esc(t.id)+'">'+esc(t.title)+'</button><div class="memento-v3-bottom"><div class="life-task-meta">'+(dateLabel?'<span class="memento-unified-time">'+esc(dateLabel)+'</span>· ':'')+meta.map(x=>'<span>'+x+'</span>').join('')+'</div>'+dayNoteControl(t,t.title)+'</div></div>'+
    '<div class="memento-event-actions">'+menu+'</div></article>';
  }
  return '<article data-order-id="'+esc(t.id)+'" class="life-task'+(finished?' life-completed':'')+(late?' life-task-late':'')+'">'+
@@ -1812,7 +1812,6 @@ root.addEventListener('click',e=>{
  if(d.lifeTemplateUse){const t=state.templates.find(x=>x.id===d.lifeTemplateUse);if(t){const exists=state.tasks.some(x=>!x.deletedAt&&!x.archived&&!x.done&&(x.templateId===t.id||x.title.toLowerCase()===t.title.toLowerCase()));if(exists&&!confirm('Er staat al een actieve taak met deze naam. Toch een nieuwe taak inplannen?'))return;editTask(null,clone(t))}return}
  if(d.lifeTemplateEdit){editTask(d.lifeTemplateEdit,null,true);return}
  if(d.lifeTemplateDelete||d.lifeTemplateRestore){const t=state.templates.find(x=>x.id===(d.lifeTemplateDelete||d.lifeTemplateRestore));mutate(()=>{t.deletedAt=d.lifeTemplateDelete?new Date().toISOString():''},d.lifeTemplateDelete?'Sjabloon naar de prullenbak verplaatst.':'Sjabloon teruggezet.',true);return}
- if(d.lifeMenuComplete){completeTask(d.lifeMenuComplete);return;}
  if(d.lifeView){setView(d.lifeView);return}if(d.lifeDetail){detail(d.lifeDetail);return}if(d.lifeComplete){completeTask(d.lifeComplete);return}
  if(d.lifeFocus){const t=state.tasks.find(x=>x.id===d.lifeFocus);mutate(()=>{t.focusDate=t.focusDate===today()?'':today()},'Dagselectie bijgewerkt.');return}
  if(d.lifeStar){const t=state.tasks.find(x=>x.id===d.lifeStar);mutate(()=>{t.priority=!t.priority});return}
