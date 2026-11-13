@@ -51,25 +51,46 @@
  window.addEventListener('resize',()=>{weatherSlider.scrollLeft=activeWeatherPage*weatherSlider.clientWidth});
  setWeatherPage(0);
 
- function refreshThought(){
-  const host=one('ms-quote-host'),today=date();
-  if(!host||host.dataset.date===today)return;
-  // Prefer the canonical renderer, but support an older cached HTML shell.
-  let html=window.CompassFlow?.quoteHTML?.();
-  if(!html){
-   try{
-    const quotes=JSON.parse(document.getElementById('compassQuoteData')?.textContent||'[]');
-    if(Array.isArray(quotes)&&quotes.length){
-     const n=Math.floor(Date.parse(today+'T00:00:00Z')/86400000);
-     const q=quotes[((n%quotes.length)+quotes.length)%quotes.length];
-     const avatar=document.getElementById('compassAvatarData')?.textContent.trim()||'./assets/memento-avatar.png';
-     const dateLabel=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',weekday:'long',day:'numeric',month:'long'}).format(new Date());
-     if(q?.text&&q?.author&&q?.url)html='<div class="flow-hero"><div class="flow-hero-top"><div><div class="flow-eyebrow">Gedachte voor vandaag</div><div class="flow-date">'+esc(dateLabel)+'</div></div><img class="flow-avatar" src="'+esc(avatar)+'" alt="Portret" width="64" height="64"></div><blockquote lang="en">“'+esc(q.text)+'”</blockquote><div class="flow-citation">'+esc(q.author)+' · '+esc(q.work)+' '+esc(q.section)+'<details><summary>Bron & vertaling</summary><span>Engelse vertaling: '+esc(q.translator)+'. </span><a href="'+esc(q.url)+'" target="_blank" rel="noopener noreferrer">Lees de bron ↗</a></details></div></div>';
-    }
-   }catch{}
-  }
-  host.innerHTML=html?html.replace(/Gedachte voor vandaag/g,'Quote van de dag'):'<div class="flow-hero"><div class="flow-eyebrow">Quote van de dag</div><p>Quote tijdelijk niet beschikbaar.</p></div>';
-  host.dataset.date=html?today:'';
+ let quoteTimer;
+ function refreshThought(now){
+  const host=one('ms-quote-host');
+  const year=now.getFullYear(),month=now.getMonth(),day=now.getDate();
+  const dateKey=[month+1,day].map(part=>String(part).padStart(2,'0')).join('-');
+  const today=year+'-'+dateKey;
+  if(host.dataset.date===today)return;
+  const hadFocus=host.contains(document.activeElement);
+  const q=window.MementoStoicDays?.[dateKey];
+  const label=now.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
+  const heading=`<span class="flow-eyebrow">Quote van de dag</span><time class="flow-date" datetime="${today}">${esc(label)}</time>`;
+  host.innerHTML=q?.thoughtNl&&q.explanationNl&&q.reflectionNl?`
+   <details class="flow-hero ms-quote-disclosure">
+    <summary class="ms-quote-summary">
+     <span class="flow-hero-top"><span>${heading}</span><img class="flow-avatar" src="./assets/memento-avatar.png" alt="" width="40" height="40"></span>
+     <span class="ms-quote-thought">${esc(q.thoughtNl)}</span>
+     <span class="ms-quote-meta"><span class="flow-citation">${esc(q.thinker)}</span><span class="ms-quote-chevron" aria-hidden="true"></span></span>
+    </summary>
+    <div class="ms-quote-detail">
+     <h3>De gedachte uitgelegd</h3>
+     <p>${esc(q.explanationNl)}</p>
+     <div class="flow-citation ms-quote-source">${esc(q.bookAttribution)}<br><cite lang="en">${esc(q.sourceTitle)}</cite></div>
+     <h3>Sta vandaag stil bij</h3>
+     <p>${esc(q.reflectionNl)}</p>
+     ${q.exerciseNl?`<h3>Kleine oefening</h3><p>${esc(q.exerciseNl)}</p>`:''}
+    </div>
+   </details>`:`<div class="flow-hero ms-quote-unavailable">${heading}<p>Quote tijdelijk niet beschikbaar.</p></div>`;
+  host.dataset.date=today;
+  if(hadFocus)host.querySelector('summary')?.focus({preventScroll:true});
+ }
+ function stopQuoteClock(){
+  clearTimeout(quoteTimer);
+ }
+ function syncQuoteClock(){
+  stopQuoteClock();
+  if(document.hidden||!lock.classList.contains('memento-welcome-mode'))return;
+  const now=new Date();
+  refreshThought(now);
+  const midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);
+  quoteTimer=setTimeout(syncQuoteClock,Math.max(0,midnight-Date.now()));
  }
  function removeLegacyTodayQuote(){
   // An already-open PWA can combine an older HTML document with newer assets.
@@ -86,15 +107,17 @@
   if(isLocked())return showPin();
   lock.classList.add('visible','memento-welcome-mode');lock.removeAttribute('aria-labelledby');lock.setAttribute('aria-label','Memento dagoverzicht');
   document.body.classList.add('pin-locked','memento-start-open');
-  setFocusBlocked(true);removeLegacyTodayQuote();refreshDay();refreshWeather();refreshThought();illuminate();
+  setFocusBlocked(true);removeLegacyTodayQuote();refreshDay();refreshWeather();syncQuoteClock();illuminate();
  }
  function showPin(){
+  stopQuoteClock();
   lock.classList.add('visible');lock.classList.remove('memento-welcome-mode');
   lock.removeAttribute('aria-label');lock.setAttribute('aria-labelledby','pinTitle');
   document.body.classList.remove('memento-start-open');document.body.classList.add('pin-locked');
   setFocusBlocked(true);
  }
  function leave(){
+  stopQuoteClock();
   lock.classList.remove('visible','memento-welcome-mode');document.body.classList.remove('memento-start-open','pin-locked');setFocusBlocked(false);removeLegacyTodayQuote();
  }
  function navigate(view){
@@ -212,13 +235,18 @@
 
   window.dispatchEvent(new CustomEvent('memento-start-weather-refresh'));
  });
- window.addEventListener('memento-weather-update',event=>{refreshWeather(event);refreshThought()});
+ window.addEventListener('memento-weather-update',refreshWeather);
  window.addEventListener('storage',e=>{if(e.key===PIN_KEY){if(isLocked())showPin();else showWelcome()}});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather();refreshThought()}});
+ document.addEventListener('visibilitychange',()=>{
+  syncQuoteClock();
+  if(!document.hidden&&lock.classList.contains('memento-welcome-mode')){refreshDay();refreshWeather()}
+ });
+ window.addEventListener('pageshow',syncQuoteClock);
+ window.addEventListener('focus',syncQuoteClock);
  lock.addEventListener('keydown',e=>{
   if(e.key!=='Tab'||!lock.classList.contains('visible'))return;
   const surface=lock.classList.contains('memento-welcome-mode')?root:form;
-  const items=[...surface.querySelectorAll('button:not([disabled]),input:not([disabled]),a[href]')].filter(x=>x.getClientRects().length&&getComputedStyle(x).visibility!=='hidden');
+  const items=[...surface.querySelectorAll('button:not([disabled]),input:not([disabled]),a[href],summary')].filter(x=>x.getClientRects().length&&getComputedStyle(x).visibility!=='hidden');
   if(items.length===0)return;
   const first=items[0],last=items.at(-1);
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
