@@ -79,6 +79,7 @@ function validate(s){
     check(Object.hasOwn(core.scopes,r.scope),q+'.scope');check(key===core.key(period,r.scope),q+'.key');check(JSON.stringify(r.accounts)===JSON.stringify(core.scopes[r.scope]),q+'.accounts');
     list(r.transactions,q+'.transactions');const txIds=new Set();r.transactions.forEach((t,j)=>{transaction(t,q+'.transactions['+j+']');check(!txIds.has(t.id),q+'.transactions');txIds.add(t.id);});
     record(r.budget,q+'.budget');amounts(r.budget.categories,q+'.budget.categories');number(r.budget.total,q+'.budget.total',0);record(r.analysis,q+'.analysis');text(r.signature,q+'.signature');
+    if(r.analysis.previous!==null){const prev=r.analysis.previous;record(prev,q+'.previous');record(prev.period,q+'.previous.period');for(const k of ['start','end','observedEnd'])date(prev.period[k],q+'.previous.'+k);check(prev.period.status==='confirmed'&&prev.period.end<period.start&&prev.period.observedEnd===prev.period.end,q+'.previous.period');check(Number.isInteger(prev.count)&&prev.count>0,q+'.previous.count');for(const k of ['income','netExpenses','result'])number(prev[k],q+'.previous.'+k);}
     const recomputed=core.report({transactions:r.transactions},{period,scope:r.scope,budget:r.budget,previous:r.analysis.previous});check(recomputed.signature===r.signature,q+'.signature');check(core.canonical(recomputed.analysis)===core.canonical(r.analysis),q+'.analysis');
    });
   }
