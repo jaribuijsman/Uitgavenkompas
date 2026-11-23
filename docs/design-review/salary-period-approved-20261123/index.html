@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a1913"><title>Memento · Loonperiode prototype</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="demo"><span><i></i> PROTOTYPE · FICTIEVE GEGEVENS</span><button id="demoStates">Toestanden</button></div>
+<header class="brand"><svg viewBox="25 105 2120 420" role="img" aria-label="Memento"><image width="2172" height="724" href="../../../assets/memento-logo-gold.png"/></svg><div class="area"><span>Leven</span><strong>Financiën</strong></div></header>
+<main id="main"></main>
+<nav class="bottom" aria-label="Financiën"><button data-page="overview"><span data-icon="grid"></span>Overzicht</button><button data-page="transactions"><span data-icon="transfer"></span>Transacties</button><button data-page="analysis"><span data-icon="chart"></span>Analyse</button><button data-page="budgets"><span data-icon="wallet"></span>Budgetten</button><button id="more"><span data-icon="menu"></span>Meer</button></nav>
+<dialog id="sheet"><div class="handle"></div><header class="sheet-head"><div><div class="eyebrow" id="sheetEyebrow">LOONPERIODE</div><h2 id="sheetTitle"></h2></div><button class="iconbtn" id="sheetClose" aria-label="Sluiten"></button></header><div id="sheetBody"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script></body></html>

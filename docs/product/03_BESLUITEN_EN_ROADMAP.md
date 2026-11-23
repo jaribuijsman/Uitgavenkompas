@@ -159,3 +159,9 @@ De gebruiker heeft het gezamenlijke plan voor Mijn dag, Taken en Agenda explicie
 - Agenda: één gouden stip naast het dagnummer voor echte afspraken; alleen O/M/N, geen V in dagcellen. Lokale afspraken ondersteunen hele dag en wekelijkse/maandelijkse/jaarlijkse herhaling met uitzonderingen per voorkomen. Afspraken, taken, trainingen en diensten blijven afzonderlijke typen.
 
 Het [uitvoeringscontract](../design-review/day-tasks-agenda-20261108.md) bevat de eisenmatrix en randgevallen. Implementatie op een werkbranch geeft geen merge- of productieclaim; daarvoor blijven actuele checks en afzonderlijke autorisatie nodig. Kennis/Meer vallen buiten deze opdracht.
+
+## Loonperiodebeheer — besluit 23 november 2026
+
+Gebruiker heeft implementatie van het aangepaste prototype gevraagd. Beheer onder bestaande Instellingen → Loonperiodes; geen herontwerp van het financiële dashboard. Salaris expliciet bevestigen uit bestaande persoonlijke inkomst of handmatige datum, zonder nieuwe boeking. Nieuwe periodeafsluitingen bewaren opeenvolgende momentopnames per periode en rekeningselectie; bestaande kalendermaandafsluitingen blijven behouden. Download volledige JSON voor analyse of CSV met dezelfde selectie incl. afzonderlijk behandelde overboekingen. Lopend/voorlopig exporteerbaar, uitsluitend afgelopen bevestigde perioden afsluitbaar.
+
+Acceptatie en bevroren prototype: [salary-period-acceptance.md](../salary-period-acceptance.md). Implementatie- en teststatus volgt uit de bijbehorende PR; dit besluit verklaart geen publicatie of fysieke A54-verificatie.

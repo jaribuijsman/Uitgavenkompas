@@ -1,0 +1,33 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+module.exports=async function financePeriods(browser,origin,width=393){
+ const out='/tmp/memento-finance-periods';fs.mkdirSync(out,{recursive:true});
+ const data=await require('./visual-fixture.cjs').fixture();
+ data.finance.transactions=[
+ {id:'salary-sep',type:'income',date:'2026-09-25',description:'Fictief salaris',amount:3520,account:'personal',category:'Salaris'},
+ {id:'expense-sep',type:'expense',date:'2026-09-26',description:'Fictieve aankoop',amount:100,account:'personal',category:'Boodschappen',subcategory:'Supermarkt'},
+ {id:'refund-sep',type:'refund',date:'2026-09-27',description:'Fictieve retour',amount:20,account:'personal',category:'Boodschappen'},
+ {id:'transfer-card',type:'transfer',date:'2026-09-28',description:'Creditcardaflossing',amount:80,account:'personal',transferToAccount:'creditcard',category:'Overboekingen'},
+ {id:'card-expense',type:'expense',date:'2026-09-28',description:'Creditcardaankoop',amount:80,account:'creditcard',category:'Boodschappen'}];
+ data.finance.settings.salaryPayDates=['2026-09-25','2026-10-26'];data.finance.salaryBudgets={'2026-09':{personalBundle:{total:300,categories:{Boodschappen:250}}}};data.finance.monthClosures={'2026-09':{income:3520,expense:160,net:3360,count:5,signature:'legacy'}};
+ const ctx=await browser.newContext({viewport:{width,height:852},locale:'nl-NL',timezoneId:'Europe/Amsterdam',reducedMotion:'reduce'}),page=await ctx.newPage();page.setDefaultTimeout(12000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ try{
+  await page.goto(origin+'/__seed__');await page.evaluate(d=>{localStorage.setItem('uitgavenkompas_v1',JSON.stringify(d.finance));localStorage.setItem('compass_life_preview_v1',JSON.stringify(d.life));},data);await page.goto(origin);await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await require('./enter-app.cjs')(page);
+  async function nav(view){await page.evaluate(view=>{window.MementoNavigation.setArea('finance');document.querySelector('#sideNav [data-view="'+view+'"]').click();},view);}
+  const stored=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('uitgavenkompas_v1')));
+  async function shot(name){assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),name+' overflow');await page.screenshot({path:path.join(out,width+'-'+name+'.jpg'),type:'jpeg',quality:82,animations:'disabled'});}
+  await nav('dashboard');const untouched=await stored();await shot('dashboard-before');
+  await nav('settings');await page.locator('#mementoSettingsFinance [data-ms-target=salary]').click();await page.locator('#mpKey').selectOption('2026-09');await shot('manager');
+  assert.equal(await page.locator('#mpScope').inputValue(),'personalBundle');await page.locator('[data-mp=salary]').click();await page.locator('#mpSalaryTx').selectOption('salary-sep');assert.match(await page.locator('#mpSalaryInfo').innerText(),/al geboekt/);await page.locator('[form=mpSalaryForm]').click();assert.deepEqual((await stored()).transactions,untouched.transactions);assert.equal((await stored()).settings.salarySources['2026-09'].transactionId,'salary-sep');
+  await page.locator('#mpKey').selectOption('2026-09');await page.locator('[data-mp=review]').click();assert(await page.locator('#mpClosePeriod').isDisabled());await shot('review');
+  for(const id of ['mpCheckDates','mpCheckTx','mpCheckBalances'])await page.locator('#'+id).check();await page.locator('#mpClosePeriod').click();assert.match(await page.locator('#modalTitle').innerText(),/afgesloten/);await page.locator('#closeModal').click();
+  const closed=await stored(),key='salary:2026-09:personalBundle';assert.equal(closed.periodClosures[key][0].report.analysis.netExpenses,160);assert.deepEqual(closed.monthClosures,untouched.monthClosures);assert.deepEqual(closed.transactions,untouched.transactions);await shot('closed');
+  await page.locator('[data-mp=download]').first().click();const downloadWait=page.waitForEvent('download');await page.locator('#mpJSON').click();const file=await(await downloadWait).path(),payload=JSON.parse(fs.readFileSync(file,'utf8'));assert.equal(payload.period.start,'2026-09-25');assert.equal(payload.analysis.result,3360);assert.equal(payload.analysis.transfers.internal,80);assert.equal(payload.analysis.budget.remaining,140);assert.equal(payload.transactions.length,5);await page.locator('#closeModal').click();
+  await nav('transactions');await page.locator('#addTransaction').click();await page.locator('#txDescription').fill('Latere fictieve aankoop');await page.locator('#txAmount').fill('42.50');await page.locator('#txDate').fill('2026-09-30');await page.locator('[form=txForm][type=submit]').click();
+  await nav('settings');await page.evaluate(()=>window.MementoSettings.open('finance','salary'));await page.locator('#mpKey').selectOption('2026-09');assert.match(await page.locator('.mp-status').innerText(),/gewijzigd/);await shot('changed');
+  await page.locator('[data-mp=review]').click();for(const id of ['mpCheckDates','mpCheckTx','mpCheckBalances'])await page.locator('#'+id).check();await page.locator('#mpClosePeriod').click();await page.locator('#closeModal').click();const changed=await stored();assert.equal(changed.periodClosures[key].length,2);assert.deepEqual(changed.periodClosures[key][0],closed.periodClosures[key][0]);assert.equal(changed.periodClosures[key][1].report.analysis.netExpenses,202.5);
+  await page.locator('[data-mp=history]').first().click();await page.locator('[data-mp-record="'+closed.periodClosures[key][0].id+'"]').click();const archiveWait=page.waitForEvent('download');await page.locator('#mpJSON').click();const archive=JSON.parse(fs.readFileSync(await(await archiveWait).path(),'utf8'));assert.equal(archive.closure.version,1);assert.equal(archive.analysis.netExpenses,160);await page.locator('#closeModal').click();
+  await page.reload();await page.waitForFunction(()=>window.MementoStorageGuard?.writable);await require('./enter-app.cjs')(page);assert.equal((await stored()).periodClosures[key].length,2);
+  assert.deepEqual(errors,[]);console.log('PASS salary Settings route, no duplicate salary, immutable closing history, JSON download and reload at '+width+'px');
+ }finally{await ctx.close();}
+};

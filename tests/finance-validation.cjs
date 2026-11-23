@@ -61,5 +61,6 @@ const rawZip=finance=>ZIP.zip([
   s.localStorage.setItem=setter;s.fin.importBackup({contents:JSON.stringify(valid())});assert.equal(s.fin.blocked,false);assert.equal(s.fin.state.transactions[0].id,'keep');assert.equal(s.storage.get('uitgavenkompas_auto_backup_v1'),raw);s.MementoStorageGuard.close();
  });
  await test('cancelled recovery leaves byte-identical storage and memory',async()=>{const s=await tab(new Map([[Guard.KEYS.finance,JSON.stringify(valid())]]));const before=clone([...s.storage]),memory=clone(s.fin.state);s.confirm=()=>false;s.FileReader=class{readAsText(f){this.result=f.contents;this.onload();}};s.fin.importBackup({contents:JSON.stringify({...valid(),transactions:[]})});assert.deepEqual([...s.storage],before);assert.deepEqual(clone(s.fin.state),memory);s.MementoStorageGuard.close();});
+ await require('./finance-archive-storage.cjs');
  console.log(count+' financial boundary checks passed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
