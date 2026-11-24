@@ -23,3 +23,5 @@ assert.equal(presentation.periodContext(filtered,date),'Eigen datumbereik · 202
 assert.equal(JSON.stringify(filtered),before);
 assert(presentation.periodContext({...context,view:'transactions',extra:[],query:''},date).endsWith(' · Eigen filters (dashboard heeft een loonperiode)'));
 console.log('PASS pure Finance period labels: scope, calendar/salary/custom ranges, exact filters/search text and immutable input');
+
+require('./finance-archive-core.cjs');

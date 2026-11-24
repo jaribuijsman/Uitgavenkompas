@@ -25,9 +25,9 @@
  window.MementoTheme={get:()=>validTheme(document.documentElement.dataset.mementoTheme),set:theme=>applyTheme(theme,true)};
 
  const selected={life:null,finance:null};
- const pages=['appearance','personal','assistant','backup','privacy','trash','life','finance'];
- const labels={appearance:'Weergave',personal:'Persoonlijke instellingen',assistant:'Memento-assistent',backup:'Back-up en herstel',privacy:'Privacy en beveiliging',trash:'Prullenbak',life:'Leven',finance:'Financiën'};
- const descriptions={appearance:'Achtergrond en vormgeving',personal:'Voorkeuren en standaardwaarden',assistant:'Gegevens analyseren en organiseren',backup:'Volledige Memento-back-up',privacy:'Vergrendeling en lokale opslag',trash:'Verwijderde gegevens beheren',life:'Taken, agenda en notities',finance:'Categorieën en financiële voorkeuren'};
+ const pages=['appearance','personal','assistant','backup','privacy','trash','life','finance','salary'];
+ const labels={appearance:'Weergave',personal:'Persoonlijke instellingen',assistant:'Memento-assistent',backup:'Back-up en herstel',privacy:'Privacy en beveiliging',trash:'Prullenbak',life:'Leven',finance:'Financiën',salary:'Loonperiodes'};
+ const descriptions={appearance:'Achtergrond en vormgeving',personal:'Voorkeuren en standaardwaarden',assistant:'Gegevens analyseren en organiseren',backup:'Volledige Memento-back-up',privacy:'Vergrendeling en lokale opslag',trash:'Verwijderde gegevens beheren',life:'Taken, agenda en notities',finance:'Categorieën en financiële voorkeuren',salary:'Salaris bevestigen, afsluiten en downloaden'};
  const symbols={
   appearance:'<circle cx="12" cy="12" r="9"/><path d="M12 3a3 3 0 0 0 0 6h2a2.5 2.5 0 0 1 0 5h-1a2 2 0 0 0-2 2v1"/>',
   personal:'<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="17" r="2"/>',
@@ -38,6 +38,7 @@
   life:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2"/>',
   finance:'<rect x="3" y="6" width="18" height="15" rx="3"/><path d="M3 10h18M7 3h10"/>'
  };
+ symbols.salary=symbols.finance;
  const svg=id=>'<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+symbols[id]+'</svg>';
  function section(title,ids,area){
   return '<section class="ms-group" aria-label="'+title+'"><h2>'+title+'</h2><div class="ms-list">'+ids.map(id=>'<button type="button" class="ms-row" data-ms-target="'+id+'" aria-controls="ms-'+area+'-'+id+'"><span class="ms-icon">'+svg(id)+'</span><span class="ms-copy"><strong>'+labels[id]+'</strong><small>'+descriptions[id]+'</small></span><span class="ms-chevron" aria-hidden="true">›</span></button>').join('')+'</div></section>';
@@ -45,7 +46,7 @@
  function create(area,host){
   const shell=document.createElement('section');shell.className='ms-shell';shell.id='mementoSettings'+(area==='life'?'Life':'Finance');shell.dataset.msArea=area;
   shell.innerHTML='<div class="ms-home"><header class="ms-heading"><p class="ms-eyebrow">MEMENTO</p><h1>Instellingen</h1><p>Beheer Memento op één plek.</p></header>'+
-   section('Algemeen',['appearance','personal','assistant'],area)+section('Gegevens en veiligheid',['backup','privacy','trash'],area)+section('Onderdelen',['life','finance'],area)+
+   section('Algemeen',['appearance','personal','assistant'],area)+section('Gegevens en veiligheid',['backup','privacy','trash'],area)+section('Onderdelen',area==='finance'?['life','finance','salary']:['life','finance'],area)+
    '<p class="ms-footnote">Bewaar een volledige back-up buiten je telefoon. Lokale browsergegevens kunnen verdwijnen.</p></div>'+
    pages.map(id=>'<section class="ms-page" data-ms-page="'+id+'" id="ms-'+area+'-'+id+'" aria-label="'+labels[id]+'" hidden><header class="ms-detail-head"><button type="button" class="ms-back" data-ms-back aria-label="Terug naar instellingen"><span aria-hidden="true">‹</span> Terug</button><h2 tabindex="-1">'+labels[id]+'</h2></header><div class="ms-page-body"></div></section>').join('');
   const body=id=>$('.ms-page[data-ms-page="'+id+'"] .ms-page-body',shell);
@@ -70,7 +71,7 @@
   const appendLinks=(id,arr)=>{const nav=document.createElement('nav');nav.className='ms-shortcuts';nav.setAttribute('aria-label','Gerelateerde onderdelen');nav.innerHTML=arr.map(([label,to])=>'<button type="button" class="ms-shortcut" data-ms-go="'+to+'">'+label+'<span aria-hidden="true">›</span></button>').join('');body(id).append(nav);};
   appendLinks('life',[['Mijn dag','life:today'],['Taken','life:tasks'],['Agenda','life:agenda'],['Notities','life:notes']]);
   if(area==='life'){appendLinks('personal',[['Open financiële voorkeuren','finance:personal']]);appendLinks('finance',[['Open financiële instellingen','finance:finance']]);}
-  else{appendLinks('assistant',[['Open Memento-assistent','life:assistant']]);appendLinks('life',[['Open Leven','life:life']]);appendLinks('finance',[['Persoonlijke instellingen','finance:personal'],['Back-up en herstel','finance:backup']]);}
+  else{appendLinks('assistant',[['Open Memento-assistent','life:assistant']]);appendLinks('life',[['Open Leven','life:life']]);appendLinks('finance',[['Loonperiodes','finance:salary'],['Persoonlijke instellingen','finance:personal'],['Back-up en herstel','finance:backup']]);}
   shell.addEventListener('click',e=>{
    const target=e.target.closest('[data-ms-theme],[data-ms-target],[data-ms-back],[data-ms-go]');
    if(target?.dataset.msTheme){window.MementoTheme.set(target.dataset.msTheme);return;}
@@ -81,6 +82,7 @@
    if(area==='life'&&id==='personal'){navigate('finance:personal');return;}
    if(area==='life'&&id==='finance'){navigate('finance:finance');return;}
    if(area==='finance'&&id==='assistant'){navigate('life:assistant');return;}
+   if(area==='life'&&id==='salary'){navigate('finance:salary');return;}
    if(area==='finance'&&id==='life'){navigate('life:life');return;}
    openPage(shell,id);
   });
@@ -90,6 +92,7 @@
  }
  function openPage(shell,id){
   selected[shell.dataset.msArea]=id||null;
+  if(id==='salary')window.MementoFinancePeriods?.render();
   const home=$('.ms-home',shell);home.hidden=!!id;
   shell.querySelectorAll('.ms-page').forEach(p=>p.hidden=p.dataset.msPage!==id);
   if(id){$('.ms-page[data-ms-page="'+id+'"] h2',shell)?.focus({preventScroll:true});}

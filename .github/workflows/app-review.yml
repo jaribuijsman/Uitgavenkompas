@@ -146,6 +146,15 @@ jobs:
           path: /tmp/memento-*
           retention-days: 7
 
+      - name: Preserve salary period mobile evidence
+        uses: actions/upload-artifact@v4
+        if: always() && matrix.group == 'data-full'
+        with:
+          name: memento-finance-periods
+          path: /tmp/memento-finance-periods
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Preserve Checklisten browser and accessibility evidence
         uses: actions/upload-artifact@v4
         if: always() && (matrix.group == 'interface-acceptance' || matrix.group == 'interface-visual' || matrix.group == 'test-release-acceptance-browser' || matrix.group == 'test-visual-browser')

@@ -66,11 +66,30 @@ function validate(s){
  optional(s,'budgetMonths',(months,p)=>{record(months,p);for(const [m,scopes] of Object.entries(months)){month(m,p);record(scopes,p+'.'+m);for(const [scope,b] of Object.entries(scopes)){check(['all','personalBundle',...accounts].includes(scope),p+'.'+m);record(b,p);optional(b,'total',(v,q)=>number(v,q,0),p);optional(b,'categories',amounts,p);}}},'financiën');
  function totals(v,p){record(v,p);for(const k of ['income','expense','net'])optional(v,k,number,p);optional(v,'count',(n,q)=>check(Number.isInteger(n)&&n>=0,q),p);optional(v,'byAccount',(a,q)=>{record(a,q);for(const [key,t] of Object.entries(a)){account(key,q);totals(t,q+'.'+key);}},p);}
  optional(s,'monthClosures',(v,p)=>{record(v,p);for(const [m,r] of Object.entries(v)){month(m,p);totals(r,p+'.'+m);optional(r,'signature',text,p);optional(r,'closedAt',text,p);}},'financiën');
+
+ optional(s,'periodClosures',(histories,p)=>{
+  record(histories,p);const ids=new Set();
+  const core=typeof module==='object'&&module.exports?require('./memento-finance-archive-core.js'):globalThis.MementoFinanceArchiveCore;
+  check(!!core,p);
+  for(const [key,versions] of Object.entries(histories)){
+   list(versions,p+'.'+key);versions.forEach((entry,i)=>{
+    const q=p+'.'+key+'['+i+']';record(entry,q);id(entry.id,q+'.id');check(!ids.has(entry.id),q+'.id');ids.add(entry.id);check(entry.version===i+1,q+'.version');text(entry.closedAt,q+'.closedAt');check(Number.isFinite(Date.parse(entry.closedAt)),q+'.closedAt');
+    const r=entry.report;record(r,q+'.report');check(r.format==='memento-period-analysis'&&r.schemaVersion===1&&r.currency==='EUR',q+'.report');
+    record(r.period,q+'.period');const period=r.period;check(['salary','month'].includes(period.mode),q+'.mode');month(period.key,q+'.key');for(const k of ['start','end','endExclusive','observedEnd'])date(period[k],q+'.'+k);check(period.start<=period.end&&period.observedEnd===period.end&&Date.parse(period.endExclusive+'T12:00:00Z')-Date.parse(period.end+'T12:00:00Z')===86400000,q+'.period');check(period.status==='confirmed'&&period.startConfirmed===true&&period.endConfirmed===true,q+'.period');
+    check(Object.hasOwn(core.scopes,r.scope),q+'.scope');check(key===core.key(period,r.scope),q+'.key');check(JSON.stringify(r.accounts)===JSON.stringify(core.scopes[r.scope]),q+'.accounts');
+    list(r.transactions,q+'.transactions');const txIds=new Set();r.transactions.forEach((t,j)=>{transaction(t,q+'.transactions['+j+']');check(!txIds.has(t.id),q+'.transactions');txIds.add(t.id);});
+    record(r.budget,q+'.budget');amounts(r.budget.categories,q+'.budget.categories');number(r.budget.total,q+'.budget.total',0);record(r.analysis,q+'.analysis');text(r.signature,q+'.signature');
+    if(r.analysis.previous!==null){const prev=r.analysis.previous;record(prev,q+'.previous');record(prev.period,q+'.previous.period');for(const k of ['start','end','observedEnd'])date(prev.period[k],q+'.previous.'+k);check(prev.period.status==='confirmed'&&prev.period.end<period.start&&prev.period.observedEnd===prev.period.end,q+'.previous.period');check(Number.isInteger(prev.count)&&prev.count>0,q+'.previous.count');for(const k of ['income','netExpenses','result'])number(prev[k],q+'.previous.'+k);}
+    const recomputed=core.report({transactions:r.transactions},{period,scope:r.scope,budget:r.budget,previous:r.analysis.previous});check(recomputed.signature===r.signature,q+'.signature');check(core.canonical(recomputed.analysis)===core.canonical(r.analysis),q+'.analysis');
+   });
+  }
+ },'financiën');
  optional(s,'settings',(v,p)=>{
   record(v,p);
   for(const k of ['startBalance','monthlyIncomeTarget'])optional(v,k,number,p);
   optional(v,'payday',(n,q)=>check(Number.isInteger(n)&&n>=1&&n<=31,q),p);optional(v,'periodModeDefault',(m,q)=>check(['salary','month'].includes(m),q),p);
   for(const k of ['accountOpening','actualBalances'])optional(v,k,(balances,q)=>{record(balances,q);for(const [a,n] of Object.entries(balances)){account(a,q+'.'+a);if(k==='actualBalances'&&n==='')continue;number(n,q+'.'+a);}},p);
+  optional(v,'salarySources',(sources,q)=>{record(sources,q);for(const [key,source] of Object.entries(sources)){month(key,q);record(source,q);date(source.date,q+'.date');check(source.date.slice(0,7)===key,q);if(source.transactionId!==null)id(source.transactionId,q+'.transactionId');}},p);
   optional(v,'salaryPeriodStart',(d,q)=>{if(d!=='')date(d,q);},p);optional(v,'salaryPayDates',(a,q)=>{list(a,q);const months=new Set();a.forEach((d,i)=>{date(d,q+'['+i+']');check(!months.has(d.slice(0,7)),q);months.add(d.slice(0,7))})},p);
   optional(v,'salaryPeriods',(periods,q)=>{list(periods,q);periods.forEach((r,i)=>{const at=q+'['+i+']';totals(r,at);date(r.from,at+'.from');date(r.to,at+'.to');check(r.from<=r.to,at);});},p);
   optional(v,'balanceCheckedAt',(a,q)=>{record(a,q);for(const [key,d] of Object.entries(a)){account(key,q);text(d,q+'.'+key);}},p);
